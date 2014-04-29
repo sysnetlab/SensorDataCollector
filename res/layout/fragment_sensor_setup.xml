@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_sensor_setup"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/tv_sensor_setup_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"        
+        android:layout_below="@+id/tv_sensor_setup_header"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"        
+        android:text="@string/textview_sensing_type"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/tv_sensing_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_sensor_setup_header"
+        android:layout_alignBaseline="@+id/textView1"
+        android:layout_alignBottom="@+id/textView1"
+        android:layout_marginLeft="10dp"
+        android:layout_alignLeft="@+id/edittext_sampling_rate"
+        android:text="@string/text_sensing_type_onchange"
+        android:textAppearance="?android:attr/textAppearanceMedium" />    
+    
+    <TextView
+        android:id="@+id/tv_sampling_rate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/textview_sampling_rate"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/edittext_sampling_rate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_sampling_rate"
+        android:layout_alignBottom="@+id/tv_sampling_rate"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/tv_sampling_rate"
+        android:ems="10"
+        android:text="@string/const_number_10"
+        android:inputType="number" >
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/btn_sensor_setup_confirm"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_toLeftOf="@+id/tv_sensing_type"
+        android:text="@string/button_sensor_setup_confirm" />    
+    
+    <Button
+        android:id="@+id/btn_sensor_setup_cancel"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btn_sensor_setup_confirm"
+        android:layout_alignBottom="@+id/btn_sensor_setup_confirm"
+        android:layout_alignRight="@+id/tv_sensing_type"
+        android:text="@string/button_sensor_setup_cancel" />
+
+</RelativeLayout>
