@@ -5,7 +5,7 @@ package sysnetlab.android.sdc.ui;
 import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.DataSensorFactory;
-import edu.vsu.cs.sensordatacollector.R;
+import sysnetlab.android.sdc.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;

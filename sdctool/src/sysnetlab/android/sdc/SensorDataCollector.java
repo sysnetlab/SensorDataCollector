@@ -15,7 +15,7 @@ import sysnetlab.android.sdc.sensor.DataSensorFactory;
 import sysnetlab.android.sdc.sensor.VirtualSensor;
 import sysnetlab.android.sdc.ui.SensorListFragment;
 import sysnetlab.android.sdc.ui.SensorSetupFragment;
-import edu.vsu.cs.sensordatacollector.R;
+import sysnetlab.android.sdc.R;
 import android.content.Context;
 import android.graphics.Color;
 import android.hardware.Sensor;

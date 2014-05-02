@@ -3,7 +3,7 @@ package sysnetlab.android.sdc.ui;
 
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.VirtualSensor;
-import edu.vsu.cs.sensordatacollector.R;
+import sysnetlab.android.sdc.R;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;

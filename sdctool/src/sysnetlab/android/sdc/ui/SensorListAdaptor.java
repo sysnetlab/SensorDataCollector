@@ -5,7 +5,7 @@ import java.util.List;
 
 import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
-import edu.vsu.cs.sensordatacollector.R;
+import sysnetlab.android.sdc.R;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
