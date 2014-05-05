@@ -21,7 +21,7 @@ public class SensorListFragment extends ListFragment {
 	private OnClickListener mCallback;
     private View mHeaderView;
     private View mFooterView;
-    private ArrayAdapter<AndroidSensor> mAdapter;
+    private ArrayAdapter<AndroidSensor> mSensorList;
 
     public interface OnClickListener {
         public void onSensorClicked(AndroidSensor sensor);
@@ -38,7 +38,7 @@ public class SensorListFragment extends ListFragment {
 	    mFooterView = inflator.inflate(R.layout.sensor_list_footer, null);
 	    mHeaderView = inflator.inflate(R.layout.sensor_list_header, null);	
         
-	    mAdapter = new SensorListAdaptor(getActivity(), DataSensorFactory.getSensorList(getActivity()));
+	    mSensorList = new SensorListAdaptor(getActivity(), DataSensorFactory.getSensorList(getActivity()));
     }
 
     @Override
@@ -76,7 +76,7 @@ public class SensorListFragment extends ListFragment {
     	//TODO: handle configuration changes 
     	getListView().addHeaderView(mHeaderView);
     	getListView().addFooterView(mFooterView);
-    	setListAdapter(mAdapter);
+    	setListAdapter(mSensorList);
 
 
     	((Button)mFooterView.findViewById(R.id.btnDataSensorsRun))
@@ -93,4 +93,10 @@ public class SensorListFragment extends ListFragment {
     		}
     	});
     }   
+    
+    public SensorListAdaptor getSensorList()
+    {
+    	return (SensorListAdaptor) mSensorList;
+    }
+   
 }

@@ -32,7 +32,7 @@ import android.widget.Toast;
 
 
 public class SensorDataCollectorActivity extends FragmentActivity 
-implements SensorListFragment.OnClickListener, SensorSetupFragment.OnClickListener {
+	implements SensorListFragment.OnClickListener, SensorSetupFragment.OnClickListener {
 	
 	private SensorManager mSensorManager;
 	private SensorListFragment mSensorListFragment;
@@ -159,6 +159,16 @@ implements SensorListFragment.OnClickListener, SensorSetupFragment.OnClickListen
 		switchToFragment(mSensorListFragment, "sensorlist");
 	} 	
 	
+	public SensorListFragment getSensorListFragment()
+	{
+		return mSensorListFragment;
+	}
+	
+	public SensorSetupFragment getSensorSetupFragment()
+	{
+		return mSensorSetupFragment;
+	}
+	
 	private void runDataSensor() throws IOException {	
 		mDataSink.createExperiment();
 		
@@ -218,4 +228,5 @@ implements SensorListFragment.OnClickListener, SensorSetupFragment.OnClickListen
 			Log.e("SensorDataCollector", "Oops, this not supposed to happen!");
 		}		
 	}
+	
 }

@@ -2,6 +2,8 @@ package sysnetlab.android.sdc.test;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.SensorDataCollectorActivity;
+import sysnetlab.android.sdc.ui.SensorListAdaptor;
+import sysnetlab.android.sdc.ui.SensorListFragment;
 import android.content.Intent;
 
 public class SensorDataCollectorActivityTests 
@@ -24,9 +26,13 @@ public class SensorDataCollectorActivityTests
 		super.tearDown();
 	}
 
-	public void testLoadedFragmentContainer()
+	public void testPopulatedAvailableSensorList()
 	{
-		assertNotNull(sdcActivity.findViewById(R.id.fragment_container));
+		SensorListFragment sensorListFragment = sdcActivity.getSensorListFragment();
+		assertNotNull(sensorListFragment);
+		SensorListAdaptor sensorList = sensorListFragment.getSensorList();
+		assertNotNull(sensorList);
+		assert(sensorList.getCount() > 0);
 	}
 	
 }
