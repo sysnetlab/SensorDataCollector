@@ -15,5 +15,6 @@
     <string name="text_sensing_type_onchange">On Change</string>
     <string name="button_sensor_setup_confirm">Confirm</string>
     <string name="button_sensor_setup_cancel">Cancel</string>
+    <string name="title_activity_create_experiement">CreateExperiementActivity</string>
 
 </resources>

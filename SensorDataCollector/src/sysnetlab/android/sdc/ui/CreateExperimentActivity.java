@@ -1,6 +1,4 @@
-/* $Id$ */
 package sysnetlab.android.sdc.ui;
-
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -27,8 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-
-public class SensorDataCollectorActivity extends FragmentActivity 
+public class CreateExperimentActivity extends FragmentActivity 
 	implements SensorListFragment.OnFragmentClickListener, SensorSetupFragment.OnFragmentClickListener {
 	
 	private SensorManager mSensorManager;

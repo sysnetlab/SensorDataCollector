@@ -1,34 +1,30 @@
 /* $Id$ */
-package sysnetlab.android.sdc.ui;
+package sysnetlab.android.sdc.ui.adaptors;
 
 import java.util.List;
 
-import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.R;
+import sysnetlab.android.sdc.datacollector.Experiment;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
-
-
-public class SensorListAdaptor extends ArrayAdapter<AndroidSensor> {
-	private final List<AndroidSensor> mList;
+public class ExperimentListAdaptor extends ArrayAdapter<Experiment> {
+	private final List<Experiment> mList;
 	private final Activity mContext;
 
-	public SensorListAdaptor(Activity context, List<AndroidSensor> list) {
-		super(context, R.layout.sensor_row_layout, list);
+	public ExperimentListAdaptor(Activity context, List<Experiment> list) {
+		super(context, R.layout.experiment_row_layout, list);
 		mContext = context;
 		mList = list;
 	}
 
 	static class ViewHolder {
 		protected TextView text;
-		protected CheckBox checkbox;
+		protected TextView dateCreated;
 	}
 
 	@Override
@@ -40,23 +36,15 @@ public class SensorListAdaptor extends ArrayAdapter<AndroidSensor> {
 			
 			final ViewHolder viewHolder = new ViewHolder();
 			viewHolder.text = (TextView) view.findViewById(R.id.label);
-			viewHolder.checkbox = (CheckBox) view.findViewById(R.id.check);
-			viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					AndroidSensor sensor = (AndroidSensor) viewHolder.checkbox.getTag();
-					sensor.setSelected(buttonView.isChecked());
-				}
-			});
+			viewHolder.dateCreated = (TextView) view.findViewById(R.id.date_created);
 			
 			view.setTag(viewHolder);
 		} else {
 			view = convertView;
 		}
 		ViewHolder holder = (ViewHolder) view.getTag();
-		holder.checkbox.setTag(mList.get(position));
 		holder.text.setText(mList.get(position).getName());
-		holder.checkbox.setChecked(mList.get(position).isSelected());
+		holder.text.setText(mList.get(position).getDateCreated());
 		return view;
 	}
 }

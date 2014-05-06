@@ -10,10 +10,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.util.Log;
 
-public class DataSensorFactory {
+public class SensorDiscoverer {
 	private static List<AndroidSensor> mList = null;
 	
-	public static List<AndroidSensor> getSensorList(Context ctx) {
+	public static List<AndroidSensor> discoverSensorList(Context ctx) {
 		if (mList == null) {
 			SensorManager sensorManager = (SensorManager)ctx.getSystemService(Context.SENSOR_SERVICE);	
 			List<Sensor> slist = sensorManager.getSensorList(Sensor.TYPE_ALL);	

@@ -2,10 +2,11 @@
 package sysnetlab.android.sdc.ui;
 
 
-import sysnetlab.android.sdc.sensor.AndroidSensor;
-import sysnetlab.android.sdc.sensor.SensorDiscoverer;
-import sysnetlab.android.sdc.ui.adaptors.SensorListAdaptor;
+import java.util.ArrayList;
+
 import sysnetlab.android.sdc.R;
+import sysnetlab.android.sdc.datacollector.Experiment;
+import sysnetlab.android.sdc.ui.adaptors.ExperimentListAdaptor;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -15,17 +16,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-public class SensorListFragment extends ListFragment {
+public class ExperimentListFragment extends ListFragment {
 	
 	private OnFragmentClickListener mCallback;
     private View mHeaderView;
     private View mFooterView;
-    private ArrayAdapter<AndroidSensor> mSensorList;
+    private ArrayAdapter<Experiment> mExperimentList;
 
     public interface OnFragmentClickListener {
-        public void onSensorClicked_SensorListFragment(AndroidSensor sensor);
-    	public void onBtnRunClicked_SensorListFragment(View v);
-    	public void onBtnClearClicked_SensorListFragment();
+        public void onExperimentClicked_ExperimentListFragment(Experiment experiment);
+    	public void onButtonRunClicked_ExperimentListFragment(Button b);
     }
 
     @Override
@@ -37,7 +37,8 @@ public class SensorListFragment extends ListFragment {
 	    mFooterView = inflator.inflate(R.layout.sensor_list_footer, null);
 	    mHeaderView = inflator.inflate(R.layout.sensor_list_header, null);	
         
-	    mSensorList = new SensorListAdaptor(getActivity(), SensorDiscoverer.discoverSensorList(getActivity()));
+	    //TODO: read experiment list from somewhere
+	    mExperimentList = new ExperimentListAdaptor(getActivity(), new ArrayList<Experiment>());;
     }
 
     @Override
@@ -63,7 +64,7 @@ public class SensorListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView lv, View v, int position, long id) {
-		mCallback.onSensorClicked_SensorListFragment((AndroidSensor)lv.getItemAtPosition(position));
+		mCallback.onExperimentClicked_ExperimentListFragment((Experiment)lv.getItemAtPosition(position));
     }
     
     public void onActivityCreated (Bundle savedInstanceState) {
@@ -72,22 +73,15 @@ public class SensorListFragment extends ListFragment {
     	//TODO: handle configuration changes 
     	getListView().addHeaderView(mHeaderView);
     	getListView().addFooterView(mFooterView);
-    	setListAdapter(mSensorList);
+    	setListAdapter(mExperimentList);
 
 
     	((Button)mFooterView.findViewById(R.id.btnDataSensorsRun))
     	.setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
-    			mCallback.onBtnRunClicked_SensorListFragment(v);
-    		}
-    	});
-
-    	((Button)mFooterView.findViewById(R.id.btnDataSensorsClear))
-    	.setOnClickListener(new Button.OnClickListener() {
-    		public void onClick(View v) {
-    			mCallback.onBtnClearClicked_SensorListFragment();
+    			mCallback.onButtonRunClicked_ExperimentListFragment((Button) v);
     		}
     	});
     }   
-   
+    
 }
