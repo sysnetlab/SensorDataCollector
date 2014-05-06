@@ -2,7 +2,7 @@ package sysnetlab.android.sdc.sensor;
 
 import sysnetlab.android.sdc.datacollector.DataSensorEventListener;
 
-public abstract class VirtualSensor {
+public abstract class AbstractSensor {
 	private int mMajorType;
 	private int mMinorType;	
 	private boolean mSelected;

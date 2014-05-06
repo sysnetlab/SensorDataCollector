@@ -2,7 +2,6 @@
 package sysnetlab.android.sdc.ui;
 
 
-import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.DataSensorFactory;
 import sysnetlab.android.sdc.R;
@@ -14,19 +13,18 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class SensorListFragment extends ListFragment {
 	
-	private OnClickListener mCallback;
+	private OnFragmentClickListener mCallback;
     private View mHeaderView;
     private View mFooterView;
     private ArrayAdapter<AndroidSensor> mSensorList;
 
-    public interface OnClickListener {
-        public void onSensorClicked(AndroidSensor sensor);
-    	public void onBtnRunClicked(View v);
-    	public void onBtnClearClicked();
+    public interface OnFragmentClickListener {
+        public void onSensorClicked_SensorListFragment(AndroidSensor sensor);
+    	public void onBtnRunClicked_SensorListFragment(View v);
+    	public void onBtnClearClicked_SensorListFragment();
     }
 
     @Override
@@ -55,7 +53,7 @@ public class SensorListFragment extends ListFragment {
         super.onAttach(activity);
 
         try {
-            mCallback = (OnClickListener)activity;
+            mCallback = (OnFragmentClickListener)activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnClickedListener");
@@ -64,10 +62,7 @@ public class SensorListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView lv, View v, int position, long id) {
-    	if (DataCollectionState.getState() == DataCollectionState.DATA_COLLECTION_STOPPED)
-    		mCallback.onSensorClicked((AndroidSensor)lv.getItemAtPosition(position));
-    	else
-    		Toast.makeText(getActivity(), "Data Collection In Progress!", Toast.LENGTH_SHORT).show();
+		mCallback.onSensorClicked_SensorListFragment((AndroidSensor)lv.getItemAtPosition(position));
     }
     
     public void onActivityCreated (Bundle savedInstanceState) {
@@ -82,14 +77,14 @@ public class SensorListFragment extends ListFragment {
     	((Button)mFooterView.findViewById(R.id.btnDataSensorsRun))
     	.setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
-    			mCallback.onBtnRunClicked(v);
+    			mCallback.onBtnRunClicked_SensorListFragment(v);
     		}
     	});
 
     	((Button)mFooterView.findViewById(R.id.btnDataSensorsClear))
     	.setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
-    			mCallback.onBtnClearClicked();
+    			mCallback.onBtnClearClicked_SensorListFragment();
     		}
     	});
     }   

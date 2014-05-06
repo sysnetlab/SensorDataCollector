@@ -2,7 +2,7 @@ package sysnetlab.android.sdc.sensor;
 
 import android.hardware.Camera;
 
-public class CameraSensor extends VirtualSensor {
+public class CameraSensor extends AbstractSensor {
 	private Camera mCamera;
 	private String mName;
 	private int mCameraId;

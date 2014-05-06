@@ -6,16 +6,13 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Iterator;
 
-import sysnetlab.android.sdc.R.id;
-import sysnetlab.android.sdc.R.layout;
-import sysnetlab.android.sdc.R.string;
 import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.datacollector.DataSensorEventListener;
 import sysnetlab.android.sdc.datasink.DataSink;
 import sysnetlab.android.sdc.datasink.SimpleFileSink;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.DataSensorFactory;
-import sysnetlab.android.sdc.sensor.VirtualSensor;
+import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.R;
 import android.content.Context;
 import android.graphics.Color;
@@ -33,12 +30,15 @@ import android.widget.Toast;
 
 
 public class SensorDataCollectorActivity extends FragmentActivity 
-	implements SensorListFragment.OnClickListener, SensorSetupFragment.OnClickListener {
+	implements SensorListFragment.OnFragmentClickListener, SensorSetupFragment.OnFragmentClickListener {
 	
 	private SensorManager mSensorManager;
+	
 	private SensorListFragment mSensorListFragment;
 	private SensorSetupFragment mSensorSetupFragment;
+	
 	private DataSink mDataSink;
+	private DataCollectionState mCollectionState;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,24 +55,25 @@ public class SensorDataCollectorActivity extends FragmentActivity
 			transaction.add(R.id.fragment_container, mSensorListFragment);
 			transaction.commit();
 		} 
-
+		
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mDataSink = new SimpleFileSink();
+		mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
 	}
-	
-	public void onStart() {
-		super.onStart();
 
+	public void onStart()
+	{
+		super.onStart();
+		
 		final Button btnRunStop = (Button) getSupportFragmentManager()
 				.findFragmentById(R.id.fragment_container)
 				.getView()
 				.findViewById(R.id.btnDataSensorsRun);
 		btnRunStop.setText(getResources().getString(R.string.button_run_text_run));
-		DataCollectionState.setState(DataCollectionState.DATA_COLLECTION_STOPPED);
 		btnRunStop.setTextColor(Color.GREEN);
 	}
 	
-	public void onSensorClicked(AndroidSensor sensor) {
+	public void onSensorClicked_SensorListFragment(AndroidSensor sensor) {
 		if (mSensorSetupFragment == null) {
 			mSensorSetupFragment = new SensorSetupFragment();
 		}
@@ -81,19 +82,20 @@ public class SensorDataCollectorActivity extends FragmentActivity
 	}	
 	
 	@Override
-	public void onBtnRunClicked(View v) {
-		if (DataCollectionState.getState() == DataCollectionState.DATA_COLLECTION_STOPPED) {
+	public void onBtnRunClicked_SensorListFragment(View v) {
+		if (mCollectionState == DataCollectionState.DATA_COLLECTION_STOPPED) {
 			try {
 				runDataSensor();
 				
 				((Button)v).setText(getResources().getString(R.string.button_run_text_stop));
 				((Button)v).setTextColor(Color.RED);
-				DataCollectionState.setState(DataCollectionState.DATA_COLLECTION_IN_PROGRESS);
+				
+				mCollectionState = DataCollectionState.DATA_COLLECTION_IN_PROGRESS;
 			} catch (IOException e) {
 				Log.e("SensorDataCollector", e.toString());
 			}
 			// Toast.makeText(this, "Run Button Pressed", Toast.LENGTH_SHORT).show();	
-		} else if (DataCollectionState.getState() == DataCollectionState.DATA_COLLECTION_IN_PROGRESS) {
+		} else if (mCollectionState == DataCollectionState.DATA_COLLECTION_IN_PROGRESS) {
 			try {
 				stopDataSensor();
 			} catch (IOException e) {
@@ -101,7 +103,8 @@ public class SensorDataCollectorActivity extends FragmentActivity
 			}
 			((Button)v).setText(getResources().getString(R.string.button_run_text_run));
 			((Button)v).setTextColor(Color.GREEN);
-			DataCollectionState.setState(DataCollectionState.DATA_COLLECTION_STOPPED);
+			
+			mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
 			// Toast.makeText(this, "Stop Button Pressed", Toast.LENGTH_SHORT).show();	
 		} else {
 			Toast.makeText(this, "Unsupported Button Action", Toast.LENGTH_SHORT).show();					
@@ -109,36 +112,36 @@ public class SensorDataCollectorActivity extends FragmentActivity
 	}
 	
 	@Override
-	public void onBtnClearClicked() {
+	public void onBtnClearClicked_SensorListFragment() {
 		Toast.makeText(this, "Clear Button Pressed", Toast.LENGTH_SHORT).show();		
 	}
 
 	@Override
-	public void onBtnConfirmClicked(View v, VirtualSensor sensor) {
+	public void onBtnConfirmClicked_SensorSetupFragment(View v, AbstractSensor sensor) {
 		Log.i("SensorDataCollector", "SensorSetupFragment: Button Confirm clicked.");
 		
 		EditText et = (EditText)findViewById(R.id.edittext_sampling_rate);
 		
 		switch(sensor.getMajorType()) {
-		case VirtualSensor.ANDROID_SENSOR:
+		case AbstractSensor.ANDROID_SENSOR:
 			AndroidSensor androidSensor = (AndroidSensor)sensor;
 			if (androidSensor.isStreamingSensor()) {
 				androidSensor.setSamplingInterval((int)(1000000./Double.parseDouble(et.getText().toString())));
 			}
 			break;
-		case VirtualSensor.AUDIO_SENSOR:
+		case AbstractSensor.AUDIO_SENSOR:
 			Log.i("SensorDataCollector", "Audio Sensor is a todo.");
 			// TODO: todo ...
 			break;
-		case VirtualSensor.CAMERA_SENSOR:
+		case AbstractSensor.CAMERA_SENSOR:
 			// TODO: todo ...	
 			Log.i("SensorDataCollector", "Camera Sensor is a todo.");			
 			break;
-		case VirtualSensor.WIFI_SENSOR:
+		case AbstractSensor.WIFI_SENSOR:
 			// TODO: todo ...		
 			Log.i("SensorDataCollector", "WiFi Sensor is a todo.");			
 			break;
-		case VirtualSensor.BLUETOOTH_SENSOR:
+		case AbstractSensor.BLUETOOTH_SENSOR:
 			// TODO: todo ...	
 			Log.i("SensorDataCollector", "Bluetooth Sensor is a todo.");			
 			break;
@@ -152,7 +155,7 @@ public class SensorDataCollectorActivity extends FragmentActivity
 	}
 
 	@Override
-	public void onBtnCancelClicked() {
+	public void onBtnCancelClicked_SensorSetupFragment() {
 		Log.i("SensorDataCollector", "Button Cancel clicked.");
 		switchToFragment(mSensorListFragment, "sensorlist");
 	} 	
@@ -165,6 +168,11 @@ public class SensorDataCollectorActivity extends FragmentActivity
 	public SensorSetupFragment getSensorSetupFragment()
 	{
 		return mSensorSetupFragment;
+	}
+	
+	public DataCollectionState getCurrentCollectionState()
+	{
+		return mCollectionState;
 	}
 	
 	private void runDataSensor() throws IOException {	

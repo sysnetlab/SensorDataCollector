@@ -2,7 +2,7 @@
 package sysnetlab.android.sdc.ui;
 
 import sysnetlab.android.sdc.sensor.AndroidSensor;
-import sysnetlab.android.sdc.sensor.VirtualSensor;
+import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.R;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -17,13 +17,13 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 
 public class SensorSetupFragment extends Fragment {
-	private OnClickListener mCallback;
+	private OnFragmentClickListener mCallback;
     private View mView;
-    private VirtualSensor mSensor;
+    private AbstractSensor mSensor;
 
-    public interface OnClickListener {
-    	public void onBtnConfirmClicked(View v, VirtualSensor sensor);
-    	public void onBtnCancelClicked();
+    public interface OnFragmentClickListener {
+    	public void onBtnConfirmClicked_SensorSetupFragment(View v, AbstractSensor sensor);
+    	public void onBtnCancelClicked_SensorSetupFragment();
     }    
     
     @Override
@@ -56,7 +56,7 @@ public class SensorSetupFragment extends Fragment {
         super.onAttach(activity);
 
         try {
-            mCallback = (OnClickListener)activity;
+            mCallback = (OnFragmentClickListener)activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnClickedListener");
@@ -64,7 +64,7 @@ public class SensorSetupFragment extends Fragment {
     }
     
     
-    public void setSensor(VirtualSensor sensor) {
+    public void setSensor(AbstractSensor sensor) {
     	mSensor = sensor;
     }
     
@@ -74,24 +74,24 @@ public class SensorSetupFragment extends Fragment {
     	((Button)mView.findViewById(R.id.btn_sensor_setup_confirm))
     	.setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
-    			mCallback.onBtnConfirmClicked(v, mSensor);
+    			mCallback.onBtnConfirmClicked_SensorSetupFragment(v, mSensor);
     		}
     	});
 
     	((Button)mView.findViewById(R.id.btn_sensor_setup_cancel))
     	.setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
-    			mCallback.onBtnCancelClicked();
+    			mCallback.onBtnCancelClicked_SensorSetupFragment();
     		}
     	});
     }
    
     @SuppressLint("NewApi")
-	private void updateSensorSetupView(VirtualSensor sensor) {
+	private void updateSensorSetupView(AbstractSensor sensor) {
     	TextView tv = (TextView)mView.findViewById(R.id.tv_sensor_setup_header);
     	tv.setText(sensor.getName());
     	switch(sensor.getMajorType()) {
-    	case VirtualSensor.ANDROID_SENSOR: 
+    	case AbstractSensor.ANDROID_SENSOR: 
     		Log.i("SensorDataCollector", "Android sensor.");
     		
 			TextView tvSensingType = (TextView)mView.findViewById(R.id.tv_sensing_type);
@@ -109,19 +109,19 @@ public class SensorSetupFragment extends Fragment {
     			Log.i("SensorDataCollector", "Non-streaming (onchange) sensor."); 
     		}
     		break;
-    	case VirtualSensor.AUDIO_SENSOR:
+    	case AbstractSensor.AUDIO_SENSOR:
     		// TODO: audio sensor
     		Log.i("SensorDataCollector", "ToDo: Audio sensor.");
     		break;
-    	case VirtualSensor.CAMERA_SENSOR:
+    	case AbstractSensor.CAMERA_SENSOR:
     		// TODO: camera sensor
     		Log.i("SensorDataCollector", "ToDo: Camera sensor.");
     		break;
-    	case VirtualSensor.WIFI_SENSOR:
+    	case AbstractSensor.WIFI_SENSOR:
     		// TODO: WiFi sensor
     		Log.i("SensorDataCollector", "Todo: WiFi RSSI sensor.");
     		break;
-    	case VirtualSensor.BLUETOOTH_SENSOR:
+    	case AbstractSensor.BLUETOOTH_SENSOR:
     		// TODO: Bluetooth sensor
     		Log.i("SensorDataCollector", "Todo: Bluetooth RSSI sensor.");
     		break;

@@ -3,7 +3,6 @@ package sysnetlab.android.sdc.ui;
 
 import java.util.List;
 
-import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.R;
 import android.app.Activity;
@@ -14,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 
 public class SensorListAdaptor extends ArrayAdapter<AndroidSensor> {
@@ -44,15 +43,9 @@ public class SensorListAdaptor extends ArrayAdapter<AndroidSensor> {
 			viewHolder.checkbox = (CheckBox) view.findViewById(R.id.check);
 			viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 				@Override
-				public void onCheckedChanged(CompoundButton buttonView,
-						boolean isChecked) {
-					if (DataCollectionState.getState() == DataCollectionState.DATA_COLLECTION_STOPPED) {
-						AndroidSensor sensor = (AndroidSensor) viewHolder.checkbox.getTag();
-						sensor.setSelected(buttonView.isChecked());
-					} else {
-						viewHolder.checkbox.toggle();
-			    		Toast.makeText(mContext, "Data Collection In Progress!", Toast.LENGTH_SHORT).show();
-					}
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					AndroidSensor sensor = (AndroidSensor) viewHolder.checkbox.getTag();
+					sensor.setSelected(buttonView.isChecked());
 				}
 			});
 			

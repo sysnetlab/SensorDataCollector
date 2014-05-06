@@ -6,7 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Build;
 
-public class AndroidSensor extends VirtualSensor {
+public class AndroidSensor extends AbstractSensor {
 	private Sensor mSensor;
 	private int mSamplingInterval; /* in microseconds */
 	private int mSensingType;
