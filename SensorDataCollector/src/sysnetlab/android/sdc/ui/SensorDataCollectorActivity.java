@@ -1,11 +1,14 @@
 /* $Id$ */
-package sysnetlab.android.sdc;
+package sysnetlab.android.sdc.ui;
 
 
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Iterator;
 
+import sysnetlab.android.sdc.R.id;
+import sysnetlab.android.sdc.R.layout;
+import sysnetlab.android.sdc.R.string;
 import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.datacollector.DataSensorEventListener;
 import sysnetlab.android.sdc.datasink.DataSink;
@@ -13,8 +16,6 @@ import sysnetlab.android.sdc.datasink.SimpleFileSink;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.DataSensorFactory;
 import sysnetlab.android.sdc.sensor.VirtualSensor;
-import sysnetlab.android.sdc.ui.SensorListFragment;
-import sysnetlab.android.sdc.ui.SensorSetupFragment;
 import sysnetlab.android.sdc.R;
 import android.content.Context;
 import android.graphics.Color;
@@ -72,14 +73,11 @@ public class SensorDataCollectorActivity extends FragmentActivity
 	}
 	
 	public void onSensorClicked(AndroidSensor sensor) {
-		if (mSensorSetupFragment != null) {
-			mSensorSetupFragment.setSensor(sensor);
-			switchToFragment(mSensorSetupFragment, "sensorsetup");
-		} else {
+		if (mSensorSetupFragment == null) {
 			mSensorSetupFragment = new SensorSetupFragment();
-			mSensorSetupFragment.setSensor(sensor);
-			switchToFragment(mSensorSetupFragment, "sensorsetup");
 		}
+		mSensorSetupFragment.setSensor(sensor);
+		switchToFragment(mSensorSetupFragment, "sensorsetup");
 	}	
 	
 	@Override
