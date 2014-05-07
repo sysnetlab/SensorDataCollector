@@ -8,7 +8,7 @@ import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.datacollector.DataSensorEventListener;
 import sysnetlab.android.sdc.datasink.DataSink;
-import sysnetlab.android.sdc.datasink.SimpleFileSink;
+import sysnetlab.android.sdc.datasink.DataSinkSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
@@ -33,7 +33,6 @@ public class CreateExperimentActivity extends FragmentActivity
 	private SensorListFragment mSensorListFragment;
 	private SensorSetupFragment mSensorSetupFragment;
 	
-	private DataSink mDataSink;
 	private DataCollectionState mCollectionState;
 
 	@Override
@@ -53,7 +52,6 @@ public class CreateExperimentActivity extends FragmentActivity
 		} 
 		
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		mDataSink = new SimpleFileSink();
 		mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
 	}
 
@@ -172,7 +170,7 @@ public class CreateExperimentActivity extends FragmentActivity
 	}
 	
 	private void runDataSensor() throws IOException {	
-		mDataSink.createExperiment();
+		DataSinkSingleton.getInstance().createExperiment();
 		
 		Iterator<AndroidSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
 		int nChecked = 0;
@@ -180,17 +178,8 @@ public class CreateExperimentActivity extends FragmentActivity
 			AndroidSensor sensor = (AndroidSensor) iter.next();
 			if (sensor.isSelected()) {
 				nChecked ++;
-				/*
-				String path = Environment.getExternalStorageDirectory().getPath();
-				path = path + "/SensorData";
-				File sensorDataDir = new File(path);
-				if (!sensorDataDir.exists()) {
-					sensorDataDir.mkdir();
-				}
-				String filename = path + "/" + sensor.getName().replace(' ', '_') + ".txt";
-				Log.i("SensorDataCollector", "Saved to " + filename);
-				*/
-				PrintStream out = mDataSink.open(sensor.getName().replace(' ', '_') + ".txt");
+
+				PrintStream out = DataSinkSingleton.getInstance().open(sensor.getName().replace(' ', '_') + ".txt");
 				DataSensorEventListener listener = new DataSensorEventListener(out);
 				sensor.setListener(listener);
 				mSensorManager.registerListener(listener, (Sensor)sensor.getSensor(), sensor.getSamplingInterval());
@@ -214,7 +203,7 @@ public class CreateExperimentActivity extends FragmentActivity
 			}
 		}
 		
-		mDataSink.close();
+		DataSinkSingleton.getInstance().close();
 		
 		CharSequence text = "Stopped data collection for " + nChecked + " Sensors";
 		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();		

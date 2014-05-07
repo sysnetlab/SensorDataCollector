@@ -4,14 +4,18 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
+import sysnetlab.android.sdc.datacollector.Experiment;
 import android.os.Environment;
 import android.util.Log;
 
-public class SimpleFileSink extends DataSink {
+public class SimpleFileSink implements DataSink {
 	String mParentPath; 
 	String mPath;
 	LinkedList<PrintStream> mPrintStreamList;
@@ -66,5 +70,24 @@ public class SimpleFileSink extends DataSink {
 		dataDir.mkdir();
 		mPath = path;
 		Log.i("SensorDataCollector", "path " + path + " does not exist and is created.");
+	}
+
+	@Override
+	public List<Experiment> listExperiments() {
+		List<Experiment> listExp = new ArrayList<Experiment>();
+		
+		File parentDir = new File(mParentPath);
+		String[] experimentDirNames = parentDir.list(new FilenameFilter() {
+			public boolean accept(File current, String name) {
+				return new File(current, name).isDirectory();
+			}
+		});
+		
+		for (String dirName : experimentDirNames)
+		{
+			listExp.add(new Experiment(dirName,"unknown"));
+		}
+		
+		return listExp;
 	}
 }
