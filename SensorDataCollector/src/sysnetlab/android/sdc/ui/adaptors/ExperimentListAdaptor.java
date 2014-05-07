@@ -32,7 +32,7 @@ public class ExperimentListAdaptor extends ArrayAdapter<Experiment> {
 		View view = null;
 		if (convertView == null) {
 			LayoutInflater inflator = mContext.getLayoutInflater();
-			view = inflator.inflate(R.layout.sensor_row_layout, null);
+			view = inflator.inflate(R.layout.experiment_row_layout, null);
 			
 			final ViewHolder viewHolder = new ViewHolder();
 			viewHolder.text = (TextView) view.findViewById(R.id.label);

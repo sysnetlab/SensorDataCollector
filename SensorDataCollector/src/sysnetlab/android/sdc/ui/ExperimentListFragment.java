@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
+import sysnetlab.android.sdc.datasink.DataSinkSingleton;
 import sysnetlab.android.sdc.ui.adaptors.ExperimentListAdaptor;
 import android.app.Activity;
 import android.os.Bundle;
@@ -37,8 +38,7 @@ public class ExperimentListFragment extends ListFragment {
 	    mFooterView = inflator.inflate(R.layout.experiment_list_footer, null);
 	    mHeaderView = inflator.inflate(R.layout.experiment_list_header, null);	
         
-	    //TODO: read experiment list from somewhere
-	    mExperimentList = new ExperimentListAdaptor(getActivity(), new ArrayList<Experiment>());;
+	    mExperimentList = new ExperimentListAdaptor(getActivity(), DataSinkSingleton.getInstance().listExperiments());
     }
 
     @Override
