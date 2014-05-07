@@ -1,11 +1,8 @@
 package sysnetlab.android.sdc.test;
 
-import sysnetlab.android.sdc.datacollector.DataCollectionState;
+import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.ui.SensorDataCollectorActivity;
-import sysnetlab.android.sdc.ui.SensorListFragment;
-import sysnetlab.android.sdc.ui.SensorSetupFragment;
 import android.content.Intent;
-import android.widget.Button;
 
 public class SensorDataCollectorActivityTests 
 		extends android.test.ActivityUnitTestCase<SensorDataCollectorActivity> {
@@ -30,18 +27,8 @@ public class SensorDataCollectorActivityTests
 
 	public void testSensorDataCollectionActivityLoaded()
 	{
-		SensorListFragment sensorListFragment = sdcActivity.getSensorListFragment();
-		assertNotNull(sensorListFragment);
-		SensorSetupFragment sensorSetupFragment = sdcActivity.getSensorSetupFragment();
-		assertNull(sensorSetupFragment);
+		assertNotNull(sdcActivity.findViewById(R.id.fragment_container));
+		assertNotNull(sdcActivity.getExperimentListFragment());
 	}
-	
-	public void testSensorDataCollectionState()
-	{
-		assert(sdcActivity.getCurrentCollectionState() == DataCollectionState.DATA_COLLECTION_STOPPED);
-		sdcActivity.onBtnRunClicked_SensorListFragment(new Button(sdcActivity));
-		assert(sdcActivity.getCurrentCollectionState() == DataCollectionState.DATA_COLLECTION_IN_PROGRESS);
-		sdcActivity.onBtnRunClicked_SensorListFragment(new Button(sdcActivity));
-		assert(sdcActivity.getCurrentCollectionState() == DataCollectionState.DATA_COLLECTION_STOPPED);
-	}
+
 }

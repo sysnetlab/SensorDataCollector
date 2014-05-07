@@ -25,7 +25,7 @@ public class ExperimentListFragment extends ListFragment {
 
     public interface OnFragmentClickListener {
         public void onExperimentClicked_ExperimentListFragment(Experiment experiment);
-    	public void onButtonRunClicked_ExperimentListFragment(Button b);
+    	public void onCreateExperimentButtonClicked_ExperimentListFragment(Button b);
     }
 
     @Override
@@ -34,20 +34,11 @@ public class ExperimentListFragment extends ListFragment {
         
     	//TODO: handle configuration changes 
 		LayoutInflater inflator = getLayoutInflater(savedInstanceState);
-	    mFooterView = inflator.inflate(R.layout.sensor_list_footer, null);
-	    mHeaderView = inflator.inflate(R.layout.sensor_list_header, null);	
+	    mFooterView = inflator.inflate(R.layout.experiment_list_footer, null);
+	    mHeaderView = inflator.inflate(R.layout.experiment_list_header, null);	
         
 	    //TODO: read experiment list from somewhere
 	    mExperimentList = new ExperimentListAdaptor(getActivity(), new ArrayList<Experiment>());;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        if (getFragmentManager().findFragmentById(R.id.fragment_sensor_setup) != null) {
-            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        }
     }
 
     @Override
@@ -58,7 +49,7 @@ public class ExperimentListFragment extends ListFragment {
             mCallback = (OnFragmentClickListener)activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnClickedListener");
+                    + " must implement OnFragmentClickedListener");
         }
     }
 
@@ -76,10 +67,10 @@ public class ExperimentListFragment extends ListFragment {
     	setListAdapter(mExperimentList);
 
 
-    	((Button)mFooterView.findViewById(R.id.btnDataSensorsRun))
+    	((Button)mHeaderView.findViewById(R.id.buttonCreateExperiment))
     	.setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
-    			mCallback.onButtonRunClicked_ExperimentListFragment((Button) v);
+    			mCallback.onCreateExperimentButtonClicked_ExperimentListFragment((Button) v);
     		}
     	});
     }   

@@ -16,5 +16,6 @@
     <string name="button_sensor_setup_confirm">Confirm</string>
     <string name="button_sensor_setup_cancel">Cancel</string>
     <string name="title_activity_create_experiement">CreateExperiementActivity</string>
+    <string name="button_create_experiment">Create New Experiment</string>
 
 </resources>

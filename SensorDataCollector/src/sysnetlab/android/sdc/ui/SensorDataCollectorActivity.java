@@ -2,42 +2,19 @@
 package sysnetlab.android.sdc.ui;
 
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Iterator;
-
 import sysnetlab.android.sdc.R;
-import sysnetlab.android.sdc.datacollector.DataCollectionState;
-import sysnetlab.android.sdc.datacollector.DataSensorEventListener;
-import sysnetlab.android.sdc.datasink.DataSink;
-import sysnetlab.android.sdc.datasink.SimpleFileSink;
-import sysnetlab.android.sdc.sensor.AbstractSensor;
-import sysnetlab.android.sdc.sensor.AndroidSensor;
-import sysnetlab.android.sdc.sensor.SensorDiscoverer;
-import android.content.Context;
-import android.graphics.Color;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
+import sysnetlab.android.sdc.datacollector.Experiment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 
 public class SensorDataCollectorActivity extends FragmentActivity 
-	implements SensorListFragment.OnFragmentClickListener, SensorSetupFragment.OnFragmentClickListener {
+	implements ExperimentListFragment.OnFragmentClickListener {
 	
-	private SensorManager mSensorManager;
-	
-	private SensorListFragment mSensorListFragment;
-	private SensorSetupFragment mSensorSetupFragment;
-	
-	private DataSink mDataSink;
-	private DataCollectionState mCollectionState;
+	private ExperimentListFragment mExperimentListFragment;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,177 +26,34 @@ public class SensorDataCollectorActivity extends FragmentActivity
 				return;
 			}
 
-			mSensorListFragment = new SensorListFragment();
+			mExperimentListFragment = new ExperimentListFragment();
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-			transaction.add(R.id.fragment_container, mSensorListFragment);
+			transaction.add(R.id.fragment_container, mExperimentListFragment);
 			transaction.commit();
 		} 
 		
-		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		mDataSink = new SimpleFileSink();
-		mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
 	}
-
+	
 	public void onStart()
 	{
 		super.onStart();
+	}
+	
+	@Override
+	public void onExperimentClicked_ExperimentListFragment(Experiment experiment) {
+		// TODO Auto-generated method stub
 		
-		final Button btnRunStop = (Button) getSupportFragmentManager()
-				.findFragmentById(R.id.fragment_container)
-				.getView()
-				.findViewById(R.id.btnDataSensorsRun);
-		btnRunStop.setText(getResources().getString(R.string.button_run_text_run));
-		btnRunStop.setTextColor(Color.GREEN);
-	}
-	
-	public void onSensorClicked_SensorListFragment(AndroidSensor sensor) {
-		if (mSensorSetupFragment == null) {
-			mSensorSetupFragment = new SensorSetupFragment();
-		}
-		mSensorSetupFragment.setSensor(sensor);
-		FragmentUtil.switchToFragment(this, mSensorSetupFragment, "sensorsetup");
-	}	
-	
-	@Override
-	public void onBtnRunClicked_SensorListFragment(View v) {
-		if (mCollectionState == DataCollectionState.DATA_COLLECTION_STOPPED) {
-			try {
-				runDataSensor();
-				
-				((Button)v).setText(getResources().getString(R.string.button_run_text_stop));
-				((Button)v).setTextColor(Color.RED);
-				
-				mCollectionState = DataCollectionState.DATA_COLLECTION_IN_PROGRESS;
-			} catch (IOException e) {
-				Log.e("SensorDataCollector", e.toString());
-			}
-			// Toast.makeText(this, "Run Button Pressed", Toast.LENGTH_SHORT).show();	
-		} else if (mCollectionState == DataCollectionState.DATA_COLLECTION_IN_PROGRESS) {
-			try {
-				stopDataSensor();
-			} catch (IOException e) {
-				Log.e("SensorDataCollector", e.toString());
-			}
-			((Button)v).setText(getResources().getString(R.string.button_run_text_run));
-			((Button)v).setTextColor(Color.GREEN);
-			
-			mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
-			// Toast.makeText(this, "Stop Button Pressed", Toast.LENGTH_SHORT).show();	
-		} else {
-			Toast.makeText(this, "Unsupported Button Action", Toast.LENGTH_SHORT).show();					
-		}
-	}
-	
-	@Override
-	public void onBtnClearClicked_SensorListFragment() {
-		Toast.makeText(this, "Clear Button Pressed", Toast.LENGTH_SHORT).show();		
 	}
 
 	@Override
-	public void onBtnConfirmClicked_SensorSetupFragment(View v, AbstractSensor sensor) {
-		Log.i("SensorDataCollector", "SensorSetupFragment: Button Confirm clicked.");
-		
-		EditText et = (EditText)findViewById(R.id.edittext_sampling_rate);
-		
-		switch(sensor.getMajorType()) {
-		case AbstractSensor.ANDROID_SENSOR:
-			AndroidSensor androidSensor = (AndroidSensor)sensor;
-			if (androidSensor.isStreamingSensor()) {
-				androidSensor.setSamplingInterval((int)(1000000./Double.parseDouble(et.getText().toString())));
-			}
-			break;
-		case AbstractSensor.AUDIO_SENSOR:
-			Log.i("SensorDataCollector", "Audio Sensor is a todo.");
-			// TODO: todo ...
-			break;
-		case AbstractSensor.CAMERA_SENSOR:
-			// TODO: todo ...	
-			Log.i("SensorDataCollector", "Camera Sensor is a todo.");			
-			break;
-		case AbstractSensor.WIFI_SENSOR:
-			// TODO: todo ...		
-			Log.i("SensorDataCollector", "WiFi Sensor is a todo.");			
-			break;
-		case AbstractSensor.BLUETOOTH_SENSOR:
-			// TODO: todo ...	
-			Log.i("SensorDataCollector", "Bluetooth Sensor is a todo.");			
-			break;
-		default:
-			// TODO: todo ...	
-			Log.i("SensorDataCollector", "unknow sensor. unexpected.");			
-			break;
-		}
-		
-		FragmentUtil.switchToFragment(this, mSensorListFragment, "sensorlist");
+	public void onCreateExperimentButtonClicked_ExperimentListFragment(Button b) {
+		Intent intent = new Intent(this, CreateExperimentActivity.class);
+        startActivity(intent);
 	}
-
-	@Override
-	public void onBtnCancelClicked_SensorSetupFragment() {
-		Log.i("SensorDataCollector", "Button Cancel clicked.");
-		FragmentUtil.switchToFragment(this, mSensorListFragment, "sensorlist");
-	} 	
 	
-	public SensorListFragment getSensorListFragment()
+	public ExperimentListFragment getExperimentListFragment()
 	{
-		return mSensorListFragment;
+		return mExperimentListFragment;
 	}
 	
-	public SensorSetupFragment getSensorSetupFragment()
-	{
-		return mSensorSetupFragment;
-	}
-	
-	public DataCollectionState getCurrentCollectionState()
-	{
-		return mCollectionState;
-	}
-	
-	private void runDataSensor() throws IOException {	
-		mDataSink.createExperiment();
-		
-		Iterator<AndroidSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
-		int nChecked = 0;
-		while (iter.hasNext()) {
-			AndroidSensor sensor = (AndroidSensor) iter.next();
-			if (sensor.isSelected()) {
-				nChecked ++;
-				/*
-				String path = Environment.getExternalStorageDirectory().getPath();
-				path = path + "/SensorData";
-				File sensorDataDir = new File(path);
-				if (!sensorDataDir.exists()) {
-					sensorDataDir.mkdir();
-				}
-				String filename = path + "/" + sensor.getName().replace(' ', '_') + ".txt";
-				Log.i("SensorDataCollector", "Saved to " + filename);
-				*/
-				PrintStream out = mDataSink.open(sensor.getName().replace(' ', '_') + ".txt");
-				DataSensorEventListener listener = new DataSensorEventListener(out);
-				sensor.setListener(listener);
-				mSensorManager.registerListener(listener, (Sensor)sensor.getSensor(), sensor.getSamplingInterval());
-			}
-		}	
-		
-		CharSequence text = "Started data collection for " + nChecked + " Sensors";
-		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();			
-	}		
-	
-	private void stopDataSensor() throws IOException {		
-		Iterator<AndroidSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
-		int nChecked = 0;
-		while (iter.hasNext()) {
-			AndroidSensor sensor = (AndroidSensor) iter.next();
-			if (sensor.isSelected()) {
-				nChecked ++;
-				DataSensorEventListener listener = sensor.getListener();
-				listener.finish();
-				mSensorManager.unregisterListener(listener);
-			}
-		}
-		
-		mDataSink.close();
-		
-		CharSequence text = "Stopped data collection for " + nChecked + " Sensors";
-		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();		
-	}	
 }
