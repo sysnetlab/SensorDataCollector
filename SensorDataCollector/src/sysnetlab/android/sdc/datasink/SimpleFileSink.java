@@ -92,7 +92,10 @@ public class SimpleFileSink implements DataSink {
 				return new File(current, name).isDirectory();
 			}
 		});
-		
+		if (experimentDirNames == null) 
+		{
+			return listExp;
+		}
 		for (String dirName : experimentDirNames)
 		{
 			Experiment exp = readExperimentConfigurationFile(mParentPath + "/" + dirName);
