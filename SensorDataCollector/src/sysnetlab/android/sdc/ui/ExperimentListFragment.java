@@ -2,8 +2,6 @@
 package sysnetlab.android.sdc.ui;
 
 
-import java.util.ArrayList;
-
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datasink.DataSinkSingleton;

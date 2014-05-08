@@ -4,8 +4,6 @@ package sysnetlab.android.sdc.ui;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
-import sysnetlab.android.sdc.datasink.DataSink;
-import sysnetlab.android.sdc.datasink.SimpleFileSink;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;

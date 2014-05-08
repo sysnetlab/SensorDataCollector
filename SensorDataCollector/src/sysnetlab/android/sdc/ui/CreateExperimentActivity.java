@@ -7,7 +7,6 @@ import java.util.Iterator;
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.datacollector.DataSensorEventListener;
-import sysnetlab.android.sdc.datasink.DataSink;
 import sysnetlab.android.sdc.datasink.DataSinkSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
