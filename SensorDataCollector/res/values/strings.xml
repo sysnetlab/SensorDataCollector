@@ -24,10 +24,6 @@
     <string name="button_sensor_setup_cancel">Cancel</string>
     <string name="title_activity_create_experiement">CreateExperimentActivity</string>
     <string name="button_create_experiment">Create New Experiment</string>
-<<<<<<< HEAD
     <string name="img_plus_green_white">Expand</string>
-=======
     <string name="button_back_text">Back</string>
->>>>>>> 825a9414b0fb9eb02c3fed6385ebe1b25c84ffa3
-
 </resources>
