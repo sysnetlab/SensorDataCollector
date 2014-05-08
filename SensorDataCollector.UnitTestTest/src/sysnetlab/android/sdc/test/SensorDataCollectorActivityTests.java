@@ -3,6 +3,7 @@ package sysnetlab.android.sdc.test;
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.ui.SensorDataCollectorActivity;
 import android.content.Intent;
+import android.widget.Button;
 
 public class SensorDataCollectorActivityTests 
 		extends android.test.ActivityUnitTestCase<SensorDataCollectorActivity> {
@@ -31,4 +32,12 @@ public class SensorDataCollectorActivityTests
 		assertNotNull(sdcActivity.getExperimentListFragment());
 	}
 
+	public void testCreateExperimentButtonClicked()
+	{
+	    Button view = (Button) sdcActivity.findViewById(R.id.buttonCreateExperiment);
+	    assertNotNull("Button not allowed to be null", view);
+	    view.performClick();
+	    Intent triggeredIntent = getStartedActivityIntent();
+	    assertNotNull("Intent was null", triggeredIntent);
+	}
 }
