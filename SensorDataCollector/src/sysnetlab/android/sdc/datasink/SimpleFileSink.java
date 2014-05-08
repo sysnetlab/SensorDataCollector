@@ -1,13 +1,18 @@
 package sysnetlab.android.sdc.datasink;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,7 +26,6 @@ public class SimpleFileSink implements DataSink {
 	LinkedList<PrintStream> mPrintStreamList;
 	
 	public SimpleFileSink() {
-		// TODO Auto-generated method stub
 		Log.i("SensorDataCollector", "entering SimpleFileSink.constructor() ...");
 		String parentPath = Environment.getExternalStorageDirectory().getPath();
 		parentPath = parentPath + "/SensorData";
@@ -29,8 +33,7 @@ public class SimpleFileSink implements DataSink {
 		if (!dataDir.exists()) {
 			dataDir.mkdir();
 		} 
-		mParentPath = parentPath;
-		
+		mParentPath = parentPath;		
 		mPrintStreamList = new LinkedList<PrintStream>();
 	}
 	
@@ -56,12 +59,14 @@ public class SimpleFileSink implements DataSink {
 	}
 
 	@Override
-	public void createExperiment() {
+	public Experiment createExperiment() {
 		String pathPrefix = mParentPath + "/exp"; 
 		DecimalFormat f = new DecimalFormat("00000");
-		int i = 0;
+		String timeCreated = SimpleDateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime()); 
 		String path;
 		File dataDir;
+		int i = 0;
+		
 		do {
 			i = i + 1;
 			path = pathPrefix + f.format(i);
@@ -69,7 +74,12 @@ public class SimpleFileSink implements DataSink {
 		} while (dataDir.exists());
 		dataDir.mkdir();
 		mPath = path;
+		
+		Experiment exp = new Experiment("exp" + f.format(i), timeCreated);
+		writeExperimentConfigurationFile(exp, path);
+		
 		Log.i("SensorDataCollector", "path " + path + " does not exist and is created.");
+		return exp;
 	}
 
 	@Override
@@ -82,12 +92,51 @@ public class SimpleFileSink implements DataSink {
 				return new File(current, name).isDirectory();
 			}
 		});
-		
+		if (experimentDirNames == null) 
+		{
+			return listExp;
+		}
 		for (String dirName : experimentDirNames)
 		{
-			listExp.add(new Experiment(dirName,"unknown"));
+			Experiment exp = readExperimentConfigurationFile(mParentPath + "/" + dirName);
+			if(exp != null)
+			{
+				listExp.add(exp);
+			}
+			else
+			{
+				listExp.add(new Experiment(dirName, "unknown"));
+			}
 		}
 		
 		return listExp;
 	}
+	
+	private void writeExperimentConfigurationFile(Experiment exp, String experimentDir)
+	{
+		try {
+			PrintStream out = new PrintStream(new FileOutputStream(experimentDir + "/.experiment"));
+			out.println(exp.getName());
+			out.println(exp.getDateCreated());
+			out.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private Experiment readExperimentConfigurationFile(String experimentDir)
+	{
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(experimentDir + "/.experiment"));
+			String name = reader.readLine();
+			String dateCreated = reader.readLine();
+			reader.close();
+			return new Experiment(name, dateCreated);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
 }

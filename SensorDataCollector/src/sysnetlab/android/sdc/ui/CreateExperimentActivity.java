@@ -7,12 +7,12 @@ import java.util.Iterator;
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.datacollector.DataSensorEventListener;
-import sysnetlab.android.sdc.datasink.DataSink;
 import sysnetlab.android.sdc.datasink.DataSinkSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -153,6 +153,12 @@ public class CreateExperimentActivity extends FragmentActivity
 		Log.i("SensorDataCollector", "Button Cancel clicked.");
 		FragmentUtil.switchToFragment(this, mSensorListFragment, "sensorlist");
 	} 	
+	
+	@Override
+	public void onBtnBackClicked_SensorListFragment() {
+		Intent intent = new Intent(this, SensorDataCollectorActivity.class);
+        startActivity(intent);
+	}
 	
 	public SensorListFragment getSensorListFragment()
 	{

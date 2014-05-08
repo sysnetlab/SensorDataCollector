@@ -44,7 +44,7 @@ public class ExperimentListAdaptor extends ArrayAdapter<Experiment> {
 		}
 		ViewHolder holder = (ViewHolder) view.getTag();
 		holder.text.setText(mList.get(position).getName());
-		holder.text.setText(mList.get(position).getDateCreated());
+		holder.dateCreated.setText(mList.get(position).getDateCreated());
 		return view;
 	}
 }
