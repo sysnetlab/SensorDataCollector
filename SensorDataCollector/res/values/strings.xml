@@ -9,7 +9,14 @@
     <string name="textview_sampling_rate">Sampling Rate</string>
     <string name="const_number_10">10</string>
     <string name="button_run_text_run">Run</string>
+    <string name="button_back_text_back">Back</string>
     <string name="textview_sensing_type">Sensing Type</string>
+    <string name="textview_experiment_setup_new">New Experiment Setup</string>
+    <string name="textview_experiment_setup_view">View Experiment Setup</string> 
+    <string name="textview_experiment_name">Name</string>
+	<string name="textview_experiment_tags">Tags</string>  
+	<string name="textview_experiment_notes">Notes</string>
+	<string name="textview_experiment_sensors">Sensors</string>
     <string name="text_sensing_type_streaming">Streaming</string>
     <string name="text_sensing_rate_na">N/A</string>
     <string name="text_sensing_type_onchange">On Change</string>
@@ -17,5 +24,6 @@
     <string name="button_sensor_setup_cancel">Cancel</string>
     <string name="title_activity_create_experiement">CreateExperimentActivity</string>
     <string name="button_create_experiment">Create New Experiment</string>
+    <string name="img_plus_green_white">Expand</string>
 
 </resources>
