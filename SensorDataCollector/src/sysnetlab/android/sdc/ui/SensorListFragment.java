@@ -26,6 +26,7 @@ public class SensorListFragment extends ListFragment {
         public void onSensorClicked_SensorListFragment(AndroidSensor sensor);
     	public void onBtnRunClicked_SensorListFragment(View v);
     	public void onBtnClearClicked_SensorListFragment();
+    	public void onBtnBackClicked_SensorListFragment();
     }
 
     @Override
@@ -86,6 +87,13 @@ public class SensorListFragment extends ListFragment {
     	.setOnClickListener(new Button.OnClickListener() {
     		public void onClick(View v) {
     			mCallback.onBtnClearClicked_SensorListFragment();
+    		}
+    	});
+    	
+    	((Button)mFooterView.findViewById(R.id.btnBack))
+    	.setOnClickListener(new Button.OnClickListener() {
+    		public void onClick(View v) {
+    			mCallback.onBtnBackClicked_SensorListFragment();
     		}
     	});
     }   

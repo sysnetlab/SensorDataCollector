@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="41dp"
+        android:layout_marginLeft="42dp"
         android:text="@string/button_run_text_run" />
 
     <Button
@@ -18,9 +18,18 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/button_clear_text" />
+
+    <Button
+        android:id="@+id/btnBack"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="64dp"
-        android:text="@string/button_clear_text" />
+        android:layout_marginRight="35dp"
+        android:text="@string/button_back_text" />
 
 </RelativeLayout>
