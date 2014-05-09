@@ -33,36 +33,12 @@
         android:ems="10"
         android:inputType="text|textAutoCorrect|textAutoComplete" />
 
-    <RelativeLayout 
+    <RelativeLayout
         android:id="@+id/layout_tags"
-    	android:layout_width="match_parent"
-    	android:layout_height="wrap_content" 
-    	android:layout_alignLeft="@+id/tv_experiment_name"
-        android:layout_below="@+id/et_experiment_name">
-        
-	    <TextView
-	        android:id="@+id/tv_tags"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="36dp"
-	        android:text="@string/textview_experiment_tags"
-	        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-	    <RelativeLayout
-	        android:id="@+id/layout_tags_fragment"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentTop="true"
-	        android:layout_marginLeft="12dp"
-	        android:layout_marginTop="19dp"
-	        android:layout_toRightOf="@+id/tv_tags"
-	        android:paddingBottom="0dp"
-	        android:paddingLeft="0dp"
-	        android:paddingRight="0dp"
-	        android:paddingTop="0dp"
-	        android:textAlignment="center">
-	     </RelativeLayout>
-
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_experiment_name"
+        android:layout_below="@+id/et_experiment_name" >
     </RelativeLayout>
     
     <RelativeLayout 

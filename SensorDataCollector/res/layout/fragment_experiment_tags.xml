@@ -1,25 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_sensor_setup"
+    android:id="@+id/fragment_edit_tags"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="wrap_content" >
 
-    <EditText
+ 	<TextView
+		android:id="@+id/tv_tags"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="12dp"
+		android:text="@string/textview_experiment_tags"
+		android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    
+ 	<EditText
         android:id="@+id/edittext_new_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/tv_tags"
         android:ems="10"
+        android:layout_alignParentRight="true"
         android:inputType="textAutoComplete"
         android:singleLine="true" />
-
+ 	
     <LinearLayout
         android:id="@+id/layout_label_list"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/edittext_new_label"
-        android:layout_below="@+id/edittext_new_label"
+        android:layout_marginTop="12dp"
+        android:layout_alignLeft="@+id/tv_tags"
+        android:layout_below="@+id/tv_tags"
         android:orientation="horizontal" >
     </LinearLayout>
 

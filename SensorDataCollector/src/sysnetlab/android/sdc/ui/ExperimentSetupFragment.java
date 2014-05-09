@@ -14,6 +14,7 @@ import android.widget.ImageView;
 public class ExperimentSetupFragment extends Fragment {
 	private View mView;
 	private SensorListFragment mSensorListFragment;
+	private ExperimentTagsFragment mExperimentTagsFragment;
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -64,11 +65,21 @@ public class ExperimentSetupFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_experiment_setup_layout, container, false);
         
 		// use nested fragment
+		FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+
+
+		if (mExperimentTagsFragment == null) {
+			mExperimentTagsFragment = new ExperimentTagsFragment();;
+			transaction.add(R.id.layout_tags, mExperimentTagsFragment);
+		}
+		
 		if (mSensorListFragment == null) {
 			mSensorListFragment = new SensorListFragment();
-			FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-			transaction.add(R.id.layout_sensor_list, mSensorListFragment).commit();   
+			transaction.add(R.id.layout_sensor_list, mSensorListFragment);   	
 		}
+		
+		transaction.commit();
+
 		
         return mView;		
 	}

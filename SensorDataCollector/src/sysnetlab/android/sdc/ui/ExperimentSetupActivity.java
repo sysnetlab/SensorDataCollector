@@ -23,7 +23,6 @@ public class ExperimentSetupActivity extends FragmentActivity
 		ExperimentTagsFragment.OnFragmentEventListener {
 	private ExperimentSetupFragment mExperimentSetupFragment;
 	private SensorListFragment mSensorListFragment;
-	private ExperimentTagsFragment mExperimentTagsFragment;
 	private Experiment mExperiment;
 
 	@Override
@@ -42,8 +41,6 @@ public class ExperimentSetupActivity extends FragmentActivity
 			mExperimentSetupFragment = new ExperimentSetupFragment();
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			transaction.add(R.id.fragment_container, mExperimentSetupFragment);
-			mExperimentTagsFragment = new ExperimentTagsFragment();
-			transaction.add(R.id.layout_tags_fragment, mExperimentTagsFragment);
 			transaction.commit();
 		} 		
 	}
