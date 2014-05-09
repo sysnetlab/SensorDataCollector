@@ -4,6 +4,7 @@ import sysnetlab.android.sdc.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 
 public class ExperimentSetupFragment extends Fragment {
 	private View mView;
+	private SensorListFragment mSensorListFragment;
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -60,6 +62,14 @@ public class ExperimentSetupFragment extends Fragment {
 		super.onCreateView(inflater, container, savedInstanceState);
 		
         mView = inflater.inflate(R.layout.fragment_experiment_setup_layout, container, false);
+        
+		// use nested fragment
+		if (mSensorListFragment == null) {
+			mSensorListFragment = new SensorListFragment();
+			FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+			transaction.add(R.id.layout_sensor_list, mSensorListFragment).commit();   
+		}
+		
         return mView;		
 	}
 

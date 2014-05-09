@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+	    <TextView
+	        android:id="@+id/tv_sensors_on_header"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="36dp"
+	       	android:layout_marginLeft="12dp"
+	        android:text="@string/textview_experiment_sensors"
+	        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+	    <ImageView
+	        android:id="@+id/imv_sensors_plusminus_on_header"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentTop="true"
+	        android:layout_marginLeft="24dp"
+	        android:layout_marginTop="14dp"
+	        android:layout_toRightOf="@+id/tv_sensors_on_header"
+	        android:contentDescription="@string/img_plus_green_white"
+	        android:paddingBottom="0dp"
+	        android:paddingLeft="0dp"
+	        android:paddingRight="0dp"
+	        android:paddingTop="0dp"
+	        android:src="@drawable/minus_green_white"
+	        android:textAlignment="center" />
+    
+</RelativeLayout>

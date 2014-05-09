@@ -1,6 +1,8 @@
 package sysnetlab.android.sdc.datacollector;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.text.DateFormat;
 
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import android.os.Parcel;
@@ -17,7 +19,7 @@ public class Experiment implements Parcelable {
 		return mTags;
 	}
 
-	public void setmTags(ArrayList<Tag> mTags) {
+	public void setTags(ArrayList<Tag> mTags) {
 		this.mTags = mTags;
 	}
 
@@ -25,7 +27,7 @@ public class Experiment implements Parcelable {
 		return mNotes;
 	}
 
-	public void setmNotes(ArrayList<Note> mNotes) {
+	public void setNotes(ArrayList<Note> mNotes) {
 		this.mNotes = mNotes;
 	}
 
@@ -60,6 +62,13 @@ public class Experiment implements Parcelable {
 		mDateCreated = inParcel.readString();
 	}
 	
+	public Experiment() 
+	{
+		DateFormat df = DateFormat.getDateTimeInstance();
+		mDateCreated = df.format(Calendar.getInstance().getTime());
+		mName = "Unamed Experiment (" + mDateCreated + ")";	
+	}
+	
 	public Experiment(String n, String dC)
 	{
 		mName = n;
@@ -69,6 +78,10 @@ public class Experiment implements Parcelable {
 	public String getName()
 	{
 		return mName;
+	}
+	
+	public void setName(String name) {
+		mName = name;
 	}
 	
 	public String getDateCreated()

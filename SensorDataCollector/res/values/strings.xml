@@ -21,6 +21,7 @@
     <string name="text_sensing_rate_na">N/A</string>
     <string name="text_sensing_type_onchange">On Change</string>
     <string name="button_sensor_setup_confirm">Confirm</string>
+    <string name="button_sensor_selection_confirm">Confirm</string>
     <string name="button_sensor_setup_cancel">Cancel</string>
     <string name="title_activity_create_experiement">CreateExperimentActivity</string>
     <string name="button_create_experiment">Create New Experiment</string>
