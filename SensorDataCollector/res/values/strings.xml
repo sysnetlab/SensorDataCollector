@@ -18,5 +18,6 @@
     <string name="title_activity_create_experiement">CreateExperimentActivity</string>
     <string name="button_create_experiment">Create New Experiment</string>
     <string name="button_back_text">Back</string>
+    <string name="text_experiment_labels">Experiment Labels:</string>
 
 </resources>
