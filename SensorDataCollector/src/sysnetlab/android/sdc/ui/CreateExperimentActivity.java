@@ -23,15 +23,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class CreateExperimentActivity extends FragmentActivity 
-	implements SensorListFragment.OnFragmentClickListener, SensorSetupFragment.OnFragmentClickListener {
+	implements SensorListFragment.OnFragmentClickListener, SensorSetupFragment.OnFragmentClickListener,
+	ExperimentTagsFragment.OnFragmentEventListener {
 	
 	private SensorManager mSensorManager;
 	
 	private SensorListFragment mSensorListFragment;
 	private SensorSetupFragment mSensorSetupFragment;
+	private ExperimentTagsFragment mExperimentLabelFragment;
 	
 	private DataCollectionState mCollectionState;
 
@@ -45,10 +48,12 @@ public class CreateExperimentActivity extends FragmentActivity
 				return;
 			}
 
-			mSensorListFragment = new SensorListFragment();
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-			transaction.add(R.id.fragment_container, mSensorListFragment);
-			transaction.commit();
+			mSensorListFragment = new SensorListFragment();
+			transaction.add(R.id.sensor_list, mSensorListFragment);
+			mExperimentLabelFragment = new ExperimentTagsFragment();
+			transaction.add(R.id.experiment_labels, mExperimentLabelFragment);
+			transaction.commit();	
 		} 
 		
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -59,10 +64,7 @@ public class CreateExperimentActivity extends FragmentActivity
 	{
 		super.onStart();
 		
-		final Button btnRunStop = (Button) getSupportFragmentManager()
-				.findFragmentById(R.id.fragment_container)
-				.getView()
-				.findViewById(R.id.btnDataSensorsRun);
+		final Button btnRunStop = (Button) findViewById(R.id.btnDataSensorsRun);
 		btnRunStop.setText(getResources().getString(R.string.button_run_text_run));
 		btnRunStop.setTextColor(Color.GREEN);
 	}
@@ -213,5 +215,21 @@ public class CreateExperimentActivity extends FragmentActivity
 		
 		CharSequence text = "Stopped data collection for " + nChecked + " Sensors";
 		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();		
+	}
+
+	@Override
+	public void onTxtFldEnterPressed_ExperimentTagsFragment() {
+		Log.i("CreateExperiment", "New label being added");
+		EditText et = (EditText)findViewById(R.id.edittext_new_label);
+		LinearLayout ll = (LinearLayout) findViewById(R.id.layout_label_list);
+		Button btnLabel = new Button(this);
+		btnLabel.setText(et.getText());
+		ll.addView(btnLabel);
+	}
+
+	@Override
+	public void onBtnLabelClicked_ExperimentTagsFragment() {
+		// TODO Auto-generated method stub
+		
 	}	
 }
