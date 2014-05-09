@@ -41,6 +41,11 @@
             android:name="sysnetlab.android.sdc.ui.CreateExperimentActivity"
             android:label="@string/title_activity_create_experiement" >
         </activity>
+        
+        <activity
+            android:name="sysnetlab.android.sdc.ui.ExperimentSetupActivity"
+            android:label="@string/title_activity_create_experiement" >
+        </activity>        
     </application>
 
 </manifest>

@@ -28,13 +28,13 @@ import android.widget.Toast;
 
 public class CreateExperimentActivity extends FragmentActivity 
 	implements SensorListFragment.OnFragmentClickListener, SensorSetupFragment.OnFragmentClickListener,
-	ExperimentLabelFragment.OnFragmentEventListener {
+	ExperimentTagsFragment.OnFragmentEventListener {
 	
 	private SensorManager mSensorManager;
 	
 	private SensorListFragment mSensorListFragment;
 	private SensorSetupFragment mSensorSetupFragment;
-	private ExperimentLabelFragment mExperimentLabelFragment;
+	private ExperimentTagsFragment mExperimentLabelFragment;
 	
 	private DataCollectionState mCollectionState;
 
@@ -51,7 +51,7 @@ public class CreateExperimentActivity extends FragmentActivity
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			mSensorListFragment = new SensorListFragment();
 			transaction.add(R.id.sensor_list, mSensorListFragment);
-			mExperimentLabelFragment = new ExperimentLabelFragment();
+			mExperimentLabelFragment = new ExperimentTagsFragment();
 			transaction.add(R.id.experiment_labels, mExperimentLabelFragment);
 			transaction.commit();	
 		} 
@@ -158,7 +158,7 @@ public class CreateExperimentActivity extends FragmentActivity
 	
 	@Override
 	public void onBtnBackClicked_SensorListFragment() {
-		Intent intent = new Intent(this, SensorDataCollectorActivity.class);
+		Intent intent = new Intent(this, ExperimentSetupActivity.class);
         startActivity(intent);
 	}
 	
@@ -218,7 +218,7 @@ public class CreateExperimentActivity extends FragmentActivity
 	}
 
 	@Override
-	public void onTxtFldEnterPressed_ExperimentLabelFragment() {
+	public void onTxtFldEnterPressed_ExperimentTagsFragment() {
 		Log.i("CreateExperiment", "New label being added");
 		EditText et = (EditText)findViewById(R.id.edittext_new_label);
 		LinearLayout ll = (LinearLayout) findViewById(R.id.layout_label_list);
@@ -228,7 +228,7 @@ public class CreateExperimentActivity extends FragmentActivity
 	}
 
 	@Override
-	public void onBtnLabelClicked_ExperimentLabelFragment() {
+	public void onBtnLabelClicked_ExperimentTagsFragment() {
 		// TODO Auto-generated method stub
 		
 	}	

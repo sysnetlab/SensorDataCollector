@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/edittext_new_label"
         android:layout_alignParentTop="true"
-        android:text="@string/text_experiment_labels"
+        android:text="@string/text_experiment_tags"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <LinearLayout

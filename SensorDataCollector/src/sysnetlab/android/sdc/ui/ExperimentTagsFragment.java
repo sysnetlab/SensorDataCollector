@@ -17,14 +17,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.app.Activity;
 
-public class ExperimentLabelFragment extends Fragment {
+public class ExperimentTagsFragment extends Fragment {
 	private OnFragmentEventListener mCallback;
     private View mView;
-    private List<String> mExperimentLabels;
+    private List<String> mExperimenTags;
 
     public interface OnFragmentEventListener {
-    	public void onTxtFldEnterPressed_ExperimentLabelFragment();
-    	public void onBtnLabelClicked_ExperimentLabelFragment();
+    	public void onTxtFldEnterPressed_ExperimentTagsFragment();
+    	public void onBtnLabelClicked_ExperimentTagsFragment();
     }    
     
     @Override 
@@ -32,9 +32,9 @@ public class ExperimentLabelFragment extends Fragment {
     	super.onCreate(savedInstanceState);
     	
     	// Load the assigned labels here.
-    	mExperimentLabels = new ArrayList<String>();
-    	mExperimentLabels.add("test1");
-    	mExperimentLabels.add("test2");
+    	mExperimenTags = new ArrayList<String>();
+    	mExperimenTags.add("test1");
+    	mExperimenTags.add("test2");
     }
     
     @Override
@@ -43,7 +43,7 @@ public class ExperimentLabelFragment extends Fragment {
 
     	//TODO: handle configuration changes 
     	
-        mView = inflater.inflate(R.layout.fragment_experiment_label, container, false);
+        mView = inflater.inflate(R.layout.fragment_experiment_tags, container, false);
         return mView;
     }
 
@@ -74,7 +74,7 @@ public class ExperimentLabelFragment extends Fragment {
     	super.onActivityCreated(savedInstanceState);
     	
     	LinearLayout labelList = (LinearLayout) mView.findViewById(R.id.layout_label_list);
-    	for (String label : mExperimentLabels) {
+    	for (String label : mExperimenTags) {
     		Button btnLabel = new Button(mView.getContext());
     		btnLabel.setText(label);
     		labelList.addView(btnLabel);
@@ -85,8 +85,8 @@ public class ExperimentLabelFragment extends Fragment {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId,
 					KeyEvent event) {
-				Log.i("ExperimentLabelFragment", "Enter Pressed");
-				mCallback.onTxtFldEnterPressed_ExperimentLabelFragment();
+				Log.i("ExperimentTagsFragment", "Enter Pressed");
+				mCallback.onTxtFldEnterPressed_ExperimentTagsFragment();
 				return true;
 			}
     	});
