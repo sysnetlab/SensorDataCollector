@@ -27,14 +27,12 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class CreateExperimentActivity extends FragmentActivity 
-	implements SensorListFragment.OnFragmentClickListener, SensorSetupFragment.OnFragmentClickListener,
-	ExperimentTagsFragment.OnFragmentEventListener {
+	implements SensorListFragment.OnFragmentClickListener, SensorSetupFragment.OnFragmentClickListener {
 	
 	private SensorManager mSensorManager;
 	
 	private SensorListFragment mSensorListFragment;
 	private SensorSetupFragment mSensorSetupFragment;
-	private ExperimentTagsFragment mExperimentLabelFragment;
 	
 	private DataCollectionState mCollectionState;
 
@@ -51,8 +49,6 @@ public class CreateExperimentActivity extends FragmentActivity
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			mSensorListFragment = new SensorListFragment();
 			transaction.add(R.id.sensor_list, mSensorListFragment);
-			mExperimentLabelFragment = new ExperimentTagsFragment();
-			transaction.add(R.id.experiment_labels, mExperimentLabelFragment);
 			transaction.commit();	
 		} 
 		
@@ -216,20 +212,5 @@ public class CreateExperimentActivity extends FragmentActivity
 		CharSequence text = "Stopped data collection for " + nChecked + " Sensors";
 		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();		
 	}
-
-	@Override
-	public void onTxtFldEnterPressed_ExperimentTagsFragment() {
-		Log.i("CreateExperiment", "New label being added");
-		EditText et = (EditText)findViewById(R.id.edittext_new_label);
-		LinearLayout ll = (LinearLayout) findViewById(R.id.layout_label_list);
-		Button btnLabel = new Button(this);
-		btnLabel.setText(et.getText());
-		ll.addView(btnLabel);
-	}
-
-	@Override
-	public void onBtnLabelClicked_ExperimentTagsFragment() {
-		// TODO Auto-generated method stub
-		
-	}	
+	
 }

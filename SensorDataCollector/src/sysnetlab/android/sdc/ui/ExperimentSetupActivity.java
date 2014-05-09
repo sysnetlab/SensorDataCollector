@@ -9,16 +9,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 public class ExperimentSetupActivity extends FragmentActivity 
 	implements 
 		ExperimentSetupFragment.OnFragmentClickListener,
-		SensorListFragment.OnFragmentClickListener {
+		SensorListFragment.OnFragmentClickListener,
+		ExperimentTagsFragment.OnFragmentEventListener {
 	private ExperimentSetupFragment mExperimentSetupFragment;
 	private SensorListFragment mSensorListFragment;
+	private ExperimentTagsFragment mExperimentTagsFragment;
 	private Experiment mExperiment;
 
 	@Override
@@ -37,6 +42,8 @@ public class ExperimentSetupActivity extends FragmentActivity
 			mExperimentSetupFragment = new ExperimentSetupFragment();
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			transaction.add(R.id.fragment_container, mExperimentSetupFragment);
+			mExperimentTagsFragment = new ExperimentTagsFragment();
+			transaction.add(R.id.layout_tags_fragment, mExperimentTagsFragment);
 			transaction.commit();
 		} 		
 	}
@@ -104,6 +111,22 @@ public class ExperimentSetupActivity extends FragmentActivity
 
 	@Override
 	public void onBtnBackClicked_SensorListFragment() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void onTxtFldEnterPressed_ExperimentTagsFragment() {
+		Log.i("CreateExperiment", "New label being added");
+		EditText et = (EditText)findViewById(R.id.edittext_new_label);
+		LinearLayout ll = (LinearLayout) findViewById(R.id.layout_label_list);
+		Button btnLabel = new Button(this);
+		btnLabel.setText(et.getText());
+		ll.addView(btnLabel);
+	}
+
+	@Override
+	public void onBtnLabelClicked_ExperimentTagsFragment() {
 		// TODO Auto-generated method stub
 		
 	}
