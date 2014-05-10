@@ -82,6 +82,4 @@ public class ExperimentRunTaggingFragment extends Fragment {
 	    
 		return mView;
 	}
-	
-	
 }

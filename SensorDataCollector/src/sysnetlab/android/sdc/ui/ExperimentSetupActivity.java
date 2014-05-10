@@ -149,4 +149,18 @@ public class ExperimentSetupActivity extends FragmentActivity
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void runExperiment(View v) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void stopExperiment(View v) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 }

@@ -46,7 +46,7 @@ public class SensorDataCollectorActivity extends FragmentActivity
 
 	@Override
 	public void onCreateExperimentButtonClicked_ExperimentListFragment(Button b) {
-		Intent intent = new Intent(this, ExperimentSetupActivity.class);
+		Intent intent = new Intent(this, CreateExperimentActivity.class);
         startActivity(intent);
 	}
 	

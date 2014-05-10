@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ public class ExperimentRunFragment extends Fragment {
 	
 	public interface OnFragmentClickListener {
         public void onBtnDoneClicked_ExperimentRunFragment();
+        public void runExperiment(View v);
+        public void stopExperiment(View v);
 	}
 
 
@@ -46,6 +49,34 @@ public class ExperimentRunFragment extends Fragment {
         }		
 	}
 
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		
+		if (mCallback == null) {
+			Log.e("SensorDataCollector", "ExperimentRunFragment.mCallback should not be null");
+		}
+		
+		if (this.mView == null) {
+			Log.e("SensorDataCollector", "ExperimentRunFragment.mCallback should not be null");
+		}
+		mCallback.stopExperiment(mView);				
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		if (mCallback == null) {
+			Log.e("SensorDataCollector", "ExperimentRunFragment.mCallback should not be null");
+		}
+		
+		if (this.mView == null) {
+			Log.e("SensorDataCollector", "ExperimentRunFragment.mCallback should not be null");
+		}
+		mCallback.runExperiment(mView);		
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
