@@ -13,8 +13,8 @@ import android.widget.ImageView;
 
 public class ExperimentSetupFragment extends Fragment {
 	private View mView;
-	private SensorListFragment mSensorListFragment;
 	private ExperimentTagsFragment mExperimentTagsFragment;
+	private ExperimentSensorSelectionFragment mExperimentSensorSelectionFragment;
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -73,13 +73,16 @@ public class ExperimentSetupFragment extends Fragment {
 			transaction.add(R.id.layout_tags, mExperimentTagsFragment);
 		}
 		
-		if (mSensorListFragment == null) {
-			mSensorListFragment = new SensorListFragment();
-			transaction.add(R.id.layout_sensor_list, mSensorListFragment);   	
+		if (mExperimentSensorSelectionFragment == null) {
+			mExperimentSensorSelectionFragment = new ExperimentSensorSelectionFragment();
+			/*
+			Button button = new Button(getActivity());
+			button.setText("Clear");
+			mExperimentSensorSelectionFragment.addViewToHeader(button);
+			*/
+			transaction.add(R.id.layout_sensor_list,  mExperimentSensorSelectionFragment);
 		}
-		
 		transaction.commit();
-
 		
         return mView;		
 	}

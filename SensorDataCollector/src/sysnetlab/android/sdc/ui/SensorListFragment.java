@@ -21,6 +21,7 @@ public class SensorListFragment extends ListFragment {
     private View mHeaderView;
     private View mFooterView;
     private ArrayAdapter<AndroidSensor> mSensorList;
+    boolean mStandalone; 
 
     public interface OnFragmentClickListener {
         public void onSensorClicked_SensorListFragment(AndroidSensor sensor);
