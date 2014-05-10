@@ -62,7 +62,7 @@ public class ExperimentSetupFragment extends Fragment {
 		// TODO Auto-generated method stub
 		super.onCreateView(inflater, container, savedInstanceState);
 		
-        mView = inflater.inflate(R.layout.fragment_experiment_setup_layout, container, false);
+        mView = inflater.inflate(R.layout.fragment_experiment_setup, container, false);
         
 		// use nested fragment
 		FragmentTransaction transaction = getChildFragmentManager().beginTransaction();

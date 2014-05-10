@@ -19,10 +19,13 @@ import android.widget.LinearLayout;
 public class ExperimentSetupActivity extends FragmentActivity 
 	implements 
 		ExperimentSetupFragment.OnFragmentClickListener,
+		ExperimentTagsFragment.OnFragmentEventListener,
 		SensorListFragment.OnFragmentClickListener,
-		ExperimentTagsFragment.OnFragmentEventListener {
+		ExperimentRunFragment.OnFragmentClickListener,
+		ExperimentRunTaggingFragment.OnFragmentClickListener {
 	private ExperimentSetupFragment mExperimentSetupFragment;
 	private SensorListFragment mSensorListFragment;
+	private ExperimentRunFragment mExperimentRunningFragment;
 	private Experiment mExperiment;
 
 	@Override
@@ -77,8 +80,14 @@ public class ExperimentSetupActivity extends FragmentActivity
 		mExperiment.setName(name);
 		AppDataSingleton.getInstance().setExperiment(mExperiment);
 		
+		/*
 		Intent intent = new Intent(this, CreateExperimentActivity.class);
-        startActivity(intent);			
+        startActivity(intent);	
+        */	
+		// TODO lazy work for now, more work ...
+		if (mExperimentRunningFragment == null)
+			mExperimentRunningFragment = new ExperimentRunFragment();
+		FragmentUtil.switchToFragment(this, mExperimentRunningFragment, "sensorlist");			
 	}
 
 	@Override
@@ -86,6 +95,23 @@ public class ExperimentSetupActivity extends FragmentActivity
 		// TODO Auto-generated method stub
 		Intent intent = new Intent(this, SensorDataCollectorActivity.class);
         startActivity(intent);	
+	}
+
+	
+	@Override
+	public void onTxtFldEnterPressed_ExperimentTagsFragment() {
+		Log.i("CreateExperiment", "New label being added");
+		EditText et = (EditText)findViewById(R.id.edittext_new_label);
+		LinearLayout ll = (LinearLayout) findViewById(R.id.layout_label_list);
+		Button btnLabel = new Button(this);
+		btnLabel.setText(et.getText());
+		ll.addView(btnLabel);
+	}
+
+	@Override
+	public void onBtnLabelClicked_ExperimentTagsFragment() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -111,19 +137,15 @@ public class ExperimentSetupActivity extends FragmentActivity
 		// TODO Auto-generated method stub
 		
 	}
-	
+
 	@Override
-	public void onTxtFldEnterPressed_ExperimentTagsFragment() {
-		Log.i("CreateExperiment", "New label being added");
-		EditText et = (EditText)findViewById(R.id.edittext_new_label);
-		LinearLayout ll = (LinearLayout) findViewById(R.id.layout_label_list);
-		Button btnLabel = new Button(this);
-		btnLabel.setText(et.getText());
-		ll.addView(btnLabel);
+	public void onBtnDoneClicked_ExperimentRunFragment() {
+		Intent intent = new Intent(this, SensorDataCollectorActivity.class);
+        startActivity(intent);	
 	}
 
 	@Override
-	public void onBtnLabelClicked_ExperimentTagsFragment() {
+	public void onTagClicked_ExperimentRunTaggingFragment(int position) {
 		// TODO Auto-generated method stub
 		
 	}

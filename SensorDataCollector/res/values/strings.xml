@@ -28,4 +28,6 @@
     <string name="img_plus_green_white">Expand</string>
     <string name="button_back_text">Back</string>
     <string name="text_experiment_tags">Experiment Tags</string>
+    <string name="text_experiment_running">Running Experiment</string>
+    <string name="text_experiment_done">Done</string>
 </resources>

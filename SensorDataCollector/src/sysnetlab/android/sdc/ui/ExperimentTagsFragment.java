@@ -43,7 +43,7 @@ public class ExperimentTagsFragment extends Fragment {
 
     	//TODO: handle configuration changes 
     	
-        mView = inflater.inflate(R.layout.fragment_experiment_tags, container, false);
+        mView = inflater.inflate(R.layout.fragment_experiment_tag_editing, container, false);
         return mView;
     }
 
@@ -76,6 +76,7 @@ public class ExperimentTagsFragment extends Fragment {
     	LinearLayout labelList = (LinearLayout) mView.findViewById(R.id.layout_label_list);
     	for (String label : mExperimenTags) {
     		Button btnLabel = new Button(mView.getContext());
+    		btnLabel.setMinimumHeight(0);
     		btnLabel.setText(label);
     		labelList.addView(btnLabel);
     	}
