@@ -146,8 +146,10 @@ public class CreateExperimentActivity extends FragmentActivity
 	
 	@Override
 	public void onBtnBackClicked_SensorListFragment() {
-		Intent intent = new Intent(this, ExperimentSetupActivity.class);
-        startActivity(intent);
+		// TODO lazy work for now, more work ...
+		if (mExperimentSetupFragment == null)
+			mExperimentSetupFragment = new ExperimentSetupFragment();
+		FragmentUtil.switchToFragment(this, mExperimentSetupFragment, "experimentsetup");
 	}
 	
 	public SensorListFragment getSensorListFragment()
