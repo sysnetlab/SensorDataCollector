@@ -31,7 +31,7 @@
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/tv_experiment_name"
         android:ems="10"
-        android:inputType="text|textAutoCorrect|textAutoComplete" />
+        android:inputType="text|textAutoCorrect|textAutoComplete"/>
 
     <RelativeLayout
         android:id="@+id/layout_tags"

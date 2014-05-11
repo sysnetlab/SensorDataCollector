@@ -1,5 +1,7 @@
 package sysnetlab.android.sdc.ui;
 
+import java.lang.reflect.Field;
+
 import sysnetlab.android.sdc.R;
 import android.app.Activity;
 import android.os.Bundle;
@@ -14,15 +16,19 @@ import android.widget.Button;
 public class ExperimentRunFragment extends Fragment {
 	private View mView;
 	private OnFragmentClickListener mCallback;   
+	private ExperimentHandler mHandler;
+	
 	private ExperimentRunTaggingFragment mExperimenRunTaggingFragment;
 
 	
 	public interface OnFragmentClickListener {
         public void onBtnDoneClicked_ExperimentRunFragment();
-        public void runExperiment(View v);
-        public void stopExperiment(View v);
 	}
-
+	
+	public interface ExperimentHandler {
+        public void runExperiment_ExperimentRunFragment(View v);
+        public void stopExperiment_ExperimentRunFragment(View v);
+	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -46,7 +52,14 @@ public class ExperimentRunFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement ExperimentRunFragment.OnFragmentClickedListener");
-        }		
+        }	
+        
+        try {
+            mHandler = (ExperimentHandler)activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement ExperimentRunFragment.ExperimentHandler");
+        }        
 	}
 
 
@@ -61,7 +74,7 @@ public class ExperimentRunFragment extends Fragment {
 		if (this.mView == null) {
 			Log.e("SensorDataCollector", "ExperimentRunFragment.mCallback should not be null");
 		}
-		mCallback.stopExperiment(mView);				
+		mHandler.stopExperiment_ExperimentRunFragment(mView);				
 	}
 
 	@Override
@@ -75,26 +88,49 @@ public class ExperimentRunFragment extends Fragment {
 		if (this.mView == null) {
 			Log.e("SensorDataCollector", "ExperimentRunFragment.mCallback should not be null");
 		}
-		mCallback.runExperiment(mView);		
+		mHandler.runExperiment_ExperimentRunFragment(mView);		
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mView = super.onCreateView(inflater, container, savedInstanceState);
+		super.onCreateView(inflater, container, savedInstanceState);
 		
-        mView = inflater.inflate(R.layout.fragment_experiment_run, container, false);
-        
+        mView = inflater.inflate(R.layout.fragment_experiment_run, container, false);      
         
 		FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 		if (mExperimenRunTaggingFragment == null) {
 			mExperimenRunTaggingFragment = new ExperimentRunTaggingFragment();
 		}
-		transaction.add(R.id.layout_experiment_run_tags, mExperimenRunTaggingFragment).commit();    
-
+		transaction.replace(R.id.layout_experiment_run_tags, mExperimenRunTaggingFragment).commit();    
 		
 		return mView;
 	}
 
-
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		
+		/* it appears that there is a bug in the support library that dealing
+		 * with nested fragments as discussed in 
+		 * http://stackoverflow.com/questions/15207305/getting-the-error-java-lang-illegalstateexception-activity-has-been-destroyed
+		 * 
+		 * In this application, the symptom of the bug is that when you click
+		 * the back button to return to the experiment setup screen from the
+		 * experiment run screen. The activity crashed with an error of
+		 * "java.lang.IllegalStateException: Activity has been destroyed".
+		 * 
+		 * The following code snippet, as suggested in the discussion, appears 
+		 * to fix the problem. 
+		 */
+	    try {
+	        Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+	        childFragmentManager.setAccessible(true);
+	        childFragmentManager.set(this, null);
+	    } catch (NoSuchFieldException e) {
+	        throw new RuntimeException(e);
+	    } catch (IllegalAccessException e) {
+	        throw new RuntimeException(e);
+	    }		
+	}
 }

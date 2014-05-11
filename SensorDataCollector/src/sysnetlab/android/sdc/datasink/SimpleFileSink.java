@@ -47,6 +47,7 @@ public class SimpleFileSink implements DataSink {
 		} catch (FileNotFoundException ex) {
 			Log.e("SensorDataCollector", "Calling open:", ex);
 		}
+		
 		return out;
 	}
 
@@ -59,7 +60,7 @@ public class SimpleFileSink implements DataSink {
 	}
 
 	@Override
-	public Experiment createExperiment() {
+	public Experiment open() {
 		String pathPrefix = mParentPath + "/exp"; 
 		DecimalFormat f = new DecimalFormat("00000");
 		String timeCreated = SimpleDateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime()); 

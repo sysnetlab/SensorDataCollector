@@ -2,7 +2,7 @@ package sysnetlab.android.sdc.test;
 
 import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
-import sysnetlab.android.sdc.ui.SensorListFragment;
+import sysnetlab.android.sdc.ui.ExperimentSetupFragment;
 import sysnetlab.android.sdc.ui.SensorSetupFragment;
 import android.content.Intent;
 import android.widget.Button;
@@ -30,8 +30,8 @@ public class CreateExperimentActivityTests
 
 	public void testSensorDataCollectionActivityLoaded()
 	{
-		SensorListFragment sensorListFragment = createExperimentActivity.getSensorListFragment();
-		assertNotNull(sensorListFragment);
+		ExperimentSetupFragment experimentSetupFragment = createExperimentActivity.getExperimentSetupFragment();
+		assertNotNull(experimentSetupFragment);
 		SensorSetupFragment sensorSetupFragment = createExperimentActivity.getSensorSetupFragment();
 		assertNull(sensorSetupFragment);
 	}

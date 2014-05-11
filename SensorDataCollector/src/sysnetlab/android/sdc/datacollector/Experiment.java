@@ -8,9 +8,12 @@ import sysnetlab.android.sdc.sensor.AbstractSensor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+
 public class Experiment implements Parcelable {
+	private DeviceInformation mDeviceInfo;			// on what device?
 	private String mName;
-	private String mDateCreated;
+	private String mDateTimeCreated;
+	private String mDateTimeDone;
 	private ArrayList<Tag> mTags;
 	private ArrayList<Note> mNotes;
 	private ArrayList<AbstractSensor> mSensors;	
@@ -53,26 +56,27 @@ public class Experiment implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel outParcel, int flags) {
 		outParcel.writeString(mName);
-		outParcel.writeString(mDateCreated);  
+		outParcel.writeString(mDateTimeCreated);  
 	}
 	
 	public Experiment(Parcel inParcel) 
 	{
 		mName = inParcel.readString();
-		mDateCreated = inParcel.readString();
+		mDateTimeCreated = inParcel.readString();
 	}
 	
 	public Experiment() 
 	{
+		mDeviceInfo = new DeviceInformation();
 		DateFormat df = DateFormat.getDateTimeInstance();
-		mDateCreated = df.format(Calendar.getInstance().getTime());
-		mName = "Unamed Experiment (" + mDateCreated + ")";	
+		mDateTimeCreated = df.format(Calendar.getInstance().getTime());
+		mName = "Unnamed Experiment (" + mDateTimeCreated + ")";	
 	}
 	
 	public Experiment(String n, String dC)
 	{
 		mName = n;
-		mDateCreated = dC;
+		mDateTimeCreated = dC;
 	}
 	
 	public String getName()
@@ -86,7 +90,7 @@ public class Experiment implements Parcelable {
 	
 	public String getDateCreated()
 	{
-		return mDateCreated;
+		return mDateTimeCreated;
 	}
 	
 	public ArrayList<AbstractSensor> getSensors() {
@@ -95,5 +99,21 @@ public class Experiment implements Parcelable {
 
 	public void setSensors(ArrayList<AbstractSensor> sensors) {
 		this.mSensors = sensors;
-	}	
+	}
+
+	public DeviceInformation getDeviceInformation() {
+		return mDeviceInfo;
+	}
+
+	public void setDeviceInformation(DeviceInformation deviceInfo) {
+		mDeviceInfo = deviceInfo;
+	}
+
+	public String getDateTimeDone() {
+		return mDateTimeDone;
+	}
+
+	public void setDateTimeDone(String mDateTimeDone) {
+		this.mDateTimeDone = mDateTimeDone;
+	}
 }

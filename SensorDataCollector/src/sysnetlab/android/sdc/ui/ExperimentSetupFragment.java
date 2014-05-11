@@ -14,11 +14,24 @@ import android.widget.ImageView;
 public class ExperimentSetupFragment extends Fragment {
 	private View mView;
 	private ExperimentTagsFragment mExperimentTagsFragment;
-	private ExperimentSensorSelectionFragment mExperimentSensorSelectionFragment;
+	private ExperimentSensorSelectionFragment mExperimentSensorSelectionFragment;	
+	private OnFragmentClickListener mCallback;
+	private ExperimentHandler mHandler;
+	
+	public interface OnFragmentClickListener {
+    	public void onImvTagsClicked_ExperimentSetupFragment(ImageView v);
+    	public void onImvNotesClicked_ExperimentSetupFragment(ImageView v);
+    	public void onImvSensorsClicked_ExperimentSetupFragment(ImageView v);    	
+    	public void onBtnRunClicked_ExperimentSetupFragment(View v);
+    	public void onBtnBackClicked_ExperimentSetupFragment();
+    }	
+	
+	public interface ExperimentHandler {
+		public void initViewWithExperiment_ExperimentSetupFragment(View v);
+	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		
 		((ImageView)mView.findViewById(R.id.imv_sensors_plusminus))
@@ -44,22 +57,14 @@ public class ExperimentSetupFragment extends Fragment {
 				mCallback.onBtnBackClicked_ExperimentSetupFragment();
 			}
 		});
+		
+		mHandler.initViewWithExperiment_ExperimentSetupFragment(mView);
 	}
 
-	private OnFragmentClickListener mCallback;
-	
-	public interface OnFragmentClickListener {
-    	public void onImvTagsClicked_ExperimentSetupFragment(ImageView v);
-    	public void onImvNotesClicked_ExperimentSetupFragment(ImageView v);
-    	public void onImvSensorsClicked_ExperimentSetupFragment(ImageView v);    	
-    	public void onBtnRunClicked_ExperimentSetupFragment(View v);
-    	public void onBtnBackClicked_ExperimentSetupFragment();
-    }	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreateView(inflater, container, savedInstanceState);
 		
         mView = inflater.inflate(R.layout.fragment_experiment_setup, container, false);
@@ -97,7 +102,16 @@ public class ExperimentSetupFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement ExperimentSetupFragment.OnFragmentClickListener");
-        }		
+        }
+        
+        try {
+        	mHandler = (ExperimentHandler)activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement ExperimentSetupFragment.ExperimentHandler");
+
+        }
+	
 	}
 
 	public View getView() {

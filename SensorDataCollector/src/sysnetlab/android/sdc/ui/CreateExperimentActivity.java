@@ -33,8 +33,10 @@ public class CreateExperimentActivity extends FragmentActivity
 		SensorListFragment.OnFragmentClickListener, 
 		SensorSetupFragment.OnFragmentClickListener,
 		ExperimentSetupFragment.OnFragmentClickListener,
+		ExperimentSetupFragment.ExperimentHandler,
 		ExperimentTagsFragment.OnFragmentEventListener,
 		ExperimentRunFragment.OnFragmentClickListener,
+		ExperimentRunFragment.ExperimentHandler,
 		ExperimentRunTaggingFragment.OnFragmentClickListener		
 {
 	
@@ -70,16 +72,6 @@ public class CreateExperimentActivity extends FragmentActivity
 
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
-	}
-
-	public void onStart()
-	{
-		super.onStart();
-		
-		/*
-		final Button btnExperimentRun = (Button) findViewById(R.id.button_experiment_run);
-		btnExperimentRun.setEnabled(false);
-		*/
 	}
 	
 	public void onSensorClicked_SensorListFragment(AndroidSensor sensor) {
@@ -162,14 +154,17 @@ public class CreateExperimentActivity extends FragmentActivity
 		return mSensorSetupFragment;
 	}
 	
+	public ExperimentSetupFragment getExperimentSetupFragment() {
+		return mExperimentSetupFragment;
+	}
+	
 	public DataCollectionState getCurrentCollectionState()
 	{
 		return mCollectionState;
 	}
 	
-	
 	private void runDataSensor() throws IOException {	
-		DataSinkSingleton.getInstance().createExperiment();
+		DataSinkSingleton.getInstance().open();
 		
 		Iterator<AndroidSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
 		int nChecked = 0;
@@ -276,22 +271,21 @@ public class CreateExperimentActivity extends FragmentActivity
 	}
 
 	@Override
-	public void runExperiment(View v) {
+	public void runExperiment_ExperimentRunFragment(View v) {
 		if (mCollectionState == DataCollectionState.DATA_COLLECTION_STOPPED) {
 			try {
 				runDataSensor();
 				mCollectionState = DataCollectionState.DATA_COLLECTION_IN_PROGRESS;
 			} catch (IOException e) {
 				Log.e("SensorDataCollector", e.toString());
-			}
-			// Toast.makeText(this, "Run Button Pressed", Toast.LENGTH_SHORT).show();	
+			}	
 		} else {
 			Toast.makeText(this, "Unsupported Button Action", Toast.LENGTH_SHORT).show();					
 		}
 	}
 
 	@Override
-	public void stopExperiment(View v) {
+	public void stopExperiment_ExperimentRunFragment(View v) {
 		if (mCollectionState == DataCollectionState.DATA_COLLECTION_IN_PROGRESS) {
 			try {
 				stopDataSensor();
@@ -299,9 +293,14 @@ public class CreateExperimentActivity extends FragmentActivity
 				Log.e("SensorDataCollector", e.toString());
 			}
 			mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
-			// Toast.makeText(this, "Stop Button Pressed", Toast.LENGTH_SHORT).show();	
 		} else {
 			Toast.makeText(this, "Unsupported Button Action", Toast.LENGTH_SHORT).show();					
 		}		
+	}
+
+	@Override
+	public void initViewWithExperiment_ExperimentSetupFragment(View v) {
+		EditText et = (EditText)v.findViewById(R.id.et_experiment_name);
+		et.setText(mExperiment.getName());
 	}
 }
