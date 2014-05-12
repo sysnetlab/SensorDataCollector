@@ -40,6 +40,9 @@ public class Tag {
 		return mLongDescription;
 	}
 
+	public String toString() {
+		return mName;
+	}
 	public void setLongDescription(String mLongDescription) {
 		this.mLongDescription = mLongDescription;
 	}

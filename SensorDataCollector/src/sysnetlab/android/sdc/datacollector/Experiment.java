@@ -22,15 +22,20 @@ public class Experiment implements Parcelable {
 	private ArrayList<Note> mNotes;
 	private ArrayList<AbstractSensor> mSensors;	
 	
-	public ArrayList<Tag> getmTags() {
+	
+	public ArrayList<Tag> getTags() {
 		return mTags;
 	}
 
 	public void setTags(ArrayList<Tag> mTags) {
 		this.mTags = mTags;
 	}
+	
+	public void addTag(String strTag) {
+		mTags.add(new Tag(strTag));
+	}
 
-	public ArrayList<Note> getmNotes() {
+	public ArrayList<Note> getNotes() {
 		return mNotes;
 	}
 
@@ -75,6 +80,8 @@ public class Experiment implements Parcelable {
 		DateFormat df = DateFormat.getDateTimeInstance();
 		mDateTimeCreated = df.format(Calendar.getInstance().getTime());
 		mName = "Unnamed Experiment (" + mDateTimeCreated + ")";	
+		mTags = new ArrayList<Tag>();
+		mNotes = new ArrayList<Note>();
 	}
 	
 	public Experiment(int metaPort) {
