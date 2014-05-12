@@ -2,8 +2,12 @@ package sysnetlab.android.sdc.datacollector;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.DateFormat;
 
+import sysnetlab.android.sdc.datasink.DataSinkSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -73,11 +77,65 @@ public class Experiment implements Parcelable {
 		mName = "Unnamed Experiment (" + mDateTimeCreated + ")";	
 	}
 	
+	public Experiment(int metaPort) {
+		readConfiguratione(metaPort);
+	}
+	
+	public Experiment(String configFile) throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(configFile));
+		mName = reader.readLine();
+		mDateTimeCreated = reader.readLine();
+		reader.close();
+	}
+	
 	public Experiment(String n, String dC)
 	{
 		mName = n;
 		mDateTimeCreated = dC;
 	}
+	
+	public void writeConfiguration(int metaPort)
+	{
+		String configMsg = getName() + "\n" + getDateTimeCreated() + "\n";
+		DataSinkSingleton.getInstance().write(metaPort,  configMsg);
+	}
+	
+	private void readConfiguratione(int metaPort)
+	{
+		mName = DataSinkSingleton.getInstance().readLine(metaPort);
+		mDateTimeCreated = DataSinkSingleton.getInstance().readLine(metaPort);
+	}	
+	
+	/*
+	private void writeExperimentConfiguration(Experiment exp, String experimentDir)
+	{
+		try {
+			PrintStream out = new PrintStream(new FileOutputStream(experimentDir + "/.experiment"));
+			out.println(exp.getName());
+			out.println(exp.getDateCreated());
+			out.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+	
+	
+	private Experiment readExperimentConfiguratione(String experimentDir)
+	{
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(experimentDir + "/.experiment"));
+			String name = reader.readLine();
+			String dateCreated = reader.readLine();
+			reader.close();
+			return new Experiment(name, dateCreated);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}	
+	*/
 	
 	public String getName()
 	{
@@ -88,7 +146,7 @@ public class Experiment implements Parcelable {
 		mName = name;
 	}
 	
-	public String getDateCreated()
+	public String getDateTimeCreated()
 	{
 		return mDateTimeCreated;
 	}

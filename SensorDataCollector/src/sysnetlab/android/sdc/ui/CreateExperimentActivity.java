@@ -1,7 +1,6 @@
 package sysnetlab.android.sdc.ui;
 
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.Iterator;
 
 import sysnetlab.android.sdc.R;
@@ -173,8 +172,9 @@ public class CreateExperimentActivity extends FragmentActivity
 			if (sensor.isSelected()) {
 				nChecked ++;
 
-				PrintStream out = DataSinkSingleton.getInstance().open(sensor.getName().replace(' ', '_') + ".txt");
-				DataSensorEventListener listener = new DataSensorEventListener(out);
+				int port = DataSinkSingleton.getInstance().openDataPort(sensor.getName().replace(' ', '_') + ".txt");
+				DataSensorEventListener listener = 
+						new DataSensorEventListener(DataSinkSingleton.getInstance(), port);
 				sensor.setListener(listener);
 				mSensorManager.registerListener(listener, (Sensor)sensor.getSensor(), sensor.getSamplingInterval());
 			}
@@ -192,7 +192,6 @@ public class CreateExperimentActivity extends FragmentActivity
 			if (sensor.isSelected()) {
 				nChecked ++;
 				DataSensorEventListener listener = sensor.getListener();
-				listener.finish();
 				mSensorManager.unregisterListener(listener);
 			}
 		}

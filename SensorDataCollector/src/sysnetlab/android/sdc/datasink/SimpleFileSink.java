@@ -1,19 +1,16 @@
 package sysnetlab.android.sdc.datasink;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Date;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.List;
 
 import sysnetlab.android.sdc.datacollector.Experiment;
@@ -23,7 +20,9 @@ import android.util.Log;
 public class SimpleFileSink implements DataSink {
 	String mParentPath; 
 	String mPath;
-	LinkedList<PrintStream> mPrintStreamList;
+	int mNumPorts;
+	int mMetaPort;
+	ArrayList<PrintStream> mPrintStreamList;
 	
 	public SimpleFileSink() {
 		Log.i("SensorDataCollector", "entering SimpleFileSink.constructor() ...");
@@ -34,36 +33,14 @@ public class SimpleFileSink implements DataSink {
 			dataDir.mkdir();
 		} 
 		mParentPath = parentPath;		
-		mPrintStreamList = new LinkedList<PrintStream>();
+		mPrintStreamList = new ArrayList<PrintStream>();
+		mNumPorts = 0;
 	}
 	
 	@Override
-	public PrintStream open(String filename) {
-		PrintStream out = null;
-		String path = mPath + "/" + filename;
-		try {
-			out = new PrintStream(new BufferedOutputStream(new FileOutputStream(path)));
-			mPrintStreamList.add(out);
-		} catch (FileNotFoundException ex) {
-			Log.e("SensorDataCollector", "Calling open:", ex);
-		}
-		
-		return out;
-	}
-
-	@Override
-	public void close() {
-		while (!mPrintStreamList.isEmpty()) {
-			PrintStream out = mPrintStreamList.remove();
-			out.close();
-		}
-	}
-
-	@Override
-	public Experiment open() {
+	public boolean open() {
 		String pathPrefix = mParentPath + "/exp"; 
 		DecimalFormat f = new DecimalFormat("00000");
-		String timeCreated = SimpleDateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime()); 
 		String path;
 		File dataDir;
 		int i = 0;
@@ -73,71 +50,107 @@ public class SimpleFileSink implements DataSink {
 			path = pathPrefix + f.format(i);
 			dataDir = new File(path);
 		} while (dataDir.exists());
-		dataDir.mkdir();
+		
 		mPath = path;
+		return dataDir.mkdir();
+	}
+	
+	@Override
+	public void close() {
+		for (PrintStream out : mPrintStreamList) {
+			out.close();
+		}
+		mPrintStreamList = null;
+	}	
+	
+	@Override
+	public int openDataPort(String sensorName) {
+		String filename = sensorName.replace(' ', '_') + ".txt";
+		String path = mPath + "/" + filename;
+		try {
+			PrintStream out = null;
+			out = new PrintStream(new BufferedOutputStream(new FileOutputStream(path)));
+			mPrintStreamList.add(out);
+			mMetaPort = mNumPorts;
+			mNumPorts ++;
+		} catch (FileNotFoundException e) {
+			Log.e("SensorDataCollector", "Calling open:", e);
+			mMetaPort = -1;
+		}
 		
-		Experiment exp = new Experiment("exp" + f.format(i), timeCreated);
-		writeExperimentConfigurationFile(exp, path);
+		return mMetaPort;		
+	}
+
+
+
+	@Override
+	public void closeDataPort(int port) {
+		PrintStream out = (PrintStream)mPrintStreamList.get(port);
+		if (out != null) out.close();
+	}	
+
+
+
+	@Override
+	public void write(int port, String s) {
+		PrintStream out = mPrintStreamList.get(port);
+		out.print(s);
+	}
+
+	@Override
+	public int openMetaPort() {
+		String path = mPath + "/.experiment";
+		int portNum = mNumPorts;		
+		try {
+			PrintStream out = new PrintStream(new FileOutputStream(path));
+			mPrintStreamList.add(out);
+			mNumPorts ++;	
+			return portNum;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return -1;
+		}		
+	}
+
+	@Override
+	public void closeMetaPort(int metaPort) {
+		PrintStream out = (PrintStream)mPrintStreamList.get(metaPort);
+		if (out != null) out.close();
 		
-		Log.i("SensorDataCollector", "path " + path + " does not exist and is created.");
-		return exp;
 	}
 
 	@Override
 	public List<Experiment> listExperiments() {
 		List<Experiment> listExp = new ArrayList<Experiment>();
-		
+
 		File parentDir = new File(mParentPath);
 		String[] experimentDirNames = parentDir.list(new FilenameFilter() {
 			public boolean accept(File current, String name) {
 				return new File(current, name).isDirectory();
 			}
 		});
-		if (experimentDirNames == null) 
-		{
+		if (experimentDirNames == null) {
 			return listExp;
 		}
-		for (String dirName : experimentDirNames)
-		{
-			Experiment exp = readExperimentConfigurationFile(mParentPath + "/" + dirName);
-			if(exp != null)
-			{
+		for (String dirName : experimentDirNames) {
+			String configFile = mParentPath + "/" + dirName + "./experiment";
+			try {
+				Experiment exp = new Experiment(configFile);
 				listExp.add(exp);
-			}
-			else
-			{
-				listExp.add(new Experiment(dirName, "unknown"));
+			} catch (IOException e) {
+				File file = new File(mParentPath + "/" + dirName);
+				String lastModDate = SimpleDateFormat.getDateTimeInstance().format((new Date(file.lastModified()))); 				
+				listExp.add(new Experiment(dirName, lastModDate));
 			}
 		}
-		
+
 		return listExp;
 	}
-	
-	private void writeExperimentConfigurationFile(Experiment exp, String experimentDir)
-	{
-		try {
-			PrintStream out = new PrintStream(new FileOutputStream(experimentDir + "/.experiment"));
-			out.println(exp.getName());
-			out.println(exp.getDateCreated());
-			out.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private Experiment readExperimentConfigurationFile(String experimentDir)
-	{
-		try {
-			BufferedReader reader = new BufferedReader(new FileReader(experimentDir + "/.experiment"));
-			String name = reader.readLine();
-			String dateCreated = reader.readLine();
-			reader.close();
-			return new Experiment(name, dateCreated);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	
+
+	@Override
+	public String readLine(int port) {
+		// TODO Auto-generated method stub
+		Log.e("SensorDataCollector", "SimpleFileSink.readLine has not been implemented.");
+		return null;
+	}	
 }
