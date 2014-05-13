@@ -37,7 +37,14 @@ public class Experiment implements Parcelable {
 	}
 
 	public void addTag(String strTag) {
-		mTags.add(new Tag(strTag));
+		strTag = strTag.trim();
+		if (strTag.equals("")) {
+			return;
+		}
+		Tag t = new Tag(strTag);
+		if (!mTags.contains(t)) {
+			mTags.add(new Tag(strTag));
+		}
 	}
 
 	public ArrayList<Note> getNotes() {

@@ -43,7 +43,20 @@ public class Tag {
 	public String toString() {
 		return mName;
 	}
+	
 	public void setLongDescription(String mLongDescription) {
 		this.mLongDescription = mLongDescription;
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		boolean sameSame = false;
+
+        if (object != null && object instanceof Tag)
+        {
+            sameSame = this.mName.equals(((Tag) object).mName);
+        }
+
+        return sameSame;
 	}
 }
