@@ -33,4 +33,13 @@
         android:orientation="horizontal" >
     </LinearLayout>
 
+    <ListView
+        android:id="@+id/listView_tags"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/layout_label_list" >
+
+    </ListView>
+
 </RelativeLayout>

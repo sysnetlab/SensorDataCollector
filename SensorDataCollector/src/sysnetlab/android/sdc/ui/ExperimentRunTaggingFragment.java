@@ -3,6 +3,7 @@ package sysnetlab.android.sdc.ui;
 import java.util.ArrayList;
 
 import sysnetlab.android.sdc.R;
+import sysnetlab.android.sdc.datacollector.Tag;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -64,19 +65,14 @@ public class ExperimentRunTaggingFragment extends Fragment {
 	        
         
 		// Temporary testing data
-		ArrayList<String> tmpTags = new ArrayList<String>();
-	    
-	    tmpTags.add("Tag001"); 
-	    tmpTags.add("Tag002"); 
-	    tmpTags.add("Tag003");
-	    tmpTags.add("Tag004");
-	    
+        ArrayList<Tag> tags = ((CreateExperimentActivity) getActivity()).getExperiment().getTags();
+
 	    GridView gv = (GridView)mView.findViewById(R.id.gridview_experiment_tagging);
 
-	    ArrayAdapter<String> adapter = 
-	    		new ArrayAdapter<String>(mActivity, 
+	    ArrayAdapter<Tag> adapter = 
+	    		new ArrayAdapter<Tag>(mActivity, 
 	    				android.R.layout.simple_list_item_1, 
-	    				tmpTags);
+	    				tags);
 	    
 	    gv.setAdapter(adapter);
 	    

@@ -162,6 +162,10 @@ public class CreateExperimentActivity extends FragmentActivity
 		return mCollectionState;
 	}
 	
+	public Experiment getExperiment() {
+		return mExperiment;
+	}
+
 	private void runDataSensor() throws IOException {	
 		DataSinkSingleton.getInstance().open();
 		
@@ -218,13 +222,9 @@ public class CreateExperimentActivity extends FragmentActivity
 	}
 
 	@Override
-	public void onTxtFldEnterPressed_ExperimentTagsFragment() {
+	public void onTxtFldEnterPressed_ExperimentTagsFragment(String newTag) {
 		Log.i("CreateExperiment", "New label being added");
-		EditText et = (EditText)findViewById(R.id.edittext_new_label);
-		LinearLayout ll = (LinearLayout) findViewById(R.id.layout_label_list);
-		Button btnLabel = new Button(this);
-		btnLabel.setText(et.getText());
-		ll.addView(btnLabel);
+		mExperiment.addTag(newTag);
 	}
 
 	@Override

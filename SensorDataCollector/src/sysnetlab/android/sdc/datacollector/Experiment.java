@@ -28,7 +28,7 @@ public class Experiment implements Parcelable {
 	private ArrayList<Note> mNotes;
 	private ArrayList<AbstractSensor> mSensors;
 
-	public ArrayList<Tag> getmTags() {
+	public ArrayList<Tag> getTags() {
 		return mTags;
 	}
 
@@ -36,7 +36,11 @@ public class Experiment implements Parcelable {
 		this.mTags = mTags;
 	}
 
-	public ArrayList<Note> getmNotes() {
+	public void addTag(String strTag) {
+		mTags.add(new Tag(strTag));
+	}
+
+	public ArrayList<Note> getNotes() {
 		return mNotes;
 	}
 
@@ -44,16 +48,17 @@ public class Experiment implements Parcelable {
 		this.mNotes = mNotes;
 	}
 
-	public static final Parcelable.Creator<Experiment> CREATOR = new Parcelable.Creator<Experiment>() {
-		@Override
-		public Experiment createFromParcel(Parcel inParcel) {
-			return new Experiment(inParcel);
-		}
+	public static final Parcelable.Creator<Experiment> CREATOR
+        = new Parcelable.Creator<Experiment>() {
+		    @Override
+		    public Experiment createFromParcel(Parcel inParcel) {
+			    return new Experiment(inParcel);
+		    }
 
-		@Override
-		public Experiment[] newArray(int size) {
-			return new Experiment[size];
-		}
+		    @Override
+		    public Experiment[] newArray(int size) {
+			    return new Experiment[size];
+		    }
 	};
 
 	@Override
@@ -79,6 +84,8 @@ public class Experiment implements Parcelable {
 		mDateTimeCreated = df.format(Calendar.getInstance().getTime());
 		// mName = "Unnamed Experiment (" + mDateTimeCreated + ")";
 		mName = "Unnamed Experiment";
+		mTags = new ArrayList<Tag>();
+		mNotes = new ArrayList<Note>();
 	}
 
 	public Experiment(int metaPort) {
@@ -185,7 +192,7 @@ public class Experiment implements Parcelable {
 		return mDateTimeDone;
 	}
 
-	public void setDateTimeDone(String dateTimeDone) {
+    public void setDateTimeDone(String dateTimeDone) {
 		mDateTimeDone = dateTimeDone;
 	}
 
