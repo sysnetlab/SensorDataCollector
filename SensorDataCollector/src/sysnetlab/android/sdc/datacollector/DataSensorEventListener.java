@@ -1,25 +1,19 @@
 /* $Id$ */
 package sysnetlab.android.sdc.datacollector;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-
+import sysnetlab.android.sdc.datasink.DataSink;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.os.SystemClock;
 
 public class DataSensorEventListener implements SensorEventListener {
-	PrintStream mOut;
+	private DataSink mDataSink;
+	private int mSinkPort;
 
-	DataSensorEventListener(String filename) throws IOException {
-		mOut = new PrintStream(new BufferedOutputStream(new FileOutputStream(filename)));
-	}
-	
-	public DataSensorEventListener(PrintStream out) throws IOException {
-		mOut = out;
+	public DataSensorEventListener(DataSink sink, int port) {
+		mDataSink = sink;
+		mSinkPort = port;
 	}
 
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -32,5 +26,10 @@ public class DataSensorEventListener implements SensorEventListener {
     				+ SystemClock.elapsedRealtimeNanos());
     	else
 		 */
-		mOut.print(SystemClock.currentThreadTimeMillis() + ", " 
-				+ SystemClock.elaps
+		mDataSink.write(mSinkPort,
+				SystemClock.currentThreadTimeMillis() + ", " + SystemClock.elapsedRealtime());	    		
+		for (int i = 0; i < event.values.length; i ++)
+			mDataSink.write(mSinkPort, ", " + event.values[i]);
+		mDataSink.write(mSinkPort, "\n");
+	}
+}
