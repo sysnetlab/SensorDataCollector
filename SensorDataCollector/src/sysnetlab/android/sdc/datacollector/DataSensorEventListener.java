@@ -2,9 +2,11 @@
 package sysnetlab.android.sdc.datacollector;
 
 import sysnetlab.android.sdc.datasink.DataSink;
+import android.annotation.SuppressLint;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.os.Build;
 import android.os.SystemClock;
 
 public class DataSensorEventListener implements SensorEventListener {
@@ -19,16 +21,18 @@ public class DataSensorEventListener implements SensorEventListener {
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 	}
 
+	@SuppressLint("NewApi")
 	public void onSensorChanged(SensorEvent event) {
-		/*
-    	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-    		out.print(SystemClock.currentThreadTimeMillis() + ", " 
-    				+ SystemClock.elapsedRealtimeNanos());
-    	else
-		 */
-		mDataSink.write(mSinkPort,
-				SystemClock.currentThreadTimeMillis() + ", " + SystemClock.elapsedRealtime());	    		
-		for (int i = 0; i < event.values.length; i ++)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+			mDataSink.write(
+					mSinkPort,
+					SystemClock.currentThreadTimeMillis() + ", "
+							+ SystemClock.elapsedRealtime() + ", "
+							+ SystemClock.elapsedRealtimeNanos());
+		else
+			mDataSink.write(mSinkPort, SystemClock.currentThreadTimeMillis()
+					+ ", " + SystemClock.elapsedRealtime());
+		for (int i = 0; i < event.values.length; i++)
 			mDataSink.write(mSinkPort, ", " + event.values[i]);
 		mDataSink.write(mSinkPort, "\n");
 	}

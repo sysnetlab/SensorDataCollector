@@ -40,5 +40,9 @@ public class AndroidUtilClassTests extends AndroidTestCase {
     	assertEquals("SysNetLabMaker", deviceInfo.getManufacturer());   	
     	assertEquals("T151", deviceInfo.getModel());   	
     	assertEquals("SysNetLabMaker T151", deviceInfo.toString());
-    }    
+    }
+    
+    public void testExperiment() {
+    	// TODO test Experiment class
+    }
 }

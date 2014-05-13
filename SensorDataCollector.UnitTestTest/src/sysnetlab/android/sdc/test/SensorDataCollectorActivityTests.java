@@ -40,4 +40,12 @@ public class SensorDataCollectorActivityTests
 	    Intent triggeredIntent = getStartedActivityIntent();
 	    assertNotNull("Intent was null", triggeredIntent);
 	}
+	
+	public void testExperimentListClicked() {
+		// TODO test correct experiment is constructed and loaded
+	}
+	
+	public void testExperimentListFragmentCreated() {
+		// TODO test if mExperimentListFragment is instantiated
+	}
 }

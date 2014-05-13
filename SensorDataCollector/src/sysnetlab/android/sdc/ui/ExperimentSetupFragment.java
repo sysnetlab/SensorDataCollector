@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 public class ExperimentSetupFragment extends Fragment {
@@ -16,7 +17,6 @@ public class ExperimentSetupFragment extends Fragment {
 	private ExperimentTagsFragment mExperimentTagsFragment;
 	private ExperimentSensorSelectionFragment mExperimentSensorSelectionFragment;	
 	private OnFragmentClickListener mCallback;
-	private ExperimentHandler mHandler;
 	
 	public interface OnFragmentClickListener {
     	public void onImvTagsClicked_ExperimentSetupFragment(ImageView v);
@@ -25,10 +25,6 @@ public class ExperimentSetupFragment extends Fragment {
     	public void onBtnRunClicked_ExperimentSetupFragment(View v);
     	public void onBtnBackClicked_ExperimentSetupFragment();
     }	
-	
-	public interface ExperimentHandler {
-		public void initViewWithExperiment_ExperimentSetupFragment(View v);
-	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -58,7 +54,8 @@ public class ExperimentSetupFragment extends Fragment {
 			}
 		});
 		
-		mHandler.initViewWithExperiment_ExperimentSetupFragment(mView);
+		((EditText)mView.findViewById(R.id.et_experiment_setup_name))
+		.setText(((CreateExperimentActivity)getActivity()).getExperiment().getName());		
 	}
 
 
@@ -103,15 +100,6 @@ public class ExperimentSetupFragment extends Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement ExperimentSetupFragment.OnFragmentClickListener");
         }
-        
-        try {
-        	mHandler = (ExperimentHandler)activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement ExperimentSetupFragment.ExperimentHandler");
-
-        }
-	
 	}
 
 	public View getView() {

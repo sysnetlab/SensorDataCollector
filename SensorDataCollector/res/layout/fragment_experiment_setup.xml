@@ -23,7 +23,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <EditText
-        android:id="@+id/et_experiment_name"
+        android:id="@+id/et_experiment_setup_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/tv_experiment_setup_name"
@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tv_experiment_setup_name"
-        android:layout_below="@+id/et_experiment_name" >
+        android:layout_below="@+id/et_experiment_setup_name" >
     </RelativeLayout>
     
     <RelativeLayout 

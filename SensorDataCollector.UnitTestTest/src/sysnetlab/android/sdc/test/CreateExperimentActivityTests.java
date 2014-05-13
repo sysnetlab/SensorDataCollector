@@ -44,4 +44,14 @@ public class CreateExperimentActivityTests
 		createExperimentActivity.onBtnRunClicked_SensorListFragment(new Button(createExperimentActivity));
 		assert(createExperimentActivity.getCurrentCollectionState() == DataCollectionState.DATA_COLLECTION_STOPPED);
 	}
+	
+	public void testExperimentSetupFragment() {
+		// TODO testing fragment is loaded
+	}
+	
+	public void testExperimentRunFragment() {
+		// TODO testing fragment is loaded
+	}
+	
+	// TODO add test methods for other fragments
 }

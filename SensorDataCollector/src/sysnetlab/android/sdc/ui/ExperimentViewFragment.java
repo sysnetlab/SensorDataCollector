@@ -14,9 +14,9 @@ public class ExperimentViewFragment extends Fragment {
 	private View mView;
 	private ExperimentTagsFragment mExperimentTagsFragment;
 	private ExperimentSensorSelectionFragment mExperimentSensorSelectionFragment;
-	private ExperimentViewFragmentHandler mHandler;
+	private OnFragmentClickListener mCallback;
 	
-	public interface ExperimentViewFragmentHandler {
+	public interface OnFragmentClickListener {
 
 	}
 
@@ -60,7 +60,7 @@ public class ExperimentViewFragment extends Fragment {
 		super.onAttach(activity);
 		
 		try {
-			mHandler = (ExperimentViewFragmentHandler)activity;
+			mCallback = (OnFragmentClickListener)activity;
 		} catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement ExperimentViewFragment.ExperimentViewFragmentHandler");

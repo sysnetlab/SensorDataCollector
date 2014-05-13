@@ -29,7 +29,6 @@ public class CreateExperimentActivity extends FragmentActivity
 		SensorListFragment.OnFragmentClickListener, 
 		SensorSetupFragment.OnFragmentClickListener,
 		ExperimentSetupFragment.OnFragmentClickListener,
-		ExperimentSetupFragment.ExperimentHandler,
 		ExperimentTagsFragment.OnFragmentEventListener,
 		ExperimentRunFragment.OnFragmentClickListener,
 		ExperimentRunFragment.ExperimentHandler,
@@ -247,10 +246,6 @@ public class CreateExperimentActivity extends FragmentActivity
 
 	@Override
 	public void onBtnRunClicked_ExperimentSetupFragment(View v) {
-		// TODO lazy work for now, more work;
-		String name = ((EditText)findViewById(R.id.et_experiment_name)).getText().toString();
-		mExperiment.setName(name);
-		
 		if (mExperimentRunFragment == null)
 			mExperimentRunFragment = new ExperimentRunFragment();
 		FragmentUtil.switchToFragment(this, mExperimentRunFragment, "sensorlist");		
@@ -290,9 +285,4 @@ public class CreateExperimentActivity extends FragmentActivity
 		}		
 	}
 
-	@Override
-	public void initViewWithExperiment_ExperimentSetupFragment(View v) {
-		EditText et = (EditText)v.findViewById(R.id.et_experiment_name);
-		et.setText(mExperiment.getName());
-	}
 }
