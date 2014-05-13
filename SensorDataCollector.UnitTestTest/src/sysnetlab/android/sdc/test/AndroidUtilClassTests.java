@@ -45,4 +45,12 @@ public class AndroidUtilClassTests extends AndroidTestCase {
     public void testExperiment() {
     	// TODO test Experiment class
     }
+    
+    public void TestNote() {
+    	// TODO test Note class
+    }
+    
+    public void TestTag() {
+    	// TODO test Tag class
+    }
 }
