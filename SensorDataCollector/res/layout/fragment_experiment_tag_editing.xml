@@ -21,7 +21,8 @@
         android:ems="10"
         android:layout_alignParentRight="true"
         android:inputType="textAutoComplete"
-        android:singleLine="true" />
+        android:singleLine="true" 
+        android:imeOptions="actionDone"/>
  	
     <LinearLayout
         android:id="@+id/layout_label_list"
