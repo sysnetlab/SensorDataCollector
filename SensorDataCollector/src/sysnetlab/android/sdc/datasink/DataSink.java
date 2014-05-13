@@ -1,9 +1,5 @@
 package sysnetlab.android.sdc.datasink;
 
-import java.util.List;
-
-import sysnetlab.android.sdc.datacollector.Experiment;
-
 public interface DataSink {
 	/*
 	 *  It is expected that a data sink provides a light-weight buffering
@@ -31,10 +27,10 @@ public interface DataSink {
 	public void closeDataPort(int port);
 	public int openMetaPort();
 	public void closeMetaPort(int port);
-	// TODO prevent write data to meta port, and vice versus 
+	// TODO prevent write sensor data to meta port, and vice versus 
 	public void write(int port, String s);
 	public String readLine(int port);
 	public void close();
 	
-	public List<Experiment> listExperiments();
+	// public List<Experiment> listExperiments();
 }

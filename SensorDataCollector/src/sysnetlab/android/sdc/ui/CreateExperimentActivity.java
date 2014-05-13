@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import sysnetlab.android.sdc.R;
-import sysnetlab.android.sdc.appdata.AppDataSingleton;
 import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.datacollector.DataSensorEventListener;
 import sysnetlab.android.sdc.datacollector.Experiment;
@@ -71,6 +70,7 @@ public class CreateExperimentActivity extends FragmentActivity
 
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
+		Log.i("SensorDataCollector", "CreateExperimentActivity created");
 	}
 	
 	public void onSensorClicked_SensorListFragment(AndroidSensor sensor) {
@@ -122,7 +122,7 @@ public class CreateExperimentActivity extends FragmentActivity
 			break;
 		default:
 			// TODO: todo ...	
-			Log.i("SensorDataCollector", "unknow sensor. unexpected.");			
+			Log.i("SensorDataCollector", "unknown sensor. unexpected.");			
 			break;
 		}
 		
@@ -165,6 +165,9 @@ public class CreateExperimentActivity extends FragmentActivity
 	private void runDataSensor() throws IOException {	
 		DataSinkSingleton.getInstance().open();
 		
+		int metaPort = DataSinkSingleton.getInstance().openMetaPort();
+		mExperiment.writeConfiguration(metaPort);
+		
 		Iterator<AndroidSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
 		int nChecked = 0;
 		while (iter.hasNext()) {
@@ -172,7 +175,7 @@ public class CreateExperimentActivity extends FragmentActivity
 			if (sensor.isSelected()) {
 				nChecked ++;
 
-				int port = DataSinkSingleton.getInstance().openDataPort(sensor.getName().replace(' ', '_') + ".txt");
+				int port = DataSinkSingleton.getInstance().openDataPort(sensor.getName());
 				DataSensorEventListener listener = 
 						new DataSensorEventListener(DataSinkSingleton.getInstance(), port);
 				sensor.setListener(listener);
@@ -255,8 +258,6 @@ public class CreateExperimentActivity extends FragmentActivity
 		// TODO lazy work for now, more work;
 		String name = ((EditText)findViewById(R.id.et_experiment_name)).getText().toString();
 		mExperiment.setName(name);
-		AppDataSingleton.getInstance().setExperiment(mExperiment);
-
 		
 		if (mExperimentRunFragment == null)
 			mExperimentRunFragment = new ExperimentRunFragment();

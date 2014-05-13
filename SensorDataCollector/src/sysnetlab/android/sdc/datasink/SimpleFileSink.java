@@ -4,20 +4,14 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.sql.Date;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
-
-import sysnetlab.android.sdc.datacollector.Experiment;
 import android.os.Environment;
 import android.util.Log;
 
 public class SimpleFileSink implements DataSink {
+	SimpleFileExperimentStoreCompartment mCompartment;
 	String mParentPath; 
 	String mPath;
 	int mNumPorts;
@@ -35,6 +29,10 @@ public class SimpleFileSink implements DataSink {
 		mParentPath = parentPath;		
 		mPrintStreamList = new ArrayList<PrintStream>();
 		mNumPorts = 0;
+	}
+	
+	public SimpleFileSink(SimpleFileExperimentStoreCompartment compartment) {
+		mCompartment = compartment;
 	}
 	
 	@Override
@@ -69,6 +67,7 @@ public class SimpleFileSink implements DataSink {
 		String path = mPath + "/" + filename;
 		try {
 			PrintStream out = null;
+			Log.i("SensorDataCollector", "SimpleFileSink.openDataPort: path = " + path);
 			out = new PrintStream(new BufferedOutputStream(new FileOutputStream(path)));
 			mPrintStreamList.add(out);
 			mMetaPort = mNumPorts;
@@ -119,6 +118,7 @@ public class SimpleFileSink implements DataSink {
 		
 	}
 
+	/*
 	@Override
 	public List<Experiment> listExperiments() {
 		List<Experiment> listExp = new ArrayList<Experiment>();
@@ -146,6 +146,7 @@ public class SimpleFileSink implements DataSink {
 
 		return listExp;
 	}
+	*/
 
 	@Override
 	public String readLine(int port) {

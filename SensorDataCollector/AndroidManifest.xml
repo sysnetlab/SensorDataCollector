@@ -46,9 +46,19 @@
 	        <!-- The meta-data element is needed for versions lower than 4.1 -->
 	        <meta-data
 	            android:name="android.support.PARENT_ACTIVITY"
-	            android:value="sysnetlab.android.sdc.ui.CreateExperimentActivity" />
-            
-        </activity>       
+	            android:value="sysnetlab.android.sdc.ui.CreateExperimentActivity" />          
+        </activity>    
+        <activity
+            android:name="sysnetlab.android.sdc.ui.ViewExperimentActivity"
+            android:label="@string/title_activity_view_exeriment"
+            android:parentActivityName="sysnetlab.android.sdc.ui.SensorDataCollectorActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
+	        <!-- The meta-data element is needed for versions lower than 4.1 -->
+	        <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="sysnetlab.android.sdc.ui.ViewExperimentActivity" />           
+        </activity>   
     </application>
 
 </manifest>

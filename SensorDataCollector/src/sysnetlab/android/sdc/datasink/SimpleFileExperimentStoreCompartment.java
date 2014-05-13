@@ -21,6 +21,10 @@ public class SimpleFileExperimentStoreCompartment extends ExperimentStoreCompart
 		createSimpleFileExperimentStoreCompartment(dirPath, flags);
 	}
 	
+	public String getConfigFilePath() {
+		return mExperimentDir + "/.experiment";			
+	}
+	
 	private void createSimpleFileExperimentStoreCompartment(String dirPath, int flags) 
 			throws 
 				ExperimentStoreCompartmentNotFoundException,

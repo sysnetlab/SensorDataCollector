@@ -23,11 +23,13 @@
     <string name="button_sensor_setup_confirm">Confirm</string>
     <string name="button_sensor_selection_confirm">Confirm</string>
     <string name="button_sensor_setup_cancel">Cancel</string>
-    <string name="title_activity_create_experiement">CreateExperimentActivity</string>
+    <string name="title_activity_create_experiement">Creating Experiment</string>
+    <string name="title_activity_view_exeriment">Viewing Experiment</string>
     <string name="button_create_experiment">Create New Experiment</string>
     <string name="img_plus_green_white">Expand</string>
     <string name="button_back_text">Back</string>
     <string name="text_experiment_tags">Experiment Tags</string>
     <string name="text_experiment_running">Running Experiment</string>
     <string name="text_experiment_done">Done</string>
+    <string name="textview_experiment_view_existing">Experiment Information</string>
 </resources>

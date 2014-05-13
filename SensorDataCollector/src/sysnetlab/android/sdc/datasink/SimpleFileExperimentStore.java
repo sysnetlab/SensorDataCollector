@@ -63,7 +63,8 @@ public class SimpleFileExperimentStore extends ExperimentStore {
 		SimpleFileExperimentStoreCompartment compartment;
 		mCompartmentCursor++;
 		DecimalFormat f = new DecimalFormat("00000");
-		String path = mParentPath + "/" + DIR_PREFIX + f.format(mCompartmentCursor);
+		String path = mParentPath + "/" + DIR_PREFIX
+				+ f.format(mCompartmentCursor);
 		try {
 			compartment = new SimpleFileExperimentStoreCompartment(path,
 					ExperimentStoreCompartment.SCF_EXIST);

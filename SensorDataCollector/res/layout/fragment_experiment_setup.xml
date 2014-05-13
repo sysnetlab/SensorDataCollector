@@ -12,7 +12,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/tv_experiment_name"
+        android:id="@+id/tv_experiment_setup_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -26,10 +26,10 @@
         android:id="@+id/et_experiment_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/tv_experiment_name"
-        android:layout_alignBottom="@+id/tv_experiment_name"
+        android:layout_alignBaseline="@+id/tv_experiment_setup_name"
+        android:layout_alignBottom="@+id/tv_experiment_setup_name"
         android:layout_alignParentRight="true"
-        android:layout_toRightOf="@+id/tv_experiment_name"
+        android:layout_toRightOf="@+id/tv_experiment_setup_name"
         android:ems="10"
         android:inputType="text|textAutoCorrect|textAutoComplete"/>
 
@@ -37,7 +37,7 @@
         android:id="@+id/layout_tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tv_experiment_name"
+        android:layout_alignLeft="@+id/tv_experiment_setup_name"
         android:layout_below="@+id/et_experiment_name" >
     </RelativeLayout>
     
