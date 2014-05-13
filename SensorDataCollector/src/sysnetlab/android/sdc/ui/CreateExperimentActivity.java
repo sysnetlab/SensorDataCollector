@@ -20,10 +20,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class CreateExperimentActivity extends FragmentActivity 
@@ -225,12 +223,6 @@ public class CreateExperimentActivity extends FragmentActivity
 	public void onTxtFldEnterPressed_ExperimentTagsFragment(String newTag) {
 		Log.i("CreateExperiment", "New label being added");
 		mExperiment.addTag(newTag);
-	}
-
-	@Override
-	public void onBtnLabelClicked_ExperimentTagsFragment() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

@@ -45,16 +45,8 @@ public class ViewExperimentActivity extends FragmentActivity implements
 		return mExperiment;
 	}
 
-
-
 	@Override
-	public void onTxtFldEnterPressed_ExperimentTagsFragment() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onBtnLabelClicked_ExperimentTagsFragment() {
+	public void onTxtFldEnterPressed_ExperimentTagsFragment(String newTag) {
 		// TODO Auto-generated method stub
 		
 	}

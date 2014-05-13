@@ -1,8 +1,6 @@
 package sysnetlab.android.sdc.ui;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Tag;
 import android.support.v4.app.Fragment;
@@ -13,9 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.app.Activity;
@@ -23,7 +19,7 @@ import android.app.Activity;
 public class ExperimentTagsFragment extends Fragment {
 	private OnFragmentEventListener mCallback;
     private View mView;
-    private List<String> mExperimenTags;
+    // private List<String> mExperimenTags;
     private Activity mActivity;
 
     public interface OnFragmentEventListener {
@@ -45,9 +41,23 @@ public class ExperimentTagsFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_experiment_tag_editing, container, false);
         
     	ListView lv = (ListView) mView.findViewById(R.id.listView_tags);
-    	ArrayList<Tag> tmpTags = ((CreateExperimentActivity) getActivity()).getExperiment().getTags();
+    	
+    	ArrayList<Tag> tmpTags;
+    	Activity activity = getActivity();
+    	
+    	if (activity instanceof CreateExperimentActivity)
+    		tmpTags = ((CreateExperimentActivity) activity).getExperiment().getTags();
+    	else
+    		tmpTags = ((ViewExperimentActivity) activity).getExperiment().getTags();
     	ArrayAdapter<Tag> adapter = new ArrayAdapter<Tag>(mActivity, android.R.layout.simple_list_item_1, tmpTags);
-	    lv.setAdapter(adapter);
+    	
+    	Log.i("SensorDataCollector", "ExperimentTagsFragment.onCreateView: lv = " + lv);
+    	Log.i("SensorDataCollector", "ExperimentTagsFragment.onCreateView: adapter = " + adapter);
+    	
+    	if (activity instanceof CreateExperimentActivity)
+    		lv.setAdapter(adapter);
+    	else
+    		Log.i("SensorDataCollector", "not yet implemented for ViewExperimentActivity");
 	    
         return mView;
     }
