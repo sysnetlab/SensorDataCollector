@@ -3,43 +3,25 @@ package sysnetlab.android.sdc.datacollector;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.util.Log;
-import sysnetlab.android.sdc.datasink.ExperimentStore;
-import sysnetlab.android.sdc.datasink.ExperimentStoreCompartment;
+import sysnetlab.android.sdc.datastore.AbstractStore;
 
 public class ExperimentManager {
-	private List<ExperimentStore> mStores;
+	private List<AbstractStore> mStores;
 
 	public ExperimentManager() {
-		mStores = new ArrayList<ExperimentStore>();
+		mStores = new ArrayList<AbstractStore>();
 	}
 
-	public void addExperimentStore(ExperimentStore store) {
+	public void addExperimentStore(AbstractStore store) {
 		mStores.add(store);
 	}
 
-	public List<Experiment> listExperiments() {
-		List<Experiment> listExp = new ArrayList<Experiment>();
-		
-		for (ExperimentStore store : mStores) {
-			listExperiments(store, listExp);
+	public List<Experiment> getExperiments() {
+		List<Experiment> allExperiments = new ArrayList<Experiment>();
+		for (AbstractStore store : mStores) {
+			List<Experiment> experiments = store.listExperiments();
+			allExperiments.addAll(experiments);
 		}
-		
-		return listExp;
-	}
-
-	private void listExperiments(ExperimentStore store, List<Experiment> listExp) {
-		ExperimentStoreCompartment compartment;
-
-		while ((compartment = store.nextExperimentStoreCompartment()) != null) {
-			try {
-				Experiment experiment = new Experiment(compartment);
-				listExp.add(experiment);
-			} catch (Exception e) {
-				Log.e("SensorDataCollector",
-						"ExperimentManager failed to reconstruct experiment");
-				e.printStackTrace();
-			}
-		}
+		return allExperiments;
 	}
 }

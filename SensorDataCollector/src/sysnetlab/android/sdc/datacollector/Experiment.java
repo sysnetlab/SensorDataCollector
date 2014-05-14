@@ -2,22 +2,12 @@ package sysnetlab.android.sdc.datacollector;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
-import sysnetlab.android.sdc.datasink.DataSinkSingleton;
-import sysnetlab.android.sdc.datasink.ExperimentStoreCompartment;
-import sysnetlab.android.sdc.datasink.SimpleFileExperimentStoreCompartment;
+import sysnetlab.android.sdc.datastore.AbstractStore;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 public class Experiment implements Parcelable {
 	private DeviceInformation mDeviceInfo; // on what device?
@@ -27,6 +17,7 @@ public class Experiment implements Parcelable {
 	private ArrayList<Tag> mTags;
 	private ArrayList<Note> mNotes;
 	private ArrayList<AbstractSensor> mSensors;
+	private AbstractStore mStore;
 
 	public ArrayList<Tag> getTags() {
 		return mTags;
@@ -70,7 +61,6 @@ public class Experiment implements Parcelable {
 
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -80,92 +70,34 @@ public class Experiment implements Parcelable {
 		outParcel.writeString(mDateTimeCreated);
 	}
 
-	public Experiment(Parcel inParcel) {
+	public Experiment(Parcel inParcel) {	
 		mName = inParcel.readString();
 		mDateTimeCreated = inParcel.readString();
 	}
-
-	public Experiment() {
+	
+	public Experiment(String n, String dt, AbstractStore store) {
 		mDeviceInfo = new DeviceInformation();
-		DateFormat df = DateFormat.getDateTimeInstance();
-		mDateTimeCreated = df.format(Calendar.getInstance().getTime());
-		// mName = "Unnamed Experiment (" + mDateTimeCreated + ")";
-		mName = "Unnamed Experiment";
+		mName = n;
+		mDateTimeCreated = dt;
 		mTags = new ArrayList<Tag>();
 		mNotes = new ArrayList<Note>();
+		mSensors = new ArrayList<AbstractSensor>();
+		mStore = store;
 	}
 
-	public Experiment(int metaPort) {
-		readConfiguratione(metaPort);
+	public Experiment() {
+		this("Unnamed Experiment", DateFormat.getDateTimeInstance().format(
+				Calendar.getInstance().getTime()), null);
 	}
 
-	public Experiment(ExperimentStoreCompartment compartment) {
-
-		BufferedReader reader;
-		String configFilePath = ((SimpleFileExperimentStoreCompartment) compartment)
-				.getConfigFilePath();
-		try {
-			reader = new BufferedReader(new FileReader(configFilePath));
-			mName = reader.readLine();
-			mDateTimeCreated = reader.readLine();
-			reader.close();
-		} catch (FileNotFoundException e) {
-			Log.e("SensorDataCollector", "Cannot open configuration file.");
-			String parentDir = configFilePath.substring(0,
-					configFilePath.lastIndexOf("/"));
-			Log.i("SensorDataCollector", "Experiment: parent = " + parentDir);
-			File file = new File(parentDir);
-			mDateTimeCreated = SimpleDateFormat.getDateTimeInstance().format(
-					(new Date(file.lastModified())));
-			mName = parentDir.substring(parentDir.lastIndexOf("/") + 1);
-			Log.i("SensorDataCollector", "Experiment: experiment = " + mName);
-			e.printStackTrace();
-		} catch (IOException e) {
-			Log.e("SensorDataCollector", "Cannot read configuration file.");
-			e.printStackTrace();
-		}
-
+	public Experiment(String n, String dt) {
+		this(n, dt, null);
 	}
 
-	public Experiment(String configFile) throws IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(configFile));
-		mName = reader.readLine();
-		mDateTimeCreated = reader.readLine();
-		reader.close();
+	public Experiment(AbstractStore store) {
+		this("Unnamed Experiment", DateFormat.getDateTimeInstance().format(
+				Calendar.getInstance().getTime()), store);
 	}
-
-	public Experiment(String n, String dC) {
-		mName = n;
-		mDateTimeCreated = dC;
-	}
-
-	public void writeConfiguration(int metaPort) {
-		String configMsg = getName() + "\n" + getDateTimeCreated() + "\n";
-		DataSinkSingleton.getInstance().write(metaPort, configMsg);
-	}
-
-	private void readConfiguratione(int metaPort) {
-		mName = DataSinkSingleton.getInstance().readLine(metaPort);
-		mDateTimeCreated = DataSinkSingleton.getInstance().readLine(metaPort);
-	}
-
-	/*
-	 * private void writeExperimentConfiguration(Experiment exp, String
-	 * experimentDir) { try { PrintStream out = new PrintStream(new
-	 * FileOutputStream(experimentDir + "/.experiment"));
-	 * out.println(exp.getName()); out.println(exp.getDateCreated());
-	 * out.close(); } catch (FileNotFoundException e) { e.printStackTrace(); } }
-	 * 
-	 * 
-	 * 
-	 * 
-	 * private Experiment readExperimentConfiguratione(String experimentDir) {
-	 * try { BufferedReader reader = new BufferedReader(new
-	 * FileReader(experimentDir + "/.experiment")); String name =
-	 * reader.readLine(); String dateCreated = reader.readLine();
-	 * reader.close(); return new Experiment(name, dateCreated); } catch
-	 * (IOException e) { e.printStackTrace(); return null; } }
-	 */
 
 	public String getName() {
 		return mName;
@@ -203,6 +135,14 @@ public class Experiment implements Parcelable {
 		mDateTimeDone = dateTimeDone;
 	}
 
+	public AbstractStore getStore() {
+		return mStore;
+	}
+
+	public void setStore(AbstractStore store) {
+		mStore = store;
+	}
+	
 	public String toString() {
 		return mName + " " + mDateTimeCreated;
 	}

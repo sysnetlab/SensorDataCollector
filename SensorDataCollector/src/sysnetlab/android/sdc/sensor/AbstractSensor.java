@@ -1,12 +1,12 @@
 package sysnetlab.android.sdc.sensor;
 
-import sysnetlab.android.sdc.datacollector.DataSensorEventListener;
+import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
 
 public abstract class AbstractSensor {
 	private int mMajorType;
 	private int mMinorType;	
 	private boolean mSelected;
-	private DataSensorEventListener mListener;
+	private AndroidSensorEventListener mListener;
 	
 	public final static int ANDROID_SENSOR = 1;
 	public final static int CAMERA_SENSOR = 2;
@@ -46,11 +46,11 @@ public abstract class AbstractSensor {
 
 	public abstract String toString();
 	
-	public void setListener(DataSensorEventListener listener) {
+	public void setListener(AndroidSensorEventListener listener) {
 		mListener = listener;
 	}
 	
-	public DataSensorEventListener getListener() {
+	public AndroidSensorEventListener getListener() {
 		return mListener;
 	}
 }

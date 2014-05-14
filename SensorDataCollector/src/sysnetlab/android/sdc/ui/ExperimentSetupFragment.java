@@ -41,7 +41,7 @@ public class ExperimentSetupFragment extends Fragment {
 		.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mCallback.onBtnRunClicked_ExperimentSetupFragment(v);
+				mCallback.onBtnRunClicked_ExperimentSetupFragment(mView);
 			}
 			
 		});

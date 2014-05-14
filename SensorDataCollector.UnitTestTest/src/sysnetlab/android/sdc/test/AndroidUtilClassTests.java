@@ -1,6 +1,9 @@
 package sysnetlab.android.sdc.test;
 
 import sysnetlab.android.sdc.datacollector.DeviceInformation;
+import sysnetlab.android.sdc.datastore.AbstractStore;
+import sysnetlab.android.sdc.datastore.SimpleFileStore;
+import sysnetlab.android.sdc.datastore.SimpleFileStoreSingleton;
 import android.test.AndroidTestCase;
 
 public class AndroidUtilClassTests extends AndroidTestCase {
@@ -40,6 +43,12 @@ public class AndroidUtilClassTests extends AndroidTestCase {
     	assertEquals("SysNetLabMaker", deviceInfo.getManufacturer());   	
     	assertEquals("T151", deviceInfo.getModel());   	
     	assertEquals("SysNetLabMaker T151", deviceInfo.toString());
+    }
+    
+    public void testSimpleFileStore() {
+    	AbstractStore store = SimpleFileStoreSingleton.getInstance();
+    	store.addExperiment();
+    	assertNotNull(((SimpleFileStore)store).getNewExperimentPath());	
     }
     
     public void testExperiment() {

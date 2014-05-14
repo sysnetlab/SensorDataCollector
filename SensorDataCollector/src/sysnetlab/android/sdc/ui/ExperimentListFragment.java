@@ -37,7 +37,7 @@ public class ExperimentListFragment extends ListFragment {
 	    mHeaderView = inflator.inflate(R.layout.experiment_list_header, null);	
         
 	    mExperimentList = new ExperimentListAdaptor(getActivity(), 
-	    		ExperimentManagerSingleton.getInstance().listExperiments());
+	    		ExperimentManagerSingleton.getInstance().getExperiments());
     }
 
     @Override

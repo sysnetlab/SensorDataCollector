@@ -5,9 +5,10 @@ import java.util.Iterator;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.DataCollectionState;
-import sysnetlab.android.sdc.datacollector.DataSensorEventListener;
+import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
 import sysnetlab.android.sdc.datacollector.Experiment;
-import sysnetlab.android.sdc.datasink.DataSinkSingleton;
+import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
+import sysnetlab.android.sdc.datastore.SimpleFileStoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
@@ -52,7 +53,13 @@ public class CreateExperimentActivity extends FragmentActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_container);
 		
-		mExperiment = new Experiment();
+		
+		/** 
+		 * create an experiment using SimpleFileStore. It can be set
+		 * using UI in the future when different types of Store are
+		 * corrected. 
+		 */
+		mExperiment = new Experiment(SimpleFileStoreSingleton.getInstance());
 		
 		if (findViewById(R.id.fragment_container) != null) {
 			if (savedInstanceState != null) {
@@ -67,7 +74,7 @@ public class CreateExperimentActivity extends FragmentActivity
 
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
-		Log.i("SensorDataCollector", "CreateExperimentActivity created");
+		Log.i("SensorDataCollector", "Leaving CreateExperimentActivit::onCreate.");
 	}
 	
 	public void onSensorClicked_SensorListFragment(AndroidSensor sensor) {
@@ -163,11 +170,8 @@ public class CreateExperimentActivity extends FragmentActivity
 		return mExperiment;
 	}
 
-	private void runDataSensor() throws IOException {	
-		DataSinkSingleton.getInstance().open();
-		
-		int metaPort = DataSinkSingleton.getInstance().openMetaPort();
-		mExperiment.writeConfiguration(metaPort);
+	private void runExperiment() throws IOException {
+		mExperiment.getStore().addExperiment();
 		
 		Iterator<AndroidSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
 		int nChecked = 0;
@@ -176,9 +180,9 @@ public class CreateExperimentActivity extends FragmentActivity
 			if (sensor.isSelected()) {
 				nChecked ++;
 
-				int port = DataSinkSingleton.getInstance().openDataPort(sensor.getName());
-				DataSensorEventListener listener = 
-						new DataSensorEventListener(DataSinkSingleton.getInstance(), port);
+				Channel channel = mExperiment.getStore().getChannel(sensor.getName());
+				AndroidSensorEventListener listener = 
+						new AndroidSensorEventListener(channel);
 				sensor.setListener(listener);
 				mSensorManager.registerListener(listener, (Sensor)sensor.getSensor(), sensor.getSamplingInterval());
 			}
@@ -188,19 +192,21 @@ public class CreateExperimentActivity extends FragmentActivity
 		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();			
 	}		
 	
-	private void stopDataSensor() throws IOException {		
+	private void stopExperiment() throws IOException {		
 		Iterator<AndroidSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
 		int nChecked = 0;
 		while (iter.hasNext()) {
 			AndroidSensor sensor = (AndroidSensor) iter.next();
 			if (sensor.isSelected()) {
 				nChecked ++;
-				DataSensorEventListener listener = sensor.getListener();
+				AndroidSensorEventListener listener = sensor.getListener();
 				mSensorManager.unregisterListener(listener);
 			}
 		}
 		
-		DataSinkSingleton.getInstance().close();
+		mExperiment.getStore().writeExperimentMetaData(mExperiment);
+		
+		mExperiment.getStore().closeAllChannels();
 		
 		CharSequence text = "Stopped data collection for " + nChecked + " Sensors";
 		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();		
@@ -245,10 +251,19 @@ public class CreateExperimentActivity extends FragmentActivity
 	}
 
 	@Override
-	public void onBtnRunClicked_ExperimentSetupFragment(View v) {
+	public void onBtnRunClicked_ExperimentSetupFragment(View view) {
 		if (mExperimentRunFragment == null)
 			mExperimentRunFragment = new ExperimentRunFragment();
-		FragmentUtil.switchToFragment(this, mExperimentRunFragment, "sensorlist");		
+
+		Log.i("SensorDataCollector",
+				"CreateExperimentActivity::onBtnRunClicked_ExperimentSetupFragment(): "
+						+ view.findViewById(R.id.et_experiment_setup_name));
+		mExperiment.setName(((EditText) view
+				.findViewById(R.id.et_experiment_setup_name)).getText()
+				.toString());
+
+		FragmentUtil.switchToFragment(this, mExperimentRunFragment,
+				"experimentrun");
 	}
 
 	@Override
@@ -261,7 +276,7 @@ public class CreateExperimentActivity extends FragmentActivity
 	public void runExperiment_ExperimentRunFragment(View v) {
 		if (mCollectionState == DataCollectionState.DATA_COLLECTION_STOPPED) {
 			try {
-				runDataSensor();
+				runExperiment();
 				mCollectionState = DataCollectionState.DATA_COLLECTION_IN_PROGRESS;
 			} catch (IOException e) {
 				Log.e("SensorDataCollector", e.toString());
@@ -275,7 +290,7 @@ public class CreateExperimentActivity extends FragmentActivity
 	public void stopExperiment_ExperimentRunFragment(View v) {
 		if (mCollectionState == DataCollectionState.DATA_COLLECTION_IN_PROGRESS) {
 			try {
-				stopDataSensor();
+				stopExperiment();
 			} catch (IOException e) {
 				Log.e("SensorDataCollector", e.toString());
 			}
@@ -284,5 +299,4 @@ public class CreateExperimentActivity extends FragmentActivity
 			Toast.makeText(this, "Unsupported Button Action", Toast.LENGTH_SHORT).show();					
 		}		
 	}
-
 }
