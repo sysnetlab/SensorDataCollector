@@ -74,4 +74,7 @@ public class ExperimentListFragment extends ListFragment {
     	});
     }   
     
+    public ArrayAdapter<Experiment> getExperimentArray(){
+    	return mExperimentList;
+    }
 }
