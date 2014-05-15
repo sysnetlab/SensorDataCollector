@@ -175,6 +175,10 @@ public class CreateExperimentActivity extends FragmentActivity
     public ExperimentSetupFragment getExperimentSetupFragment() {
         return mExperimentSetupFragment;
     }
+    
+    public ExperimentRunFragment getExperimentRunFragment() {
+		return mExperimentRunFragment;
+	}
 
     public DataCollectionState getCurrentCollectionState()
     {
