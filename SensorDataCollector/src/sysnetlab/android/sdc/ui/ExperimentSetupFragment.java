@@ -24,7 +24,7 @@ public class ExperimentSetupFragment extends Fragment {
     	public void onImvSensorsClicked_ExperimentSetupFragment(ImageView v);    	
     	public void onBtnRunClicked_ExperimentSetupFragment(View v);
     	public void onBtnBackClicked_ExperimentSetupFragment();
-    }	
+	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -43,7 +43,6 @@ public class ExperimentSetupFragment extends Fragment {
 			public void onClick(View v) {
 				mCallback.onBtnRunClicked_ExperimentSetupFragment(mView);
 			}
-			
 		});
 		
 		((Button)mView.findViewById(R.id.button_experiment_back))
