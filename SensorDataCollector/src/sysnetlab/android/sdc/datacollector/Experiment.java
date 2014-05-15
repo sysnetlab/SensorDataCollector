@@ -20,7 +20,33 @@ public class Experiment implements Parcelable {
 
     private ArrayList<AbstractSensor> mSensors;
     private AbstractStore mStore;
+    
+    public Experiment(String n, String dt, AbstractStore store) {
+        mDeviceInfo = new DeviceInformation();
+        mName = n;
+        mDateTimeCreated = dt;
+        mDateTimeDone = dt;
+        mTags = new ArrayList<Tag>();
+        mNotes = new ArrayList<Note>();
+        mSensors = new ArrayList<AbstractSensor>();
+        mStore = store;
+    }
 
+
+    public Experiment() {
+        this("Unnamed Experiment", DateFormat.getDateTimeInstance().format(
+                Calendar.getInstance().getTime()), null);
+    }
+
+    public Experiment(String n, String dt) {
+        this(n, dt, null);
+    }
+
+    public Experiment(AbstractStore store) {
+        this("Unnamed Experiment", DateFormat.getDateTimeInstance().format(
+                Calendar.getInstance().getTime()), store);
+    }
+    
     public ArrayList<Tag> getTags() {
         return mTags;
     }
@@ -30,7 +56,10 @@ public class Experiment implements Parcelable {
     }
 
     public void addTag(String strTag) {
-        strTag = strTag.trim();
+    	if(strTag!=null)
+    		strTag = strTag.trim();
+    	else
+    		return;
         if (strTag.equals("")) {
             return;
         }
@@ -45,19 +74,8 @@ public class Experiment implements Parcelable {
     }
 
     public void setNotes(ArrayList<Note> mNotes) {
-        this.mNotes = mNotes;
-    }
-
-
-    public Experiment(String n, String dt, AbstractStore store) {
-        mDeviceInfo = new DeviceInformation();
-        mName = n;
-        mDateTimeCreated = dt;
-        mDateTimeDone = dt;
-        mTags = new ArrayList<Tag>();
-        mNotes = new ArrayList<Note>();
-        mSensors = new ArrayList<AbstractSensor>();
-        mStore = store;
+    	if(mNotes!=null)
+    		this.mNotes = mNotes;
     }
 
     public Experiment() {
@@ -161,4 +179,8 @@ public class Experiment implements Parcelable {
         inParcel.readTypedList(mNotes, Note.CREATOR);
         mDeviceInfo = inParcel.readParcelable(DeviceInformation.class.getClassLoader());
     }
+
+	public Parcelable.Creator<Experiment> getCreator() {
+		return CREATOR;
+	}
 }

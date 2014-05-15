@@ -29,13 +29,14 @@ import android.widget.Toast;
 public class CreateExperimentActivity extends FragmentActivity
         implements
         SensorListFragment.OnFragmentClickListener,
-        SensorSetupFragment.OnFragmentClickListener,
+        SensorSetupFragment.OnFragmentClickListener,        
         ExperimentSetupFragment.OnFragmentClickListener,
         ExperimentSensorSelectionFragment.OnFragmentClickListener,
         ExperimentEditTagsFragment.OnFragmentEventListener,
         ExperimentRunFragment.OnFragmentClickListener,
         ExperimentRunFragment.ExperimentHandler,
-        ExperimentRunTaggingFragment.OnFragmentClickListener
+        ExperimentRunTaggingFragment.OnFragmentClickListener,
+        CreateExperimentNotesFragment.OnFragmentClickListener
 {
 
     private SensorManager mSensorManager;
@@ -44,6 +45,7 @@ public class CreateExperimentActivity extends FragmentActivity
     private ExperimentSensorSelectionFragment mExperimentSensorSelectionFragment;
     private SensorListFragment mSensorListFragment;
     private SensorSetupFragment mSensorSetupFragment;
+    private CreateExperimentNotesFragment mCreateExperimentNotesFragment;
     private ExperimentRunFragment mExperimentRunFragment;
 
     private DataCollectionState mCollectionState;
@@ -149,11 +151,24 @@ public class CreateExperimentActivity extends FragmentActivity
         FragmentUtil.switchToFragment(this, mExperimentSetupFragment, "experimentsetup");
     }
 
+    @Override
+    public void onBtnBackClicked_CreateExperimentNotesFragment() {
+        // TODO lazy work for now, more work ...
+        if (mExperimentSetupFragment == null)
+            mExperimentSetupFragment = new ExperimentSetupFragment();
+        FragmentUtil.switchToFragment(this, mExperimentSetupFragment, "experimentsetup");
+    }
+    
     public SensorListFragment getSensorListFragment()
     {
         return mSensorListFragment;
     }
-
+    
+    public CreateExperimentNotesFragment getCreateExperimentNotesFragment()
+    {
+        return mCreateExperimentNotesFragment;
+    }
+    
     public SensorSetupFragment getSensorSetupFragment()
     {
         return mSensorSetupFragment;
@@ -162,6 +177,10 @@ public class CreateExperimentActivity extends FragmentActivity
     public ExperimentSetupFragment getExperimentSetupFragment() {
         return mExperimentSetupFragment;
     }
+    
+    public ExperimentRunFragment getExperimentRunFragment() {
+		return mExperimentRunFragment;
+	}
 
     public DataCollectionState getCurrentCollectionState()
     {
@@ -242,7 +261,9 @@ public class CreateExperimentActivity extends FragmentActivity
     @Override
     public void onImvNotesClicked_ExperimentSetupFragment(ImageView v) {
         // TODO Auto-generated method stub
-
+    	if (mCreateExperimentNotesFragment == null)
+            mCreateExperimentNotesFragment = new CreateExperimentNotesFragment();
+    	FragmentUtil.switchToFragment(this, mCreateExperimentNotesFragment, "viewnotes");    	
     }
 
     @Override

@@ -26,7 +26,7 @@ public class ExperimentSetupFragment extends Fragment {
     	public void onImvSensorsClicked_ExperimentSetupFragment(ImageView v);    	
     	public void onBtnRunClicked_ExperimentSetupFragment(View v);
     	public void onBtnBackClicked_ExperimentSetupFragment();
-    }	
+	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -39,13 +39,19 @@ public class ExperimentSetupFragment extends Fragment {
 			}
 		});
 		
+		((ImageView)mView.findViewById(R.id.imv_notes_plusminus))
+		.setOnClickListener(new ImageView.OnClickListener() {
+			public void onClick(View v) {
+				mCallback.onImvNotesClicked_ExperimentSetupFragment((ImageView)v);
+			}
+		});
+		
 		((Button)mView.findViewById(R.id.button_experiment_run))
 		.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mCallback.onBtnRunClicked_ExperimentSetupFragment(mView);
 			}
-			
 		});
 		
 		((Button)mView.findViewById(R.id.button_experiment_back))

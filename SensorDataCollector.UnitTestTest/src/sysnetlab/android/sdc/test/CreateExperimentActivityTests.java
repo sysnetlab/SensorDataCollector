@@ -2,7 +2,9 @@ package sysnetlab.android.sdc.test;
 
 import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
+import sysnetlab.android.sdc.ui.ExperimentRunFragment;
 import sysnetlab.android.sdc.ui.ExperimentSetupFragment;
+import sysnetlab.android.sdc.ui.SensorListFragment;
 import sysnetlab.android.sdc.ui.SensorSetupFragment;
 import android.content.Intent;
 import android.widget.Button;
@@ -27,17 +29,8 @@ public class CreateExperimentActivityTests
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}
-
-	public void testSensorDataCollectionActivityLoaded()
-	{
-		ExperimentSetupFragment experimentSetupFragment = createExperimentActivity.getExperimentSetupFragment();
-		assertNotNull(experimentSetupFragment);
-		SensorSetupFragment sensorSetupFragment = createExperimentActivity.getSensorSetupFragment();
-		assertNull(sensorSetupFragment);
-	}
 	
-	public void testSensorDataCollectionState()
-	{
+	public void testSensorDataCollectionState(){
 		assert(createExperimentActivity.getCurrentCollectionState() == DataCollectionState.DATA_COLLECTION_STOPPED);
 		createExperimentActivity.onBtnRunClicked_SensorListFragment(new Button(createExperimentActivity));
 		assert(createExperimentActivity.getCurrentCollectionState() == DataCollectionState.DATA_COLLECTION_IN_PROGRESS);
@@ -46,12 +39,22 @@ public class CreateExperimentActivityTests
 	}
 	
 	public void testExperimentSetupFragment() {
-		// TODO testing fragment is loaded
+		ExperimentSetupFragment experimentSetupFragment = createExperimentActivity.getExperimentSetupFragment();
+		assertNotNull(experimentSetupFragment);
 	}
 	
 	public void testExperimentRunFragment() {
-		// TODO testing fragment is loaded
+		ExperimentRunFragment experimentRunFragment=createExperimentActivity.getExperimentRunFragment();
+		assertNotNull(experimentRunFragment);
 	}
 	
-	// TODO add test methods for other fragments
+	public void testSensorDataCollectionActivityLoaded(){
+		SensorSetupFragment sensorSetupFragment = createExperimentActivity.getSensorSetupFragment();
+		assertNotNull(sensorSetupFragment);
+	}
+	
+	public void testSensorListFragment() {
+		SensorListFragment sensorListFragment=createExperimentActivity.getSensorListFragment();
+		assertNotNull(sensorListFragment);
+	}
 }
