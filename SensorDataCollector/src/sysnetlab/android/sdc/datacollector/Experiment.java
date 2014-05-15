@@ -19,6 +19,35 @@ public class Experiment implements Parcelable {
     private ArrayList<Note> mNotes;
     private ArrayList<AbstractSensor> mSensors;
     private AbstractStore mStore;
+    
+    public Experiment(String n, String dt, AbstractStore store) {
+        mDeviceInfo = new DeviceInformation();
+        mName = n;
+        mDateTimeCreated = dt;
+        mTags = new ArrayList<Tag>();
+        mNotes = new ArrayList<Note>();
+        mSensors = new ArrayList<AbstractSensor>();
+        mStore = store;
+    }
+
+    public Experiment() {
+        this("Unnamed Experiment", DateFormat.getDateTimeInstance().format(
+                Calendar.getInstance().getTime()), null);
+    }
+
+    public Experiment(String n, String dt) {
+        this(n, dt, null);
+    }
+
+    public Experiment(AbstractStore store) {
+        this("Unnamed Experiment", DateFormat.getDateTimeInstance().format(
+                Calendar.getInstance().getTime()), store);
+    }
+    
+    public Experiment(Parcel inParcel) {
+        mName = inParcel.readString();
+        mDateTimeCreated = inParcel.readString();
+    }
 
     public ArrayList<Tag> getTags() {
         return mTags;
@@ -29,7 +58,10 @@ public class Experiment implements Parcelable {
     }
 
     public void addTag(String strTag) {
-        strTag = strTag.trim();
+    	if(strTag!=null)
+    		strTag = strTag.trim();
+    	else
+    		return;
         if (strTag.equals("")) {
             return;
         }
@@ -44,7 +76,8 @@ public class Experiment implements Parcelable {
     }
 
     public void setNotes(ArrayList<Note> mNotes) {
-        this.mNotes = mNotes;
+    	if(mNotes!=null)
+    		this.mNotes = mNotes;
     }
 
     public static final Parcelable.Creator<Experiment> CREATOR = new Parcelable.Creator<Experiment>() {
@@ -77,36 +110,7 @@ public class Experiment implements Parcelable {
         // ? sensors
         // ? store?
     }
-
-    public Experiment(Parcel inParcel) {
-        mName = inParcel.readString();
-        mDateTimeCreated = inParcel.readString();
-    }
-
-    public Experiment(String n, String dt, AbstractStore store) {
-        mDeviceInfo = new DeviceInformation();
-        mName = n;
-        mDateTimeCreated = dt;
-        mTags = new ArrayList<Tag>();
-        mNotes = new ArrayList<Note>();
-        mSensors = new ArrayList<AbstractSensor>();
-        mStore = store;
-    }
-
-    public Experiment() {
-        this("Unnamed Experiment", DateFormat.getDateTimeInstance().format(
-                Calendar.getInstance().getTime()), null);
-    }
-
-    public Experiment(String n, String dt) {
-        this(n, dt, null);
-    }
-
-    public Experiment(AbstractStore store) {
-        this("Unnamed Experiment", DateFormat.getDateTimeInstance().format(
-                Calendar.getInstance().getTime()), store);
-    }
-
+    
     public String getName() {
         return mName;
     }
@@ -154,4 +158,8 @@ public class Experiment implements Parcelable {
     public String toString() {
         return mName + " " + mDateTimeCreated;
     }
+
+	public Parcelable.Creator<Experiment> getCreator() {
+		return CREATOR;
+	}
 }
