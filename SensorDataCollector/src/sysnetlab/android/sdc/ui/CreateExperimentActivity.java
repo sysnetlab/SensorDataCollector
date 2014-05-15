@@ -31,6 +31,7 @@ public class CreateExperimentActivity extends FragmentActivity
         SensorListFragment.OnFragmentClickListener,
         SensorSetupFragment.OnFragmentClickListener,
         ExperimentSetupFragment.OnFragmentClickListener,
+        ExperimentSensorSelectionFragment.OnFragmentClickListener,
         ExperimentEditTagsFragment.OnFragmentEventListener,
         ExperimentRunFragment.OnFragmentClickListener,
         ExperimentRunFragment.ExperimentHandler,
@@ -40,6 +41,7 @@ public class CreateExperimentActivity extends FragmentActivity
     private SensorManager mSensorManager;
 
     private ExperimentSetupFragment mExperimentSetupFragment;
+    private ExperimentSensorSelectionFragment mExperimentSensorSelectionFragment;
     private SensorListFragment mSensorListFragment;
     private SensorSetupFragment mSensorSetupFragment;
     private ExperimentRunFragment mExperimentRunFragment;
@@ -246,9 +248,12 @@ public class CreateExperimentActivity extends FragmentActivity
     @Override
     public void onImvSensorsClicked_ExperimentSetupFragment(ImageView v) {
         // TODO lazy work for now, more work ...
-        if (mSensorListFragment == null)
-            mSensorListFragment = new SensorListFragment();
-        FragmentUtil.switchToFragment(this, mSensorListFragment, "sensorlist");
+        if (mExperimentSensorSelectionFragment == null) {
+            mExperimentSensorSelectionFragment = new ExperimentSensorSelectionFragment();
+        }
+        getIntent().putExtra("havingheader", true);
+        getIntent().putExtra("havingfooter",  true);
+        FragmentUtil.switchToFragment(this, mExperimentSensorSelectionFragment, "sensorselection");
     }
 
     @Override
@@ -299,5 +304,25 @@ public class CreateExperimentActivity extends FragmentActivity
         } else {
             Toast.makeText(this, "Unsupported Button Action", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onBtnConfirmClicked_ExperimentSensorSelectionFragment() {
+        getIntent().putExtra("havingheader",  false);
+        getIntent().putExtra("havingfooter",  false);        
+        FragmentUtil.switchToFragment(this, mExperimentSetupFragment, "sensorsetup");
+    }
+
+    @Override
+    public void onBtnClearClicked_ExperimentSensorSelectionFragment() {
+        Iterator<AndroidSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
+        while (iter.hasNext()) {
+            AndroidSensor sensor = (AndroidSensor) iter.next();
+            if (sensor.isSelected()) {
+                sensor.setSelected(false); 
+            }
+        }
+        
+        mExperimentSensorSelectionFragment.getSensorListAdapter().notifyDataSetChanged();
     }
 }

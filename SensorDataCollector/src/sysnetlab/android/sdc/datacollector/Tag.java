@@ -16,7 +16,7 @@ public class Tag implements Parcelable {
     public Tag(String name, String shortDesc) {
         this(name, shortDesc, null);
     }
-
+ 
     public Tag(String name, String shortDesc, String longDesc) {
         mName = name;
         mShortDescription = shortDesc;

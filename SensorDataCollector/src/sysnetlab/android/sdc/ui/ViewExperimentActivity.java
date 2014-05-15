@@ -21,7 +21,7 @@ public class ViewExperimentActivity extends FragmentActivity implements
 		setContentView(R.layout.fragment_container);
 		
 		Intent intent = getIntent();
-		mExperiment = intent.getParcelableExtra("experiment");
+		mExperiment = (Experiment)intent.getParcelableExtra("experiment");
 		if (mExperiment == null)
 			Log.i("SensorDataColelctor", "ViewExperimentActivity failed to get experiment from intent");
 		Log.i("SensorDataCollector", "ViewExperimentActivity: experiment is " + mExperiment.toString());

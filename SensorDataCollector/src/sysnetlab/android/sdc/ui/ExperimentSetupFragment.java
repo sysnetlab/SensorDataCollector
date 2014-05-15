@@ -1,5 +1,7 @@
 package sysnetlab.android.sdc.ui;
 
+import java.lang.reflect.Field;
+
 import sysnetlab.android.sdc.R;
 import android.app.Activity;
 import android.os.Bundle;
@@ -77,11 +79,9 @@ public class ExperimentSetupFragment extends Fragment {
 		
 		if (mExperimentSensorSelectionFragment == null) {
 			mExperimentSensorSelectionFragment = new ExperimentSensorSelectionFragment();
-			/*
-			Button button = new Button(getActivity());
-			button.setText("Clear");
-			mExperimentSensorSelectionFragment.addViewToHeader(button);
-			*/
+
+			getActivity().getIntent().putExtra("havingheader",  false);
+			getActivity().getIntent().putExtra("havingfooter",  false);
 			transaction.add(R.id.layout_sensor_list,  mExperimentSensorSelectionFragment);
 		}
 		transaction.commit();
@@ -102,7 +102,7 @@ public class ExperimentSetupFragment extends Fragment {
         }
 	}
 
-	public View getView() {
-		return mView;
-	}
+    public View getView() {
+        return mView;
+    }
 }

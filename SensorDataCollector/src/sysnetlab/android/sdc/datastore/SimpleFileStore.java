@@ -15,7 +15,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import sysnetlab.android.sdc.datacollector.DeviceInformation;
 import sysnetlab.android.sdc.datacollector.Experiment;
+import sysnetlab.android.sdc.datacollector.Tag;
+import sysnetlab.android.sdc.datacollector.Note;
 import android.os.Environment;
 import android.util.Log;
 
@@ -36,6 +39,7 @@ public class SimpleFileStore extends AbstractStore {
 
         Log.i("SensorDataCollector",
                 "entering SimpleFileStore.constructor() ...");
+
         String parentPath = Environment.getExternalStorageDirectory().getPath();
         parentPath = parentPath + "/SensorData";
         File dataDir = new File(parentPath);
@@ -99,8 +103,27 @@ public class SimpleFileStore extends AbstractStore {
         try {
             out = new PrintStream(new BufferedOutputStream(
                     new FileOutputStream(configFilePath)));
+
             out.println(experiment.getName());
             out.println(experiment.getDateTimeCreated());
+            out.println(experiment.getDateTimeDone());
+
+            out.println(experiment.getTags().size());
+            for (Tag tag : experiment.getTags()) {
+                out.println(tag.getName());
+                out.println(tag.getShortDescription());
+                out.println(tag.getLongDescription());
+            }
+
+            out.println(experiment.getNotes().size());
+            for (Note note : experiment.getNotes()) {
+                out.println(note.getDateTime());
+                out.println(note.getNote());
+            }
+
+            out.println(experiment.getDeviceInformation().getManufacturer());
+            out.println(experiment.getDeviceInformation().getModel());
+
             out.close();
             return true;
         } catch (FileNotFoundException e) {
@@ -109,6 +132,107 @@ public class SimpleFileStore extends AbstractStore {
                             configFilePath);
             e.printStackTrace();
             return false;
+        }
+    }
+
+    private Experiment loadExperiment(String dirName, String parentDir) {
+        String configFilePath = parentDir + "/.experiment";
+        String name = null, dateTimeCreated = null;
+
+        try {
+            BufferedReader in;
+            File file;
+
+            file = new File(configFilePath);
+
+            if (file.exists()) {
+                String dateTimeDone;
+
+                in = new BufferedReader(new FileReader(configFilePath));
+
+                name = in.readLine();
+                dateTimeCreated = in.readLine();
+
+                Experiment experiment = new Experiment(name, dateTimeCreated);
+
+                dateTimeDone = in.readLine();
+                experiment.setDateTimeDone(dateTimeDone);
+
+                int n;
+                n = Integer.parseInt(in.readLine());
+                if (n > 0) {
+                    ArrayList<Tag> tags = new ArrayList<Tag>();
+
+                    for (int i = 0; i < n; i++) {
+                        String tagName = in.readLine();
+                        String tagShortDesc = in.readLine();
+                        String tagLongDesc = in.readLine();
+
+                        Tag tag = new Tag(tagName, tagShortDesc, tagLongDesc);
+                        tags.add(tag);
+                    }
+                }
+
+                n = Integer.parseInt(in.readLine());
+                if (n > 0) {
+                    ArrayList<Note> notes = new ArrayList<Note>();
+
+                    for (int i = 0; i < n; i++) {
+                        String dateTime = in.readLine();
+                        String noteText = in.readLine();
+
+                        Note note = new Note(noteText, dateTime);
+                        notes.add(note);
+                    }
+                }
+
+                String make = in.readLine();
+                String model = in.readLine();
+                DeviceInformation deviceInfo = new DeviceInformation(make, model);
+
+                experiment.setDeviceInformation(deviceInfo);
+
+                in.close();
+
+                return experiment;
+            } else {
+                file = new File(parentDir);
+
+                dateTimeCreated = SimpleDateFormat.getDateTimeInstance().format(
+                        (new Date(file.lastModified())));
+                name = dirName;
+
+                Log.w("SensorDataCollector",
+                        "SimpleFileStore::loadExperiment(): no configuraiton file is found. treated it as an old experiment.");
+
+                return new Experiment(name, dateTimeCreated);
+            }
+        } catch (NumberFormatException e) {
+            if (name != null && dateTimeCreated != null) {
+                Log.w("SensorDataCollector",
+                        "SimpleFileStore::loadExperiment(): Found an old configuration file.");
+                return new Experiment(name, dateTimeCreated);
+            }
+
+            Log.e("SensorDataCollector", "SimpleFileStore::loadExperiment(): " +
+                    "Failed to load the configuration file.");
+            e.printStackTrace();
+
+            return null;     
+            
+        } catch (IOException e) {
+
+            if (name != null && dateTimeCreated != null) {
+                Log.w("SensorDataCollector",
+                        "SimpleFileStore::loadExperiment(): Found an old configuration file.");
+                return new Experiment(name, dateTimeCreated);
+            }
+
+            Log.e("SensorDataCollector", "SimpleFileStore::loadExperiment(): " +
+                    "Failed to load the configuration file.");
+            e.printStackTrace();
+
+            return null;
         }
     }
 
@@ -143,7 +267,9 @@ public class SimpleFileStore extends AbstractStore {
 
     @Override
     public Channel getChannel(String tag) {
+
         String path;
+
         if (tag == null || tag.trim().length() == 0) {
             DecimalFormat f = new DecimalFormat("00000");
             path = mNewExperimentPath + "/" + DEFAULT_DATAFILE_PREFIX
@@ -152,6 +278,7 @@ public class SimpleFileStore extends AbstractStore {
         } else {
             path = mNewExperimentPath + "/" + tag.replace(' ', '_') + ".txt";
         }
+
         try {
             Channel channel;
             channel = new SimpleFileChannel(path);
@@ -179,34 +306,6 @@ public class SimpleFileStore extends AbstractStore {
             channel.close();
         // create new channel list and garbage-collect the old channel list
         mChannels = new ArrayList<Channel>();
-    }
-
-    private Experiment loadExperiment(String dirName, String parentDir) {
-        String configFilePath = parentDir + "/.experiment";
-        String name, dt;
-        BufferedReader reader;
-        File file;
-
-        try {
-            file = new File(configFilePath);
-            if (file.exists()) {
-                reader = new BufferedReader(new FileReader(configFilePath));
-                name = reader.readLine();
-                dt = reader.readLine();
-                reader.close();
-            } else {
-                file = new File(parentDir);
-                dt = SimpleDateFormat.getDateTimeInstance().format(
-                        (new Date(file.lastModified())));
-                name = dirName;
-            }
-            return new Experiment(name, dt);
-        } catch (IOException e) {
-            Log.e("SensorDataCollector",
-                    "SimpleFileStore::loadExperiment: failed to load experiment.");
-            e.printStackTrace();
-            return null;
-        }
     }
 
     public String getNewExperimentPath() {

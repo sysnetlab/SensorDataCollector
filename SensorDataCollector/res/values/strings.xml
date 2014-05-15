@@ -38,4 +38,8 @@
     <string name="notes">Notes</string>
     <string name="back">Back</string>
     <string name="clone">Clone</string>
+    <string name="select_sensors">Select Sensors</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="clear">Clear</string>
 </resources>
