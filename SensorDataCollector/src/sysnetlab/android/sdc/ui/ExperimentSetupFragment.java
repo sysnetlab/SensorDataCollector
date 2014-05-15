@@ -37,6 +37,13 @@ public class ExperimentSetupFragment extends Fragment {
 			}
 		});
 		
+		((ImageView)mView.findViewById(R.id.imv_notes_plusminus))
+		.setOnClickListener(new ImageView.OnClickListener() {
+			public void onClick(View v) {
+				mCallback.onImvNotesClicked_ExperimentSetupFragment((ImageView)v);
+			}
+		});
+		
 		((Button)mView.findViewById(R.id.button_experiment_run))
 		.setOnClickListener(new Button.OnClickListener() {
 			@Override
