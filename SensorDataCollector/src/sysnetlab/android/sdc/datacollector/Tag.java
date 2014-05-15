@@ -10,11 +10,11 @@ public class Tag implements Parcelable {
     private String mLongDescription;
     
     public Tag(String name) {
-        this(name, null, null);
+        this(name, "", "");
     }
 
     public Tag(String name, String shortDesc) {
-        this(name, shortDesc, null);
+        this(name, shortDesc, "");
     }
 
     public Tag(String name, String shortDesc, String longDesc) {
@@ -95,4 +95,8 @@ public class Tag implements Parcelable {
         outParcel.writeString(mShortDescription);
         outParcel.writeString(mLongDescription);       
     }
+    
+    public Parcelable.Creator<Tag> getCreator() {
+		return CREATOR;
+	}
 }
