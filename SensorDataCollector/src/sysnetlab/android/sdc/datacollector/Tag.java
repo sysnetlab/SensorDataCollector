@@ -1,18 +1,20 @@
 
 package sysnetlab.android.sdc.datacollector;
 
-public class Tag {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Tag implements Parcelable {
     private String mName;
     private String mShortDescription;
     private String mLongDescription;
-
+    
     public Tag(String name) {
-        mName = name;
+        this(name, null, null);
     }
 
     public Tag(String name, String shortDesc) {
-        mName = name;
-        mShortDescription = shortDesc;
+        this(name, shortDesc, null);
     }
 
     public Tag(String name, String shortDesc, String longDesc) {
@@ -59,5 +61,38 @@ public class Tag {
         }
 
         return sameSame;
+    }
+    
+    public static final Parcelable.Creator<Tag> CREATOR = new Parcelable.Creator<Tag>() {
+
+        @Override
+        public Tag createFromParcel(Parcel inParcel) {
+            return new Tag(inParcel);
+        }
+
+        @Override
+        public Tag[] newArray(int size) {
+            return new Tag[size];
+        }
+        
+    };
+    
+    public Tag(Parcel inParcel) {
+        mName = inParcel.readString();
+        mShortDescription = inParcel.readString();
+        mLongDescription = inParcel.readString();
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel outParcel, int flags) {
+        outParcel.writeString(mName);
+        outParcel.writeString(mShortDescription);
+        outParcel.writeString(mLongDescription);       
     }
 }

@@ -68,6 +68,14 @@ public class Experiment implements Parcelable {
     public void writeToParcel(Parcel outParcel, int flags) {
         outParcel.writeString(mName);
         outParcel.writeString(mDateTimeCreated);
+        /* old simple experiment configuration file does not have the following data,
+         * but still work */
+        // outParcel.writeString(mDateTimeDone);
+        // output tags (n, then a tag a line), make it a parcel?
+        // output notes (n, then a note a line), make it a parcel?
+        // output device information (maker model), make it a parcel?
+        // ? sensors
+        // ? store?
     }
 
     public Experiment(Parcel inParcel) {

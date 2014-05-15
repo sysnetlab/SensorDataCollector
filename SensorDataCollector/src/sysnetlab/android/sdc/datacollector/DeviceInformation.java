@@ -2,8 +2,10 @@
 package sysnetlab.android.sdc.datacollector;
 
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class DeviceInformation {
+public class DeviceInformation implements Parcelable {
     private String mManufacturer;
     private String mModel;
 
@@ -42,5 +44,33 @@ public class DeviceInformation {
 
     public String toString() {
         return mManufacturer + " " + mModel;
+    }
+
+    public static final Parcelable.Creator<DeviceInformation> CREATOR = new Parcelable.Creator<DeviceInformation>() {
+        @Override
+        public DeviceInformation createFromParcel(Parcel inParcel) {
+            return new DeviceInformation(inParcel);
+        }
+
+        @Override
+        public DeviceInformation[] newArray(int size) {
+            return new DeviceInformation[size];
+        }
+    };
+    
+    public DeviceInformation(Parcel inParcel) {
+        mManufacturer = inParcel.readString();
+        mModel = inParcel.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel outParcel, int flags) {
+        outParcel.writeString(mManufacturer);
+        outParcel.writeString(mModel);
     }
 }

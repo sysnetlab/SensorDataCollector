@@ -4,7 +4,10 @@ package sysnetlab.android.sdc.datacollector;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-public class Note {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Note implements Parcelable {
     private String mNote;
     private String mDateTime;
 
@@ -32,7 +35,37 @@ public class Note {
         return mDateTime;
     }
 
-    public void setDateTime(String mDateTime) {
-        this.mDateTime = mDateTime;
+    public void setDateTime(String dateTime) {
+        mDateTime = dateTime;
+    }
+    
+    public static final Parcelable.Creator<Note> CREATOR = new Parcelable.Creator<Note> () {
+
+        @Override
+        public Note createFromParcel(Parcel inParcel) {
+            return new Note(inParcel);
+        }
+
+        @Override
+        public Note[] newArray(int size) {
+            return new Note[size];
+        }
+        
+    };
+    
+    public Note(Parcel inParcel) {
+        mNote = inParcel.readString();
+        mDateTime = inParcel.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel outParcel, int flags) {
+        outParcel.writeString(mNote);
+        outParcel.writeString(mDateTime);
     }
 }
