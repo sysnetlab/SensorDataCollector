@@ -1,4 +1,5 @@
 /* $Id$ */
+
 package sysnetlab.android.sdc.sensor;
 
 import android.annotation.SuppressLint;
@@ -7,64 +8,67 @@ import android.hardware.SensorManager;
 import android.os.Build;
 
 public class AndroidSensor extends AbstractSensor {
-	private Sensor mSensor;
-	private int mSamplingInterval; /* in microseconds */
-	private int mSensingType;
-	private boolean mIsStreamingSensor;
-	
-	@SuppressLint("NewApi")
-	public AndroidSensor(Sensor sensor) {
-		this.mSensor = sensor;
-		super.setMajorType(ANDROID_SENSOR);
-		super.setMinorType(this.mSensor.getType());
-		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-			mSamplingInterval = mSensor.getMinDelay();
-			if (mSamplingInterval != 0) {
-				mSamplingInterval = SensorManager.SENSOR_DELAY_NORMAL; 
-				mIsStreamingSensor = true;
-			} else {
-				mIsStreamingSensor = false;
-			}
-		} else {
-			mIsStreamingSensor = false; /* old android does not have streaming sensor */
-		}
-	}
-	
-	public String getName() {
-		return mSensor.getName();
-	}
+    private Sensor mSensor;
+    private int mSamplingInterval; /* in microseconds */
+    private int mSensingType;
+    private boolean mIsStreamingSensor;
 
-	public Object getSensor() {
-		return mSensor;
-	}
+    @SuppressLint("NewApi")
+    public AndroidSensor(Sensor sensor) {
+        this.mSensor = sensor;
+        super.setMajorType(ANDROID_SENSOR);
+        super.setMinorType(this.mSensor.getType());
 
-	public String toString() {
-		return mSensor.toString();
-	}
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            mSamplingInterval = mSensor.getMinDelay();
+            if (mSamplingInterval != 0) {
+                mSamplingInterval = SensorManager.SENSOR_DELAY_NORMAL;
+                mIsStreamingSensor = true;
+            } else {
+                mIsStreamingSensor = false;
+            }
+        } else {
+            mIsStreamingSensor = false; /*
+                                         * old android does not have streaming
+                                         * sensor
+                                         */
+        }
+    }
 
-	@Override
-	public void setSensor(Object sensor) {
-		this.mSensor = (Sensor)sensor;
-	}
+    public String getName() {
+        return mSensor.getName();
+    }
 
-	public int getSamplingInterval() {
-		return mSamplingInterval;
-	}
+    public Object getSensor() {
+        return mSensor;
+    }
 
-	public void setSamplingInterval(int samplingInterval) {
-		this.mSamplingInterval = samplingInterval;
-	}
+    public String toString() {
+        return mSensor.toString();
+    }
 
-	public int getSensingType() {
-		return mSensingType;
-	}
+    @Override
+    public void setSensor(Object sensor) {
+        this.mSensor = (Sensor) sensor;
+    }
 
-	public void setSensingType(int sensingType) {
-		this.mSensingType = sensingType;
-	}
+    public int getSamplingInterval() {
+        return mSamplingInterval;
+    }
 
-	public boolean isStreamingSensor() {
-		return mIsStreamingSensor;
-	}
-} 
+    public void setSamplingInterval(int samplingInterval) {
+        this.mSamplingInterval = samplingInterval;
+    }
+
+    public int getSensingType() {
+        return mSensingType;
+    }
+
+    public void setSensingType(int sensingType) {
+        this.mSensingType = sensingType;
+    }
+
+    public boolean isStreamingSensor() {
+        return mIsStreamingSensor;
+    }
+}

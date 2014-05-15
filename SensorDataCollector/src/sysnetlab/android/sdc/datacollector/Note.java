@@ -1,37 +1,38 @@
+
 package sysnetlab.android.sdc.datacollector;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 
 public class Note {
-	private String mNote;
-	private String mDateTime;
-	
-	public Note(String note) {
-		mNote = note;
+    private String mNote;
+    private String mDateTime;
 
-		DateFormat df = DateFormat.getDateTimeInstance();
-		mDateTime = df.format(Calendar.getInstance().getTime());		
-	}
-	
-	public Note(String note, String dt) {
-		mNote = note;
-		mDateTime = dt;
-	}
+    public Note(String note) {
+        mNote = note;
 
-	public String getNote() {
-		return mNote;
-	}
+        DateFormat df = DateFormat.getDateTimeInstance();
+        mDateTime = df.format(Calendar.getInstance().getTime());
+    }
 
-	public void setNote(String mNote) {
-		this.mNote = mNote;
-	}
+    public Note(String note, String dt) {
+        mNote = note;
+        mDateTime = dt;
+    }
 
-	public String getDateTime() {
-		return mDateTime;
-	}
+    public String getNote() {
+        return mNote;
+    }
 
-	public void setDateTime(String mDateTime) {
-		this.mDateTime = mDateTime;
-	}
+    public void setNote(String mNote) {
+        this.mNote = mNote;
+    }
+
+    public String getDateTime() {
+        return mDateTime;
+    }
+
+    public void setDateTime(String mDateTime) {
+        this.mDateTime = mDateTime;
+    }
 }

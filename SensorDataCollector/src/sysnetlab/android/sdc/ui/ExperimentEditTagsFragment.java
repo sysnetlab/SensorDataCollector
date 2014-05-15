@@ -16,7 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.app.Activity;
 
-public class ExperimentTagsFragment extends Fragment {
+public class ExperimentEditTagsFragment extends Fragment {
 	private OnFragmentEventListener mCallback;
     private View mView;
     // private List<String> mExperimenTags;

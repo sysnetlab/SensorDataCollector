@@ -14,7 +14,7 @@ import android.widget.ImageView;
 
 public class ExperimentSetupFragment extends Fragment {
 	private View mView;
-	private ExperimentTagsFragment mExperimentTagsFragment;
+	private ExperimentEditTagsFragment mExperimentTagsFragment;
 	private ExperimentSensorSelectionFragment mExperimentSensorSelectionFragment;	
 	private OnFragmentClickListener mCallback;
 	
@@ -71,7 +71,7 @@ public class ExperimentSetupFragment extends Fragment {
 
 
 		if (mExperimentTagsFragment == null) {
-			mExperimentTagsFragment = new ExperimentTagsFragment();;
+			mExperimentTagsFragment = new ExperimentEditTagsFragment();;
 			transaction.add(R.id.layout_tags, mExperimentTagsFragment);
 		}
 		

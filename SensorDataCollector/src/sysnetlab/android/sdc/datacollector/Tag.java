@@ -1,56 +1,57 @@
+
 package sysnetlab.android.sdc.datacollector;
 
 public class Tag {
-	private String mName;
-	private String mShortDescription;
-	private String mLongDescription;
-	
-	public Tag(String name) {
-		mName = name;
-	}
+    private String mName;
+    private String mShortDescription;
+    private String mLongDescription;
 
-	public Tag(String name, String shortDesc) {
-		mName = name;
-		mShortDescription = shortDesc;
-	}	
-	
-	public Tag(String name, String shortDesc, String longDesc) {
-		mName = name;
-		mShortDescription = shortDesc;
-		mLongDescription = longDesc;
-	}
+    public Tag(String name) {
+        mName = name;
+    }
 
-	public String getName() {
-		return mName;
-	}
+    public Tag(String name, String shortDesc) {
+        mName = name;
+        mShortDescription = shortDesc;
+    }
 
-	public void setName(String mName) {
-		this.mName = mName;
-	}
+    public Tag(String name, String shortDesc, String longDesc) {
+        mName = name;
+        mShortDescription = shortDesc;
+        mLongDescription = longDesc;
+    }
 
-	public String getShortDescription() {
-		return mShortDescription;
-	}
+    public String getName() {
+        return mName;
+    }
 
-	public void setShortDescription(String mShortDescription) {
-		this.mShortDescription = mShortDescription;
-	}
+    public void setName(String mName) {
+        this.mName = mName;
+    }
 
-	public String getLongDescription() {
-		return mLongDescription;
-	}
+    public String getShortDescription() {
+        return mShortDescription;
+    }
 
-	public String toString() {
-		return mName;
-	}
-	
-	public void setLongDescription(String mLongDescription) {
-		this.mLongDescription = mLongDescription;
-	}
-	
-	@Override
-	public boolean equals(Object object) {
-		boolean sameSame = false;
+    public void setShortDescription(String mShortDescription) {
+        this.mShortDescription = mShortDescription;
+    }
+
+    public String getLongDescription() {
+        return mLongDescription;
+    }
+
+    public String toString() {
+        return mName;
+    }
+
+    public void setLongDescription(String mLongDescription) {
+        this.mLongDescription = mLongDescription;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        boolean sameSame = false;
 
         if (object != null && object instanceof Tag)
         {
@@ -58,5 +59,5 @@ public class Tag {
         }
 
         return sameSame;
-	}
+    }
 }

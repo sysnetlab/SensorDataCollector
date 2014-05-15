@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="12dp"
+    android:layout_marginBottom="12dp">
+
+    <TextView
+        android:id="@+id/textview_fragment_tag_viewing_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/tags"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    
+    <LinearLayout
+        android:id="@+id/layout_fragment_tag_viewing_tags"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/textview_fragment_tag_viewing_label"
+        android:layout_alignBottom="@id/textview_fragment_tag_viewing_label"
+        android:gravity="bottom">
+        
+      
+    </LinearLayout>	
+</RelativeLayout>

@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tv_experiment_view_name"
-        android:layout_below="@+id/et_experiment_view_name" >
+        android:layout_below="@+id/et_experiment_view_name">
     </RelativeLayout>
     
     <RelativeLayout 
@@ -48,31 +48,6 @@
     	android:layout_height="wrap_content" 
     	android:layout_alignLeft="@+id/layout_experiment_view_tags"
         android:layout_below="@+id/layout_experiment_view_tags">
-        
-	    <TextView
-	        android:id="@+id/tv_experiment_view_notes"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="36dp"
-	        android:text="@string/textview_experiment_notes"
-	        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-	    <ImageView
-	        android:id="@+id/imv_notes_plusminus"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentTop="true"
-	        android:layout_marginLeft="12dp"
-	        android:layout_marginTop="19dp"
-	        android:layout_toRightOf="@+id/tv_experiment_view_notes"
-	        android:contentDescription="@string/img_plus_green_white"
-	        android:paddingBottom="0dp"
-	        android:paddingLeft="0dp"
-	        android:paddingRight="0dp"
-	        android:paddingTop="0dp"
-	        android:src="@drawable/plus_green_white"
-	        android:textAlignment="center" />
-
     </RelativeLayout>    
     
     <RelativeLayout 
@@ -121,19 +96,20 @@
         android:id="@+id/layout_experiment_view_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="26dp" >
 
         <Button
-            android:id="@+id/button_experiment_view_run"
+            android:id="@+id/button_experiment_view_clone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="0dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="94dp"
-            android:text="@string/button_run_text_run" />
+            android:text="@string/clone" />
 
         <Button
             android:id="@+id/button_experiment_view_back"
@@ -142,8 +118,8 @@
             android:minHeight="0dp"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="26dp"
-            android:layout_toRightOf="@+id/button_experiment_view_run"
-            android:text="@string/button_back_text_back" />
+            android:layout_toRightOf="@+id/button_experiment_view_clone"
+            android:text="@string/back" />
     </RelativeLayout>
     
 

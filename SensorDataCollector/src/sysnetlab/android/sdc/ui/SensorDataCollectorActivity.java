@@ -1,10 +1,10 @@
 /* $Id$ */
+
 package sysnetlab.android.sdc.ui;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
-import sysnetlab.android.sdc.datastore.SimpleFileStore;
 import sysnetlab.android.sdc.datastore.SimpleFileStoreSingleton;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,51 +14,51 @@ import android.util.Log;
 import android.widget.Button;
 
 public class SensorDataCollectorActivity extends FragmentActivity implements
-		ExperimentListFragment.OnFragmentClickListener {
+        ExperimentListFragment.OnFragmentClickListener {
 
-	private ExperimentListFragment mExperimentListFragment;
+    private ExperimentListFragment mExperimentListFragment;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.fragment_container);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_container);
 
-		ExperimentManagerSingleton.getInstance().addExperimentStore(
-				SimpleFileStoreSingleton.getInstance());
+        ExperimentManagerSingleton.getInstance().addExperimentStore(
+                SimpleFileStoreSingleton.getInstance());
 
-		if (findViewById(R.id.fragment_container) != null) {
-			if (savedInstanceState != null) {
-				return;
-			}
+        if (findViewById(R.id.fragment_container) != null) {
+            if (savedInstanceState != null) {
+                return;
+            }
 
-			mExperimentListFragment = new ExperimentListFragment();
-			FragmentTransaction transaction = getSupportFragmentManager()
-					.beginTransaction();
-			transaction.add(R.id.fragment_container, mExperimentListFragment);
-			transaction.commit();
-		}
-	}
+            mExperimentListFragment = new ExperimentListFragment();
+            FragmentTransaction transaction = getSupportFragmentManager()
+                    .beginTransaction();
+            transaction.add(R.id.fragment_container, mExperimentListFragment);
+            transaction.commit();
+        }
+    }
 
-	public void onStart() {
-		super.onStart();
-	}
+    public void onStart() {
+        super.onStart();
+    }
 
-	@Override
-	public void onExperimentClicked_ExperimentListFragment(Experiment experiment) {
-		Log.i("SensorDataCollector", "Creating ViewExperimentActivity ...");
-		Intent intent = new Intent(this, ViewExperimentActivity.class);
-		intent.putExtra("experiment", experiment);
-		startActivity(intent);
-	}
+    @Override
+    public void onExperimentClicked_ExperimentListFragment(Experiment experiment) {
+        Log.i("SensorDataCollector", "Creating ViewExperimentActivity ...");
+        Intent intent = new Intent(this, ViewExperimentActivity.class);
+        intent.putExtra("experiment", experiment);
+        startActivity(intent);
+    }
 
-	@Override
-	public void onCreateExperimentButtonClicked_ExperimentListFragment(Button b) {
-		Intent intent = new Intent(this, CreateExperimentActivity.class);
-		startActivity(intent);
-	}
+    @Override
+    public void onCreateExperimentButtonClicked_ExperimentListFragment(Button b) {
+        Intent intent = new Intent(this, CreateExperimentActivity.class);
+        startActivity(intent);
+    }
 
-	public ExperimentListFragment getExperimentListFragment() {
-		return mExperimentListFragment;
-	}
+    public ExperimentListFragment getExperimentListFragment() {
+        return mExperimentListFragment;
+    }
 
 }

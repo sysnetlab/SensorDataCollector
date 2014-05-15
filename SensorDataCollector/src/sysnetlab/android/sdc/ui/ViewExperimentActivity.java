@@ -10,7 +10,7 @@ import android.util.Log;
 
 public class ViewExperimentActivity extends FragmentActivity implements
 		ExperimentViewFragment.OnFragmentClickListener,
-		ExperimentTagsFragment.OnFragmentEventListener {
+		ExperimentEditTagsFragment.OnFragmentEventListener {
 	private ExperimentViewFragment mExperimentViewFragment;
 	private Experiment mExperiment;
 
