@@ -1,4 +1,3 @@
-/* $Id$ */
 
 package sysnetlab.android.sdc.sensor;
 
@@ -13,6 +12,13 @@ public class AndroidSensor extends AbstractSensor {
     private int mSensingType;
     private boolean mIsStreamingSensor;
 
+    public AndroidSensor() {
+        mSensor = null;
+        mSamplingInterval = -1;
+        mSensingType = -1;
+        mIsStreamingSensor = false;
+    }
+    
     @SuppressLint("NewApi")
     public AndroidSensor(Sensor sensor) {
         this.mSensor = sensor;

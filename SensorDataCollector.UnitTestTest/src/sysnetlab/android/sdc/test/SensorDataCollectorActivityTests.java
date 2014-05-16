@@ -2,13 +2,10 @@ package sysnetlab.android.sdc.test;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
-import sysnetlab.android.sdc.ui.ExperimentListFragment;
 import sysnetlab.android.sdc.ui.SensorDataCollectorActivity;
-import sysnetlab.android.sdc.ui.ViewExperimentActivity;
 import android.content.Intent;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.TextView;
 
 public class SensorDataCollectorActivityTests 
 		extends android.test.ActivityUnitTestCase<SensorDataCollectorActivity> {

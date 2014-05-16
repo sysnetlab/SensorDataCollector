@@ -1,13 +1,11 @@
 package sysnetlab.android.sdc.test;
 
-import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
 import sysnetlab.android.sdc.ui.ExperimentRunFragment;
 import sysnetlab.android.sdc.ui.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.ExperimentSetupFragment;
 import sysnetlab.android.sdc.ui.SensorSetupFragment;
 import android.content.Intent;
-import android.widget.Button;
 
 public class CreateExperimentActivityTests 
 		extends android.test.ActivityUnitTestCase<CreateExperimentActivity> {

@@ -2,6 +2,9 @@
 package sysnetlab.android.sdc.ui;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 
 import sysnetlab.android.sdc.R;
@@ -169,6 +172,8 @@ public class CreateExperimentActivity extends FragmentActivity
         mExperiment.getStore().addExperiment();
 
         Iterator<AndroidSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
+        ArrayList<AbstractSensor> lstSensors = new ArrayList<AbstractSensor>();
+        
         int nChecked = 0;
         while (iter.hasNext()) {
             AndroidSensor sensor = (AndroidSensor) iter.next();
@@ -181,9 +186,13 @@ public class CreateExperimentActivity extends FragmentActivity
                 sensor.setListener(listener);
                 mSensorManager.registerListener(listener, (Sensor) sensor.getSensor(),
                         sensor.getSamplingInterval());
+                
+                lstSensors.add(sensor);
             }
         }
 
+        mExperiment.setSensors(lstSensors);
+        
         CharSequence text = "Started data collection for " + nChecked + " Sensors";
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
@@ -199,6 +208,9 @@ public class CreateExperimentActivity extends FragmentActivity
                 mSensorManager.unregisterListener(listener);
             }
         }
+        
+        mExperiment.setDateTimeDone(DateFormat.getDateTimeInstance().format(
+                Calendar.getInstance().getTime()));
 
         mExperiment.getStore().writeExperimentMetaData(mExperiment);
 
@@ -234,7 +246,6 @@ public class CreateExperimentActivity extends FragmentActivity
 
     @Override
     public void onImvNotesClicked_ExperimentSetupFragment(ImageView v) {
-        // TODO Auto-generated method stub
     	if (mCreateExperimentNotesFragment == null)
             mCreateExperimentNotesFragment = new CreateExperimentNotesFragment();
     	FragmentUtil.switchToFragment(this, mCreateExperimentNotesFragment, "viewnotes");    	

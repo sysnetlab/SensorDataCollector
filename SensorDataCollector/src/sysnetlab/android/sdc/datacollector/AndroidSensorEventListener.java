@@ -34,4 +34,8 @@ public class AndroidSensorEventListener implements SensorEventListener {
             mChannel.write(", " + event.values[i]);
         mChannel.write("\n");
     }
+    
+    public Channel getChannel() {
+        return mChannel;
+    }
 }
