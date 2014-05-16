@@ -1,4 +1,3 @@
-/* $Id$ */
 
 package sysnetlab.android.sdc.ui;
 
@@ -6,6 +5,7 @@ import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datastore.SimpleFileStoreSingleton;
+import sysnetlab.android.sdc.sensor.SensorUtilSingleton;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -37,6 +37,8 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
             transaction.add(R.id.fragment_container, mExperimentListFragment);
             transaction.commit();
         }
+
+        SensorUtilSingleton.getInstance().setContext(getBaseContext());
     }
 
     public void onStart() {
@@ -46,8 +48,13 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
     @Override
     public void onExperimentClicked_ExperimentListFragment(Experiment experiment) {
         Log.i("SensorDataCollector", "Creating ViewExperimentActivity ...");
+
         Intent intent = new Intent(this, ViewExperimentActivity.class);
-        intent.putExtra("experiment", experiment);
+
+        // intent.putExtra("experiment", experiment);
+
+        ExperimentManagerSingleton.getInstance().setActiveExperiment(experiment);
+
         startActivity(intent);
     }
 

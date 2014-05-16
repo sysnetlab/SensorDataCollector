@@ -1,3 +1,4 @@
+
 package sysnetlab.android.sdc.ui;
 
 import java.util.ArrayList;
@@ -15,67 +16,65 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
 public class ExperimentRunTaggingFragment extends Fragment {
-	private View mView;
-	private OnFragmentClickListener mCallback;
-	private Activity mActivity;
-	
-	public interface OnFragmentClickListener {
+    private View mView;
+    private OnFragmentClickListener mCallback;
+    private Activity mActivity;
+
+    public interface OnFragmentClickListener {
         public void onTagClicked_ExperimentRunTaggingFragment(int position);
-	}
+    }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		
-	    GridView gv = (GridView)mView.findViewById(R.id.gridview_experiment_tagging);
-	    
-	    gv.setOnItemClickListener(new GridView.OnItemClickListener() {
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View v, int position,
-					long id) {
-				mCallback.onTagClicked_ExperimentRunTaggingFragment(position); 
-			}
-	    	
-	    });
-		
-		
-	}
+        GridView gv = (GridView) mView.findViewById(R.id.gridview_experiment_tagging);
 
-	@Override
-	public void onAttach(Activity activity) {
-		// TODO Auto-generated method stub
-		super.onAttach(activity);
-		mActivity = activity;
-		
+        gv.setOnItemClickListener(new GridView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int position,
+                    long id) {
+                mCallback.onTagClicked_ExperimentRunTaggingFragment(position);
+            }
+
+        });
+
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        // TODO Auto-generated method stub
+        super.onAttach(activity);
+        mActivity = activity;
+
         try {
-            mCallback = (OnFragmentClickListener)activity;
+            mCallback = (OnFragmentClickListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement ExperimentRunTaggingFragment.OnFragmentClickedListener");
-        }			
-	}
+        }
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		mView = super.onCreateView(inflater, container, savedInstanceState);
-		
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        mView = super.onCreateView(inflater, container, savedInstanceState);
+
         mView = inflater.inflate(R.layout.fragment_experiment_tagging, container, false);
-	        
-        
-		// Temporary testing data
+
+        // Temporary testing data
         ArrayList<Tag> tags = ((CreateExperimentActivity) getActivity()).getExperiment().getTags();
 
-	    GridView gv = (GridView)mView.findViewById(R.id.gridview_experiment_tagging);
+        GridView gv = (GridView) mView.findViewById(R.id.gridview_experiment_tagging);
 
-	    ArrayAdapter<Tag> adapter = 
-	    		new ArrayAdapter<Tag>(mActivity, 
-	    				android.R.layout.simple_list_item_1, 
-	    				tags);
-	    
-	    gv.setAdapter(adapter);
-	    
-		return mView;
-	}
+        ArrayAdapter<Tag> adapter =
+                new ArrayAdapter<Tag>(mActivity,
+                        android.R.layout.simple_list_item_1,
+                        tags);
+
+        gv.setAdapter(adapter);
+
+        return mView;
+    }
 }

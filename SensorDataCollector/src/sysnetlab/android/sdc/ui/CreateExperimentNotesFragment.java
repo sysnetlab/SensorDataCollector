@@ -2,8 +2,6 @@
 package sysnetlab.android.sdc.ui;
 
 import sysnetlab.android.sdc.R;
-import sysnetlab.android.sdc.sensor.AndroidSensor;
-import sysnetlab.android.sdc.ui.SensorListFragment.OnFragmentClickListener;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

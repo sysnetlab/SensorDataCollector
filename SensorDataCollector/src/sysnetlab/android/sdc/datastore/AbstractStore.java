@@ -14,6 +14,12 @@ public abstract class AbstractStore {
         public abstract void write(String s);
 
         public abstract void close();
+
+        /**
+         * @return the channel description sufficiently to reconstruct a channel
+         *         to read the data
+         */
+        public abstract String describe();
     };
 
     public abstract void addExperiment();

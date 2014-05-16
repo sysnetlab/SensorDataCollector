@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 public class ExperimentViewFragment extends Fragment {
@@ -19,7 +20,8 @@ public class ExperimentViewFragment extends Fragment {
     private OnFragmentClickListener mCallback;
 
     public interface OnFragmentClickListener {
-
+        public void onBtnBackClicked_ExperimentViewFragment();
+        public void onBtnCloneClicked_ExperimentViewFragment();
     }
 
     @Override
@@ -62,6 +64,23 @@ public class ExperimentViewFragment extends Fragment {
         ((EditText) mView.findViewById(R.id.et_experiment_view_name))
                 .setText(((ViewExperimentActivity) getActivity()).getExperiment().getName());
 
+        ((Button) mView.findViewById(R.id.button_experiment_view_clone))
+                .setOnClickListener(new Button.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        mCallback.onBtnCloneClicked_ExperimentViewFragment();
+                    }
+                });
+        
+        ((Button) mView.findViewById(R.id.button_experiment_view_back))
+                .setOnClickListener(new Button.OnClickListener() {
+                    
+                    @Override
+                    public void onClick(View v) {
+                        mCallback.onBtnBackClicked_ExperimentViewFragment();
+                    }
+                });
     }
 
     @Override

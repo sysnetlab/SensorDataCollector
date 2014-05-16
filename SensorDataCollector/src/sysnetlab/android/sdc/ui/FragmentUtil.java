@@ -1,3 +1,4 @@
+
 package sysnetlab.android.sdc.ui;
 
 import sysnetlab.android.sdc.R;
@@ -13,4 +14,5 @@ public class FragmentUtil {
 		transaction.addToBackStack(name);
 		transaction.commit();			
 	}	
+
 }

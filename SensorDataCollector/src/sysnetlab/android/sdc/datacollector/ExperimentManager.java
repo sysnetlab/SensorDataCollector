@@ -8,6 +8,7 @@ import sysnetlab.android.sdc.datastore.AbstractStore;
 
 public class ExperimentManager {
     private List<AbstractStore> mStores;
+    private Experiment mActiveExperiment;
 
     public ExperimentManager() {
         mStores = new ArrayList<AbstractStore>();
@@ -24,5 +25,13 @@ public class ExperimentManager {
             allExperiments.addAll(experiments);
         }
         return allExperiments;
+    }
+    
+    public void setActiveExperiment(Experiment experiment) {
+        mActiveExperiment = experiment; 
+    }
+    
+    public Experiment getActiveExperiment() {
+        return mActiveExperiment;
     }
 }

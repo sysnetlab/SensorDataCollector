@@ -3,12 +3,18 @@ package sysnetlab.android.sdc.datacollector;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.io.FileNotFoundException;
 import java.text.DateFormat;
 
 import sysnetlab.android.sdc.datastore.AbstractStore;
+import sysnetlab.android.sdc.datastore.SimpleFileStore;
+import sysnetlab.android.sdc.datastore.StoreClassUtil;
+import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
+import sysnetlab.android.sdc.sensor.SensorUtilSingleton;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 public class Experiment implements Parcelable {
     private DeviceInformation mDeviceInfo; // on what device?
@@ -17,13 +23,15 @@ public class Experiment implements Parcelable {
     private String mDateTimeDone;
     private ArrayList<Tag> mTags;
     private ArrayList<Note> mNotes;
+
     private ArrayList<AbstractSensor> mSensors;
     private AbstractStore mStore;
-    
+
     public Experiment(String n, String dt, AbstractStore store) {
         mDeviceInfo = new DeviceInformation();
         mName = n;
         mDateTimeCreated = dt;
+        mDateTimeDone = dt;
         mTags = new ArrayList<Tag>();
         mNotes = new ArrayList<Note>();
         mSensors = new ArrayList<AbstractSensor>();
@@ -43,11 +51,6 @@ public class Experiment implements Parcelable {
         this("Unnamed Experiment", DateFormat.getDateTimeInstance().format(
                 Calendar.getInstance().getTime()), store);
     }
-    
-    public Experiment(Parcel inParcel) {
-        mName = inParcel.readString();
-        mDateTimeCreated = inParcel.readString();
-    }
 
     public ArrayList<Tag> getTags() {
         return mTags;
@@ -58,10 +61,10 @@ public class Experiment implements Parcelable {
     }
 
     public void addTag(String strTag) {
-    	if(strTag!=null)
-    		strTag = strTag.trim();
-    	else
-    		return;
+        if (strTag != null)
+            strTag = strTag.trim();
+        else
+            return;
         if (strTag.equals("")) {
             return;
         }
@@ -76,41 +79,10 @@ public class Experiment implements Parcelable {
     }
 
     public void setNotes(ArrayList<Note> mNotes) {
-    	if(mNotes!=null)
-    		this.mNotes = mNotes;
+        if (mNotes != null)
+            this.mNotes = mNotes;
     }
 
-    public static final Parcelable.Creator<Experiment> CREATOR = new Parcelable.Creator<Experiment>() {
-        @Override
-        public Experiment createFromParcel(Parcel inParcel) {
-            return new Experiment(inParcel);
-        }
-
-        @Override
-        public Experiment[] newArray(int size) {
-            return new Experiment[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel outParcel, int flags) {
-        outParcel.writeString(mName);
-        outParcel.writeString(mDateTimeCreated);
-        /* old simple experiment configuration file does not have the following data,
-         * but still work */
-        // outParcel.writeString(mDateTimeDone);
-        // output tags (n, then a tag a line), make it a parcel?
-        // output notes (n, then a note a line), make it a parcel?
-        // output device information (maker model), make it a parcel?
-        // ? sensors
-        // ? store?
-    }
-    
     public String getName() {
         return mName;
     }
@@ -159,7 +131,97 @@ public class Experiment implements Parcelable {
         return mName + " " + mDateTimeCreated;
     }
 
-	public Parcelable.Creator<Experiment> getCreator() {
-		return CREATOR;
-	}
+    public static final Parcelable.Creator<Experiment> CREATOR = new Parcelable.Creator<Experiment>() {
+        @Override
+        public Experiment createFromParcel(Parcel inParcel) {
+            return new Experiment(inParcel);
+        }
+
+        @Override
+        public Experiment[] newArray(int size) {
+            return new Experiment[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel outParcel, int flags) {
+        outParcel.writeString(mName);
+
+        outParcel.writeString(mDateTimeCreated);
+        outParcel.writeString(mDateTimeDone);
+
+        outParcel.writeTypedList(mTags);
+
+        outParcel.writeTypedList(mNotes);
+
+        outParcel.writeParcelable(mDeviceInfo, flags);
+
+        outParcel.writeString(mStore.getClass().getName());
+
+        outParcel.writeInt(mSensors.size());
+        for (AbstractSensor sensor : mSensors) {
+            outParcel.writeString(sensor.getName());
+            outParcel.writeInt(sensor.getMajorType());
+            outParcel.writeInt(sensor.getMinorType());
+            outParcel.writeString(sensor.getListener().getChannel().describe());
+        }
+    }
+
+    public Experiment(Parcel inParcel) {
+        mName = inParcel.readString();
+
+        mDateTimeCreated = inParcel.readString();
+        mDateTimeDone = inParcel.readString();
+
+        mTags = new ArrayList<Tag>();
+        inParcel.readTypedList(mTags, Tag.CREATOR);
+
+        mNotes = new ArrayList<Note>();
+        inParcel.readTypedList(mNotes, Note.CREATOR);
+
+        mDeviceInfo = inParcel.readParcelable(DeviceInformation.class.getClassLoader());
+
+        String storeClassName = inParcel.readString();
+        AbstractStore store = StoreClassUtil.getStoreInstanceFromClassName(storeClassName);
+        mStore = store;
+
+        mSensors = new ArrayList<AbstractSensor>();
+        int numSensors = inParcel.readInt();
+        for (int i = 0; i < numSensors; i++) {
+            String sensorName = inParcel.readString();
+            int sensorMajorType = inParcel.readInt();
+            int sensorMinorType = inParcel.readInt();
+            String channelDescriptor = inParcel.readString();
+            // TODO make sure channel is read-only or write-only or
+            // bidirectional
+            Channel channel = null;
+            if (channelDescriptor != null && !channelDescriptor.trim().equals("")) {
+                if (store instanceof SimpleFileStore) {
+                    try {
+                        channel = ((SimpleFileStore) store).new SimpleFileChannel(channelDescriptor);
+                    } catch (FileNotFoundException e) {
+                        Log.i("SensordataCollector",
+                                "Experiment::Expriment(Parcel): calling new SimpleFileChannel");
+                    }
+                } else {
+                    Log.i("SensorDataCollector",
+                            "Experiment::Expriment(Parcel): need to deal with " +
+                                    store.getClass().getName());
+                }
+            }
+            AbstractSensor sensor = SensorUtilSingleton.getInstance().getSensor(sensorName,
+                    sensorMajorType,
+                    sensorMinorType, channel);
+            mSensors.add(sensor);
+        }
+    }
+
+    public Parcelable.Creator<Experiment> getCreator() {
+        return CREATOR;
+    }
 }
