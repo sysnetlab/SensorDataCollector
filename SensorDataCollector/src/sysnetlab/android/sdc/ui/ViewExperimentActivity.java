@@ -23,14 +23,16 @@ public class ViewExperimentActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
 
-        // mExperiment = (Experiment) getIntent().getParcelableExtra("experiment");
-        mExperiment =  ExperimentManagerSingleton.getInstance().getActiveExperiment();
-        
+        // mExperiment = (Experiment)
+        // getIntent().getParcelableExtra("experiment");
+
+        mExperiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();
+
         if (mExperiment == null) {
             Log.i("SensorDataColelctor",
                     "ViewExperimentActivity failed to get experiment from intent");
         }
-        
+
         Log.i("SensorDataCollector",
                 "ViewExperimentActivity: experiment is " + mExperiment.toString());
 
@@ -58,27 +60,27 @@ public class ViewExperimentActivity extends FragmentActivity implements
     @Override
     public void onBtnConfirmClicked_ExperimentSensorSelectionFragment() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void onBtnClearClicked_ExperimentSensorSelectionFragment() {
         // TODO Auto-generated method stub
-        
+
     }
-    
+
     @Override
     public void onBtnBackClicked_ExperimentViewFragment() {
         Intent intent = new Intent(this, SensorDataCollectorActivity.class);
-        startActivity(intent); 
+        startActivity(intent);
     }
 
     @Override
     public void onBtnCloneClicked_ExperimentViewFragment() {
         // TODO Auto-generated method stub
-        
+
     }
-    
+
     public Experiment getExperiment() {
         return mExperiment;
     }

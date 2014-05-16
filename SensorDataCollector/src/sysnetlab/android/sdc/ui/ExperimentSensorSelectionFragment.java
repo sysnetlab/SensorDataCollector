@@ -143,7 +143,7 @@ public class ExperimentSensorSelectionFragment extends Fragment {
                 mCallback.onSensorClicked_ExperimentSensorSelectionFragment(
                         (AndroidSensor) listView.getItemAtPosition(position));
             }
-        });        
+        });
     }
 
     public ArrayAdapter<AndroidSensor> getSensorListAdapter() {

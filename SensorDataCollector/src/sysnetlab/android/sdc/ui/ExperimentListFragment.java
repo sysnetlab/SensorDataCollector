@@ -1,6 +1,5 @@
-/* $Id$ */
-package sysnetlab.android.sdc.ui;
 
+package sysnetlab.android.sdc.ui;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
@@ -16,28 +15,29 @@ import android.widget.Button;
 import android.widget.ListView;
 
 public class ExperimentListFragment extends ListFragment {
-	
-	private OnFragmentClickListener mCallback;
+
+    private OnFragmentClickListener mCallback;
     private View mHeaderView;
     private View mFooterView;
     private ArrayAdapter<Experiment> mExperimentList;
 
     public interface OnFragmentClickListener {
         public void onExperimentClicked_ExperimentListFragment(Experiment experiment);
-    	public void onCreateExperimentButtonClicked_ExperimentListFragment(Button b);
+
+        public void onCreateExperimentButtonClicked_ExperimentListFragment(Button b);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-    	//TODO: handle configuration changes 
-		LayoutInflater inflator = getLayoutInflater(savedInstanceState);
-	    mFooterView = inflator.inflate(R.layout.experiment_list_footer, null);
-	    mHeaderView = inflator.inflate(R.layout.experiment_list_header, null);	
-        
-	    mExperimentList = new ExperimentListAdaptor(getActivity(), 
-	    		ExperimentManagerSingleton.getInstance().getExperiments());
+
+        // TODO: handle configuration changes
+        LayoutInflater inflator = getLayoutInflater(savedInstanceState);
+        mFooterView = inflator.inflate(R.layout.experiment_list_footer, null);
+        mHeaderView = inflator.inflate(R.layout.experiment_list_header, null);
+
+        mExperimentList = new ExperimentListAdaptor(getActivity(),
+                ExperimentManagerSingleton.getInstance().getExperiments());
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ExperimentListFragment extends ListFragment {
         super.onAttach(activity);
 
         try {
-            mCallback = (OnFragmentClickListener)activity;
+            mCallback = (OnFragmentClickListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentClickedListener");
@@ -54,27 +54,28 @@ public class ExperimentListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView lv, View v, int position, long id) {
-		mCallback.onExperimentClicked_ExperimentListFragment((Experiment)lv.getItemAtPosition(position));
+        mCallback.onExperimentClicked_ExperimentListFragment((Experiment) lv
+                .getItemAtPosition(position));
     }
-    
-    public void onActivityCreated (Bundle savedInstanceState) {
-    	super.onActivityCreated(savedInstanceState);
 
-    	//TODO: handle configuration changes 
-    	getListView().addHeaderView(mHeaderView);
-    	getListView().addFooterView(mFooterView);
-    	setListAdapter(mExperimentList);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
+        // TODO: handle configuration changes
+        getListView().addHeaderView(mHeaderView);
+        getListView().addFooterView(mFooterView);
+        setListAdapter(mExperimentList);
 
-    	((Button)mHeaderView.findViewById(R.id.buttonCreateExperiment))
-    	.setOnClickListener(new Button.OnClickListener() {
-    		public void onClick(View v) {
-    			mCallback.onCreateExperimentButtonClicked_ExperimentListFragment((Button) v);
-    		}
-    	});
-    }   
-    
-    public ArrayAdapter<Experiment> getExperimentArray(){
-    	return mExperimentList;
+        ((Button) mHeaderView.findViewById(R.id.buttonCreateExperiment))
+                .setOnClickListener(new Button.OnClickListener() {
+                    public void onClick(View v) {
+                        mCallback
+                                .onCreateExperimentButtonClicked_ExperimentListFragment((Button) v);
+                    }
+                });
+    }
+
+    public ArrayAdapter<Experiment> getExperimentArray() {
+        return mExperimentList;
     }
 }

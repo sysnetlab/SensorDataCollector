@@ -1,4 +1,3 @@
-/* $Id$ */
 
 package sysnetlab.android.sdc.ui;
 
@@ -38,7 +37,7 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
             transaction.add(R.id.fragment_container, mExperimentListFragment);
             transaction.commit();
         }
-        
+
         SensorUtilSingleton.getInstance().setContext(getBaseContext());
     }
 
@@ -51,10 +50,11 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
         Log.i("SensorDataCollector", "Creating ViewExperimentActivity ...");
 
         Intent intent = new Intent(this, ViewExperimentActivity.class);
-        //intent.putExtra("experiment", experiment);
-        
+
+        // intent.putExtra("experiment", experiment);
+
         ExperimentManagerSingleton.getInstance().setActiveExperiment(experiment);
-        
+
         startActivity(intent);
     }
 
