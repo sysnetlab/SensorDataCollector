@@ -260,8 +260,9 @@ public class CreateExperimentActivity extends FragmentActivity
     public void onImvNotesClicked_ExperimentSetupFragment(ImageView v) {
         // TODO Auto-generated method stub
     	if (mCreateExperimentNotesFragment == null)
-            mCreateExperimentNotesFragment = new CreateExperimentNotesFragment();
-    	FragmentUtil.switchToFragment(this, mCreateExperimentNotesFragment, "viewnotes");    	
+            mCreateExperimentNotesFragment = new CreateExperimentNotesFragment();    	
+    	FragmentUtil.switchToFragment(this, mCreateExperimentNotesFragment, "viewnotes");
+    	
     }
 
     @Override
