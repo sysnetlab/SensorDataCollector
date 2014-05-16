@@ -28,7 +28,6 @@ import android.widget.Toast;
 
 public class CreateExperimentActivity extends FragmentActivity
         implements
-        SensorListFragment.OnFragmentClickListener,
         SensorSetupFragment.OnFragmentClickListener,        
         ExperimentSetupFragment.OnFragmentClickListener,
         ExperimentSensorSelectionFragment.OnFragmentClickListener,
@@ -43,7 +42,6 @@ public class CreateExperimentActivity extends FragmentActivity
 
     private ExperimentSetupFragment mExperimentSetupFragment;
     private ExperimentSensorSelectionFragment mExperimentSensorSelectionFragment;
-    private SensorListFragment mSensorListFragment;
     private SensorSetupFragment mSensorSetupFragment;
     private CreateExperimentNotesFragment mCreateExperimentNotesFragment;
     private ExperimentRunFragment mExperimentRunFragment;
@@ -78,24 +76,6 @@ public class CreateExperimentActivity extends FragmentActivity
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
         Log.i("SensorDataCollector", "Leaving CreateExperimentActivit::onCreate.");
-    }
-
-    public void onSensorClicked_SensorListFragment(AndroidSensor sensor) {
-        if (mSensorSetupFragment == null) {
-            mSensorSetupFragment = new SensorSetupFragment();
-        }
-        mSensorSetupFragment.setSensor(sensor);
-        FragmentUtil.switchToFragment(this, mSensorSetupFragment, "sensorsetup");
-    }
-
-    @Override
-    public void onBtnRunClicked_SensorListFragment(View v) {
-
-    }
-
-    @Override
-    public void onBtnClearClicked_SensorListFragment() {
-        Toast.makeText(this, "Clear Button Pressed", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -134,21 +114,15 @@ public class CreateExperimentActivity extends FragmentActivity
                 break;
         }
 
-        FragmentUtil.switchToFragment(this, mSensorListFragment, "sensorlist");
+        getSupportFragmentManager().popBackStack();
+        // FragmentUtil.switchToFragment(this, mExperimentSensorSelectionFragment, "sensorselection");
     }
 
     @Override
     public void onBtnCancelClicked_SensorSetupFragment() {
         Log.i("SensorDataCollector", "Button Cancel clicked.");
-        FragmentUtil.switchToFragment(this, mSensorListFragment, "sensorlist");
-    }
-
-    @Override
-    public void onBtnBackClicked_SensorListFragment() {
-        // TODO lazy work for now, more work ...
-        if (mExperimentSetupFragment == null)
-            mExperimentSetupFragment = new ExperimentSetupFragment();
-        FragmentUtil.switchToFragment(this, mExperimentSetupFragment, "experimentsetup");
+        getSupportFragmentManager().popBackStack();
+        // FragmentUtil.switchToFragment(this, mExperimentSensorSelectionFragment, "sensorlist");
     }
 
     @Override
@@ -159,9 +133,9 @@ public class CreateExperimentActivity extends FragmentActivity
         FragmentUtil.switchToFragment(this, mExperimentSetupFragment, "experimentsetup");
     }
     
-    public SensorListFragment getSensorListFragment()
+    public ExperimentSensorSelectionFragment getExperimentSensorSensorSelectionFragment()
     {
-        return mSensorListFragment;
+        return mExperimentSensorSelectionFragment;
     }
     
     public CreateExperimentNotesFragment getCreateExperimentNotesFragment()
@@ -346,4 +320,13 @@ public class CreateExperimentActivity extends FragmentActivity
         
         mExperimentSensorSelectionFragment.getSensorListAdapter().notifyDataSetChanged();
     }
+    
+    public void onSensorClicked_ExperimentSensorSelectionFragment(AndroidSensor sensor) {
+        Log.i("SensorDataCollector", "CreateExperimentActivity::onSensorClicked_ExperimentSensorSelectionFragment() called.");
+        if (mSensorSetupFragment == null) {
+            mSensorSetupFragment = new SensorSetupFragment();
+        }
+        mSensorSetupFragment.setSensor(sensor);
+        FragmentUtil.switchToFragment(this, mSensorSetupFragment, "sensorsetup");
+    }    
 }

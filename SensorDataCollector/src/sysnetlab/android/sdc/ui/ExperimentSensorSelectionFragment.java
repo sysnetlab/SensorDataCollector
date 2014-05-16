@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -22,40 +23,44 @@ public class ExperimentSensorSelectionFragment extends Fragment {
     private boolean mHavingFooter;
 
     private View mView;
+    private ListView mListView;
     private ArrayAdapter<AndroidSensor> mSensorList;
 
     private OnFragmentClickListener mCallback;
 
     public interface OnFragmentClickListener {
         public void onBtnConfirmClicked_ExperimentSensorSelectionFragment();
+
         public void onBtnClearClicked_ExperimentSensorSelectionFragment();
+
+        public void onSensorClicked_ExperimentSensorSelectionFragment(AndroidSensor sensor);
     }
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("SensorDataCollector", 
-                "ExperimentSensorSelectionFragment::onCreate(): " + 
-                "entering ......");
+        Log.i("SensorDataCollector",
+                "ExperimentSensorSelectionFragment::onCreate(): " +
+                        "entering ......");
         mHavingHeader = false;
         mHavingFooter = false;
-        
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        Log.i("SensorDataCollector", 
-                "ExperimentSensorSelectionFragment::onCreateView(): " + 
-                "entering with mHavingHeader = " + mHavingHeader);
+        Log.i("SensorDataCollector",
+                "ExperimentSensorSelectionFragment::onCreateView(): " +
+                        "entering with mHavingHeader = " + mHavingHeader);
         super.onCreateView(inflater, container, savedInstanceState);
 
         // inflate the fragment
         mView = inflater.inflate(R.layout.fragment_sensor_selection, container, false);
 
         mHavingHeader = getActivity().getIntent().getBooleanExtra("havingheader", false);
-        mHavingFooter = getActivity().getIntent().getBooleanExtra("havingfooter",  false);
-        
+        mHavingFooter = getActivity().getIntent().getBooleanExtra("havingfooter", false);
+
         if (mHavingHeader) {
             RelativeLayout layout = (RelativeLayout) mView
                     .findViewById(R.id.layout_sensor_selection_header);
@@ -72,11 +77,11 @@ public class ExperimentSensorSelectionFragment extends Fragment {
         RelativeLayout layout = (RelativeLayout) mView
                 .findViewById(R.id.layout_sensor_selection_list);
 
-        ListView listView = new ListView(getActivity());
+        mListView = new ListView(getActivity());
         mSensorList = new SensorListAdaptor(getActivity(),
                 SensorDiscoverer.discoverSensorList(getActivity()));
-        listView.setAdapter(mSensorList);
-        layout.addView(listView);
+        mListView.setAdapter(mSensorList);
+        layout.addView(mListView);
 
         return mView;
     }
@@ -86,10 +91,7 @@ public class ExperimentSensorSelectionFragment extends Fragment {
         super.onAttach(activity);
 
         try {
-            if (mHavingFooter)
-                mCallback = (OnFragmentClickListener) activity;
-            else
-                mCallback = null;
+            mCallback = (OnFragmentClickListener) activity;
         } catch (ClassCastException e) {
             Log.e("SensorDataCollector",
                     "ExperimentSensorSelectionFragment::onAttach(): failed to cast Activity to OnFragmentClickListener.");
@@ -97,13 +99,14 @@ public class ExperimentSensorSelectionFragment extends Fragment {
             throw new RuntimeException("Failed to cast Activity to OnFragmentClickListener");
         }
     }
-    
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.i("SensorDataCollector", "ExperimentSensorSelection::onActivityCreated() called.");
 
         if (mHavingFooter) {
-            
+
             try {
                 if (mHavingFooter)
                     mCallback = (OnFragmentClickListener) getActivity();
@@ -115,7 +118,7 @@ public class ExperimentSensorSelectionFragment extends Fragment {
                 e.printStackTrace();
                 throw new RuntimeException("Failed to cast Activity to OnFragmentClickListener");
             }
-            
+
             ((Button) mView.findViewById(R.id.button_sensor_selection_confirm))
                     .setOnClickListener(new Button.OnClickListener() {
                         @Override
@@ -132,10 +135,19 @@ public class ExperimentSensorSelectionFragment extends Fragment {
                         }
                     });
         }
+
+        // ((ListView) mView.findViewById(R.id.layout_sensor_list))
+        mListView.setOnItemClickListener(new ListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
+                mCallback.onSensorClicked_ExperimentSensorSelectionFragment(
+                        (AndroidSensor) listView.getItemAtPosition(position));
+            }
+        });        
     }
-    
+
     public ArrayAdapter<AndroidSensor> getSensorListAdapter() {
         return mSensorList;
     }
-   
+
 }

@@ -2,6 +2,7 @@ package sysnetlab.android.sdc.ui;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
+import sysnetlab.android.sdc.sensor.AndroidSensor;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -10,9 +11,10 @@ import android.util.Log;
 
 public class ViewExperimentActivity extends FragmentActivity implements
 		ExperimentViewFragment.OnFragmentClickListener,
-		ExperimentEditTagsFragment.OnFragmentEventListener {
+		ExperimentEditTagsFragment.OnFragmentEventListener, 
+		ExperimentSensorSelectionFragment.OnFragmentClickListener {
 	private ExperimentViewFragment mExperimentViewFragment;
-	private Experiment mExperiment;
+	private Experiment mExperiment; 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,4 +52,22 @@ public class ViewExperimentActivity extends FragmentActivity implements
 		// TODO Auto-generated method stub
 		
 	}
+
+    @Override
+    public void onBtnConfirmClicked_ExperimentSensorSelectionFragment() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onBtnClearClicked_ExperimentSensorSelectionFragment() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onSensorClicked_ExperimentSensorSelectionFragment(AndroidSensor sensor) {
+        // TODO Auto-generated method stub
+        
+    }
 }
