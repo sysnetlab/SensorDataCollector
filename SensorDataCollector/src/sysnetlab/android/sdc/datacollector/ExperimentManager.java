@@ -2,6 +2,8 @@
 package sysnetlab.android.sdc.datacollector;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import sysnetlab.android.sdc.datastore.AbstractStore;
@@ -25,6 +27,17 @@ public class ExperimentManager {
             allExperiments.addAll(experiments);
         }
         return allExperiments;
+    }       
+    
+    public List<Experiment> getExperimentsSortedByDate(){
+    	List<Experiment> allExperiments = getExperiments();    	
+	    	Collections.sort(allExperiments, new Comparator<Experiment>(){    		
+	    		public int compare(Experiment e1, Experiment e2){    			
+	    			return -1*e1.getDateTimeCreated().compareTo(e2.getDateTimeCreated());
+	    		}
+	    	});    	
+    		
+    	return allExperiments;
     }
     
     public void setActiveExperiment(Experiment experiment) {
