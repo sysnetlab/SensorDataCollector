@@ -99,25 +99,26 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginBottom="26dp" >
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="0dp" >
 
         <Button
             android:id="@+id/button_experiment_view_clone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="0dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="94dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:text="@string/clone" />
 
         <Button
             android:id="@+id/button_experiment_view_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="0dp"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="26dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:layout_toRightOf="@+id/button_experiment_view_clone"
             android:text="@string/back" />
     </RelativeLayout>

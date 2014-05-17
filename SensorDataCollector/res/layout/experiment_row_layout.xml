@@ -5,10 +5,12 @@
     
     <TextView
         android:id="@+id/label"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@+id/label"
         android:layout_marginRight="8dp"
+        android:layout_toLeftOf="@+id/date_created"
+        android:gravity="left|center"
         android:textSize="15sp"
         android:focusable="false">
     </TextView>
@@ -20,6 +22,8 @@
         android:layout_alignParentRight="true"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="8dp" 
+        android:layout_centerVertical="true"
+        android:gravity="right|center"
         android:text="@+id/label"
         android:textSize="12sp"
         android:focusable="false">

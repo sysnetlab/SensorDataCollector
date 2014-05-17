@@ -16,7 +16,7 @@ public class ExperimentViewFragment extends Fragment {
     private View mView;
     private ExperimentViewTagsFragment mExperimentViewTagsFragment;
     private ExperimentViewNotesFragment mExperimentViewNotesFragment;
-    private ExperimentSensorSelectionFragment mExperimentSensorSelectionFragment;
+    private ExperimentSensorListFragment mExperimentSensorListFragment;
     private OnFragmentClickListener mCallback;
 
     public interface OnFragmentClickListener {
@@ -37,20 +37,20 @@ public class ExperimentViewFragment extends Fragment {
 
         if (mExperimentViewTagsFragment == null) {
             mExperimentViewTagsFragment = new ExperimentViewTagsFragment();
-            mExperimentViewTagsFragment.setArguments(getArguments());
+            // mExperimentViewTagsFragment.setArguments(getArguments());
             transaction.add(R.id.layout_experiment_view_tags, mExperimentViewTagsFragment);
         }
 
         if (mExperimentViewNotesFragment == null) {
             mExperimentViewNotesFragment = new ExperimentViewNotesFragment();
-            mExperimentViewNotesFragment.setArguments(getArguments());
+            // mExperimentViewNotesFragment.setArguments(getArguments());
             transaction.add(R.id.layout_experiment_view_notes, mExperimentViewNotesFragment);
         }
 
-        if (mExperimentSensorSelectionFragment == null) {
-            mExperimentSensorSelectionFragment = new ExperimentSensorSelectionFragment();
+        if (mExperimentSensorListFragment == null) {
+            mExperimentSensorListFragment = new ExperimentSensorListFragment();
             transaction.add(R.id.layout_experiment_view_sensor_list,
-                    mExperimentSensorSelectionFragment);
+                    mExperimentSensorListFragment);
         }
         transaction.commit();
 

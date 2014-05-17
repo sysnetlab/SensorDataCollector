@@ -2,6 +2,7 @@
 package sysnetlab.android.sdc.ui;
 
 import sysnetlab.android.sdc.R;
+import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.ui.adaptors.SensorListAdaptor;
@@ -24,7 +25,7 @@ public class ExperimentSensorSelectionFragment extends Fragment {
 
     private View mView;
     private ListView mListView;
-    private ArrayAdapter<AndroidSensor> mSensorList;
+    private ArrayAdapter<AbstractSensor> mSensorList;
 
     private OnFragmentClickListener mCallback;
 
@@ -146,7 +147,7 @@ public class ExperimentSensorSelectionFragment extends Fragment {
         });
     }
 
-    public ArrayAdapter<AndroidSensor> getSensorListAdapter() {
+    public ArrayAdapter<AbstractSensor> getSensorListAdapter() {
         return mSensorList;
     }
 
