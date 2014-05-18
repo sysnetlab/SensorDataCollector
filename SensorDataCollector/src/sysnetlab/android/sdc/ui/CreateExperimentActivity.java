@@ -47,6 +47,7 @@ public class CreateExperimentActivity extends FragmentActivity
     private ExperimentSensorSelectionFragment mExperimentSensorSelectionFragment;
     private SensorSetupFragment mSensorSetupFragment;
     private CreateExperimentNotesFragment mCreateExperimentNotesFragment;
+    private ExperimentEditTagsFragment mExperimentEditTagsFragment;
     private ExperimentRunFragment mExperimentRunFragment;
 
     private DataCollectionState mCollectionState;
@@ -239,21 +240,22 @@ public class CreateExperimentActivity extends FragmentActivity
     }
 
     @Override
-    public void onImvTagsClicked_ExperimentSetupFragment(ImageView v) {
-        // TODO Auto-generated method stub
-
+    public void onTagsClicked_ExperimentSetupFragment() {
+        if (mExperimentEditTagsFragment == null)
+            mExperimentEditTagsFragment = new ExperimentEditTagsFragment();
+        FragmentUtil.switchToFragment(this, mExperimentEditTagsFragment, "edittags");
     }
 
     @Override
-    public void onImvNotesClicked_ExperimentSetupFragment(ImageView v) {
+    public void onNotesClicked_ExperimentSetupFragment() {
     	if (mCreateExperimentNotesFragment == null)
             mCreateExperimentNotesFragment = new CreateExperimentNotesFragment();    	
-    	FragmentUtil.switchToFragment(this, mCreateExperimentNotesFragment, "viewnotes");
+    	FragmentUtil.switchToFragment(this, mCreateExperimentNotesFragment, "editnotes");
     	
     }
 
     @Override
-    public void onImvSensorsClicked_ExperimentSetupFragment(ImageView v) {
+    public void onSensorsClicked_ExperimentSetupFragment() {
         // TODO lazy work for now, more work ...
         if (mExperimentSensorSelectionFragment == null) {
             mExperimentSensorSelectionFragment = new ExperimentSensorSelectionFragment();

@@ -30,36 +30,4 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>res/drawable/plus_icon_hover.png</name>
-			<type>1</type>
-			<location>C:/Users/Geraldo/Desktop/plus_icon_hover.png</location>
-		</link>
-		<link>
-			<name>res/drawable/plus_icon_normal.png</name>
-			<type>1</type>
-			<location>C:/Users/Geraldo/Downloads/plus_icon.png</location>
-		</link>
-		<link>
-			<name>res/drawable-hdpi/plus_icon_hover.png</name>
-			<type>1</type>
-			<location>C:/Users/Geraldo/Desktop/plus_icon_hover.png</location>
-		</link>
-		<link>
-			<name>res/drawable-mdpi/plus_icon_hover.png</name>
-			<type>1</type>
-			<location>C:/Users/Geraldo/Desktop/plus_icon_hover.png</location>
-		</link>
-		<link>
-			<name>res/drawable-xhdpi/plus_icon_hover.png</name>
-			<type>1</type>
-			<location>C:/Users/Geraldo/Desktop/plus_icon_hover.png</location>
-		</link>
-		<link>
-			<name>res/drawable-xxhdpi/plus_icon_hover.png</name>
-			<type>1</type>
-			<location>C:/Users/Geraldo/Desktop/plus_icon_hover.png</location>
-		</link>
-	</linkedResources>
 </projectDescription>

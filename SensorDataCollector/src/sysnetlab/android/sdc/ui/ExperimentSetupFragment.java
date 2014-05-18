@@ -9,9 +9,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 public class ExperimentSetupFragment extends Fragment {
     private View mView;
@@ -20,34 +22,50 @@ public class ExperimentSetupFragment extends Fragment {
     private OnFragmentClickListener mCallback;
 
     public interface OnFragmentClickListener {
-        public void onImvTagsClicked_ExperimentSetupFragment(ImageView v);
+        public void onTagsClicked_ExperimentSetupFragment();
 
-        public void onImvNotesClicked_ExperimentSetupFragment(ImageView v);
+        public void onNotesClicked_ExperimentSetupFragment();
 
-        public void onImvSensorsClicked_ExperimentSetupFragment(ImageView v);
+        public void onSensorsClicked_ExperimentSetupFragment();
 
         public void onBtnRunClicked_ExperimentSetupFragment(View v);
 
         public void onBtnBackClicked_ExperimentSetupFragment();
     }
 
+    
+    
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((ImageView) mView.findViewById(R.id.imv_sensors_plusminus))
-                .setOnClickListener(new ImageView.OnClickListener() {
-                    public void onClick(View v) {
-                        mCallback.onImvSensorsClicked_ExperimentSetupFragment((ImageView) v);
-                    }
-                });
+        ((EditText) mView.findViewById(R.id.et_experiment_setup_name))
+        .setText(((CreateExperimentActivity) getActivity()).getExperiment().getName());
 
-        ((ImageView) mView.findViewById(R.id.imv_notes_plusminus))
-                .setOnClickListener(new ImageView.OnClickListener() {
-                    public void onClick(View v) {
-                        mCallback.onImvNotesClicked_ExperimentSetupFragment((ImageView) v);
-                    }
-                });
+		CreateExperimentActivity a = (CreateExperimentActivity) getActivity();
+		ListView operationMenu = (ListView) mView.findViewById(R.id.lv_operations);
+		OperationAdapter operationAdapter = new OperationAdapter(a, a.getExperiment());
+		operationMenu.setAdapter(operationAdapter);
+		operationMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				if (position == OperationAdapter.OP_TAGS) {
+					mCallback.onTagsClicked_ExperimentSetupFragment();
+					
+				}
+				else if (position == OperationAdapter.OP_NOTES) {
+					mCallback.onNotesClicked_ExperimentSetupFragment();
+				}
+				else if (position == OperationAdapter.OP_SENSORS) {
+					mCallback.onSensorsClicked_ExperimentSetupFragment();
+				}
+				
+			}
+			
+		});
+
 
         ((Button) mView.findViewById(R.id.button_experiment_run))
                 .setOnClickListener(new Button.OnClickListener() {
@@ -64,10 +82,7 @@ public class ExperimentSetupFragment extends Fragment {
                         mCallback.onBtnBackClicked_ExperimentSetupFragment();
                     }
                 });
-
-        ((EditText) mView.findViewById(R.id.et_experiment_setup_name))
-                .setText(((CreateExperimentActivity) getActivity()).getExperiment().getName());
-
+        
     }
 
     @Override
@@ -80,20 +95,14 @@ public class ExperimentSetupFragment extends Fragment {
         // use nested fragment
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 
-        if (mExperimentTagsFragment == null) {
-            mExperimentTagsFragment = new ExperimentEditTagsFragment();
-            ;
-            transaction.add(R.id.layout_tags, mExperimentTagsFragment);
-        }
-
-        if (mExperimentSensorSelectionFragment == null) {
-            mExperimentSensorSelectionFragment = new ExperimentSensorSelectionFragment();
-
-            getActivity().getIntent().putExtra("havingheader", false);
-            getActivity().getIntent().putExtra("havingfooter", false);
-
-            transaction.add(R.id.layout_sensor_list, mExperimentSensorSelectionFragment);
-        }
+//        if (mExperimentSensorSelectionFragment == null) {
+//            mExperimentSensorSelectionFragment = new ExperimentSensorSelectionFragment();
+//
+//            getActivity().getIntent().putExtra("havingheader", false);
+//            getActivity().getIntent().putExtra("havingfooter", false);
+//
+//            transaction.add(R.id.layout_sensor_list, mExperimentSensorSelectionFragment);
+//        }
         transaction.commit();
 
         return mView;
