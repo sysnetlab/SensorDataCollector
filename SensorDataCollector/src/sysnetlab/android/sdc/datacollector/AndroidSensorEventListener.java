@@ -1,4 +1,3 @@
-/* $Id$ */
 
 package sysnetlab.android.sdc.datacollector;
 

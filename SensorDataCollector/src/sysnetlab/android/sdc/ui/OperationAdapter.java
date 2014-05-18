@@ -1,8 +1,5 @@
 package sysnetlab.android.sdc.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 

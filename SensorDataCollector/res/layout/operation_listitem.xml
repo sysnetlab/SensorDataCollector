@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
          >
 
         <ImageView
@@ -25,7 +26,7 @@
             android:id="@+id/tv_subtext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/iv_image"
+            android:layout_below="@+id/tv_maintext"
             android:layout_alignLeft="@+id/tv_maintext"
             android:text="Supporting information." />
 
