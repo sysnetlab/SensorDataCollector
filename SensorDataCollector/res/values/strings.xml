@@ -11,7 +11,7 @@
     <string name="button_run_text_run">Run</string>
     <string name="button_back_text_back">Back</string>
     <string name="textview_sensing_type">Sensing Type</string>
-    <string name="textview_experiment_setup_new">New Experiment Setup</string>
+    <string name="textview_experiment_setup_new">Experiment Properties</string>
     <string name="textview_experiment_setup_view">View Experiment Setup</string> 
     <string name="textview_experiment_name">Name</string>
 	<string name="textview_experiment_tags">Tags</string>  

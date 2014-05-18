@@ -4,21 +4,17 @@ package sysnetlab.android.sdc.ui;
 import sysnetlab.android.sdc.R;
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.Fragment;	
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 public class ExperimentSetupFragment extends Fragment {
     private View mView;
-    private ExperimentEditTagsFragment mExperimentTagsFragment;
-    private ExperimentSensorSelectionFragment mExperimentSensorSelectionFragment;
     private OnFragmentClickListener mCallback;
 
     public interface OnFragmentClickListener {
@@ -92,18 +88,6 @@ public class ExperimentSetupFragment extends Fragment {
 
         mView = inflater.inflate(R.layout.fragment_experiment_setup, container, false);
 
-        // use nested fragment
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-
-//        if (mExperimentSensorSelectionFragment == null) {
-//            mExperimentSensorSelectionFragment = new ExperimentSensorSelectionFragment();
-//
-//            getActivity().getIntent().putExtra("havingheader", false);
-//            getActivity().getIntent().putExtra("havingfooter", false);
-//
-//            transaction.add(R.id.layout_sensor_list, mExperimentSensorSelectionFragment);
-//        }
-        transaction.commit();
 
         return mView;
     }
