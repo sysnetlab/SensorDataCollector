@@ -2,15 +2,20 @@ package sysnetlab.android.sdc.test;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
+import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
+import sysnetlab.android.sdc.ui.ExperimentListFragment;
 import sysnetlab.android.sdc.ui.SensorDataCollectorActivity;
 import android.content.Intent;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 
+
 public class SensorDataCollectorActivityTests 
 		extends android.test.ActivityUnitTestCase<SensorDataCollectorActivity> {
 
 	private SensorDataCollectorActivity sdcActivity;
+	ExperimentListFragment mExperimentListFragment;
+	ArrayAdapter<Experiment> mExperimentList;
 	
 	public SensorDataCollectorActivityTests() {
 		super(SensorDataCollectorActivity.class);
@@ -22,6 +27,8 @@ public class SensorDataCollectorActivityTests
         startActivity(intent, null, null);
         sdcActivity = getActivity();
         getInstrumentation().callActivityOnStart(sdcActivity);
+        mExperimentListFragment = sdcActivity.getExperimentListFragment();
+        mExperimentList = mExperimentListFragment.getExperimentArray();
 	}
 
 	protected void tearDown() throws Exception {
@@ -43,21 +50,30 @@ public class SensorDataCollectorActivityTests
 	    assertNotNull("Intent was null", triggeredIntent);
 	}
 	
+	public void testExperimentListFragmentCreated() {
+		// TODO test if mExperimentListFragment is instantiated
+		assertNotNull("ExperimentListFragment is null",mExperimentListFragment);
+	}
+	
 	public void testExperimentListClicked() {
-		// TODO test correct experiment is constructed and loaded
-		ArrayAdapter<Experiment> mExperimentListFragment=sdcActivity.getExperimentListFragment().getExperimentArray();
-		assertNotNull("Experiment list is null", mExperimentListFragment);
-		assertNotSame("Experiment list is empty, create an experiment to run next tests", 0, mExperimentListFragment.getCount());
-		if(!mExperimentListFragment.isEmpty()){
-			sdcActivity.onExperimentClicked_ExperimentListFragment(mExperimentListFragment.getItem(0));
+		assertNotNull("Experiment list is null", mExperimentList);
+		assertNotSame("Experiment list is empty, create an experiment to run next tests", 0, mExperimentList.getCount());
+			
+		if(!mExperimentList.isEmpty()){								
+			
+			// TODO Change the way the experiment is loaded performing a item click
+			
+			//mlistView.performItemClick(mlistView.getAdapter().getView(0, null, null),
+			//				0, mlistView.getAdapter().getItemId(0));
+			
+		    sdcActivity.onExperimentClicked_ExperimentListFragment(mExperimentList.getItem(0));
 			Intent triggeredIntent = getStartedActivityIntent();
-			assertNotNull("Intent was null", triggeredIntent);			
-			Experiment mExperiment=triggeredIntent.getParcelableExtra("experiment");
-			assertEquals("The loaded experiment is not correct",mExperiment,mExperimentListFragment.getItem(0));	
+			assertNotNull("Intent was null", triggeredIntent);
+			Experiment mExperiment=ExperimentManagerSingleton.getInstance().getActiveExperiment();
+			assertNotNull("The loaded experiment is null", mExperiment);			
+			assertEquals("The loaded experiment is not correct",mExperiment,mExperimentList.getItem(0));	
 		}		
 	}
 	
-	public void testExperimentListFragmentCreated() {
-		// TODO test if mExperimentListFragment is instantiated
-	}
+	
 }

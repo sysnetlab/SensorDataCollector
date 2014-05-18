@@ -13,8 +13,10 @@ import android.util.Log;
 
 public class ViewExperimentActivity extends FragmentActivity implements
         ExperimentViewFragment.OnFragmentClickListener,
-        ExperimentSensorSelectionFragment.OnFragmentClickListener {
+        ExperimentSensorSelectionFragment.OnFragmentClickListener,
+        ExperimentViewNotesFragment.OnFragmentClickListener {
     private ExperimentViewFragment mExperimentViewFragment;
+    private ExperimentViewMoreNotesFragment mExperimentViewMoreNotesFragment;
     private Experiment mExperiment;
 
     @Override
@@ -83,6 +85,16 @@ public class ViewExperimentActivity extends FragmentActivity implements
 
     public Experiment getExperiment() {
         return mExperiment;
+    }
+
+    @Override
+    public void onImageViewMoreOrLessNotesClicked_ExperimentViewNotesFragment() {
+        Log.i("SensorDataCollector",
+                "entered onImageViewMoreOrLessNotesClicked_ExperimentViewNotesFragment");
+        if (mExperimentViewMoreNotesFragment == null) {
+            mExperimentViewMoreNotesFragment = new ExperimentViewMoreNotesFragment();
+        }
+        FragmentUtil.switchToFragment(this, mExperimentViewMoreNotesFragment, "experimentviewnotes");
     }
 
 }

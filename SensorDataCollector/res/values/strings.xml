@@ -44,4 +44,5 @@
     <string name="clear">Clear</string>
     <string name="text_more_more">More >></string>
     <string name="text_experiment_has_no_sensors">Experiment has no sensors</string>
+    <string name="text_epxeriment_has_no_notes">Experiment has no notes</string>
 </resources>

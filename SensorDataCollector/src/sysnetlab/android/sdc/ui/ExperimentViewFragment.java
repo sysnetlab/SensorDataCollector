@@ -49,8 +49,7 @@ public class ExperimentViewFragment extends Fragment {
 
         if (mExperimentSensorListFragment == null) {
             mExperimentSensorListFragment = new ExperimentSensorListFragment();
-            transaction.add(R.id.layout_experiment_view_sensor_list,
-                    mExperimentSensorListFragment);
+            transaction.add(R.id.layout_experiment_view_sensor_list, mExperimentSensorListFragment);
         }
         transaction.commit();
 
@@ -72,10 +71,10 @@ public class ExperimentViewFragment extends Fragment {
                         mCallback.onBtnCloneClicked_ExperimentViewFragment();
                     }
                 });
-        
+
         ((Button) mView.findViewById(R.id.button_experiment_view_back))
                 .setOnClickListener(new Button.OnClickListener() {
-                    
+
                     @Override
                     public void onClick(View v) {
                         mCallback.onBtnBackClicked_ExperimentViewFragment();
@@ -91,8 +90,7 @@ public class ExperimentViewFragment extends Fragment {
             mCallback = (OnFragmentClickListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement ExperimentViewFragment.ExperimentViewFragmentHandler");
+                    + " must implement OnFragmentClickListener");
         }
     }
-
 }
