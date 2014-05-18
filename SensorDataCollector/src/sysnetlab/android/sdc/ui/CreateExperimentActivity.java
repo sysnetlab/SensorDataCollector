@@ -171,7 +171,7 @@ public class CreateExperimentActivity extends FragmentActivity
     private void runExperiment() throws IOException {
         mExperiment.getStore().addExperiment();
 
-        Iterator<AndroidSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
+        Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
         ArrayList<AbstractSensor> lstSensors = new ArrayList<AbstractSensor>();
         
         int nChecked = 0;
@@ -198,7 +198,7 @@ public class CreateExperimentActivity extends FragmentActivity
     }
 
     private void stopExperiment() throws IOException {
-        Iterator<AndroidSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
+        Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
         int nChecked = 0;
         while (iter.hasNext()) {
             AndroidSensor sensor = (AndroidSensor) iter.next();
@@ -322,7 +322,7 @@ public class CreateExperimentActivity extends FragmentActivity
 
     @Override
     public void onBtnClearClicked_ExperimentSensorSelectionFragment() {
-        Iterator<AndroidSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
+        Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
         while (iter.hasNext()) {
             AndroidSensor sensor = (AndroidSensor) iter.next();
             if (sensor.isSelected()) {
