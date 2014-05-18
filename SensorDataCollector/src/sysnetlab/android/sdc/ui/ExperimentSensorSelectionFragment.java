@@ -151,4 +151,7 @@ public class ExperimentSensorSelectionFragment extends Fragment {
         return mSensorList;
     }
 
+    public ListView getSensorListView(){
+    	return mListView;
+    }
 }

@@ -1,11 +1,15 @@
 package sysnetlab.android.sdc.test;
 
+import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
 import sysnetlab.android.sdc.ui.ExperimentRunFragment;
 import sysnetlab.android.sdc.ui.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.ExperimentSetupFragment;
 import sysnetlab.android.sdc.ui.SensorSetupFragment;
 import android.content.Intent;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;;
 
 public class CreateExperimentActivityTests 
 		extends android.test.ActivityUnitTestCase<CreateExperimentActivity> {
@@ -43,17 +47,33 @@ public class CreateExperimentActivityTests
 	}
 	
 	public void testExperimentRunFragment() {
+		Button view = (Button) createExperimentActivity.findViewById(R.id.button_experiment_run);
+	    assertNotNull("Button not allowed to be null", view);
+	    view.performClick();
 		ExperimentRunFragment experimentRunFragment=createExperimentActivity.getExperimentRunFragment();
 		assertNotNull(experimentRunFragment);
 	}
 	
 	public void testSensorDataCollectionActivityLoaded(){
+		// TODO Get the sensor list view from the sensorSelectionFragment and perform a item click
+		
+		//ImageView view = (ImageView) createExperimentActivity.findViewById(R.id.imv_sensors_plusminus);
+	    //assertNotNull("Button not allowed to be null", view);
+	    //view.performClick();
+		//ExperimentSensorSelectionFragment sensorSelectionFragment=createExperimentActivity.getExperimentSensorSensorSelectionFragment();				
+		//ListView listView = (ListView) sensorSelectionFragment.getSensorListView();
+		//listView.performItemClick(listView.getAdapter().getView(0, null, null),
+		//				0, listView.getAdapter().getItemId(0));
+		
 		SensorSetupFragment sensorSetupFragment = createExperimentActivity.getSensorSetupFragment();
 		assertNotNull(sensorSetupFragment);
 	}
 	
 	public void testSensorSelectionFragment() {
-		ExperimentSensorSelectionFragment sensorSelectionFragment=createExperimentActivity.getExperimentSensorSensorSelectionFragment();
+		ImageView view = (ImageView) createExperimentActivity.findViewById(R.id.imv_sensors_plusminus);
+	    assertNotNull("Button not allowed to be null", view);
+	    view.performClick();
+	    ExperimentSensorSelectionFragment sensorSelectionFragment=createExperimentActivity.getExperimentSensorSensorSelectionFragment();
 		assertNotNull(sensorSelectionFragment);
 	}
 }
