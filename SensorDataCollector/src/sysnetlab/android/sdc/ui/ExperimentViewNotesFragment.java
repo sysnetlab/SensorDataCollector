@@ -32,7 +32,7 @@ public class ExperimentViewNotesFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentClickListener");
-        }        
+        }    
     }
     
     @Override
@@ -59,6 +59,13 @@ public class ExperimentViewNotesFragment extends Fragment {
 
         ArrayList<Note> lstNotes = ExperimentManagerSingleton.getInstance().getActiveExperiment()
                 .getNotes();
+        
+        /*
+        lstNotes.add(new Note("aaa", "2014-05-14"));
+        lstNotes.add(new Note("bbb", "2014-05-14"));
+        lstNotes.add(new Note("ccc", "2014-05-14"));
+        lstNotes.add(new Note("ddd", "2014-05-14"));
+        */
         
         if (lstNotes != null && !lstNotes.isEmpty()) {
             Note note = lstNotes.get(0);

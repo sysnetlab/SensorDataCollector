@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/textview_fragment_experiment_view_more_notes_experiment_heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center|center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/text_experiment"/>
+    <TextView 
+        android:id="@+id/textview_fragment_experiment_view_more_notes_experiment_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textview_fragment_experiment_view_more_notes_experiment_heading"
+        android:gravity="center|center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/text_experiment"/>
+    
+    <TextView
+        android:id="@+id/textview_fragment_experiment_view_more_notes_experiment_time_created"
+        android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/textview_fragment_experiment_view_more_notes_experiment_name"
+		android:gravity="center|center_horizontal"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/text_experiment"/>
+    <TextView
+        android:id="@+id/textview_fragment_experiment_view_more_notes_experiment_time_done"
+        android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/textview_fragment_experiment_view_more_notes_experiment_time_created"
+		android:gravity="center|center_horizontal"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/text_experiment"/>   
+        
+    <TextView
+        android:id="@+id/textview_fragment_experiment_view_more_notes_note_indicator"
+        android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/textview_fragment_experiment_view_more_notes_experiment_time_done"
+		android:gravity="center|center_horizontal"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/text_experiment"/>   
+    <TextView
+        android:id="@+id/textview_fragment_experiment_view_more_notes_note_time"
+        android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/textview_fragment_experiment_view_more_notes_note_indicator"
+		android:gravity="center|center_horizontal"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/text_experiment"/>  
+
+	<Button 
+	    android:id="@+id/button_fragment_experiment_view_more_notes_back"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:layout_alignParentBottom="true"
+		android:gravity="center|center_horizontal"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/text_back"/>    
+        
+    <TextView
+        android:id="@+id/textview_fragment_experiment_view_more_notes_note_text"
+        android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@id/textview_fragment_experiment_view_more_notes_note_time"
+		android:layout_above="@id/button_fragment_experiment_view_more_notes_back"
+		android:gravity="center|center_horizontal"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/text_experiment"/>                       
+</RelativeLayout>

@@ -14,7 +14,8 @@ import android.util.Log;
 public class ViewExperimentActivity extends FragmentActivity implements
         ExperimentViewFragment.OnFragmentClickListener,
         ExperimentSensorSelectionFragment.OnFragmentClickListener,
-        ExperimentViewNotesFragment.OnFragmentClickListener {
+        ExperimentViewNotesFragment.OnFragmentClickListener,
+        ExperimentViewMoreNotesFragment.OnFragmentClickListener {
     private ExperimentViewFragment mExperimentViewFragment;
     private ExperimentViewMoreNotesFragment mExperimentViewMoreNotesFragment;
     private Experiment mExperiment;
@@ -91,10 +92,16 @@ public class ViewExperimentActivity extends FragmentActivity implements
     public void onImageViewMoreOrLessNotesClicked_ExperimentViewNotesFragment() {
         Log.i("SensorDataCollector",
                 "entered onImageViewMoreOrLessNotesClicked_ExperimentViewNotesFragment");
+
         if (mExperimentViewMoreNotesFragment == null) {
             mExperimentViewMoreNotesFragment = new ExperimentViewMoreNotesFragment();
         }
         FragmentUtil.switchToFragment(this, mExperimentViewMoreNotesFragment, "experimentviewnotes");
+    }
+
+    @Override
+    public void onBtnBackClicked_ExperimentViewMoreNotesFragment() {
+        FragmentUtil.switchToFragment(this, mExperimentViewFragment, "experimentview");
     }
 
 }

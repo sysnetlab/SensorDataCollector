@@ -91,6 +91,6 @@ public class ExperimentViewFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentClickListener");
-        }
+        }     
     }
 }
