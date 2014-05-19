@@ -137,10 +137,9 @@ public class CreateExperimentActivity extends FragmentActivity
 
     @Override
     public void onBtnBackClicked_CreateExperimentNotesFragment() {
-        // TODO lazy work for now, more work ...
-        if (mExperimentSetupFragment == null)
-            mExperimentSetupFragment = new ExperimentSetupFragment();
-        FragmentUtil.switchToFragment(this, mExperimentSetupFragment, "experimentsetup");
+    	Log.i("SensorDataCollector", "Button Cancel clicked.");
+        getSupportFragmentManager().popBackStack();
+        //FragmentUtil.switchToFragment(this, mExperimentSetupFragment, "experimentsetup");
     }
     
     public ExperimentSensorSelectionFragment getExperimentSensorSensorSelectionFragment()
@@ -251,9 +250,11 @@ public class CreateExperimentActivity extends FragmentActivity
     }
 
     @Override
-    public void onTxtFldEnterPressed_ExperimentTagsFragment(String newTag) {
+    public void onTxtFldEnterPressed_ExperimentEditTagsFragment(String newTag) {
         Log.i("CreateExperiment", "New label being added");
         mExperiment.addTag(newTag);
+        mExperimentEditTagsFragment.getTagListAdapter().notifyDataSetChanged();
+        
     }
 
     @Override
@@ -350,6 +351,13 @@ public class CreateExperimentActivity extends FragmentActivity
         }
         
         mExperimentSensorSelectionFragment.getSensorListAdapter().notifyDataSetChanged();
+    }
+    
+    @Override
+    public void onBtnConfirmClicked_ExperimentEditTagsFragment() {
+    	Log.i("SensorDataCollector", "Button Cancel clicked.");
+        getSupportFragmentManager().popBackStack();        
+        //FragmentUtil.switchToFragment(this, mExperimentSetupFragment, "sensorsetup");
     }
     
     public void onSensorClicked_ExperimentSensorSelectionFragment(AndroidSensor sensor) {

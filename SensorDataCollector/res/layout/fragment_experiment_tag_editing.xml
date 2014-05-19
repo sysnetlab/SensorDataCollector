@@ -12,7 +12,6 @@
 		android:text="@string/textview_experiment_tags"
 		android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    
  	<EditText
         android:id="@+id/edittext_new_label"
         android:layout_width="wrap_content"
@@ -33,14 +32,30 @@
         android:layout_below="@+id/tv_tags"
         android:orientation="horizontal" >
     </LinearLayout>
-
+    
     <ListView
         android:id="@+id/listView_tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignTop="@+id/layout_label_list" >
-
-    </ListView>
-
+    </ListView>  
+    
+	<RelativeLayout
+	    android:id="@+id/layout_tag_editing_footer"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    android:gravity="center_horizontal"
+	    android:visibility="visible">
+	    
+	    <Button
+	        android:id="@+id/button_tag_editing_confirm"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/confirm"
+	        android:textAppearance="?android:attr/textAppearanceMedium"
+	        android:layout_marginRight="8dp"
+	        />	    	        
+	</RelativeLayout>
 </RelativeLayout>
