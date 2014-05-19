@@ -8,6 +8,7 @@ import java.text.DateFormat;
 
 import sysnetlab.android.sdc.datastore.AbstractStore;
 import sysnetlab.android.sdc.datastore.SimpleFileStore;
+import sysnetlab.android.sdc.datastore.SimpleFileStoreSingleton;
 import sysnetlab.android.sdc.datastore.StoreClassUtil;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
@@ -50,6 +51,25 @@ public class Experiment implements Parcelable {
     public Experiment(AbstractStore store) {
         this("Unnamed Experiment", DateFormat.getDateTimeInstance().format(
                 Calendar.getInstance().getTime()), store);
+    }
+
+    public Experiment clone() {
+        Experiment experiment;
+        if (mStore instanceof SimpleFileStore) {
+            experiment = new Experiment(SimpleFileStoreSingleton.getInstance());
+        } else {
+            experiment = new Experiment(SimpleFileStoreSingleton.getInstance());
+            Log.i("SensorDataCollector", "Experiment class needs support on data stype "
+                    + mStore.getClass().getName());
+        }
+        
+        experiment.setDeviceInformation(new DeviceInformation(mDeviceInfo));
+        experiment.setName(new String(mName));
+        experiment.setTags(new ArrayList<Tag>(mTags));
+        experiment.setNotes(new ArrayList<Note>(mNotes));
+        experiment.setSensors(new ArrayList<AbstractSensor>(mSensors));
+
+        return experiment;
     }
 
     public ArrayList<Tag> getTags() {
@@ -224,4 +244,5 @@ public class Experiment implements Parcelable {
     public Parcelable.Creator<Experiment> getCreator() {
         return CREATOR;
     }
+
 }

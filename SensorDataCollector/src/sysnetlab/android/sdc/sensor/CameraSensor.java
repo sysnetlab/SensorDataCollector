@@ -40,4 +40,10 @@ public class CameraSensor extends AbstractSensor {
     public Object getSensor() {
         return mCamera;
     }
+
+    @Override
+    public boolean isSameSensor(AbstractSensor sensor) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

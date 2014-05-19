@@ -6,11 +6,13 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.List;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
 import sysnetlab.android.sdc.datacollector.Experiment;
+import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.datastore.SimpleFileStoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
@@ -59,11 +61,16 @@ public class CreateExperimentActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
 
-        /**
-         * create an experiment using SimpleFileStore. It can be set using UI in
-         * the future when different types of Store are corrected.
-         */
-        mExperiment = new Experiment(SimpleFileStoreSingleton.getInstance());
+        int operation = getIntent().getIntExtra(SensorDataCollectorActivity.APP_OPERATION_KEY, SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT);
+        if (operation == SensorDataCollectorActivity.APP_OPERATION_CLONE_EXPERIMENT) {
+            mExperiment = ExperimentManagerSingleton.getInstance().getActiveExperiment().clone();
+        } else {
+            /**
+             * create an experiment using SimpleFileStore. It can be set using UI in
+             * the future when different types of Store are corrected.
+             */
+            mExperiment = new Experiment(SimpleFileStoreSingleton.getInstance());            
+        }
 
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {
@@ -166,6 +173,17 @@ public class CreateExperimentActivity extends FragmentActivity
 
     public Experiment getExperiment() {
         return mExperiment;
+    }
+    
+    public void selectSensors(List<AbstractSensor> lstSensorsTo) {
+        for (AbstractSensor sensorTo : lstSensorsTo) {
+            for (AbstractSensor sensorFrom : mExperiment.getSensors()) {
+                if (sensorTo.isSameSensor(sensorFrom)) {
+                    sensorTo.setSelected(true);
+                    break;
+                }
+            }
+        }
     }
 
     private void runExperiment() throws IOException {

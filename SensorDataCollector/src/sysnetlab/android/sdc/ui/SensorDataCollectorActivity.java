@@ -15,6 +15,10 @@ import android.widget.Button;
 
 public class SensorDataCollectorActivity extends FragmentActivity implements
         ExperimentListFragment.OnFragmentClickListener {
+    
+    public final static String APP_OPERATION_KEY = "operation";
+    public final static int APP_OPERATION_CREATE_NEW_EXPERIMENT = 1;
+    public final static int APP_OPERATION_CLONE_EXPERIMENT = 2;
 
     private ExperimentListFragment mExperimentListFragment;
 
@@ -60,7 +64,11 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
 
     @Override
     public void onCreateExperimentButtonClicked_ExperimentListFragment(Button b) {
+        Log.i("SensorDataCollector", "Creating CreateExperimentActivity ...");
+        
         Intent intent = new Intent(this, CreateExperimentActivity.class);
+        intent.putExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
+                SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT);
         startActivity(intent);
     }
 
