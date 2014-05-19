@@ -77,4 +77,9 @@ public class AndroidSensor extends AbstractSensor {
     public boolean isStreamingSensor() {
         return mIsStreamingSensor;
     }
+
+    @Override
+    public boolean isSameSensor(AbstractSensor sensor) {
+        return mSensor.getName().equals(sensor.getName());
+    }
 }

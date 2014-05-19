@@ -1,6 +1,8 @@
 
 package sysnetlab.android.sdc.ui;
 
+import java.util.List;
+
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
@@ -25,7 +27,7 @@ public class ExperimentSensorSelectionFragment extends Fragment {
 
     private View mView;
     private ListView mListView;
-    private ArrayAdapter<AbstractSensor> mSensorList;
+    private ArrayAdapter<AbstractSensor> mSensorListAdaptor;
 
     private OnFragmentClickListener mCallback;
 
@@ -79,9 +81,20 @@ public class ExperimentSensorSelectionFragment extends Fragment {
                 .findViewById(R.id.layout_sensor_selection_list);
 
         mListView = new ListView(getActivity());
-        mSensorList = new SensorListAdaptor(getActivity(),
-                SensorDiscoverer.discoverSensorList(getActivity()));
-        mListView.setAdapter(mSensorList);
+        List<AbstractSensor> lstSensors = SensorDiscoverer.discoverSensorList(getActivity());
+        
+        
+        Activity activity = getActivity();
+        if (activity instanceof CreateExperimentActivity) {
+            ((CreateExperimentActivity)activity).selectSensors(lstSensors);
+        } else {
+            Log.i("SensorDataCollector",
+                    "not a CreateExperimentActivity in ExperimentSensorSelectionFragment::onCreateView().");
+        }
+        
+        mSensorListAdaptor = new SensorListAdaptor(getActivity(), lstSensors);
+        
+        mListView.setAdapter(mSensorListAdaptor);
         layout.addView(mListView);
 
         return mView;
@@ -148,7 +161,7 @@ public class ExperimentSensorSelectionFragment extends Fragment {
     }
 
     public ArrayAdapter<AbstractSensor> getSensorListAdapter() {
-        return mSensorList;
+        return mSensorListAdaptor;
     }
 
     public ListView getSensorListView(){

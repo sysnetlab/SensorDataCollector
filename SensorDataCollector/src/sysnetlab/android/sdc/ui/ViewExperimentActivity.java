@@ -63,8 +63,10 @@ public class ViewExperimentActivity extends FragmentActivity implements
 
     @Override
     public void onBtnCloneClicked_ExperimentViewFragment() {
-        // TODO Auto-generated method stub
-
+        Intent intent = new Intent(this, CreateExperimentActivity.class);
+        intent.putExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
+                SensorDataCollectorActivity.APP_OPERATION_CLONE_EXPERIMENT);
+        startActivity(intent);
     }
 
     public Experiment getExperiment() {
@@ -93,9 +95,9 @@ public class ViewExperimentActivity extends FragmentActivity implements
         if (mExperimentViewSensorDataFragment == null) {
             mExperimentViewSensorDataFragment = new ExperimentViewSensorDataFragment();
         }
-        
+
         mExperimentViewSensorDataFragment.setSensorNo(sensorNo);
-        
+
         FragmentUtil.switchToFragment(this, mExperimentViewSensorDataFragment,
                 "experimentviewsensordata");
     }

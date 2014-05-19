@@ -16,6 +16,13 @@ public class DeviceInformation implements Parcelable {
     public DeviceInformation(String manufacturer, String model) {
         setDeviceInformation(manufacturer, model);
     }
+    
+
+    public DeviceInformation(DeviceInformation deviceInfo) {
+        mManufacturer = deviceInfo.mManufacturer;
+        mModel = deviceInfo.mModel;
+    }
+
 
     public void setDeviceInformation(String manufacturer, String model) {
         mManufacturer = manufacturer;

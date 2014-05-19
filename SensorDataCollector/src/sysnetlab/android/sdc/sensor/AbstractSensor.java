@@ -34,6 +34,8 @@ public abstract class AbstractSensor {
     public abstract String getName();
 
     public abstract Object getSensor();
+    
+    public abstract boolean isSameSensor(AbstractSensor sensor);
 
     public abstract void setSensor(Object sensor);
 
