@@ -11,7 +11,7 @@
         android:layout_alignParentTop="true"
         android:gravity="center|center_horizontal"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/text_experiment"/>
+        android:text="@string/experiment"/>
     <TextView 
         android:id="@+id/textview_fragment_experiment_view_sensor_data_experiment_name"
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
         android:layout_below="@id/textview_fragment_experiment_view_sensor_data_experiment_heading"
         android:gravity="center|center_horizontal"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/text_experiment"/>
+        android:text="@string/experiment"/>
     
     <TextView
         android:id="@+id/textview_fragment_experiment_view_sensor_data_experiment_time_created"
@@ -28,7 +28,7 @@
 		android:layout_below="@id/textview_fragment_experiment_view_sensor_data_experiment_name"
 		android:gravity="center|center_horizontal"
 		android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/text_experiment"/>
+        android:text="@string/experiment"/>
     <TextView
         android:id="@+id/textview_fragment_experiment_view_sensor_data_experiment_time_done"
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
 		android:layout_below="@id/textview_fragment_experiment_view_sensor_data_experiment_time_created"
 		android:gravity="center|center_horizontal"
 		android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/text_experiment"/>   
+        android:text="@string/experiment"/>   
         
     <TextView
         android:id="@+id/textview_fragment_experiment_view_sensor_data_sensor_description"
@@ -45,7 +45,7 @@
 		android:layout_below="@id/textview_fragment_experiment_view_sensor_data_experiment_time_done"
 		android:gravity="center|center_horizontal"
 		android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/text_experiment"/>   
+        android:text="@string/experiment"/>   
  
 
 	<Button 
@@ -56,7 +56,7 @@
 		android:layout_alignParentBottom="true"
 		android:gravity="center|center_horizontal"
 		android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/text_back"/>    
+        android:text="@string/back"/>    
         
     <TextView
         android:id="@+id/textview_fragment_experiment_view_sensor_data_text"
@@ -70,5 +70,5 @@
 		android:gravity="left|top"
 		android:scrollbars="horizontal|vertical"
 		android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/text_experiment"/>                       
+        android:text="@string/experiment"/>                       
 </RelativeLayout>

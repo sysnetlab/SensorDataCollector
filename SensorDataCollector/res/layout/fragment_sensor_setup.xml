@@ -19,7 +19,7 @@
         android:layout_below="@+id/tv_sensor_setup_header"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"        
-        android:text="@string/textview_sensing_type"
+        android:text="@string/sensing_type"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -31,7 +31,7 @@
         android:layout_alignBottom="@+id/textView1"
         android:layout_marginLeft="10dp"
         android:layout_alignLeft="@+id/edittext_sampling_rate"
-        android:text="@string/text_sensing_type_onchange"
+        android:text="@string/on_change"
         android:textAppearance="?android:attr/textAppearanceMedium" />    
     
     <TextView
@@ -42,7 +42,7 @@
         android:layout_below="@+id/textView1"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
-        android:text="@string/textview_sampling_rate"
+        android:text="@string/sampling_rate"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
@@ -68,7 +68,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"
         android:layout_toLeftOf="@+id/tv_sensing_type"
-        android:text="@string/button_sensor_setup_confirm" />    
+        android:text="@string/confirm" />    
     
     <Button
         android:id="@+id/btn_sensor_setup_cancel"
@@ -79,6 +79,6 @@
         android:layout_alignBaseline="@+id/btn_sensor_setup_confirm"
         android:layout_alignBottom="@+id/btn_sensor_setup_confirm"
         android:layout_alignRight="@+id/tv_sensing_type"
-        android:text="@string/button_sensor_setup_cancel" />
+        android:text="@string/cancel" />
 
 </RelativeLayout>

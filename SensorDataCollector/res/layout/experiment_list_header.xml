@@ -10,6 +10,6 @@
  	    android:layout_alignParentBottom="true"
  	    android:layout_centerHorizontal="true"
  	    android:minHeight="0dp"
- 	    android:text="@string/button_create_experiment" />
+ 	    android:text="@string/create_new_experiment" />
 
 </RelativeLayout>

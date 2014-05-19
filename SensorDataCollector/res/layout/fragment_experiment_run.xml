@@ -15,7 +15,7 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
         	android:gravity="center_horizontal"
-	        android:text="@string/text_experiment_running"
+	        android:text="@string/running_experiment"
 	        android:textAppearance="?android:attr/textAppearanceMedium">
 		</TextView>
 
@@ -51,7 +51,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_centerHorizontal="true"
 		    android:minHeight="0dp"
-		    android:text="@string/text_experiment_done" />
+		    android:text="@string/done" />
 		        
 	</RelativeLayout>
 

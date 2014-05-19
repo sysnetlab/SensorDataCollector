@@ -8,7 +8,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="36dp"
 	       	android:layout_marginLeft="12dp"
-	        android:text="@string/textview_experiment_sensors"
+	        android:text="@string/sensors"
 	        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 	    <ImageView
@@ -19,7 +19,7 @@
 	        android:layout_marginLeft="24dp"
 	        android:layout_marginTop="14dp"
 	        android:layout_toRightOf="@+id/tv_sensors_on_header"
-	        android:contentDescription="@string/img_plus_green_white"
+	        android:contentDescription="@string/expand"
 	        android:paddingBottom="0dp"
 	        android:paddingLeft="0dp"
 	        android:paddingRight="0dp"

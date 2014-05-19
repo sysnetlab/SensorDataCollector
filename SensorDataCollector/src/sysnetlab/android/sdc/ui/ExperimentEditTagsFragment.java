@@ -90,7 +90,7 @@ public class ExperimentEditTagsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((EditText) mView.findViewById(R.id.edittext_new_label))
+        ((EditText) mView.findViewById(R.id.edittext_tag))
                 .setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId,
