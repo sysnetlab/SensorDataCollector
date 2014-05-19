@@ -73,7 +73,7 @@ public class ExperimentViewNotesFragment extends Fragment {
                     .setText(note.getNote());
         } else {
             ((TextView) mView.findViewById(R.id.textview_fragment_note_viewing_note))
-                    .setText(getResources().getString(R.string.text_epxeriment_has_no_notes));
+                    .setText(getResources().getString(R.string.experiment_has_no_notes));
         }
 
         return mView;

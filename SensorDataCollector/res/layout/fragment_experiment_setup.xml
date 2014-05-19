@@ -13,7 +13,7 @@
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
         android:layout_marginTop="12dp"
-        android:text="@string/textview_experiment_setup_new"
+        android:text="@string/experiment_properties"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -25,7 +25,7 @@
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
         android:layout_marginTop="12dp"
-        android:text="@string/textview_experiment_name"
+        android:text="@string/name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
@@ -73,7 +73,7 @@
             android:layout_marginRight="6dp"
             android:minHeight="30dp"
             android:layout_weight="1"
-            android:text="@string/button_run_text_run" />
+            android:text="@string/run" />
 
         <Button            
             android:id="@+id/button_experiment_back"
@@ -83,7 +83,7 @@
             android:layout_marginRight="12dp"
             android:minHeight="30dp"
             android:layout_weight="1"
-            android:text="@string/button_back_text_back" />
+            android:text="@string/back" />
     </LinearLayout>
 
 </RelativeLayout>

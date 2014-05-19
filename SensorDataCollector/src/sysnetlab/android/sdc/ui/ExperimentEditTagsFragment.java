@@ -96,7 +96,7 @@ public class ExperimentEditTagsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((EditText) mView.findViewById(R.id.edittext_new_label))
+        ((EditText) mView.findViewById(R.id.edittext_tag))
                 .setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId,
@@ -109,7 +109,7 @@ public class ExperimentEditTagsFragment extends Fragment {
                     }
                 });
         
-        ((Button) mView.findViewById(R.id.button_tag_editing_confirm))
+        ((Button) mView.findViewById(R.id.btn_tag_edit_confirm))
         .setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {

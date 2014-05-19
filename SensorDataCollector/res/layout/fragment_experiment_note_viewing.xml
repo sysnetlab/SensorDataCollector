@@ -26,7 +26,7 @@
             android:layout_marginLeft="0dp"
             android:layout_marginTop="0dp"
             android:layout_toRightOf="@id/textview_fragment_note_viewing_label"
-            android:contentDescription="@string/img_plus_green_white"
+            android:contentDescription="@string/expand"
             android:paddingBottom="0dp"
             android:paddingLeft="0dp"
             android:paddingRight="0dp"

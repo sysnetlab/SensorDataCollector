@@ -100,15 +100,15 @@ public class SensorSetupFragment extends Fragment {
                 TextView tvSamplingRate = (TextView) mView.findViewById(R.id.tv_sampling_rate);
                 if (((AndroidSensor) sensor).isStreamingSensor()) {
                     tvSensingType.setText(getActivity().getResources().getString(
-                            R.string.text_sensing_type_streaming));
+                            R.string.streaming));
                     etSamplingRate.setText(String.valueOf(1000000. / ((AndroidSensor) sensor)
                             .getSamplingInterval()));
                     Log.i("SensorDataCollector", "Streaming sensor.");
                 } else {
                     tvSensingType.setText(getActivity().getResources().getString(
-                            R.string.text_sensing_type_onchange));
+                            R.string.on_change));
                     etSamplingRate.setText(getActivity().getResources().getString(
-                            R.string.text_sensing_rate_na));
+                            R.string.abbreviation_not_applicable));
                     etSamplingRate.setEnabled(false);
                     tvSamplingRate.setEnabled(false);
                     Log.i("SensorDataCollector", "Non-streaming (onchange) sensor.");

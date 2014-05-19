@@ -11,7 +11,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="42dp"
-        android:text="@string/button_run_text_run" />
+        android:text="@string/run" />
 
     <Button
         android:id="@+id/btnDataSensorsClear"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/button_clear_text" />
+        android:text="@string/clear" />
 
     <Button
         android:id="@+id/btnBack"
@@ -30,6 +30,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="35dp"
-        android:text="@string/button_back_text" />
+        android:text="@string/back" />
 
 </RelativeLayout>

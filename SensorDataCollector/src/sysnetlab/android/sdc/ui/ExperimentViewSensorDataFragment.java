@@ -110,12 +110,12 @@ public class ExperimentViewSensorDataFragment extends Fragment {
         } else {
             ((TextView) mView
                     .findViewById(R.id.textview_fragment_experiment_view_sensor_data_sensor_description))
-                    .setText(getResources().getString(R.string.text_unknown_sensor));
+                    .setText(getResources().getString(R.string.unknown_sensor));
 
             ((TextView) mView
                     .findViewById(R.id.textview_fragment_experiment_view_sensor_data_text))
                     .setText(getResources().getString(
-                            R.string.text_sensor_has_not_recorded_any_data));
+                            R.string.sensor_has_not_recorded_any_data));
         }
         return mView;
     }
@@ -146,7 +146,7 @@ public class ExperimentViewSensorDataFragment extends Fragment {
             ((TextView) mView
                     .findViewById(R.id.textview_fragment_experiment_view_sensor_data_text))
                     .setText(getResources().getString(
-                            R.string.text_sensor_has_not_recorded_any_data));
+                            R.string.sensor_has_not_recorded_any_data));
         } else {
             TextView textView = (TextView) mView
                     .findViewById(R.id.textview_fragment_experiment_view_sensor_data_text);
