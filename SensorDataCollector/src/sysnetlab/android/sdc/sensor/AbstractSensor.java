@@ -32,6 +32,10 @@ public abstract class AbstractSensor {
     }
 
     public abstract String getName();
+    
+    public abstract String getVendor();
+    
+    public abstract int getVersion();
 
     public abstract Object getSensor();
     

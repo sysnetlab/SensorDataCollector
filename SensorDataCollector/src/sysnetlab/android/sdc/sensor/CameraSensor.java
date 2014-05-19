@@ -46,4 +46,16 @@ public class CameraSensor extends AbstractSensor {
         // TODO Auto-generated method stub
         return false;
     }
+
+    @Override
+    public String getVendor() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public int getVersion() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

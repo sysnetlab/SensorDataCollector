@@ -8,6 +8,7 @@ import sysnetlab.android.sdc.ui.adaptors.ExperimentListAdaptor;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -19,7 +20,7 @@ public class ExperimentListFragment extends ListFragment {
     private OnFragmentClickListener mCallback;
     private View mHeaderView;
     private View mFooterView;
-    private ArrayAdapter<Experiment> mExperimentList;
+    private ArrayAdapter<Experiment> mExperimentListAdapter;
 
     public interface OnFragmentClickListener {
         public void onExperimentClicked_ExperimentListFragment(Experiment experiment);
@@ -36,8 +37,9 @@ public class ExperimentListFragment extends ListFragment {
         mFooterView = inflator.inflate(R.layout.experiment_list_footer, null);
         mHeaderView = inflator.inflate(R.layout.experiment_list_header, null);
 
-        mExperimentList = new ExperimentListAdaptor(getActivity(),
+        mExperimentListAdapter = new ExperimentListAdaptor(getActivity(),
                 ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate());
+        Log.i("SensorDataCollector", "called ExperimentListFragment::onCreate().");
     }
 
     @Override
@@ -64,7 +66,8 @@ public class ExperimentListFragment extends ListFragment {
         // TODO: handle configuration changes
         getListView().addHeaderView(mHeaderView);
         getListView().addFooterView(mFooterView);
-        setListAdapter(mExperimentList);
+        
+        setListAdapter(mExperimentListAdapter);
 
         ((Button) mHeaderView.findViewById(R.id.buttonCreateExperiment))
                 .setOnClickListener(new Button.OnClickListener() {
@@ -76,6 +79,6 @@ public class ExperimentListFragment extends ListFragment {
     }
 
     public ArrayAdapter<Experiment> getExperimentArray() {
-        return mExperimentList;
+        return mExperimentListAdapter;
     }
 }

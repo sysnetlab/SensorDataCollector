@@ -32,7 +32,7 @@ import android.widget.Toast;
 
 public class CreateExperimentActivity extends FragmentActivity
         implements
-        SensorSetupFragment.OnFragmentClickListener,        
+        ExperimentSensorSetupFragment.OnFragmentClickListener,        
         ExperimentSetupFragment.OnFragmentClickListener,
         ExperimentSensorSelectionFragment.OnFragmentClickListener,
         ExperimentEditTagsFragment.OnFragmentEventListener,
@@ -46,7 +46,7 @@ public class CreateExperimentActivity extends FragmentActivity
 
     private ExperimentSetupFragment mExperimentSetupFragment;
     private ExperimentSensorSelectionFragment mExperimentSensorSelectionFragment;
-    private SensorSetupFragment mSensorSetupFragment;
+    private ExperimentSensorSetupFragment mSensorSetupFragment;
     private CreateExperimentNotesFragment mCreateExperimentNotesFragment;
     private ExperimentEditTagsFragment mExperimentEditTagsFragment;
     private ExperimentRunFragment mExperimentRunFragment;
@@ -92,7 +92,7 @@ public class CreateExperimentActivity extends FragmentActivity
     public void onBtnConfirmClicked_SensorSetupFragment(View v, AbstractSensor sensor) {
         Log.i("SensorDataCollector", "SensorSetupFragment: Button Confirm clicked.");
 
-        EditText et = (EditText) findViewById(R.id.edittext_sampling_rate);
+        EditText et = (EditText) findViewById(R.id.edittext_sensor_steup_sampling_rate);
 
         switch (sensor.getMajorType()) {
             case AbstractSensor.ANDROID_SENSOR:
@@ -153,7 +153,7 @@ public class CreateExperimentActivity extends FragmentActivity
         return mCreateExperimentNotesFragment;
     }
     
-    public SensorSetupFragment getSensorSetupFragment()
+    public ExperimentSensorSetupFragment getSensorSetupFragment()
     {
         return mSensorSetupFragment;
     }
@@ -355,7 +355,7 @@ public class CreateExperimentActivity extends FragmentActivity
     public void onSensorClicked_ExperimentSensorSelectionFragment(AndroidSensor sensor) {
         Log.i("SensorDataCollector", "CreateExperimentActivity::onSensorClicked_ExperimentSensorSelectionFragment() called.");
         if (mSensorSetupFragment == null) {
-            mSensorSetupFragment = new SensorSetupFragment();
+            mSensorSetupFragment = new ExperimentSensorSetupFragment();
         }
         mSensorSetupFragment.setSensor(sensor);
         FragmentUtil.switchToFragment(this, mSensorSetupFragment, "sensorsetup");

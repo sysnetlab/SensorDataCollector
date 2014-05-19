@@ -82,4 +82,14 @@ public class AndroidSensor extends AbstractSensor {
     public boolean isSameSensor(AbstractSensor sensor) {
         return mSensor.getName().equals(sensor.getName());
     }
+
+    @Override
+    public String getVendor() {
+        return mSensor.getVendor();
+    }
+
+    @Override
+    public int getVersion() {
+        return mSensor.getVersion();
+    }
 }

@@ -12,11 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 
-public class SensorSetupFragment extends Fragment {
+public class ExperimentSensorSetupFragment extends Fragment {
     private OnFragmentClickListener mCallback;
     private View mView;
     private AbstractSensor mSensor;
@@ -71,14 +72,14 @@ public class SensorSetupFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((Button) mView.findViewById(R.id.btn_sensor_setup_confirm))
+        ((Button) mView.findViewById(R.id.button_sensor_setup_confirm))
                 .setOnClickListener(new Button.OnClickListener() {
                     public void onClick(View v) {
                         mCallback.onBtnConfirmClicked_SensorSetupFragment(v, mSensor);
                     }
                 });
 
-        ((Button) mView.findViewById(R.id.btn_sensor_setup_cancel))
+        ((Button) mView.findViewById(R.id.button_sensor_setup_cancel))
                 .setOnClickListener(new Button.OnClickListener() {
                     public void onClick(View v) {
                         mCallback.onBtnCancelClicked_SensorSetupFragment();
@@ -88,27 +89,25 @@ public class SensorSetupFragment extends Fragment {
 
     @SuppressLint("NewApi")
     private void updateSensorSetupView(AbstractSensor sensor) {
-        TextView tv = (TextView) mView.findViewById(R.id.tv_sensor_setup_header);
+        TextView tv = (TextView) mView.findViewById(R.id.textview_sensor_setup_sensor_name);
         tv.setText(sensor.getName());
         switch (sensor.getMajorType()) {
             case AbstractSensor.ANDROID_SENSOR:
                 Log.i("SensorDataCollector", "Android sensor.");
-
-                TextView tvSensingType = (TextView) mView.findViewById(R.id.tv_sensing_type);
+                
+                UserInterfaceUtil.fillSensorProperties(getActivity(), (ListView)mView.findViewById(R.id.listview_sensor_setup_sensor_properties), sensor);
+                
                 EditText etSamplingRate = (EditText) mView
-                        .findViewById(R.id.edittext_sampling_rate);
-                TextView tvSamplingRate = (TextView) mView.findViewById(R.id.tv_sampling_rate);
+                        .findViewById(R.id.edittext_sensor_steup_sampling_rate);
+                TextView tvSamplingRate = (TextView) mView.findViewById(R.id.textview_sensor_setup_sampling_rate);
+                
                 if (((AndroidSensor) sensor).isStreamingSensor()) {
-                    tvSensingType.setText(getActivity().getResources().getString(
-                            R.string.text_sensing_type_streaming));
                     etSamplingRate.setText(String.valueOf(1000000. / ((AndroidSensor) sensor)
                             .getSamplingInterval()));
                     Log.i("SensorDataCollector", "Streaming sensor.");
                 } else {
-                    tvSensingType.setText(getActivity().getResources().getString(
-                            R.string.text_sensing_type_onchange));
                     etSamplingRate.setText(getActivity().getResources().getString(
-                            R.string.text_sensing_rate_na));
+                            R.string.text_not_applicable));
                     etSamplingRate.setEnabled(false);
                     tvSamplingRate.setEnabled(false);
                     Log.i("SensorDataCollector", "Non-streaming (onchange) sensor.");
