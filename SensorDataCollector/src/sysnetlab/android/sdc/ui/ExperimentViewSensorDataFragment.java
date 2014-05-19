@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class ExperimentViewSensorDataFragment extends Fragment {
@@ -108,9 +109,11 @@ public class ExperimentViewSensorDataFragment extends Fragment {
         if (experiment.getSensors().size() > 0) {
             updateSensorDataView(experiment.getSensors(), mSensorNo);
         } else {
-            ((TextView) mView
-                    .findViewById(R.id.textview_fragment_experiment_view_sensor_data_sensor_description))
-                    .setText(getResources().getString(R.string.text_unknown_sensor));
+            /*
+            ListView listView = (ListView) mView
+                    .findViewById(R.id.listview_fragment_experiment_view_sensor_data_sensor_properties);
+                    */
+            
 
             ((TextView) mView
                     .findViewById(R.id.textview_fragment_experiment_view_sensor_data_text))
@@ -134,11 +137,10 @@ public class ExperimentViewSensorDataFragment extends Fragment {
 
     private void updateSensorDataView(ArrayList<AbstractSensor> lstSensors, int sensorNo) {
         AbstractSensor sensor = lstSensors.get(sensorNo);
-        ((TextView) mView
-                .findViewById(R.id.textview_fragment_experiment_view_sensor_data_sensor_description))
-                .setText(
-                sensor.toString()
-                );
+        ListView listView = (ListView) mView
+                .findViewById(R.id.listview_fragment_experiment_view_sensor_data_sensor_properties);
+        
+        UserInterfaceUtil.fillSensorProperties(getActivity(), listView, sensor);
 
         String sensorData = getSensorData(sensor, MAXIMUM_LINES_OF_DATA_TO_READ);
 

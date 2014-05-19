@@ -7,68 +7,77 @@
         android:id="@+id/textview_fragment_experiment_view_sensor_data_experiment_heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:gravity="center|center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/text_experiment"/>
-    <TextView 
+        android:text="@string/text_experiment"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
         android:id="@+id/textview_fragment_experiment_view_sensor_data_experiment_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/textview_fragment_experiment_view_sensor_data_experiment_heading"
         android:gravity="center|center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/text_experiment"/>
-    
+        android:text="@string/text_experiment"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
     <TextView
         android:id="@+id/textview_fragment_experiment_view_sensor_data_experiment_time_created"
         android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/textview_fragment_experiment_view_sensor_data_experiment_name"
-		android:gravity="center|center_horizontal"
-		android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/text_experiment"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textview_fragment_experiment_view_sensor_data_experiment_name"
+        android:gravity="center|center_horizontal"
+        android:text="@string/text_experiment"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
     <TextView
         android:id="@+id/textview_fragment_experiment_view_sensor_data_experiment_time_done"
         android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/textview_fragment_experiment_view_sensor_data_experiment_time_created"
-		android:gravity="center|center_horizontal"
-		android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/text_experiment"/>   
-        
-    <TextView
-        android:id="@+id/textview_fragment_experiment_view_sensor_data_sensor_description"
-        android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/textview_fragment_experiment_view_sensor_data_experiment_time_done"
-		android:gravity="center|center_horizontal"
-		android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/text_experiment"/>   
- 
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textview_fragment_experiment_view_sensor_data_experiment_time_created"
+        android:gravity="center|center_horizontal"
+        android:text="@string/text_experiment"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
-	<Button 
-	    android:id="@+id/button_fragment_experiment_view_sensor_data_back"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true"
-		android:layout_alignParentBottom="true"
-		android:gravity="center|center_horizontal"
-		android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/text_back"/>    
-        
-    <TextView
-        android:id="@+id/textview_fragment_experiment_view_sensor_data_text"
+    <Button
+        android:id="@+id/button_fragment_experiment_view_sensor_data_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center|center_horizontal"
+        android:text="@string/text_back"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <LinearLayout
         android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_below="@id/textview_fragment_experiment_view_sensor_data_sensor_description"
-		android:layout_above="@id/button_fragment_experiment_view_sensor_data_back"
-		android:layout_marginTop="12dp"
-		android:layout_marginLeft="12dp"
-		android:layout_marginRight="12dp"
-		android:gravity="left|top"
-		android:scrollbars="horizontal|vertical"
-		android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/text_experiment"/>                       
+        android:layout_height="match_parent"
+        android:layout_above="@id/button_fragment_experiment_view_sensor_data_back"
+        android:layout_below="@id/textview_fragment_experiment_view_sensor_data_experiment_time_done"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/listview_fragment_experiment_view_sensor_data_sensor_properties"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="382"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/textview_fragment_experiment_view_sensor_data_text"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="618"            
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="12dp"
+            android:gravity="left|top"
+            android:scrollbars="horizontal|vertical"
+            android:text="@string/text_experiment"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </LinearLayout>
+
 </RelativeLayout>
