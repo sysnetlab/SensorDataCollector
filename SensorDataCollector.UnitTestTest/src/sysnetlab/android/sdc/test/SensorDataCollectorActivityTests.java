@@ -14,8 +14,8 @@ public class SensorDataCollectorActivityTests
 		extends android.test.ActivityUnitTestCase<SensorDataCollectorActivity> {
 
 	private SensorDataCollectorActivity sdcActivity;
-	ExperimentListFragment mExperimentListFragment;
-	ArrayAdapter<Experiment> mExperimentList;
+	private ExperimentListFragment mExperimentListFragment;
+	private ArrayAdapter<Experiment> mExperimentList;
 	
 	public SensorDataCollectorActivityTests() {
 		super(SensorDataCollectorActivity.class);

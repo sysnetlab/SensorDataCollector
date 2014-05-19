@@ -9,7 +9,7 @@ import java.util.List;
 import sysnetlab.android.sdc.datastore.AbstractStore;
 
 public class ExperimentManager {
-    private List<AbstractStore> mStores;
+    private List<AbstractStore> mStores;    
     private Experiment mActiveExperiment;
 
     public ExperimentManager() {
@@ -17,9 +17,10 @@ public class ExperimentManager {
     }
 
     public void addExperimentStore(AbstractStore store) {
-        mStores.add(store);
+    	if(!mStores.contains(store))
+    		mStores.add(store);
     }
-
+    
     public List<Experiment> getExperiments() {
         List<Experiment> allExperiments = new ArrayList<Experiment>();
         for (AbstractStore store : mStores) {
