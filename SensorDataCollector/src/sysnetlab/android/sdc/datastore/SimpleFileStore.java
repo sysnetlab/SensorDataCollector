@@ -220,7 +220,7 @@ public class SimpleFileStore extends AbstractStore {
                     int sensorMinorType = Integer.parseInt(in.readLine());
                     String channelDescriptor = in.readLine();
                     // TODO make sure channel is read-only
-                    Channel channel = new SimpleFileChannel(channelDescriptor);
+                    Channel channel = new SimpleFileChannel(channelDescriptor, Channel.READ_ONLY);
                     AbstractSensor sensor = SensorUtilSingleton.getInstance().getSensor(sensorName,
                             sensorMajorType,
                             sensorMinorType, channel);
@@ -286,9 +286,8 @@ public class SimpleFileStore extends AbstractStore {
 
     public class SimpleFileChannel extends AbstractStore.Channel {
         private PrintStream mOut;
+        private BufferedReader mIn;
         private String mPath;
-
-        // BufferedReader mIn;
 
         protected SimpleFileChannel() {
             // prohibit from creating SimpleFileChannel object with an argument
@@ -297,17 +296,68 @@ public class SimpleFileStore extends AbstractStore {
         public SimpleFileChannel(String path) throws FileNotFoundException {
             mOut = new PrintStream(new BufferedOutputStream(
                     new FileOutputStream(path)));
+            mIn = null;
             mPath = path;
+        }
+        
+        public SimpleFileChannel(String path, int flags) throws FileNotFoundException {
+            if (flags == READ_ONLY) {
+                mOut = null;
+                File file = new File(path);
+                if (file.exists()) {
+                    mIn = new BufferedReader(new FileReader(path));
+                } else {
+                    mIn = null;
+                }
+                mPath = path;
+            }
         }
 
         public void close() {
-            mOut.close();
+            if (mOut != null) mOut.close();
+            if (mIn != null) {
+                try {
+                    mIn.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.i("SensorDataCollector", "close error in SimpleFileStore::close().");
+                }
+            }
         }
 
         @Override
         public void write(String s) {
             mOut.print(s);
         }
+        
+        @Override
+        public String read() {
+            if (mIn != null) {
+                try {
+                    return mIn.readLine();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.i("SensorDataCollector", "read error in SimpleFileStore::read().");
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
+
+
+        @Override
+        public void reset() {
+            if (mIn != null) {
+                try {
+                    mIn.close();
+                    mIn = new BufferedReader(new FileReader(mPath));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.i("SensorDataCollector", "reset error in SimpleFileStore::mark().");              
+                }
+            }
+        }        
 
         @Override
         public void open() {
@@ -355,7 +405,7 @@ public class SimpleFileStore extends AbstractStore {
     }
 
     @Override
-    public void closeAllChannels() {
+    public void closeAllChannels() throws IOException {
         for (Channel channel : mChannels)
             channel.close();
         // create new channel list and garbage-collect the old channel list

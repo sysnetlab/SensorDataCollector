@@ -45,7 +45,9 @@
     <string name="text_more_more">More >></string>
     <string name="text_experiment_has_no_sensors">Experiment has no sensors</string>
     <string name="text_epxeriment_has_no_notes">Experiment has no notes</string>
+    <string name="text_sensor_has_not_recorded_any_data">Sensor has not recorded any data</string>
     <string name="text_experiment">Experiment</string>
+    <string name="text_unknown_sensor">Unknown sensor</string>
     <string name="text_back">Back</string>
     
 </resources>

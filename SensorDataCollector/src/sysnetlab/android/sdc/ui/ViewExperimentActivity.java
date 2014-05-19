@@ -4,7 +4,6 @@ package sysnetlab.android.sdc.ui;
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
-import sysnetlab.android.sdc.sensor.AndroidSensor;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -13,11 +12,13 @@ import android.util.Log;
 
 public class ViewExperimentActivity extends FragmentActivity implements
         ExperimentViewFragment.OnFragmentClickListener,
-        ExperimentSensorSelectionFragment.OnFragmentClickListener,
+        ExperimentSensorListFragment.OnFragmentClickListener,
+        ExperimentViewSensorDataFragment.OnFragmentClickListener,
         ExperimentViewNotesFragment.OnFragmentClickListener,
         ExperimentViewMoreNotesFragment.OnFragmentClickListener {
     private ExperimentViewFragment mExperimentViewFragment;
     private ExperimentViewMoreNotesFragment mExperimentViewMoreNotesFragment;
+    private ExperimentViewSensorDataFragment mExperimentViewSensorDataFragment;
     private Experiment mExperiment;
 
     @Override
@@ -55,24 +56,6 @@ public class ViewExperimentActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onSensorClicked_ExperimentSensorSelectionFragment(AndroidSensor sensor) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onBtnConfirmClicked_ExperimentSensorSelectionFragment() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onBtnClearClicked_ExperimentSensorSelectionFragment() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void onBtnBackClicked_ExperimentViewFragment() {
         Intent intent = new Intent(this, SensorDataCollectorActivity.class);
         startActivity(intent);
@@ -96,11 +79,29 @@ public class ViewExperimentActivity extends FragmentActivity implements
         if (mExperimentViewMoreNotesFragment == null) {
             mExperimentViewMoreNotesFragment = new ExperimentViewMoreNotesFragment();
         }
-        FragmentUtil.switchToFragment(this, mExperimentViewMoreNotesFragment, "experimentviewnotes");
+        FragmentUtil
+                .switchToFragment(this, mExperimentViewMoreNotesFragment, "experimentviewnotes");
     }
 
     @Override
     public void onBtnBackClicked_ExperimentViewMoreNotesFragment() {
+        FragmentUtil.switchToFragment(this, mExperimentViewFragment, "experimentview");
+    }
+
+    @Override
+    public void onListItemClicked_ExperimentSensorListFragment(int sensorNo) {
+        if (mExperimentViewSensorDataFragment == null) {
+            mExperimentViewSensorDataFragment = new ExperimentViewSensorDataFragment();
+        }
+        
+        mExperimentViewSensorDataFragment.setSensorNo(sensorNo);
+        
+        FragmentUtil.switchToFragment(this, mExperimentViewSensorDataFragment,
+                "experimentviewsensordata");
+    }
+
+    @Override
+    public void onBtnBackClicked_ExperimentViewSensorDataFragment() {
         FragmentUtil.switchToFragment(this, mExperimentViewFragment, "experimentview");
     }
 
