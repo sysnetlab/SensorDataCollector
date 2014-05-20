@@ -55,7 +55,7 @@ public class TaggingTagListAdapter extends BaseAdapter {
             viewHolder.text = (TextView) view.findViewById(R.id.textview_tag_cell);
             
             // make the tag big (a square)
-            // viewHolder.text.setWidth(viewHolder.text.getHeight());
+            // viewHolder.text.setHeight(viewHolder.text.getWidth());
             
             view.setTag(viewHolder);
         } else {
@@ -63,7 +63,8 @@ public class TaggingTagListAdapter extends BaseAdapter {
         }
         
         ViewHolder holder = (ViewHolder) view.getTag();
-        holder.text.setText(mListStateTags.get(position).getTag().getName());        
+        holder.text.setText(mListStateTags.get(position).getTag().getName());    
+        // view.setBackgroundColor(view.getResources().getColor(android.R.color.background_light));
         return view;
     }
     

@@ -14,6 +14,7 @@ import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datacollector.ExperimentTime;
+import sysnetlab.android.sdc.datacollector.StateTag;
 import sysnetlab.android.sdc.datacollector.TaggingState;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
@@ -31,6 +32,7 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -38,6 +40,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -52,10 +55,6 @@ public class CreateExperimentActivity extends FragmentActivity
         ExperimentRunTaggingFragment.OnFragmentClickListener,
         CreateExperimentNotesFragment.OnFragmentClickListener
 {
-    public final static int BUTTON_TAG_STATE_KEY = 140520;
-    public final static int BUTTON_TAG_STATE_ON = 1;
-    public final static int BUTTON_TAG_STATE_OFF = 0;
-
     private SensorManager mSensorManager;
 
     private ExperimentSetupFragment mExperimentSetupFragment;
@@ -69,11 +68,17 @@ public class CreateExperimentActivity extends FragmentActivity
 
     private Experiment mExperiment;
 
+    private int mPreviousTagPosition;
+    private StateTag mStateTagPrevious;
+    private Drawable mDrawableBackground;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO handle configuration change
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
+
+        mPreviousTagPosition = -1;
 
         int operation = getIntent().getIntExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
                 SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT);
@@ -256,25 +261,85 @@ public class CreateExperimentActivity extends FragmentActivity
     }
 
     @Override
-    public void onTagClicked_ExperimentRunTaggingFragment(View view, int position) {
-        /*
-        int state = (Integer) (view.getTag(CreateExperimentActivity.BUTTON_TAG_STATE_KEY));
-        if (state == CreateExperimentActivity.BUTTON_TAG_STATE_ON) {
-            state = CreateExperimentActivity.BUTTON_TAG_STATE_OFF;
-            mExperiment.getTaggingActions().add(
-                    new TaggingAction(mExperiment.getTags().get(position), new ExperimentTime(),
-                            TagState.TAG_OFF));
-        } else {
-            state = CreateExperimentActivity.BUTTON_TAG_STATE_ON;
-            mExperiment.getTaggingActions().add(
-                    new TaggingAction(mExperiment.getTags().get(position), new ExperimentTime(),
-                            TagState.TAG_ON));
+    public void onTagClicked_ExperimentRunTaggingFragment(AdapterView<?> gridview, View view,
+            int position) {
+        if (mPreviousTagPosition != position) { // pressed different tags or
+                                                // first press
+            Log.i("SensorDataCollector", "Tagging: first tag or different tag pressed.");
+            Log.i("SensorDataCollector", "previous tag position = " + mPreviousTagPosition
+                    + "\t" + "current tag position = " + position);
 
+            StateTag stateTag = (StateTag) gridview.getItemAtPosition(position);
+
+            if (mPreviousTagPosition >= 0) { // pressed different tags
+
+                switch (mStateTagPrevious.getState()) {
+                    case TAG_ON:
+                        // turn off previous tag
+                        mStateTagPrevious.setState(TaggingState.TAG_OFF);
+                        UserInterfaceUtil.setViewBackgroundCompatible(gridview.getChildAt(mPreviousTagPosition),
+                                mDrawableBackground);
+                        /*
+                        gridview.getChildAt(mPreviousTagPosition).setBackgroundColor(
+                                getResources().getColor(android.R.color.background_light));
+                                */
+                        mExperiment.getTaggingActions()
+                                .add(new TaggingAction(mStateTagPrevious.getTag(),
+                                        new ExperimentTime(),
+                                        TaggingState.TAG_OFF));
+                        break;
+                    case TAG_OFF:
+                    case TAG_CONTEXT:
+                }
+            } else {
+                mDrawableBackground = view.getBackground();
+            }
+
+            // turn on current tag
+            stateTag.setState(TaggingState.TAG_ON);
+            mExperiment.getTaggingActions()
+                    .add(new TaggingAction(stateTag.getTag(), new ExperimentTime(),
+                            TaggingState.TAG_ON));
+            view.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+
+            mPreviousTagPosition = position;
+            mStateTagPrevious = stateTag;
+        } else { // pressed the same button
+
+            Log.i("SensorDataCollector", "Tagging: first tag or different tag pressed.");
+            Log.i("SensorDataCollector", "previous tag position = " + mPreviousTagPosition
+                    + "\t" + "current tag position = " + position);
+
+            StateTag stateTag = (StateTag) gridview.getItemAtPosition(position);
+
+            switch (stateTag.getState()) {
+                case TAG_ON:
+                    // turn it off
+                    stateTag.setState(TaggingState.TAG_OFF);
+                    UserInterfaceUtil.setViewBackgroundCompatible(view, mDrawableBackground);
+                    /*
+                    view.setBackgroundColor(getResources().getColor(
+                            android.R.color.background_light));
+                            */
+                    mExperiment.getTaggingActions()
+                            .add(new TaggingAction(mStateTagPrevious.getTag(),
+                                    new ExperimentTime(),
+                                    TaggingState.TAG_OFF));
+                    break;
+                case TAG_OFF:
+                    // turn it on
+                    stateTag.setState(TaggingState.TAG_ON);
+                    view.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+                    mExperiment.getTaggingActions()
+                            .add(new TaggingAction(stateTag.getTag(), new ExperimentTime(),
+                                    TaggingState.TAG_ON));
+                    break;
+                case TAG_CONTEXT:
+            }
+
+            mPreviousTagPosition = position;
+            mStateTagPrevious = stateTag;
         }
-        */
-        mExperiment.getTaggingActions().add(
-                new TaggingAction(mExperiment.getTags().get(position), new ExperimentTime(),
-                        TaggingState.TAG_CONTEXT));
     }
 
     @Override
@@ -282,7 +347,6 @@ public class CreateExperimentActivity extends FragmentActivity
         Intent intent = new Intent(this, SensorDataCollectorActivity.class);
         startActivity(intent);
     }
-
 
     @Override
     public void onTagsClicked_ExperimentSetupFragment() {
@@ -400,8 +464,9 @@ public class CreateExperimentActivity extends FragmentActivity
         FragmentUtil.switchToFragment(this, mSensorSetupFragment, "sensorsetup");
     }
 
-	@Override
-	public void onBtnAddTagClicked_ExperimentEditTagsFragment(String strTag, String strDescription) {
-		mExperiment.addTag(strTag, strDescription);
-	}
+    @Override
+    public void onBtnAddTagClicked_ExperimentEditTagsFragment(String strTag, String strDescription) {
+        mExperiment.addTag(strTag, strDescription);
+    }
+    
 }
