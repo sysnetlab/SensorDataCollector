@@ -4,43 +4,24 @@
     <!--  for reusing strings, name it as engligh_word_seperated_by_underscore -->
     <string name="app_name">SensorDataCollector</string>
     <string name="text_settings">Settings</string>
-    <string name="button_clear_text">Clear</string>
-    <string name="button_run_text_stop">Stop</string>
-    <string name="text_sensors_on_the_device">Sensors on the Device</string>
-    <string name="button_run_text_run">Run</string>
-    <string name="button_back_text_back">Back</string>
-    <string name="textview_sensing_type">Sensing Type</string>
-    <string name="textview_experiment_setup_new">Experiment Properties</string>
-    <string name="textview_experiment_setup_view">View Experiment Setup</string> 
-    <string name="textview_experiment_name">Name</string>
-	<string name="textview_experiment_tags">Tags</string>  
-	<string name="textview_experiment_notes">Notes</string>
 	<string name="text_sensors">Sensors</string>
-    <string name="button_sensor_selection_confirm">Confirm</string>
     <string name="text_creating_experiment">Creating Experiment</string>
     <string name="text_viewing_experiment">Viewing Experiment</string>
-    <string name="create_new_experiment">Create New Experiment</string>
-    <string name="img_plus_green_white">Expand</string>
-    <string name="button_back_text">Back</string>
     <string name="text_experiment_tags">Experiment Tags</string>
-    <string name="text_experiment_running">Running Experiment</string>
-    <string name="text_experiment_done">Done</string>
-    <string name="textview_experiment_view_existing">Experiment Information</string>
-    <string name="tag">Tag</string>    <string name="experiment_information">Experiment Information</string>    <string name="clone">Clone</string>    <string name="text_cancel">Cancel</string>
+    <string name="text_tag">Tag</string>    <string name="text_cancel">Cancel</string>
     <string name="text_clear">Clear</string>
+    <string name="text_clone">Clone</string>
     <string name="text_more_more">More >></string>
     <string name="text_experiment_has_no_sensors">Experiment has no sensors</string>
     <string name="text_experiment_has_no_notes">Experiment has no notes</string>
     <string name="text_sensor_has_not_recorded_any_data">Sensor has not recorded any data</string>
     <string name="text_experiment">Experiment</string>
-    <string name="text_unknown_sensor">Unknown sensor</string>
     <string name="text_back">Back</string>
     <string name="text_sensor_properties">Sensor Properties</string>
     <string name="text_on_change">On Change</string>
     <string name="text_vendor">Vendor</string>
     <string name="text_sampling_rate">Sampling Rate</string>
     <string name="text_number_10">10</string>
-    <string name="text_streaming">Streaming</string>
     <string name="text_not_applicable">Not Applicable</string>
     <string name="text_place_holder">Place Holder</string>
     <string name="text_name">Name</string>
@@ -59,6 +40,8 @@
     <string name="text_description">Description</string>
     <string name="text_confirm">Confirm</string>
     <string name="text_select_sensors">Select Sensors</string>
+    <string name="text_sensors_on_the_device">Sensors on the Devices</string>
+    <string name="text_create_new_experiment">Create New Experiment</string>
     
 
 </resources>

@@ -13,7 +13,7 @@
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
         android:layout_marginBottom="12dp"
-        android:text="@string/tag"
+        android:text="@string/text_tag"
         android:textAppearance="?android:attr/textAppearance" />
 
     <EditText
