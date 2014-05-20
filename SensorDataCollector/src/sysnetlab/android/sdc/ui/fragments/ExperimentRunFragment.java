@@ -4,17 +4,22 @@ package sysnetlab.android.sdc.ui.fragments;
 import java.lang.reflect.Field;
 
 import sysnetlab.android.sdc.R;
+import sysnetlab.android.sdc.ui.CreateExperimentActivity;
+import sysnetlab.android.sdc.ui.SensorDataCollectorActivity;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class ExperimentRunFragment extends Fragment {
+public class ExperimentRunFragment extends Fragment{
     private View mView;
     private OnFragmentClickListener mCallback;
     private ExperimentHandler mHandler;
@@ -72,7 +77,7 @@ public class ExperimentRunFragment extends Fragment {
         }
 
         if (this.mView == null) {
-            Log.e("SensorDataCollector", "ExperimentRunFragment.mCallback should not be null");
+            Log.e("SensorDataCollector", "ExperimentRunFragment.mView should not be null");
         }
         mHandler.stopExperiment_ExperimentRunFragment(mView);
     }
@@ -86,11 +91,24 @@ public class ExperimentRunFragment extends Fragment {
         }
 
         if (this.mView == null) {
-            Log.e("SensorDataCollector", "ExperimentRunFragment.mCallback should not be null");
+            Log.e("SensorDataCollector", "ExperimentRunFragment.mView should not be null");
         }
         mHandler.runExperiment_ExperimentRunFragment(mView);
     }
-
+    
+    public void onBackPressed(){
+    	
+    }
+    
+    public boolean isFragmentUIActive() {
+        return isAdded() && !isDetached() && !isRemoving();
+    }
+    
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {      
+      inflater.inflate(R.menu.action_bar, menu);      
+    }
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -103,10 +121,11 @@ public class ExperimentRunFragment extends Fragment {
             mExperimenRunTaggingFragment = new ExperimentRunTaggingFragment();
         }
         transaction.replace(R.id.layout_experiment_run_tags, mExperimenRunTaggingFragment).commit();
-
+        setHasOptionsMenu(true);
+        
         return mView;
-    }
-
+    }    
+    
     @Override
     public void onDetach() {
         super.onDetach();
