@@ -1,8 +1,9 @@
 
-package sysnetlab.android.sdc.ui;
+package sysnetlab.android.sdc.ui.fragments;
 
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
+import sysnetlab.android.sdc.ui.UserInterfaceUtil;
 import sysnetlab.android.sdc.R;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;

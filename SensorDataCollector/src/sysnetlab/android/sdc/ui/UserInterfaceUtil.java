@@ -7,7 +7,7 @@ import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorProperty;
-import sysnetlab.android.sdc.ui.adaptors.SensorPropertyListAdaptor;
+import sysnetlab.android.sdc.ui.adaptors.SensorPropertyListAdapter;
 import android.app.Activity;
 import android.hardware.Sensor;
 import android.util.Log;
@@ -86,7 +86,7 @@ public class UserInterfaceUtil {
                 Log.i("SensorDataCollector", "unknown sensor. unexpected.");
                 break;
         }
-        SensorPropertyListAdaptor sensorPropertyListAdaptor = new SensorPropertyListAdaptor(
+        SensorPropertyListAdapter sensorPropertyListAdaptor = new SensorPropertyListAdapter(
                 activity, lstSensorProperties);
 
         listView.setAdapter(sensorPropertyListAdaptor);

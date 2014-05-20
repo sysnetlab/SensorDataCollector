@@ -1,5 +1,5 @@
 
-package sysnetlab.android.sdc.ui;
+package sysnetlab.android.sdc.ui.fragments;
 
 import java.util.ArrayList;
 
@@ -8,6 +8,8 @@ import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
+import sysnetlab.android.sdc.ui.GestureEventListener;
+import sysnetlab.android.sdc.ui.UserInterfaceUtil;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

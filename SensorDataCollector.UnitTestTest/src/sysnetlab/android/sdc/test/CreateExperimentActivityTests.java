@@ -2,10 +2,10 @@ package sysnetlab.android.sdc.test;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
-import sysnetlab.android.sdc.ui.ExperimentRunFragment;
-import sysnetlab.android.sdc.ui.ExperimentSensorSelectionFragment;
-import sysnetlab.android.sdc.ui.ExperimentSetupFragment;
-import sysnetlab.android.sdc.ui.ExperimentSensorSetupFragment;
+import sysnetlab.android.sdc.ui.fragments.ExperimentRunFragment;
+import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
+import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
+import sysnetlab.android.sdc.ui.fragments.ExperimentSetupFragment;
 import android.content.Intent;
 import android.widget.Button;
 import android.widget.ImageView;
