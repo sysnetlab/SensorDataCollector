@@ -18,7 +18,7 @@ public class StateTag {
         return mState;
     }
 
-    public void setState(TaggingState tagOff) {
-        mState = tagOff;
+    public void setState(TaggingState taggingState) {
+        mState = taggingState;
     }
 }
