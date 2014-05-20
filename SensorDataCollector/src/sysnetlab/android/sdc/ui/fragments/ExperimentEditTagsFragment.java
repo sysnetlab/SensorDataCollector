@@ -23,15 +23,14 @@ import android.widget.TextView;
 import android.app.Activity;
 
 public class ExperimentEditTagsFragment extends Fragment {
-    private OnFragmentEventListener mCallback;
+    private OnFragmentClickListener mCallback;
     private View mView;
-    // private List<String> mExperimenTags;
     private Activity mActivity;
-    private ArrayAdapter<Tag> mTagListAdaptor;
+    private TagListAdapter mTagListAdapter;
     
-    public interface OnFragmentEventListener {
-    	public void onBtnConfirmClicked_ExperimentEditTagsFragment();        
-        public void onTxtFldEnterPressed_ExperimentEditTagsFragment(String newTag);
+    public interface OnFragmentClickListener {
+    	public void onBtnConfirmClicked_ExperimentEditTagsFragment();
+    	public void onBtnAddTagClicked_ExperimentEditTagsFragment(String strTag, String strDescription);
     }
 
     @Override
@@ -47,7 +46,7 @@ public class ExperimentEditTagsFragment extends Fragment {
 
         mView = inflater.inflate(R.layout.fragment_experiment_tag_editing, container, false);
 
-        ListView lv = (ListView) mView.findViewById(R.id.listView_tags);        
+        ListView lv = (ListView) mView.findViewById(R.id.listView_tags);    
         
         ArrayList<Tag> tmpTags;
         Activity activity = getActivity();
@@ -57,14 +56,13 @@ public class ExperimentEditTagsFragment extends Fragment {
             tmpTags = ((CreateExperimentActivity) activity).getExperiment().getTags();
         else
             tmpTags = ((ViewExperimentActivity) activity).getExperiment().getTags();
-        mTagListAdaptor = new TagListAdapter(mActivity, tmpTags);        
+        mTagListAdapter = new TagListAdapter(mActivity, tmpTags);        
 
         Log.i("SensorDataCollector", "ExperimentTagsFragment.onCreateView: lv = " + lv);
-        Log.i("SensorDataCollector", "ExperimentTagsFragment.onCreateView: adapter = " + mTagListAdaptor);
+        Log.i("SensorDataCollector", "ExperimentTagsFragment.onCreateView: adapter = " + mTagListAdapter);
 
         if (activity instanceof CreateExperimentActivity){
-        	
-        	lv.setAdapter(mTagListAdaptor);
+        	lv.setAdapter(mTagListAdapter);
         }
         else
             Log.i("SensorDataCollector", "not yet implemented for ViewExperimentActivity");        
@@ -88,7 +86,7 @@ public class ExperimentEditTagsFragment extends Fragment {
         mActivity = activity;
 
         try {
-            mCallback = (OnFragmentEventListener) activity;
+            mCallback = (OnFragmentClickListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentClickListener");
@@ -98,18 +96,20 @@ public class ExperimentEditTagsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((EditText) mView.findViewById(R.id.edittext_tag))
-                .setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                    @Override
-                    public boolean onEditorAction(TextView v, int actionId,
-                            KeyEvent event) {
-                        Log.i("ExperimentTagsFragment", "Enter Pressed");
-                        mCallback.onTxtFldEnterPressed_ExperimentEditTagsFragment(v.getText()
-                                .toString());
-                        v.setText("");
-                        return true;
-                    }
-                });
+        ((Button) mView.findViewById(R.id.btn_add_tag))
+        .setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("ExperimentTagsFragment", "Add Tag Clicked");
+                EditText mEditTextTag = (EditText) mView.findViewById(R.id.edittext_tag);
+                EditText mEditTextDescription = (EditText) mView.findViewById(R.id.edittext_description);
+                mCallback.onBtnAddTagClicked_ExperimentEditTagsFragment(mEditTextTag.getText().toString(),
+                		mEditTextDescription.getText().toString());
+                mTagListAdapter.notifyDataSetChanged();
+                mEditTextTag.setText("");
+                mEditTextDescription.setText("");
+            }
+        });
         
         ((Button) mView.findViewById(R.id.btn_tag_edit_confirm))
         .setOnClickListener(new Button.OnClickListener() {
@@ -122,6 +122,6 @@ public class ExperimentEditTagsFragment extends Fragment {
     }
     
     public ArrayAdapter<Tag> getTagListAdapter(){
-    	return mTagListAdaptor;
+    	return mTagListAdapter;
     }    
 }
