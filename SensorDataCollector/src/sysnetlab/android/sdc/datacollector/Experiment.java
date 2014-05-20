@@ -73,7 +73,7 @@ public class Experiment implements Parcelable {
         this.mTags = mTags;
     }
 
-    public void addTag(String strTag) {
+    public void addTag(String strTag, String strDescription) {
         if (strTag != null)
             strTag = strTag.trim();
         else
@@ -81,9 +81,9 @@ public class Experiment implements Parcelable {
         if (strTag.equals("")) {
             return;
         }
-        Tag t = new Tag(strTag);
+        Tag t = new Tag(strTag, strDescription);
         if (!mTags.contains(t)) {
-            mTags.add(new Tag(strTag));
+            mTags.add(t);
         }
     }
 

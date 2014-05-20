@@ -14,6 +14,7 @@ import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datacollector.ExperimentTime;
+import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.datacollector.TagState;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
@@ -46,7 +47,7 @@ public class CreateExperimentActivity extends FragmentActivity
         ExperimentSensorSetupFragment.OnFragmentClickListener,
         ExperimentSetupFragment.OnFragmentClickListener,
         ExperimentSensorSelectionFragment.OnFragmentClickListener,
-        ExperimentEditTagsFragment.OnFragmentEventListener,
+        ExperimentEditTagsFragment.OnFragmentClickListener,
         ExperimentRunFragment.OnFragmentClickListener,
         ExperimentRunFragment.ExperimentHandler,
         ExperimentRunTaggingFragment.OnFragmentClickListener,
@@ -283,13 +284,6 @@ public class CreateExperimentActivity extends FragmentActivity
         startActivity(intent);
     }
 
-    @Override
-    public void onTxtFldEnterPressed_ExperimentEditTagsFragment(String newTag) {
-        Log.i("CreateExperiment", "New label being added");
-        mExperiment.addTag(newTag);
-        mExperimentEditTagsFragment.getTagListAdapter().notifyDataSetChanged();
-
-    }
 
     @Override
     public void onTagsClicked_ExperimentSetupFragment() {
@@ -404,4 +398,9 @@ public class CreateExperimentActivity extends FragmentActivity
         mSensorSetupFragment.setSensor(sensor);
         FragmentUtil.switchToFragment(this, mSensorSetupFragment, "sensorsetup");
     }
+
+	@Override
+	public void onBtnAddTagClicked_ExperimentEditTagsFragment(String strTag, String strDescription) {
+		mExperiment.addTag(strTag, strDescription);
+	}
 }

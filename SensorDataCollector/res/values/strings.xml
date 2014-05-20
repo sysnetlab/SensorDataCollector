@@ -42,6 +42,7 @@
     <string name="text_select_sensors">Select Sensors</string>
     <string name="text_sensors_on_the_device">Sensors on the Devices</string>
     <string name="text_create_new_experiment">Create New Experiment</string>
+    <string name="text_add_tag">Add Tag</string>
     
 
 </resources>
