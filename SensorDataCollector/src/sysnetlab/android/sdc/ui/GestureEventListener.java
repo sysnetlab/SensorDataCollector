@@ -15,26 +15,25 @@ public abstract class GestureEventListener implements OnTouchListener {
     private final int mMinimumDistance;
     private final int mMinimumFlingVelocity;
     private final int mMaximumFlingVelocity;
-    
+
     private final GestureDetector mGestureDetector;
-    
+
     public void onSwipeLeft() {
         Log.i("SensorDataCollector", "called onSwipeLeft.");
     }
 
     public void onSwipeRight() {
-        Log.i("SensorDataCollector", "called onSwipeRight.");            
+        Log.i("SensorDataCollector", "called onSwipeRight.");
     }
-    
+
     public void onSwipeTop() {
-        Log.i("SensorDataCollector", "called onSwipeTop.");        
+        Log.i("SensorDataCollector", "called onSwipeTop.");
     }
 
     public void onSwipeBottom() {
-        Log.i("SensorDataCollector", "called onSwipeBottom.");         
+        Log.i("SensorDataCollector", "called onSwipeBottom.");
     }
-    
-    
+
     public boolean onTouch(final View v, final MotionEvent event) {
         return mGestureDetector.onTouchEvent(event);
     }
@@ -70,8 +69,6 @@ public abstract class GestureEventListener implements OnTouchListener {
                     } else {
                         onSwipeLeft();
                     }
-                } else {
-                    return false;
                 }
             } else {
                 if (Math.abs(diffY) > mMinimumDistance &&
