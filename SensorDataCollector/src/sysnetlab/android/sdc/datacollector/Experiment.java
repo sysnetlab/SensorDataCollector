@@ -39,15 +39,6 @@ public class Experiment implements Parcelable {
         mStore = store;
     }
 
-    public Experiment() {
-        this("Unnamed Experiment", DateFormat.getDateTimeInstance().format(
-                Calendar.getInstance().getTime()), null);
-    }
-
-    public Experiment(String n, String dt) {
-        this(n, dt, null);
-    }
-
     public Experiment(AbstractStore store) {
         this("Unnamed Experiment", DateFormat.getDateTimeInstance().format(
                 Calendar.getInstance().getTime()), store);

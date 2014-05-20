@@ -2,6 +2,7 @@ package sysnetlab.android.sdc.test;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
+import sysnetlab.android.sdc.datastore.SimpleFileStoreSingleton;
 import sysnetlab.android.sdc.ui.ViewExperimentActivity;
 import android.content.Intent;
 
@@ -18,7 +19,7 @@ public class ViewExperimentActivityTests extends android.test.ActivityUnitTestCa
 	protected void setUp() throws Exception {
 		super.setUp();		
 	    Intent intent = new Intent(getInstrumentation().getTargetContext(), ViewExperimentActivity.class);
-	    Experiment mExperiment= new Experiment();	
+	    Experiment mExperiment= new Experiment(SimpleFileStoreSingleton.getInstance());	
 	    intent.putExtra("experiment", mExperiment);
         startActivity(intent, null, null);
         veActivity = getActivity();
