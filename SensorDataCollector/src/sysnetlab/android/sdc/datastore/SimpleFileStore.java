@@ -19,6 +19,7 @@ import sysnetlab.android.sdc.datacollector.DeviceInformation;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.datacollector.Note;
+import sysnetlab.android.sdc.datacollector.TaggingAction;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.SensorUtilSingleton;
 import android.os.Environment;
@@ -135,6 +136,11 @@ public class SimpleFileStore extends AbstractStore {
                 out.println(sensor.getMinorType());
                 out.println(sensor.getListener().getChannel().describe());
             }
+            
+            out.println(experiment.getTaggingActions().size());
+            for (TaggingAction taggingAction : experiment.getTaggingActions()) {
+                out.println(taggingAction.toString());
+            }
 
             out.close();
             return true;
@@ -227,7 +233,7 @@ public class SimpleFileStore extends AbstractStore {
                     lstSensors.add(sensor);
                 }
                 experiment.setSensors(lstSensors);
-
+                
                 in.close();
 
                 Log.i("SensorDataCollector",

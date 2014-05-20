@@ -20,7 +20,7 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
     public final static String APP_OPERATION_KEY = "operation";
     public final static int APP_OPERATION_CREATE_NEW_EXPERIMENT = 1;
     public final static int APP_OPERATION_CLONE_EXPERIMENT = 2;
-
+    
     private ExperimentListFragment mExperimentListFragment;
 
     @Override

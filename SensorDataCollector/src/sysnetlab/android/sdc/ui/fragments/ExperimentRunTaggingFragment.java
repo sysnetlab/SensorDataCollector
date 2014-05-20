@@ -22,7 +22,7 @@ public class ExperimentRunTaggingFragment extends Fragment {
     private Activity mActivity;
 
     public interface OnFragmentClickListener {
-        public void onTagClicked_ExperimentRunTaggingFragment(int position);
+        public void onTagClicked_ExperimentRunTaggingFragment(View view, int position);
     }
 
     @Override
@@ -34,9 +34,9 @@ public class ExperimentRunTaggingFragment extends Fragment {
         gv.setOnItemClickListener(new GridView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View v, int position,
+            public void onItemClick(AdapterView<?> parent, View view, int position,
                     long id) {
-                mCallback.onTagClicked_ExperimentRunTaggingFragment(position);
+                mCallback.onTagClicked_ExperimentRunTaggingFragment(view, position);
             }
 
         });
@@ -45,7 +45,6 @@ public class ExperimentRunTaggingFragment extends Fragment {
 
     @Override
     public void onAttach(Activity activity) {
-        // TODO Auto-generated method stub
         super.onAttach(activity);
         mActivity = activity;
 
@@ -64,17 +63,27 @@ public class ExperimentRunTaggingFragment extends Fragment {
 
         mView = inflater.inflate(R.layout.fragment_experiment_tagging, container, false);
 
-        // Temporary testing data
         ArrayList<Tag> tags = ((CreateExperimentActivity) getActivity()).getExperiment().getTags();
 
-        GridView gv = (GridView) mView.findViewById(R.id.gridview_experiment_tagging);
+        GridView gridview = (GridView) mView.findViewById(R.id.gridview_experiment_tagging);
 
-        ArrayAdapter<Tag> adapter =
-                new ArrayAdapter<Tag>(mActivity,
-                        android.R.layout.simple_list_item_1,
-                        tags);
+        ArrayAdapter<Tag> adapter = new ArrayAdapter<Tag>(mActivity,
+                android.R.layout.simple_list_item_1, tags)/* {
+            public View getView(int position, View convertView, ViewGroup parent) {
+                convertView.setTag(CreateExperimentActivity.BUTTON_TAG_STATE_KEY,
+                        CreateExperimentActivity.BUTTON_TAG_STATE_OFF);
+                return convertView;
+            }
+        }*/;
 
-        gv.setAdapter(adapter);
+        gridview.setAdapter(adapter);
+        
+        gridview.setOnItemClickListener(new GridView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> gridview, View view, int position, long id) {
+                mCallback.onTagClicked_ExperimentRunTaggingFragment(view, position);
+            }
+        });
+        
 
         return mView;
     }

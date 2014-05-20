@@ -24,6 +24,7 @@ public class Experiment implements Parcelable {
     private String mDateTimeDone;
     private ArrayList<Tag> mTags;
     private ArrayList<Note> mNotes;
+    private ArrayList<TaggingAction> mTaggingActions;
 
     private ArrayList<AbstractSensor> mSensors;
     private AbstractStore mStore;
@@ -36,6 +37,7 @@ public class Experiment implements Parcelable {
         mTags = new ArrayList<Tag>();
         mNotes = new ArrayList<Note>();
         mSensors = new ArrayList<AbstractSensor>();
+        mTaggingActions = new ArrayList<TaggingAction>();
         mStore = store;
     }
 
@@ -136,6 +138,14 @@ public class Experiment implements Parcelable {
 
     public void setStore(AbstractStore store) {
         mStore = store;
+    }
+    
+    public ArrayList<TaggingAction> getTaggingActions() {
+        return mTaggingActions;
+    }
+    
+    public void setTaggingActions(ArrayList<TaggingAction> taggingActions) {
+        mTaggingActions = taggingActions;
     }
 
     public String toString() {
