@@ -4,9 +4,9 @@ package sysnetlab.android.sdc.datacollector;
 public class TaggingAction {
     private Tag mTag;
     private ExperimentTime mTime;
-    private TagState mTagState;
+    private TaggingState mTagState;
     
-    public TaggingAction(Tag tag, ExperimentTime time, TagState tagState) {
+    public TaggingAction(Tag tag, ExperimentTime time, TaggingState tagState) {
         mTag = tag;
         mTime = time;
         mTagState = tagState;
@@ -15,7 +15,7 @@ public class TaggingAction {
     public TaggingAction(Tag tag, ExperimentTime time) {
         mTag = tag;
         mTime = time;
-        mTagState = TagState.TAG_CONTEXT;
+        mTagState = TaggingState.TAG_CONTEXT;
     } 
     
     public Tag getTag() {
@@ -34,11 +34,11 @@ public class TaggingAction {
         mTime = time;
     }
     
-    public TagState getTagState() {
+    public TaggingState getTagState() {
         return mTagState;
     }
     
-    public void setTagState(TagState tagState) {
+    public void setTagState(TaggingState tagState) {
         mTagState = tagState;
     }
     

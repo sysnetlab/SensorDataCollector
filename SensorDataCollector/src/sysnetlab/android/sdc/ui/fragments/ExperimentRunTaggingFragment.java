@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
+import sysnetlab.android.sdc.ui.adaptors.TaggingTagListAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -66,17 +67,20 @@ public class ExperimentRunTaggingFragment extends Fragment {
         ArrayList<Tag> tags = ((CreateExperimentActivity) getActivity()).getExperiment().getTags();
 
         GridView gridview = (GridView) mView.findViewById(R.id.gridview_experiment_tagging);
+        
+        TaggingTagListAdapter taggingAdapter = new TaggingTagListAdapter(getActivity(), tags);
 
-        ArrayAdapter<Tag> adapter = new ArrayAdapter<Tag>(mActivity,
-                android.R.layout.simple_list_item_1, tags)/* {
-            public View getView(int position, View convertView, ViewGroup parent) {
-                convertView.setTag(CreateExperimentActivity.BUTTON_TAG_STATE_KEY,
-                        CreateExperimentActivity.BUTTON_TAG_STATE_OFF);
-                return convertView;
-            }
-        }*/;
+//        ArrayAdapter<Tag> adapter = new ArrayAdapter<Tag>(mActivity,
+//                android.R.layout.simple_list_item_1, tags)/* {
+//            public View getView(int position, View convertView, ViewGroup parent) {
+//                convertView.setTag(CreateExperimentActivity.BUTTON_TAG_STATE_KEY,
+//                        CreateExperimentActivity.BUTTON_TAG_STATE_OFF);
+//                return convertView;
+//            }
+//        }*/;
+        
 
-        gridview.setAdapter(adapter);
+        gridview.setAdapter(taggingAdapter);
         
         gridview.setOnItemClickListener(new GridView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> gridview, View view, int position, long id) {

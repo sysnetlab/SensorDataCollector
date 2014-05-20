@@ -14,7 +14,7 @@ import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datacollector.ExperimentTime;
-import sysnetlab.android.sdc.datacollector.TagState;
+import sysnetlab.android.sdc.datacollector.TaggingState;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.datastore.SimpleFileStoreSingleton;
@@ -274,7 +274,7 @@ public class CreateExperimentActivity extends FragmentActivity
         */
         mExperiment.getTaggingActions().add(
                 new TaggingAction(mExperiment.getTags().get(position), new ExperimentTime(),
-                        TagState.TAG_CONTEXT));
+                        TaggingState.TAG_CONTEXT));
     }
 
     @Override
@@ -293,15 +293,17 @@ public class CreateExperimentActivity extends FragmentActivity
 
     @Override
     public void onTagsClicked_ExperimentSetupFragment() {
-        if (mExperimentEditTagsFragment == null)
+        if (mExperimentEditTagsFragment == null) {
             mExperimentEditTagsFragment = new ExperimentEditTagsFragment();
+        }
         FragmentUtil.switchToFragment(this, mExperimentEditTagsFragment, "edittags");
     }
 
     @Override
     public void onNotesClicked_ExperimentSetupFragment() {
-        if (mCreateExperimentNotesFragment == null)
+        if (mCreateExperimentNotesFragment == null) {
             mCreateExperimentNotesFragment = new CreateExperimentNotesFragment();
+        }
         FragmentUtil.switchToFragment(this, mCreateExperimentNotesFragment, "editnotes");
 
     }
