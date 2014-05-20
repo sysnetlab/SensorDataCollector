@@ -7,11 +7,11 @@
         android:id="@+id/tagName"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@+id/tagName"
+        android:text="@string/text_place_holder"
         android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"      
-        android:gravity="left|center"
-        android:textSize="?android:attr/textAppearanceLarge"
+        android:gravity="left|center_vertical"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:focusable="false">
     </TextView>
     

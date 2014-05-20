@@ -25,6 +25,11 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
     static class ViewHolder {
         protected TextView text;        
     }
+    
+    @Override
+    public int getCount() {
+        return mList.size();
+    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {

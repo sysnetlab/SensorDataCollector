@@ -52,7 +52,8 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
 
     @Override
     public void onExperimentClicked_ExperimentListFragment(Experiment experiment) {
-        Log.i("SensorDataCollector", "Creating ViewExperimentActivity ...");
+        Log.i("SensorDataCollector", "Creating ViewExperimentActivity with experiment = "
+                + experiment);
 
         Intent intent = new Intent(this, ViewExperimentActivity.class);
 

@@ -69,12 +69,11 @@
         android:textAppearance="?android:attr/textAppearance" />
 
     <ListView
-        android:id="@+id/listView_tags"
+        android:id="@+id/listview_tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/btn_add_tag" >
-
     </ListView>
     
     <Button

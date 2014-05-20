@@ -36,18 +36,18 @@ public class ExperimentTests extends AndroidTestCase{
 	}
 	
 	public void testAddTag() {
-		mExperiment.addTag("");
+		mExperiment.addTag("", "");
 		assertNotSame("An empty tag was added",1,mExperiment.getTags().size());
 		
 		mExperiment.setTags(new ArrayList<Tag>());
-		mExperiment.addTag(null);
+		mExperiment.addTag(null, null);
 		assertNotSame("A null tag was added",1,mExperiment.getTags().size());
 		
 		mExperiment.setTags(new ArrayList<Tag>());
-		mExperiment.addTag("Test1");
+		mExperiment.addTag("Test1", "");
 		assertNotSame("Failed to add a new tag",0,mExperiment.getTags().size());
 		
-		mExperiment.addTag("Test1");
+		mExperiment.addTag("Test1", "");
 		assertNotSame("The same tag was added twice",2,mExperiment.getTags().size());
 	}
 	

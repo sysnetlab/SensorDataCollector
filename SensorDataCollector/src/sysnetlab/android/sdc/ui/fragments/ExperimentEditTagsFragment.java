@@ -11,7 +11,6 @@ import sysnetlab.android.sdc.ui.adaptors.TagListAdapter;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +18,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.app.Activity;
 
 public class ExperimentEditTagsFragment extends Fragment {
     private OnFragmentClickListener mCallback;
     private View mView;
-    private Activity mActivity;
     private TagListAdapter mTagListAdapter;
     
     public interface OnFragmentClickListener {
@@ -46,20 +43,22 @@ public class ExperimentEditTagsFragment extends Fragment {
 
         mView = inflater.inflate(R.layout.fragment_experiment_tag_editing, container, false);
 
-        ListView lv = (ListView) mView.findViewById(R.id.listView_tags);    
+        ListView lv = (ListView) mView.findViewById(R.id.listview_tags);    
         
         ArrayList<Tag> tmpTags;
         Activity activity = getActivity();
         
 
-        if (activity instanceof CreateExperimentActivity)
+        if (activity instanceof CreateExperimentActivity) {
             tmpTags = ((CreateExperimentActivity) activity).getExperiment().getTags();
-        else
+        }  else {
             tmpTags = ((ViewExperimentActivity) activity).getExperiment().getTags();
-        mTagListAdapter = new TagListAdapter(mActivity, tmpTags);        
-
-        Log.i("SensorDataCollector", "ExperimentTagsFragment.onCreateView: lv = " + lv);
-        Log.i("SensorDataCollector", "ExperimentTagsFragment.onCreateView: adapter = " + mTagListAdapter);
+        }
+        mTagListAdapter = new TagListAdapter(activity, tmpTags);     
+        
+        Log.i("SensorDataCollector", "ExperimentEditTagsFragment.onCreateView: tmpTags = " + tmpTags);
+        Log.i("SensorDataCollector", "ExperimentEditTagsFragment.onCreateView: lv = " + lv);
+        Log.i("SensorDataCollector", "ExperimentEditTagsFragment.onCreateView: adapter = " + mTagListAdapter);
 
         if (activity instanceof CreateExperimentActivity){
         	lv.setAdapter(mTagListAdapter);
@@ -83,7 +82,6 @@ public class ExperimentEditTagsFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mActivity = activity;
 
         try {
             mCallback = (OnFragmentClickListener) activity;
@@ -100,14 +98,14 @@ public class ExperimentEditTagsFragment extends Fragment {
         .setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("ExperimentTagsFragment", "Add Tag Clicked");
-                EditText mEditTextTag = (EditText) mView.findViewById(R.id.edittext_tag);
-                EditText mEditTextDescription = (EditText) mView.findViewById(R.id.edittext_description);
-                mCallback.onBtnAddTagClicked_ExperimentEditTagsFragment(mEditTextTag.getText().toString(),
-                		mEditTextDescription.getText().toString());
+                Log.i("ExperimentEditTagsFragment", "Add Tag Clicked");
+                EditText editTextTag = (EditText) mView.findViewById(R.id.edittext_tag);
+                EditText editTextDescription = (EditText) mView.findViewById(R.id.edittext_description);
+                mCallback.onBtnAddTagClicked_ExperimentEditTagsFragment(editTextTag.getText().toString(),
+                		editTextDescription.getText().toString());
                 mTagListAdapter.notifyDataSetChanged();
-                mEditTextTag.setText("");
-                mEditTextDescription.setText("");
+                editTextTag.setText("");
+                editTextDescription.setText("");
             }
         });
         
