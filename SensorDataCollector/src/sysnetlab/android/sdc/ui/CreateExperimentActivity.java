@@ -36,6 +36,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -74,6 +75,9 @@ public class CreateExperimentActivity extends FragmentActivity
         // TODO handle configuration change
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
+        
+        ViewPager vp=new ViewPager(this);
+		vp.setOffscreenPageLimit(5);
 
         int operation = getIntent().getIntExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
                 SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT);
@@ -400,8 +404,21 @@ public class CreateExperimentActivity extends FragmentActivity
         FragmentUtil.switchToFragment(this, mSensorSetupFragment, "sensorsetup");
     }
 
+	public ExperimentSensorSelectionFragment getExperimentSensorSelectionFragment() {
+		return mExperimentSensorSelectionFragment;
+	}
+
+	public ExperimentEditTagsFragment getExperimentEditTagsFragment() {
+		return mExperimentEditTagsFragment;
+	}
+
+	public ExperimentSensorSetupFragment getExperimentSensorSetupFragment() {
+		return mSensorSetupFragment;
+	}
+	
 	@Override
 	public void onBtnAddTagClicked_ExperimentEditTagsFragment(String strTag, String strDescription) {
 		mExperiment.addTag(strTag, strDescription);
+
 	}
 }

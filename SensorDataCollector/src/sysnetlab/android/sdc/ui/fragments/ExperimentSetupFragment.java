@@ -1,4 +1,3 @@
-
 package sysnetlab.android.sdc.ui.fragments;
 
 import sysnetlab.android.sdc.R;

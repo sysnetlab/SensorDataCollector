@@ -2,13 +2,15 @@ package sysnetlab.android.sdc.test;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
+import sysnetlab.android.sdc.ui.fragments.CreateExperimentNotesFragment;
+import sysnetlab.android.sdc.ui.fragments.ExperimentEditTagsFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentRunFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSetupFragment;
 import android.content.Intent;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.ListView;
 
 public class CreateExperimentActivityTests 
 		extends android.test.ActivityUnitTestCase<CreateExperimentActivity> {
@@ -40,9 +42,30 @@ public class CreateExperimentActivityTests
 //		assert(createExperimentActivity.getCurrentCollectionState() == DataCollectionState.DATA_COLLECTION_STOPPED);
 	}
 	
-	public void testExperimentSetupFragment() {
-		ExperimentSetupFragment experimentSetupFragment = createExperimentActivity.getExperimentSetupFragment();
-		assertNotNull(experimentSetupFragment);
+public void testExperimentSetupFragment() {
+	ExperimentSetupFragment experimentSetupFragment=createExperimentActivity.getExperimentSetupFragment();
+	assertNotNull("The setup fragment has not been loaded",experimentSetupFragment);
+}
+
+public void testExperimentSensorSetupFragment() {
+		ListView lView = null;
+		ExperimentSensorSelectionFragment sensorSelectionFragment = null;
+		
+		lView = (ListView) createExperimentActivity.findViewById(R.id.lv_operations);
+	    assertNotNull("Menu with operations has not been loaded", lView);
+	    
+	    lView.performItemClick(lView.getAdapter().getView(2, null, null), 2, lView.getAdapter().getItemId(2));
+	    sensorSelectionFragment=createExperimentActivity.getExperimentSensorSelectionFragment();
+	    assertNotNull("Sensors selection fragment failed to load",sensorSelectionFragment);
+		
+		lView= (ListView) sensorSelectionFragment.getSensorListView();
+		assertNotNull("The list of sensors was not loaded",lView);
+		
+		if(lView!=null && !(lView.getCount()==0)){
+			lView.performItemClick(lView.getAdapter().getView(0, null, null), 0, lView.getAdapter().getItemId(0));
+			ExperimentSensorSetupFragment experimentSensorSetupFragment=createExperimentActivity.getExperimentSensorSetupFragment();
+			assertNotNull("Sensor setup fragment has not been loaded",experimentSensorSetupFragment);
+		}
 	}
 	
 	public void testExperimentRunFragment() {
@@ -53,26 +76,27 @@ public class CreateExperimentActivityTests
 		assertNotNull(experimentRunFragment);
 	}
 	
-	public void testSensorDataCollectionActivityLoaded(){
-		// TODO Get the sensor list view from the sensorSelectionFragment and perform a item click
-		
-		//ImageView view = (ImageView) createExperimentActivity.findViewById(R.id.imv_sensors_plusminus);
-	    //assertNotNull("Button not allowed to be null", view);
-	    //view.performClick();
-		//ExperimentSensorSelectionFragment sensorSelectionFragment=createExperimentActivity.getExperimentSensorSensorSelectionFragment();				
-		//ListView listView = (ListView) sensorSelectionFragment.getSensorListView();
-		//listView.performItemClick(listView.getAdapter().getView(0, null, null),
-		//				0, listView.getAdapter().getItemId(0));
-		
-		ExperimentSensorSetupFragment sensorSetupFragment = createExperimentActivity.getSensorSetupFragment();
-		assertNotNull(sensorSetupFragment);
+	public void testSensorSelectionFragment() {
+		ListView lView = (ListView) createExperimentActivity.findViewById(R.id.lv_operations);
+	    assertNotNull("Menu with operations has not been loaded", lView);
+	    lView.performItemClick(lView.getAdapter().getView(2, null, null), 2, lView.getAdapter().getItemId(2));
+	    ExperimentSensorSelectionFragment sensorSelectionFragment=createExperimentActivity.getExperimentSensorSelectionFragment();
+		assertNotNull("Sensors selection fragment failed to load",sensorSelectionFragment);
 	}
 	
-	public void testSensorSelectionFragment() {
-		ImageView view = (ImageView) createExperimentActivity.findViewById(R.id.imv_sensors_plusminus);
-	    assertNotNull("Button not allowed to be null", view);
-	    view.performClick();
-	    ExperimentSensorSelectionFragment sensorSelectionFragment=createExperimentActivity.getExperimentSensorSensorSelectionFragment();
-		assertNotNull(sensorSelectionFragment);
+	public void testExperimentNotesFragment() {
+		ListView lView = (ListView) createExperimentActivity.findViewById(R.id.lv_operations);
+	    assertNotNull("Menu with operations has not been loaded", lView);
+	    lView.performItemClick(lView.getAdapter().getView(1, null, null), 1, lView.getAdapter().getItemId(1));
+	    CreateExperimentNotesFragment experimentNotesFragment=createExperimentActivity.getCreateExperimentNotesFragment();
+		assertNotNull("Notes edition fragment failed to load",experimentNotesFragment);
+	}
+	
+	public void testExperimentEditTagsFragmentt() {
+		ListView lView = (ListView) createExperimentActivity.findViewById(R.id.lv_operations);
+	    assertNotNull("Menu with operations has not been loaded", lView);
+	    lView.performItemClick(lView.getAdapter().getView(0, null, null), 0, lView.getAdapter().getItemId(0));
+	    ExperimentEditTagsFragment experimentEditTagsFragment=createExperimentActivity.getExperimentEditTagsFragment();
+		assertNotNull("Tags edition fragment failed to load",experimentEditTagsFragment);
 	}
 }
