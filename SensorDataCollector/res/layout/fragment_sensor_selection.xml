@@ -16,7 +16,7 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_centerHorizontal="true"
-	        android:text="@string/select_sensors"
+	        android:text="@string/text_select_sensors"
 	        android:textAppearance="?android:attr/textAppearanceMedium"
 	    />
     </RelativeLayout>
@@ -41,7 +41,7 @@
 	        android:id="@+id/button_sensor_selection_confirm"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="@string/confirm"
+	        android:text="@string/text_confirm"
 	        android:textAppearance="?android:attr/textAppearanceMedium"
 	        android:layout_marginRight="8dp"
 	        />
@@ -50,7 +50,7 @@
 	        android:id="@+id/button_sensor_selection_clear"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="@string/clear"
+	        android:text="@string/text_clear"
 	        android:textAppearance="?android:attr/textAppearanceMedium"
 	        android:layout_marginLeft="8dp"
 	        android:layout_toRightOf="@id/button_sensor_selection_confirm"

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <!--  conform naming vention below -->
+    <!--  for reusing strings, name it as engligh_word_seperated_by_underscore -->
     <string name="app_name">SensorDataCollector</string>
-    <string name="action_settings">Settings</string>
+    <string name="text_settings">Settings</string>
     <string name="button_clear_text">Clear</string>
     <string name="button_run_text_stop">Stop</string>
-    <string name="textview_header_msg">Sensors on the Device</string>
+    <string name="text_sensors_on_the_device">Sensors on the Device</string>
     <string name="button_run_text_run">Run</string>
     <string name="button_back_text_back">Back</string>
     <string name="textview_sensing_type">Sensing Type</string>
@@ -14,32 +15,22 @@
     <string name="textview_experiment_name">Name</string>
 	<string name="textview_experiment_tags">Tags</string>  
 	<string name="textview_experiment_notes">Notes</string>
-	<string name="textview_experiment_sensors">Sensors</string>
+	<string name="text_sensors">Sensors</string>
     <string name="button_sensor_selection_confirm">Confirm</string>
-    <string name="title_activity_create_experiement">Creating Experiment</string>
-    <string name="title_activity_view_exeriment">Viewing Experiment</string>
-    <string name="button_create_experiment">Create New Experiment</string>
+    <string name="text_creating_experiment">Creating Experiment</string>
+    <string name="text_viewing_experiment">Viewing Experiment</string>
+    <string name="create_new_experiment">Create New Experiment</string>
     <string name="img_plus_green_white">Expand</string>
     <string name="button_back_text">Back</string>
     <string name="text_experiment_tags">Experiment Tags</string>
     <string name="text_experiment_running">Running Experiment</string>
     <string name="text_experiment_done">Done</string>
     <string name="textview_experiment_view_existing">Experiment Information</string>
-    <!--  conform naming vention below -->
-    <!--  for reusing strings, name it as engligh_word_seperated_by_underscore -->
-    <string name="tags">Tags</string>
-    <string name="notes">Notes</string>
-    <string name="back">Back</string>
-    <string name="clone">Clone</string>
-    <string name="select_sensors">Select Sensors</string>
-    <string name="text_confirm">Confirm</string>
-    <string name="text_cancel">Cancel</string>
-    <string name="confirm">Confirm</string>
-    <string name="cancel">Cancel</string>
-    <string name="clear">Clear</string>
+    <string name="tag">Tag</string>    <string name="experiment_information">Experiment Information</string>    <string name="clone">Clone</string>    <string name="text_cancel">Cancel</string>
+    <string name="text_clear">Clear</string>
     <string name="text_more_more">More >></string>
     <string name="text_experiment_has_no_sensors">Experiment has no sensors</string>
-    <string name="text_epxeriment_has_no_notes">Experiment has no notes</string>
+    <string name="text_experiment_has_no_notes">Experiment has no notes</string>
     <string name="text_sensor_has_not_recorded_any_data">Sensor has not recorded any data</string>
     <string name="text_experiment">Experiment</string>
     <string name="text_unknown_sensor">Unknown sensor</string>
@@ -59,5 +50,15 @@
     <string name="text_maximum_range">Maximum Range</string>
     <string name="text_minimum_sample_delay">Minimum Sample Delay</string>
     <string name="text_android_sensor_type">Android Sensor Type</string>
+    <string name="text_notes">Notes</string>
+    <string name="text_expand">Expand</string>
+    <string name="text_running_experiment">Running Experiment</string>
+    <string name="text_done">Done</string>
+    <string name="text_experiment_properties">Experiment Properties</string>
+    <string name="text_run">Run</string>
+    <string name="text_description">Description</string>
+    <string name="text_confirm">Confirm</string>
+    <string name="text_select_sensors">Select Sensors</string>
     
+
 </resources>

@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="@string/textview_experiment_view_existing"
+        android:text="@string/text_viewing_experiment"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -19,7 +19,7 @@
         android:layout_below="@+id/tv_experiment_view_title"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="12dp"
-        android:text="@string/textview_experiment_name"
+        android:text="@string/text_name"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <EditText
@@ -62,7 +62,7 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="36dp"
-	        android:text="@string/textview_experiment_sensors"
+	        android:text="@string/text_sensors"
 	        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 	    <ImageView
@@ -73,7 +73,7 @@
 	        android:layout_marginLeft="12dp"
 	        android:layout_marginTop="19dp"
 	        android:layout_toRightOf="@+id/tv_experiment_view_sensors"
-	        android:contentDescription="@string/img_plus_green_white"
+	        android:contentDescription="@string/text_expand"
 	        android:paddingBottom="0dp"
 	        android:paddingLeft="0dp"
 	        android:paddingRight="0dp"
@@ -120,7 +120,7 @@
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
             android:layout_toRightOf="@+id/button_experiment_view_clone"
-            android:text="@string/back" />
+            android:text="@string/text_back" />
     </RelativeLayout>
     
 

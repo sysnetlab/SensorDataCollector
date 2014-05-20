@@ -9,7 +9,7 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
-    android:text="@string/textview_header_msg"
+    android:text="@string/text_sensors_on_the_device"
     android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

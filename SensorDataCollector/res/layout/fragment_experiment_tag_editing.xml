@@ -2,45 +2,85 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fragment_edit_tags"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="match_parent"
+    android:baselineAligned="true">
 
- 	<TextView
-		android:id="@+id/tv_tags"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="12dp"
-		android:text="@string/textview_experiment_tags"
-		android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    
- 	<EditText
-        android:id="@+id/edittext_new_label"
+    <TextView
+        android:id="@+id/tv_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/tv_tags"
-        android:ems="10"
-        android:layout_alignParentRight="true"
-        android:inputType="textAutoComplete"
-        android:singleLine="true" 
-        android:imeOptions="actionDone"/>
- 	
-    <LinearLayout
-        android:id="@+id/layout_label_list"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="12dp"
+        android:text="@string/tag"
+        android:textAppearance="?android:attr/textAppearance" />
+
+    <EditText
+        android:id="@+id/edittext_tag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/tv_tag"
+        android:layout_alignBaseline="@+id/tv_tag"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="12dp"
+        android:imeOptions="actionDone"
+        android:inputType="textAutoComplete"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceInverse" >
+    </EditText>
+    
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_tag"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:layout_marginTop="12dp"
-        android:layout_alignLeft="@+id/tv_tags"
-        android:layout_below="@+id/tv_tags"
-        android:orientation="horizontal" >
-    </LinearLayout>
+        android:text="@string/text_description"
+        android:textAppearance="?android:attr/textAppearance" />
+
+    <EditText
+        android:id="@+id/edittext_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/tv_description"
+        android:layout_below="@id/edittext_tag"
+        android:layout_alignBaseline="@+id/tv_description"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="12dp"
+        android:imeOptions="actionDone"
+        android:inputType="textAutoComplete"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceInverse" >
+    </EditText>
 
     <ListView
         android:id="@+id/listView_tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignTop="@+id/layout_label_list" >
-
+        android:layout_below="@id/tv_description" >
     </ListView>
 
+    <RelativeLayout
+	    android:id="@+id/layout_tag_edit_footer"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    android:gravity="center_horizontal"
+	    android:visibility="visible">
+	    
+	    <Button
+	        android:id="@+id/btn_tag_edit_confirm"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/text_confirm"
+	        android:textAppearance="?android:attr/textAppearanceMedium"
+	        android:layout_marginRight="8dp"
+	        />
+        
+	</RelativeLayout>
 </RelativeLayout>

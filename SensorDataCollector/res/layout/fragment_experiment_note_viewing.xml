@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="@string/notes"
+            android:text="@string/text_notes"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         <ImageView
@@ -26,7 +26,7 @@
             android:layout_marginLeft="0dp"
             android:layout_marginTop="0dp"
             android:layout_toRightOf="@id/textview_fragment_note_viewing_label"
-            android:contentDescription="@string/img_plus_green_white"
+            android:contentDescription="@string/text_expand"
             android:paddingBottom="0dp"
             android:paddingLeft="0dp"
             android:paddingRight="0dp"
@@ -43,7 +43,7 @@
         android:layout_below="@+id/layout_experiment_note_viewing_label"
         android:layout_marginTop="8dp"
         android:maxLines="4"
-        android:text="@string/notes"
+        android:text="@string/text_notes"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

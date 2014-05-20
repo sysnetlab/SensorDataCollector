@@ -116,7 +116,7 @@ public class ExperimentViewMoreNotesFragment extends Fragment {
             
             ((TextView) mView
                     .findViewById(R.id.textview_fragment_experiment_view_more_notes_note_text))
-                    .setText(getResources().getString(R.string.text_epxeriment_has_no_notes));   
+                    .setText(getResources().getString(R.string.text_experiment_has_no_notes));   
         }
         return mView;
     }

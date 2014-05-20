@@ -5,11 +5,10 @@ import sysnetlab.android.sdc.ui.CreateExperimentActivity;
 import sysnetlab.android.sdc.ui.ExperimentRunFragment;
 import sysnetlab.android.sdc.ui.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.ExperimentSetupFragment;
-import sysnetlab.android.sdc.ui.SensorSetupFragment;
+import sysnetlab.android.sdc.ui.ExperimentSensorSetupFragment;
 import android.content.Intent;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;;
 
 public class CreateExperimentActivityTests 
 		extends android.test.ActivityUnitTestCase<CreateExperimentActivity> {
@@ -65,7 +64,7 @@ public class CreateExperimentActivityTests
 		//listView.performItemClick(listView.getAdapter().getView(0, null, null),
 		//				0, listView.getAdapter().getItemId(0));
 		
-		SensorSetupFragment sensorSetupFragment = createExperimentActivity.getSensorSetupFragment();
+		ExperimentSensorSetupFragment sensorSetupFragment = createExperimentActivity.getSensorSetupFragment();
 		assertNotNull(sensorSetupFragment);
 	}
 	

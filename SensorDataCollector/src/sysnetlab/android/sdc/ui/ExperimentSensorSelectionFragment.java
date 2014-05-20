@@ -47,7 +47,6 @@ public class ExperimentSensorSelectionFragment extends Fragment {
                         "entering ......");
         mHavingHeader = false;
         mHavingFooter = false;
-
     }
 
     @Override
