@@ -44,6 +44,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 public class CreateExperimentActivity extends FragmentActivity
         implements
@@ -111,8 +114,23 @@ public class CreateExperimentActivity extends FragmentActivity
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
         Log.i("SensorDataCollector", "Leaving CreateExperimentActivit::onCreate.");
-    }
+    }    
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+      case android.R.id.home:
+          Intent homeIntent = new Intent(this, SensorDataCollectorActivity.class);
+          homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+          startActivity(homeIntent);
+        break;
+      default:
+    	  return super.onOptionsItemSelected(item);        
+      }
 
+      return true;
+    }
+    
     @Override
     public void onBtnConfirmClicked_SensorSetupFragment(View v, AbstractSensor sensor) {
         Log.i("SensorDataCollector", "SensorSetupFragment: Button Confirm clicked.");
@@ -346,7 +364,20 @@ public class CreateExperimentActivity extends FragmentActivity
             mStateTagPrevious = stateTag;
         }
     }
-
+    
+    @Override
+    public void onBackPressed() {
+        if(mExperimentRunFragment!=null){
+        	if(mExperimentRunFragment.isFragmentUIActive()){
+	        	Intent homeIntent = new Intent(this, SensorDataCollectorActivity.class);
+	        	homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	        	startActivity(homeIntent);
+        	}
+        }
+        else
+        	super.onBackPressed();
+    }
+    
     @Override
     public void onBtnDoneClicked_ExperimentRunFragment() {
         Intent intent = new Intent(this, SensorDataCollectorActivity.class);
