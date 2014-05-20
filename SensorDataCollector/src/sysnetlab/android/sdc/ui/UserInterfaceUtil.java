@@ -17,15 +17,20 @@ public class UserInterfaceUtil {
 
     public static void fillSensorProperties(Activity activity, ListView listView,
             AbstractSensor sensor) {
+        UserInterfaceUtil.fillSensorProperties(activity, listView, sensor, false);
+    }
+
+    public static void fillSensorProperties(Activity activity, ListView listView,
+            AbstractSensor sensor, boolean displayName) {
         ArrayList<SensorProperty> lstSensorProperties = new ArrayList<SensorProperty>();
 
         SensorProperty property;
 
-        /*
-        property = new SensorProperty(activity.getResources().getString(R.string.text_name),
-                sensor.getName());
-        lstSensorProperties.add(property);
-        */
+        if (displayName) {
+            property = new SensorProperty(activity.getResources().getString(R.string.text_name),
+                    sensor.getName());
+            lstSensorProperties.add(property);
+        }
 
         property = new SensorProperty(activity.getResources().getString(R.string.text_vendor),
                 sensor.getVendor());
@@ -37,33 +42,39 @@ public class UserInterfaceUtil {
 
         switch (sensor.getMajorType()) {
             case AbstractSensor.ANDROID_SENSOR:
-                Sensor aSensor = (Sensor)(sensor.getSensor());
-                
-                property = new SensorProperty(activity.getResources().getString(R.string.text_android_sensor_type),
+                Sensor aSensor = (Sensor) (sensor.getSensor());
+
+                property = new SensorProperty(activity.getResources().getString(
+                        R.string.text_android_sensor_type),
                         Integer.toString(aSensor.getType()));
-                lstSensorProperties.add(property);               
-                
-                property = new SensorProperty(activity.getResources().getString(R.string.text_resolution),
+                lstSensorProperties.add(property);
+
+                property = new SensorProperty(activity.getResources().getString(
+                        R.string.text_resolution),
                         Float.toString(aSensor.getResolution()));
                 lstSensorProperties.add(property);
-                
-                property = new SensorProperty(activity.getResources().getString(R.string.text_power_consumption),
+
+                property = new SensorProperty(activity.getResources().getString(
+                        R.string.text_power_consumption),
                         Float.toString(aSensor.getPower()) + " mA");
                 lstSensorProperties.add(property);
-                
-                property = new SensorProperty(activity.getResources().getString(R.string.text_maximum_range),
+
+                property = new SensorProperty(activity.getResources().getString(
+                        R.string.text_maximum_range),
                         Float.toString(aSensor.getMaximumRange()));
                 lstSensorProperties.add(property);
-                
+
                 if (((AndroidSensor) sensor).isStreamingSensor()) {
-                    property = new SensorProperty(activity.getResources().getString(R.string.text_minimum_sample_delay),
+                    property = new SensorProperty(activity.getResources().getString(
+                            R.string.text_minimum_sample_delay),
                             Float.toString(((AndroidSensor) sensor).getSamplingInterval()));
-                } else { 
-                    property = new SensorProperty(activity.getResources().getString(R.string.text_minimum_sample_delay),
+                } else {
+                    property = new SensorProperty(activity.getResources().getString(
+                            R.string.text_minimum_sample_delay),
                             activity.getResources().getString(R.string.text_not_applicable));
                 }
                 lstSensorProperties.add(property);
-                
+
                 break;
             case AbstractSensor.AUDIO_SENSOR:
                 Log.i("SensorDataCollector", "Audio Sensor is a todo.");

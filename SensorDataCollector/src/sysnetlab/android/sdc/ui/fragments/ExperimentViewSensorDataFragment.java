@@ -142,7 +142,7 @@ public class ExperimentViewSensorDataFragment extends Fragment {
         ListView listView = (ListView) mView
                 .findViewById(R.id.listview_fragment_experiment_view_sensor_data_sensor_properties);
         
-        UserInterfaceUtil.fillSensorProperties(getActivity(), listView, sensor);
+        UserInterfaceUtil.fillSensorProperties(getActivity(), listView, sensor, true);
 
         String sensorData = getSensorData(sensor, MAXIMUM_LINES_OF_DATA_TO_READ);
 

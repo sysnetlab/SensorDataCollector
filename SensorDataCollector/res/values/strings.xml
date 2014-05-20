@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  conform naming vention below -->
-    <!--  for reusing strings, name it as engligh_word_seperated_by_underscore -->
+    <!--  for reusing strings, name it as text_engligh_word_seperated_by_underscore -->
     <string name="app_name">SensorDataCollector</string>
     <string name="text_settings">Settings</string>
 	<string name="text_sensors">Sensors</string>
