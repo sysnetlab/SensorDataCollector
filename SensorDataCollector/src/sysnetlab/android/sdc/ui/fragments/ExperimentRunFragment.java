@@ -94,11 +94,7 @@ public class ExperimentRunFragment extends Fragment{
             Log.e("SensorDataCollector", "ExperimentRunFragment.mView should not be null");
         }
         mHandler.runExperiment_ExperimentRunFragment(mView);
-    }
-    
-    public void onBackPressed(){
-    	
-    }
+    }    
     
     public boolean isFragmentUIActive() {
         return isAdded() && !isDetached() && !isRemoving();

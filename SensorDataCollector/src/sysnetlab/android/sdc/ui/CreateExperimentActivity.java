@@ -29,6 +29,9 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -36,13 +39,12 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 public class CreateExperimentActivity extends FragmentActivity
@@ -374,7 +376,19 @@ public class CreateExperimentActivity extends FragmentActivity
         if (mCollectionState == DataCollectionState.DATA_COLLECTION_STOPPED) {
             try {
                 runExperiment();
-                mCollectionState = DataCollectionState.DATA_COLLECTION_IN_PROGRESS;
+                mCollectionState = DataCollectionState.DATA_COLLECTION_IN_PROGRESS;                
+                PendingIntent pIntent = PendingIntent.getActivity(this, 0, getIntent(), 0);
+                NotificationCompat.Builder mBuilder = 
+                	new NotificationCompat.Builder(this)
+                	.setSmallIcon(R.drawable.ic_running)
+                	.setContentTitle("Running")
+                	.setContentText("Data collection is running in background")
+                	.setContentIntent(pIntent);
+                
+                NotificationManager mNotificationManager =
+                		(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotificationManager.notify(1, mBuilder.build());
+                
             } catch (IOException e) {
                 Log.e("SensorDataCollector", e.toString());
             }
