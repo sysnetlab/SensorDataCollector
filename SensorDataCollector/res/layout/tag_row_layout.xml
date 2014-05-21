@@ -11,7 +11,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"      
         android:gravity="left|center_vertical"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:focusable="false">
     </TextView>
     

@@ -7,7 +7,7 @@ public class StateTag {
 
     public StateTag(Tag tag, TaggingState state) {
         mTag = tag;
-        state = mState;
+        mState = state;
     }
 
     public Tag getTag() {
@@ -16,5 +16,9 @@ public class StateTag {
 
     public TaggingState getState() {
         return mState;
+    }
+
+    public void setState(TaggingState taggingState) {
+        mState = taggingState;
     }
 }

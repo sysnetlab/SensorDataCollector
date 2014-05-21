@@ -8,9 +8,13 @@ import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorProperty;
 import sysnetlab.android.sdc.ui.adaptors.SensorPropertyListAdapter;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
+import android.os.Build;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 
 public class UserInterfaceUtil {
@@ -101,5 +105,15 @@ public class UserInterfaceUtil {
                 activity, lstSensorProperties);
 
         listView.setAdapter(sensorPropertyListAdaptor);
+    }
+    
+    
+    @SuppressLint("NewApi")
+    public static void setViewBackgroundCompatible(View view, Drawable background) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            view.setBackground(background);
+        } else {
+            view.setBackgroundDrawable(background);
+        }        
     }
 }
