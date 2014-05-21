@@ -14,6 +14,7 @@ import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datacollector.ExperimentTime;
+import sysnetlab.android.sdc.datacollector.Note;
 import sysnetlab.android.sdc.datacollector.StateTag;
 import sysnetlab.android.sdc.datacollector.TaggingState;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
@@ -22,7 +23,7 @@ import sysnetlab.android.sdc.datastore.SimpleFileStoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
-import sysnetlab.android.sdc.ui.fragments.CreateExperimentNotesFragment;
+import sysnetlab.android.sdc.ui.fragments.ExperimentEditNotesFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentEditTagsFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentRunFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentRunTaggingFragment;
@@ -55,14 +56,14 @@ public class CreateExperimentActivity extends FragmentActivity
         ExperimentRunFragment.OnFragmentClickListener,
         ExperimentRunFragment.ExperimentHandler,
         ExperimentRunTaggingFragment.OnFragmentClickListener,
-        CreateExperimentNotesFragment.OnFragmentClickListener
+        ExperimentEditNotesFragment.OnFragmentClickListener
 {
     private SensorManager mSensorManager;
 
     private ExperimentSetupFragment mExperimentSetupFragment;
     private ExperimentSensorSelectionFragment mExperimentSensorSelectionFragment;
     private ExperimentSensorSetupFragment mSensorSetupFragment;
-    private CreateExperimentNotesFragment mCreateExperimentNotesFragment;
+    private ExperimentEditNotesFragment mCreateExperimentNotesFragment;
     private ExperimentEditTagsFragment mExperimentEditTagsFragment;
     private ExperimentRunFragment mExperimentRunFragment;
 
@@ -179,19 +180,27 @@ public class CreateExperimentActivity extends FragmentActivity
     }
 
     @Override
-    public void onBtnBackClicked_CreateExperimentNotesFragment() {
-        Log.i("SensorDataCollector", "Button Cancel clicked.");
+    public void onButtonCancelClicked_ExperimentEditNotesFragment() {
+        Log.i("SensorDataCollector", "ExperimentEditNotesFragment: Button Cancel clicked.");
         getSupportFragmentManager().popBackStack();
         // FragmentUtil.switchToFragment(this, mExperimentSetupFragment,
         // "experimentsetup");
     }
+
+    @Override
+    public void onButtonConfirmClicked_ExperimentEditNotesFragment(String note) {
+        Log.i("SensorDataCollector", "ExperimentEditNotesFragment: Button Cancel clicked.");
+        if (note.trim().length() > 0)
+            mExperiment.getNotes().add(new Note(note));
+        getSupportFragmentManager().popBackStack();
+    }   
 
     public ExperimentSensorSelectionFragment getExperimentSensorSensorSelectionFragment()
     {
         return mExperimentSensorSelectionFragment;
     }
 
-    public CreateExperimentNotesFragment getCreateExperimentNotesFragment()
+    public ExperimentEditNotesFragment getCreateExperimentNotesFragment()
     {
         return mCreateExperimentNotesFragment;
     }
@@ -393,7 +402,7 @@ public class CreateExperimentActivity extends FragmentActivity
     @Override
     public void onNotesClicked_ExperimentSetupFragment() {
         if (mCreateExperimentNotesFragment == null) {
-            mCreateExperimentNotesFragment = new CreateExperimentNotesFragment();
+            mCreateExperimentNotesFragment = new ExperimentEditNotesFragment();
         }
         FragmentUtil.switchToFragment(this, mCreateExperimentNotesFragment, "editnotes");
 
@@ -401,7 +410,6 @@ public class CreateExperimentActivity extends FragmentActivity
 
     @Override
     public void onSensorsClicked_ExperimentSetupFragment() {
-        // TODO lazy work for now, more work ...
         if (mExperimentSensorSelectionFragment == null) {
             mExperimentSensorSelectionFragment = new ExperimentSensorSelectionFragment();
         }

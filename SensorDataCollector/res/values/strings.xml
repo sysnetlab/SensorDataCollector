@@ -18,7 +18,6 @@
     <string name="text_experiment">Experiment</string>
     <string name="text_back">Back</string>
     <string name="text_sensor_properties">Sensor Properties</string>
-    <string name="text_on_change">On Change</string>
     <string name="text_vendor">Vendor</string>
     <string name="text_sampling_rate">Sampling Rate</string>
     <string name="text_number_10">10</string>
@@ -43,6 +42,9 @@
     <string name="text_sensors_on_the_device">Sensors on the Devices</string>
     <string name="text_create_new_experiment">Create New Experiment</string>
     <string name="text_add_tag">Add Tag</string>
+    <string name="text_write_a_note_for_the_experiment">
+        Write a note for the experiment
+    </string>
     
 
 </resources>
