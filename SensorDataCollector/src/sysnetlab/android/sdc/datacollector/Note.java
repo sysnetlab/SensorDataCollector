@@ -12,15 +12,15 @@ public class Note implements Parcelable {
     private String mDateTime;
 
     public Note(String note) {
-        mNote = note;
+    	mNote= note!=null ? note : "";
 
         DateFormat df = DateFormat.getDateTimeInstance();
         mDateTime = df.format(Calendar.getInstance().getTime());
     }
 
     public Note(String note, String dt) {
-        mNote = note;
-        mDateTime = dt;
+        mNote= note!=null ? note : "";
+        mDateTime = dt!=null ? dt : "";
     }
 
     public String getNote() {
