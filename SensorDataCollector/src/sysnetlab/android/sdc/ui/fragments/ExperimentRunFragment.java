@@ -7,10 +7,15 @@ import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
 import sysnetlab.android.sdc.ui.SensorDataCollectorActivity;
 import android.app.Activity;
+import android.app.Application;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +28,7 @@ public class ExperimentRunFragment extends Fragment{
     private View mView;
     private OnFragmentClickListener mCallback;
     private ExperimentHandler mHandler;
+    private boolean mIsUserTrigger;
 
     private ExperimentRunTaggingFragment mExperimenRunTaggingFragment;
 
@@ -59,33 +65,13 @@ public class ExperimentRunFragment extends Fragment{
             throw new ClassCastException(activity.toString()
                     + " must implement ExperimentRunFragment.OnFragmentClickedListener");
         }
-
         try {
             mHandler = (ExperimentHandler) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement ExperimentRunFragment.ExperimentHandler");
         }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        if (mCallback == null) {
-            Log.e("SensorDataCollector", "ExperimentRunFragment.mCallback should not be null");
-        }
-
-        if (this.mView == null) {
-            Log.e("SensorDataCollector", "ExperimentRunFragment.mView should not be null");
-        }
-        mHandler.stopExperiment_ExperimentRunFragment(mView);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
+        
         if (mCallback == null) {
             Log.e("SensorDataCollector", "ExperimentRunFragment.mCallback should not be null");
         }
@@ -95,20 +81,38 @@ public class ExperimentRunFragment extends Fragment{
         }
         mHandler.runExperiment_ExperimentRunFragment(mView);
     }
-    
-    public void onBackPressed(){
-    	
+
+    @Override
+    public void onStop(){
+	    if(!mIsUserTrigger){
+    		Intent intent = new Intent(getActivity().getBaseContext(), CreateExperimentActivity.class);        
+	        PendingIntent pIntent = PendingIntent.getActivity(getActivity(), 0, intent, 0);
+	        
+	        NotificationCompat.Builder mBuilder = 
+	        	new NotificationCompat.Builder(getActivity())
+	        	.setSmallIcon(R.drawable.ic_launcher)
+	        	.setContentTitle("Running")
+	        	.setContentText("Data collection is running in background")
+	        	.setAutoCancel(true)
+	        	.setContentIntent(pIntent);
+	        
+	        NotificationManager mNotificationManager =
+	        		(NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+	        mNotificationManager.notify(1, mBuilder.build());
+	    }
+        super.onStop();
     }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        mIsUserTrigger = false;
+    }    
     
     public boolean isFragmentUIActive() {
         return isAdded() && !isDetached() && !isRemoving();
     }
-    
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {      
-      inflater.inflate(R.menu.action_bar, menu);      
-    }
-    
+       
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -124,12 +128,38 @@ public class ExperimentRunFragment extends Fragment{
         setHasOptionsMenu(true);
         
         return mView;
-    }    
+    }
+    
+    @Override
+    public void onPause() {
+    	if(mIsUserTrigger){
+	    	if (mCallback == null) {
+	            Log.e("SensorDataCollector", "ExperimentRunFragment.mCallback should not be null");
+	        }
+	
+	        if (this.mView == null) {
+	            Log.e("SensorDataCollector", "ExperimentRunFragment.mView should not be null");
+	        }
+	        mHandler.stopExperiment_ExperimentRunFragment(mView);
+    	}    	
+    	super.onPause();
+        
+    }
+    
+    @Override
+    public void onDestroyView() {
+    	super.onDestroyView();
+    }
+    
+    @Override
+    public void onDestroy() {
+    	super.onDestroy();
+    }
     
     @Override
     public void onDetach() {
-        super.onDetach();
-
+    	super.onDetach();
+    	
         /*
          * it appears that there is a bug in the support library that dealing
          * with nested fragments as discussed in
@@ -152,5 +182,13 @@ public class ExperimentRunFragment extends Fragment{
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+    
+    public void setIsUserTrigger(boolean isUserTrigger){
+    	mIsUserTrigger=isUserTrigger;
+    }
+    
+    public boolean getIsUserTrigger(){
+    	return mIsUserTrigger;
     }
 }
