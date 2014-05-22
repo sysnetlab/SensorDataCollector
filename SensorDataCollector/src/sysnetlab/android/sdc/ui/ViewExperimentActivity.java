@@ -6,7 +6,7 @@ import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewFragment;
-import sysnetlab.android.sdc.ui.fragments.ExperimentViewMoreNotesFragment;
+import sysnetlab.android.sdc.ui.fragments.ExperimentViewNotesFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewSensorDataFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
 import android.content.Intent;
@@ -20,10 +20,10 @@ public class ViewExperimentActivity extends FragmentActivity implements
         ExperimentViewFragment.OnFragmentClickListener,
         ExperimentSensorListFragment.OnFragmentClickListener,
         ExperimentViewSensorDataFragment.OnFragmentClickListener,
-        ExperimentViewMoreNotesFragment.OnFragmentClickListener {
+        ExperimentViewNotesFragment.OnFragmentClickListener {
 
     private ExperimentViewFragment mExperimentViewFragment;
-    private ExperimentViewMoreNotesFragment mExperimentViewMoreNotesFragment;
+    private ExperimentViewNotesFragment mExperimentViewMoreNotesFragment;
     private ExperimentViewSensorDataFragment mExperimentViewSensorDataFragment;
     private Experiment mExperiment;
 
@@ -91,7 +91,7 @@ public class ViewExperimentActivity extends FragmentActivity implements
     @Override
     public void onNotesClicked_ExperimentViewFragment() {
         if (mExperimentViewMoreNotesFragment == null) {
-            mExperimentViewMoreNotesFragment = new ExperimentViewMoreNotesFragment();
+            mExperimentViewMoreNotesFragment = new ExperimentViewNotesFragment();
         }
         FragmentUtil.switchToFragment(this, mExperimentViewMoreNotesFragment,
                 "experimentviewmorenotes");
