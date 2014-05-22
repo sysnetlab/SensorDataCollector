@@ -40,7 +40,8 @@ public class ExperimentSensorListFragment extends Fragment {
                 .getSensors();
 
         if (lstSensors.size() == 0) {
-            textView.setVisibility(View.VISIBLE);
+            // textView.setVisibility(View.VISIBLE);
+            textView.setVisibility(View.GONE);
             listView.setVisibility(View.GONE);
         } else {
             textView.setVisibility(View.GONE);

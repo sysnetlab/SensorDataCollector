@@ -51,6 +51,30 @@
         Write a note for the experiment
     </string>
     <string name="text_tag_here_for_more">Tap here for more &#8230;</string>
+    <string name="text_tap_to_see_more_notes">Tap to see more about the notes.</string>
+    <string name="text_tap_to_see_more_sensors">Tap to see more about the sensors.</string>
+    <string name="text_no_notes_were_taken">
+        No notes were taken for the experiment.
+    </string>
+    <string name="text_no_tagging_action_performed">
+        No tagging actions were performed during the experiment.
+    </string>
+    <string name="text_experiment_collect_data_from">
+        The experiment collected data from a few selected sensors.
+    </string>
+    <string name="text_no_sensors_were_selected">
+        No sensors were selected for data collection in the experiment. 
+    </string>
+    <string name="text_image_icon">Image Icon</string>
+    <string name="text_run_tag_operation_text">
+        Mark important events during an experimental run.
+    </string>
+    <string name="text_run_note_operation_text">
+        Log general information about an experiment.
+    </string>
+    <string name="text_run_sensor_operation_text">
+        Configure the sensors to use during the experiment.
+    </string>
     
 
 </resources>

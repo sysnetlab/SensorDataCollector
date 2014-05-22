@@ -41,7 +41,8 @@ public class ExperimentSetupFragment extends Fragment {
 
 		CreateExperimentActivity a = (CreateExperimentActivity) getActivity();
 		ListView operationMenu = (ListView) mView.findViewById(R.id.lv_operations);
-		OperationAdapter operationAdapter = new OperationAdapter(a, a.getExperiment());
+        OperationAdapter operationAdapter = new OperationAdapter(a, a.getExperiment(),
+                OperationAdapter.CREATE_EXPERIMENT);
 		operationMenu.setAdapter(operationAdapter);
 		operationMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 		
