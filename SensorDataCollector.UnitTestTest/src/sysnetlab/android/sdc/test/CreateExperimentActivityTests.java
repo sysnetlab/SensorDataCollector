@@ -2,7 +2,7 @@ package sysnetlab.android.sdc.test;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
-import sysnetlab.android.sdc.ui.fragments.CreateExperimentNotesFragment;
+import sysnetlab.android.sdc.ui.fragments.ExperimentEditNotesFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentEditTagsFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentRunFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
@@ -88,7 +88,7 @@ public void testExperimentSensorSetupFragment() {
 		ListView lView = (ListView) createExperimentActivity.findViewById(R.id.lv_operations);
 	    assertNotNull("Menu with operations has not been loaded", lView);
 	    lView.performItemClick(lView.getAdapter().getView(1, null, null), 1, lView.getAdapter().getItemId(1));
-	    CreateExperimentNotesFragment experimentNotesFragment=createExperimentActivity.getCreateExperimentNotesFragment();
+	    ExperimentEditNotesFragment experimentNotesFragment=createExperimentActivity.getCreateExperimentNotesFragment();
 		assertNotNull("Notes edition fragment failed to load",experimentNotesFragment);
 	}
 	

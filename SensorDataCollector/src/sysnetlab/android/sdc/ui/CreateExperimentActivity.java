@@ -117,22 +117,7 @@ public class CreateExperimentActivity extends FragmentActivity
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
         Log.i("SensorDataCollector", "Leaving CreateExperimentActivit::onCreate.");
-    }    
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()) {
-      case android.R.id.home:
-          Intent homeIntent = new Intent(this, SensorDataCollectorActivity.class);
-          homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-          startActivity(homeIntent);
-        break;
-      default:
-    	  return super.onOptionsItemSelected(item);        
-      }
-
-      return true;
-    }
+    }           
     
     @Override
     public void onBtnConfirmClicked_SensorSetupFragment(View v, AbstractSensor sensor) {
@@ -380,6 +365,7 @@ public class CreateExperimentActivity extends FragmentActivity
     public void onBackPressed() {
         if(mExperimentRunFragment!=null){
         	if(mExperimentRunFragment.isFragmentUIActive()){
+        		mExperimentRunFragment.setIsUserTrigger(true);
 	        	Intent homeIntent = new Intent(this, SensorDataCollectorActivity.class);
 	        	homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	        	startActivity(homeIntent);
@@ -391,6 +377,7 @@ public class CreateExperimentActivity extends FragmentActivity
     
     @Override
     public void onBtnDoneClicked_ExperimentRunFragment() {
+    	mExperimentRunFragment.setIsUserTrigger(true);
         Intent intent = new Intent(this, SensorDataCollectorActivity.class);
         startActivity(intent);
     }
@@ -443,24 +430,14 @@ public class CreateExperimentActivity extends FragmentActivity
         Intent intent = new Intent(this, SensorDataCollectorActivity.class);
         startActivity(intent);
     }
-
+    
     @Override
     public void runExperiment_ExperimentRunFragment(View v) {
         if (mCollectionState == DataCollectionState.DATA_COLLECTION_STOPPED) {
             try {
                 runExperiment();
                 mCollectionState = DataCollectionState.DATA_COLLECTION_IN_PROGRESS;                
-                PendingIntent pIntent = PendingIntent.getActivity(this, 0, getIntent(), 0);
-                NotificationCompat.Builder mBuilder = 
-                	new NotificationCompat.Builder(this)
-                	.setSmallIcon(R.drawable.ic_running)
-                	.setContentTitle("Running")
-                	.setContentText("Data collection is running in background")
-                	.setContentIntent(pIntent);
-                
-                NotificationManager mNotificationManager =
-                		(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                mNotificationManager.notify(1, mBuilder.build());
+
                 
             } catch (IOException e) {
                 Log.e("SensorDataCollector", e.toString());
