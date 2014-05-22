@@ -7,7 +7,6 @@ import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewMoreNotesFragment;
-import sysnetlab.android.sdc.ui.fragments.ExperimentViewNotesFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewSensorDataFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
 import android.content.Intent;
@@ -15,18 +14,23 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.widget.Toast;
 
 public class ViewExperimentActivity extends FragmentActivity implements
         ExperimentViewFragment.OnFragmentClickListener,
         ExperimentSensorListFragment.OnFragmentClickListener,
         ExperimentViewSensorDataFragment.OnFragmentClickListener,
-        ExperimentViewNotesFragment.OnFragmentClickListener,
         ExperimentViewMoreNotesFragment.OnFragmentClickListener {
+
     private ExperimentViewFragment mExperimentViewFragment;
     private ExperimentViewMoreNotesFragment mExperimentViewMoreNotesFragment;
     private ExperimentViewSensorDataFragment mExperimentViewSensorDataFragment;
     private Experiment mExperiment;
 
+    public Experiment getExperiment() {
+        return mExperiment;
+    }   
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO handle configuration change
@@ -41,6 +45,8 @@ public class ViewExperimentActivity extends FragmentActivity implements
         if (mExperiment == null) {
             Log.i("SensorDataColelctor",
                     "ViewExperimentActivity failed to get experiment from intent");
+            Toast.makeText(this, "Failed to  load experiment.", Toast.LENGTH_LONG).show();
+            finish();
         }
 
         Log.i("SensorDataCollector",
@@ -74,22 +80,32 @@ public class ViewExperimentActivity extends FragmentActivity implements
                 SensorDataCollectorActivity.APP_OPERATION_CLONE_EXPERIMENT);
         startActivity(intent);
     }
+    
 
-    public Experiment getExperiment() {
-        return mExperiment;
+    @Override
+    public void onTagsClicked_ExperimentViewFragment() {
+        // TODO Auto-generated method stub
+        // choose to do nothing. 
     }
 
     @Override
-    public void onImageViewMoreOrLessNotesClicked_ExperimentViewNotesFragment() {
-        Log.i("SensorDataCollector",
-                "entered onImageViewMoreOrLessNotesClicked_ExperimentViewNotesFragment");
-
+    public void onNotesClicked_ExperimentViewFragment() {
         if (mExperimentViewMoreNotesFragment == null) {
             mExperimentViewMoreNotesFragment = new ExperimentViewMoreNotesFragment();
         }
-        FragmentUtil
-                .switchToFragment(this, mExperimentViewMoreNotesFragment, "experimentviewnotes");
+        FragmentUtil.switchToFragment(this, mExperimentViewMoreNotesFragment,
+                "experimentviewmorenotes");
+
     }
+
+    @Override
+    public void onSensorsClicked_ExperimentViewFragment() {
+        if (mExperimentViewSensorDataFragment == null) {
+            mExperimentViewSensorDataFragment = new ExperimentViewSensorDataFragment();
+        }
+        FragmentUtil.switchToFragment(this, mExperimentViewSensorDataFragment,
+                "experimentviewsensordata");
+    }  
 
     @Override
     public void onBtnBackClicked_ExperimentViewMoreNotesFragment() {
@@ -112,5 +128,4 @@ public class ViewExperimentActivity extends FragmentActivity implements
     public void onBtnBackClicked_ExperimentViewSensorDataFragment() {
         FragmentUtil.switchToFragment(this, mExperimentViewFragment, "experimentview");
     }
-
 }

@@ -2,14 +2,18 @@ package sysnetlab.android.sdc.ui.adaptors;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
-
+import sysnetlab.android.sdc.datacollector.Note;
+import sysnetlab.android.sdc.datacollector.Tag;
+import sysnetlab.android.sdc.ui.UserInterfaceUtil;
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 // Icons from www.thenounproject.com.  Creative Commons Attribution License
@@ -20,6 +24,9 @@ import android.widget.TextView;
 //  	http://android-ui-utils.googlecode.com/hg/asset-studio/dist/icons-launcher.html
 
 public class OperationAdapter extends BaseAdapter {
+    // Operation mode: create/view experiment
+    public static final int CREATE_EXPERIMENT = 1;
+    public static final int VIEW_EXPERIMENT = 2;
 
 	// Total number of operations.
 	public static final int OP_COUNT = 3;
@@ -36,12 +43,14 @@ public class OperationAdapter extends BaseAdapter {
 
 	private Activity mActivity;
 	private Experiment mExperiment;
+	private int mMode;
 
-	public OperationAdapter(Activity a, Experiment e) {
-		mExperiment = e;
-		mActivity = a;
-	}
-
+    public OperationAdapter(Activity a, Experiment e, int m) {
+        mExperiment = e;
+        mActivity = a;
+        mMode = m;
+    }
+	
 	@Override
 	public int getCount() {
 		return OP_COUNT;
@@ -60,41 +69,149 @@ public class OperationAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int arg0, View arg1, ViewGroup arg2) {
-		if (arg1 == null) {
-			LayoutInflater inflater = (LayoutInflater) mActivity
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			arg1 = inflater.inflate(R.layout.operation_listitem, arg2, false);
-		}
+	public View getView(int position, View view, ViewGroup viewGroup) {
+        if (view == null) {
+            LayoutInflater inflater = (LayoutInflater) mActivity
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflater.inflate(R.layout.operation_listitem, viewGroup, false);
+        }
+        
+	    switch (mMode) {
+	        case CREATE_EXPERIMENT:
+	            view = getViewForCreatingExperiment(position, view);
+	            break;
+	        case VIEW_EXPERIMENT:
+	            view = getViewForViewingExperiment(position, view);
+	            break;
+	    }
+	    
+	    return view;
+	}
+	
+	private View getViewForCreatingExperiment(int position, View view) {
+	    
+        ImageView icon = (ImageView) view.findViewById(R.id.iv_image);
+        TextView operation = (TextView) view.findViewById(R.id.tv_maintext);
+        TextView operationInfo = (TextView) view.findViewById(R.id.tv_subtext);
 
-		ImageView icon = (ImageView) arg1.findViewById(R.id.iv_image);
-		TextView operation = (TextView) arg1.findViewById(R.id.tv_maintext);
-		TextView operationInfo = (TextView) arg1.findViewById(R.id.tv_subtext);
+        // TODO: Replace the help text with other information when available,
+        // e.g., list of entered tags,
+        // selected sensors, or first words of notes??
+        if (position == OP_TAGS) {
+            icon.setImageResource(R.drawable.icon_tags);
+            operation.setText(OP_TAGS_NAME);
+            operationInfo.setText(view.getResources().getString(
+                    R.string.text_run_tag_operation_text));     
+            //listTagsInView(view);
+        } else if (position == OP_NOTES) {
+            icon.setImageResource(R.drawable.icon_notes);
+            operation.setText(OP_NOTES_NAME);
+            operationInfo.setText(view.getResources().getString(
+                    R.string.text_run_note_operation_text));    
+            //listNotesInView(view);
+        } else if (position == OP_SENSORS) {
+            icon.setImageResource(R.drawable.icon_sensors);
+            operation.setText(OP_SENSORS_NAME);
+            operationInfo.setText(view.getResources().getString(
+                    R.string.text_run_sensor_operation_text));
+            //listSensorsSummaryInView(view);
+        }
 
-		// TODO: Do some stuff to prevent long operationInfo text from wrapping.
-		// If it gets too
-		// long, cut it off and add ellipses.
-		// TODO: Replace the help text with other information when available,
-		// e.g., list of entered tags,
-		// selected sensors, or first words of notes??
-		if (arg0 == OP_TAGS) {
-			icon.setImageResource(R.drawable.icon_tags);
-			operation.setText(OP_TAGS_NAME);
-			operationInfo
-					.setText("Mark important events during an experimental run.");
-		} else if (arg0 == OP_NOTES) {
-			icon.setImageResource(R.drawable.icon_notes);
-			operation.setText(OP_NOTES_NAME);
-			operationInfo
-					.setText("Log general information about an experiment.");
-		} else if (arg0 == OP_SENSORS) {
-			icon.setImageResource(R.drawable.icon_sensors);
-			operation.setText(OP_SENSORS_NAME);
-			operationInfo
-					.setText("Configure the sensors to use during the experiment.");
-		}
-
-		return arg1;
+        return view;	    
 	}
 
+	private View getViewForViewingExperiment(int position, View view) {
+	    
+        ImageView icon = (ImageView) view.findViewById(R.id.iv_image);
+        TextView operation = (TextView) view.findViewById(R.id.tv_maintext);
+
+        if (position == OP_TAGS) {
+            icon.setImageResource(R.drawable.icon_tags);
+            operation.setText(OP_TAGS_NAME);
+            listTagsInView(view);
+        } else if (position == OP_NOTES) {
+            icon.setImageResource(R.drawable.icon_notes);
+            operation.setText(OP_NOTES_NAME);
+            listNotesInView(view);
+        } else if (position == OP_SENSORS) {
+            icon.setImageResource(R.drawable.icon_sensors);
+            operation.setText(OP_SENSORS_NAME);
+            listSensorsSummaryInView(view);
+        }
+        
+        return view;
+	}
+	
+	private void listTagsInView(View view) {
+        if (mExperiment == null || mExperiment.getTags() == null || mExperiment.getTags().isEmpty()) {
+            ((TextView) view.findViewById(R.id.tv_subtext)).setText(view.getResources().getString(
+                    R.string.text_no_tagging_action_performed));
+            return;
+        }
+        
+        ((TextView) view.findViewById(R.id.tv_subtext)).setVisibility(View.GONE);
+	    
+	    LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout_subtext);
+	    layout.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, 0, 24, 0);
+        
+        layout.removeAllViews();
+        for (Tag tag : mExperiment.getTags()) {
+            TextView tvTag = new TextView(mActivity);
+            //tvTag.setBackgroundResource(R.drawable.rounded_corner);
+            tvTag.setTextAppearance(mActivity, android.R.attr.textAppearanceSmall);
+            tvTag.setText(tag.getName());
+            tvTag.setPadding(0, 2, 8, 2);
+            layout.addView(tvTag, layoutParams);
+        }
+	    
+	    layout.setVisibility(View.VISIBLE);
+	}
+	
+    private void listNotesInView(View view) {
+        if (mExperiment == null || mExperiment.getNotes() == null
+                || mExperiment.getNotes().isEmpty()) {
+            ((TextView) view.findViewById(R.id.tv_subtext)).setText(view.getResources().getString(
+                    R.string.text_no_notes_were_taken));
+            return;
+        }
+        
+        ((TextView) view.findViewById(R.id.tv_subtext)).setText(view.getResources().getString(
+                R.string.text_tap_to_see_more_notes)); 
+        ((TextView) view.findViewById(R.id.tv_subtext)).setVisibility(View.VISIBLE);
+
+        LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout_subtext);
+        layout.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, 0, 24, 0);
+
+        layout.removeAllViews();        
+        Note note = mExperiment.getNotes().get(0);
+        TextView tvNote = new TextView(mActivity);
+        //tvNote.setBackgroundResource(R.drawable.rounded_corner);
+        tvNote.setTextAppearance(mActivity, android.R.attr.textAppearanceSmall);
+        tvNote.setText(note.getDateTime() + ": " + note.getNote());
+        tvNote.setPadding(0, 2, 8, 2);
+        UserInterfaceUtil.setEllipsizeforTextView(tvNote, TextUtils.TruncateAt.END);
+
+        layout.addView(tvNote, layoutParams);
+
+        layout.setVisibility(View.VISIBLE);
+    }
+    
+    private void listSensorsSummaryInView(View view) {
+        if (mExperiment == null || mExperiment.getSensors() == null
+                || mExperiment.getSensors().isEmpty()) {
+            ((TextView) view.findViewById(R.id.tv_subtext)).setText(view.getResources().getString(
+                    R.string.text_no_sensors_were_selected));    
+            return;
+        }
+        ((TextView) view.findViewById(R.id.tv_subtext)).setText(view.getResources().getString(
+                R.string.text_tap_to_see_more_sensors));  
+        ((TextView) view.findViewById(R.id.tv_subtext)).setVisibility(View.VISIBLE);
+    }
+	
 }
