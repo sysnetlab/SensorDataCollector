@@ -60,6 +60,8 @@
 	            android:name="android.support.PARENT_ACTIVITY"
 	            android:value="sysnetlab.android.sdc.ui.ViewExperimentActivity" />           
         </activity>   
+        
+        <service android:name="sysnetlab.android.sdc.services.RunExperimentService"/>
     </application>
 
 </manifest>
