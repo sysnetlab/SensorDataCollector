@@ -88,7 +88,7 @@ public void testExperimentSensorSetupFragment() {
 		ListView lView = (ListView) createExperimentActivity.findViewById(R.id.lv_operations);
 	    assertNotNull("Menu with operations has not been loaded", lView);
 	    lView.performItemClick(lView.getAdapter().getView(1, null, null), 1, lView.getAdapter().getItemId(1));
-	    ExperimentEditNotesFragment experimentNotesFragment=createExperimentActivity.getCreateExperimentNotesFragment();
+	    ExperimentEditNotesFragment experimentNotesFragment=createExperimentActivity.getExperimentEditNotesFragment();
 		assertNotNull("Notes edition fragment failed to load",experimentNotesFragment);
 	}
 	
