@@ -9,8 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import sysnetlab.android.sdc.R;
-import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
+import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datacollector.ExperimentTime;
@@ -18,8 +18,8 @@ import sysnetlab.android.sdc.datacollector.Note;
 import sysnetlab.android.sdc.datacollector.StateTag;
 import sysnetlab.android.sdc.datacollector.TaggingState;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
-import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.datastore.SimpleFileStoreSingleton;
+import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
@@ -32,26 +32,18 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.view.MenuItem;
 
 public class CreateExperimentActivity extends FragmentActivity
         implements
@@ -235,9 +227,25 @@ public class CreateExperimentActivity extends FragmentActivity
     	intent.putExtra("experiment", mExperiment);
     	startService(intent);
     	
+    	updateSensorList();
+    	
     	// TODO: retrieve the number of sensors checked from the service (getter?)
-        CharSequence text = "Started data collection for "+/* + nChecked + */" Sensors";
+        CharSequence text = "Started data collection for "+ mExperiment.getSensors().size() + " Sensors";
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    }
+    
+    private void updateSensorList() {
+        Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
+        ArrayList<AbstractSensor> lstSensors = new ArrayList<AbstractSensor>();
+
+        while (iter.hasNext()) {
+            AndroidSensor sensor = (AndroidSensor) iter.next();
+            if (sensor.isSelected()) {
+                lstSensors.add(sensor);
+            }
+        }
+
+        mExperiment.setSensors(lstSensors); 
     }
 
     private void stopExperiment() throws IOException {
@@ -253,7 +261,7 @@ public class CreateExperimentActivity extends FragmentActivity
         mExperiment.getStore().closeAllChannels();
 
         // TODO: retrieve the number of sensors checked from the service (getter?)
-        CharSequence text = "Stopped data collection for "+/* + nChecked + */" Sensors";
+        CharSequence text = "Stopped data collection for " + mExperiment.getSensors().size() + " Sensors";
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 

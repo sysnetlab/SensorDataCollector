@@ -33,12 +33,9 @@ public class RunExperimentService extends IntentService{
         Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
         ArrayList<AbstractSensor> lstSensors = new ArrayList<AbstractSensor>();
 
-        int nChecked = 0;
         while (iter.hasNext()) {
             AndroidSensor sensor = (AndroidSensor) iter.next();
             if (sensor.isSelected()) {
-                nChecked++;
-
                 Channel channel = experiment.getStore().getChannel(sensor.getName());
                 AndroidSensorEventListener listener =
                         new AndroidSensorEventListener(channel);
@@ -63,11 +60,9 @@ public class RunExperimentService extends IntentService{
 	public void onDestroy() {
 		super.onDestroy();
 		Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
-        int nChecked = 0;
         while (iter.hasNext()) {
             AndroidSensor sensor = (AndroidSensor) iter.next();
             if (sensor.isSelected()) {
-                nChecked++;
                 AndroidSensorEventListener listener = sensor.getListener();
                 mSensorManager.unregisterListener(listener);
             }
