@@ -71,9 +71,6 @@ public class OperationAdapter extends BaseAdapter {
 		TextView operation = (TextView) arg1.findViewById(R.id.tv_maintext);
 		TextView operationInfo = (TextView) arg1.findViewById(R.id.tv_subtext);
 
-		// TODO: Do some stuff to prevent long operationInfo text from wrapping.
-		// If it gets too
-		// long, cut it off and add ellipses.
 		// TODO: Replace the help text with other information when available,
 		// e.g., list of entered tags,
 		// selected sensors, or first words of notes??

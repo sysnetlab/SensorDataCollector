@@ -2,98 +2,178 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
+
     <TextView
-        android:id="@+id/tv_experiment_view_title"
+        android:id="@+id/textview_experiment_view_experiment_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="@string/text_viewing_experiment"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/tv_experiment_view_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/tv_experiment_view_title"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="12dp"
+        android:gravity="center_horizontal|center_vertical"
         android:text="@string/text_name"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <EditText
-        android:id="@+id/et_experiment_view_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/tv_experiment_view_name"
-        android:layout_alignBottom="@+id/tv_experiment_view_name"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@+id/tv_experiment_view_name"
-        android:ems="10"
-        android:enabled="false"
-        android:inputType="text|textAutoCorrect|textAutoComplete"/>
-
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
     <RelativeLayout
         android:id="@+id/layout_experiment_view_tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tv_experiment_view_name"
-        android:layout_below="@+id/et_experiment_view_name">
-    </RelativeLayout>
-    
-    <RelativeLayout 
-        android:id="@+id/layout_experiment_view_notes"
-    	android:layout_width="match_parent"
-    	android:layout_height="wrap_content" 
-    	android:layout_alignLeft="@+id/layout_experiment_view_tags"
-        android:layout_below="@+id/layout_experiment_view_tags">
-    </RelativeLayout>    
-    
-    <RelativeLayout 
-        android:id="@+id/layout_experiment_view_sensors"
-    	android:layout_width="match_parent"
-    	android:layout_height="wrap_content" 
-    	android:layout_alignLeft="@+id/layout_experiment_view_notes"
-        android:layout_below="@+id/layout_experiment_view_notes">
+        android:layout_gravity="left|center_vertical"
+        android:layout_below="@id/textview_experiment_view_experiment_name">
+
+        <ImageView
+            android:id="@+id/imageview_experiment_view_tag_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="12dp"
+            android:contentDescription="@string/text_tags"
+            android:src="@drawable/icon_tags"/>
+
+        <TextView
+            android:id="@+id/textview_experiment_view_tag_maintext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/imageview_experiment_view_tag_image"
+            android:textSize="20sp" 
+            android:text="@string/text_tags"/>
+
+        <TextView
+            android:id="@+id/textview_experiment_view_tag_subtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textview_experiment_view_tag_maintext"
+            android:layout_alignLeft="@+id/textview_experiment_view_tag_maintext"
+            android:textSize="12sp" 
+            android:text="@string/text_tag_description_text"
+            android:ellipsize="end"
+            android:scrollHorizontally="false"
+            android:maxLines="1"/>
         
-	    <TextView
-	        android:id="@+id/tv_experiment_view_sensors"
-	        android:layout_width="wrap_content"
+	    <LinearLayout
+	        android:id="@+id/layout_experiment_view_tag_list"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_marginTop="36dp"
-	        android:text="@string/text_sensors"
-	        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-	    <ImageView
-	        android:id="@+id/imv_sensors_plusminus"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentTop="true"
-	        android:layout_marginLeft="12dp"
-	        android:layout_marginTop="19dp"
-	        android:layout_toRightOf="@+id/tv_experiment_view_sensors"
-	        android:contentDescription="@string/text_expand"
-	        android:paddingBottom="0dp"
-	        android:paddingLeft="0dp"
-	        android:paddingRight="0dp"
-	        android:paddingTop="0dp"
-	        android:src="@drawable/amplifying_glass"
-	        android:textAlignment="center" />
-
-    </RelativeLayout>
+	        android:orientation="vertical"
+	        android:layout_marginRight="24dp"
+	        android:layout_below="@+id/textview_experiment_view_tag_subtext"
+	        android:layout_alignLeft="@id/textview_experiment_view_tag_subtext"/>
+    </RelativeLayout> 
     
-    <RelativeLayout
-        android:id="@+id/layout_experiment_view_sensor_list"
+    
+	<RelativeLayout
+	    android:id="@+id/layout_experiment_view_notes"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@+id/layout_experiment_view_buttons"
-        android:layout_below="@+id/layout_experiment_view_sensors" >
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
+        android:layout_below="@id/layout_experiment_view_tags">
+
+        <ImageView
+            android:id="@+id/imageview_experiment_view_notes_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="12dp"
+            android:src="@drawable/icon_notes"
+            android:contentDescription="@string/text_notes"/>
+
+        <TextView
+            android:id="@+id/textview_experiment_view_notes_maintext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/imageview_experiment_view_notes_image"
+            android:textSize="20sp" 
+            android:text="@string/text_notes"/>
+
+        <TextView
+            android:id="@+id/textview_experiment_view_notes_subtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textview_experiment_view_notes_maintext"
+            android:layout_alignLeft="@+id/textview_experiment_view_notes_maintext"
+            android:textSize="12sp" 
+            android:text="@string/text_notes_description_text"
+            android:ellipsize="end"
+            android:scrollHorizontally="false"
+            android:maxLines="1"/>
         
+	    <LinearLayout
+	        android:id="@+id/layout_experiment_view_note_list"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        android:layout_marginRight="24dp"
+	        android:layout_below="@+id/textview_experiment_view_notes_subtext"
+	        android:layout_alignLeft="@id/textview_experiment_view_notes_subtext"/>
+        
+    </RelativeLayout>     
+    
+
+<RelativeLayout
+	    android:id="@+id/layout_experiment_view_sensors"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
+        android:layout_below="@id/layout_experiment_view_notes"
+        android:layout_above="@+id/layout_experiment_view_buttons">
+
+        <ImageView
+            android:id="@+id/imageview_experiment_view_sensors_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="12dp"
+            android:src="@drawable/icon_sensors"
+            android:contentDescription="@string/text_sensors"/>
+
+        <TextView
+            android:id="@+id/textview_experiment_view_sensors_maintext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/imageview_experiment_view_sensors_image"
+            android:textSize="20sp" 
+            android:text="@string/text_sensors"/>
+
+        <TextView
+            android:id="@+id/textview_experiment_view_sensors_subtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textview_experiment_view_sensors_maintext"
+            android:layout_alignLeft="@+id/textview_experiment_view_sensors_maintext"
+            android:textSize="12sp" 
+            android:text="@string/text_sensors_description_text"
+            android:ellipsize="end"
+            android:scrollHorizontally="false"
+            android:maxLines="1"/>
+        
+	    <LinearLayout
+	        android:id="@+id/layout_experiment_view_sensor_list"
+	        android:layout_width="match_parent"
+	        android:layout_height="fill_parent"
+	        android:orientation="vertical"
+	        android:layout_marginRight="24dp"	        
+	        android:layout_below="@+id/textview_experiment_view_sensors_subtext"
+	        android:layout_alignLeft="@id/textview_experiment_view_sensors_subtext"/>
+
     </RelativeLayout>
+	
+	
+    
 
     <RelativeLayout
-        android:id="@+id/layout_experiment_view_buttons"
+        android:id="@id/layout_experiment_view_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

@@ -29,6 +29,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_maintext"
             android:layout_alignLeft="@+id/tv_maintext"
-            android:textSize="12sp" />
+            android:textSize="12sp" 
+            android:ellipsize="end"
+            android:scrollHorizontally="false"
+            android:maxLines="1"/>
 
     </RelativeLayout> 

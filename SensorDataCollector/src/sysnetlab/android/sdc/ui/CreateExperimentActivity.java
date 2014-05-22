@@ -63,7 +63,7 @@ public class CreateExperimentActivity extends FragmentActivity
     private ExperimentSetupFragment mExperimentSetupFragment;
     private ExperimentSensorSelectionFragment mExperimentSensorSelectionFragment;
     private ExperimentSensorSetupFragment mSensorSetupFragment;
-    private ExperimentEditNotesFragment mCreateExperimentNotesFragment;
+    private ExperimentEditNotesFragment mExperimentEditNotesFragment;
     private ExperimentEditTagsFragment mExperimentEditTagsFragment;
     private ExperimentRunFragment mExperimentRunFragment;
 
@@ -200,9 +200,9 @@ public class CreateExperimentActivity extends FragmentActivity
         return mExperimentSensorSelectionFragment;
     }
 
-    public ExperimentEditNotesFragment getCreateExperimentNotesFragment()
+    public ExperimentEditNotesFragment getExperimentEditNotesFragment()
     {
-        return mCreateExperimentNotesFragment;
+        return mExperimentEditNotesFragment;
     }
 
     public ExperimentSensorSetupFragment getSensorSetupFragment()
@@ -401,10 +401,10 @@ public class CreateExperimentActivity extends FragmentActivity
 
     @Override
     public void onNotesClicked_ExperimentSetupFragment() {
-        if (mCreateExperimentNotesFragment == null) {
-            mCreateExperimentNotesFragment = new ExperimentEditNotesFragment();
+        if (mExperimentEditNotesFragment == null) {
+            mExperimentEditNotesFragment = new ExperimentEditNotesFragment();
         }
-        FragmentUtil.switchToFragment(this, mCreateExperimentNotesFragment, "editnotes");
+        FragmentUtil.switchToFragment(this, mExperimentEditNotesFragment, "editnotes");
 
     }
 
