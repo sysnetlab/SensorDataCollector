@@ -32,6 +32,9 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -41,6 +44,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -65,7 +69,7 @@ public class CreateExperimentActivity extends FragmentActivity
     private ExperimentSetupFragment mExperimentSetupFragment;
     private ExperimentSensorSelectionFragment mExperimentSensorSelectionFragment;
     private ExperimentSensorSetupFragment mSensorSetupFragment;
-    private ExperimentEditNotesFragment mCreateExperimentNotesFragment;
+    private ExperimentEditNotesFragment mExperimentEditNotesFragment;
     private ExperimentEditTagsFragment mExperimentEditTagsFragment;
     private ExperimentRunFragment mExperimentRunFragment;
 
@@ -116,22 +120,7 @@ public class CreateExperimentActivity extends FragmentActivity
         //mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
         Log.i("SensorDataCollector", "Leaving CreateExperimentActivit::onCreate.");
-    }    
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()) {
-      case android.R.id.home:
-          Intent homeIntent = new Intent(this, SensorDataCollectorActivity.class);
-          homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-          startActivity(homeIntent);
-        break;
-      default:
-    	  return super.onOptionsItemSelected(item);        
-      }
-
-      return true;
-    }
+    }           
     
     @Override
     public void onBtnConfirmClicked_SensorSetupFragment(View v, AbstractSensor sensor) {
@@ -203,9 +192,9 @@ public class CreateExperimentActivity extends FragmentActivity
         return mExperimentSensorSelectionFragment;
     }
 
-    public ExperimentEditNotesFragment getCreateExperimentNotesFragment()
+    public ExperimentEditNotesFragment getExperimentEditNotesFragment()
     {
-        return mCreateExperimentNotesFragment;
+        return mExperimentEditNotesFragment;
     }
 
     public ExperimentSensorSetupFragment getSensorSetupFragment()
@@ -354,6 +343,7 @@ public class CreateExperimentActivity extends FragmentActivity
     public void onBackPressed() {
         if(mExperimentRunFragment!=null){
         	if(mExperimentRunFragment.isFragmentUIActive()){
+        		mExperimentRunFragment.setIsUserTrigger(true);
 	        	Intent homeIntent = new Intent(this, SensorDataCollectorActivity.class);
 	        	homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	        	startActivity(homeIntent);
@@ -365,6 +355,7 @@ public class CreateExperimentActivity extends FragmentActivity
     
     @Override
     public void onBtnDoneClicked_ExperimentRunFragment() {
+    	mExperimentRunFragment.setIsUserTrigger(true);
         Intent intent = new Intent(this, SensorDataCollectorActivity.class);
         startActivity(intent);
     }
@@ -379,10 +370,10 @@ public class CreateExperimentActivity extends FragmentActivity
 
     @Override
     public void onNotesClicked_ExperimentSetupFragment() {
-        if (mCreateExperimentNotesFragment == null) {
-            mCreateExperimentNotesFragment = new ExperimentEditNotesFragment();
+        if (mExperimentEditNotesFragment == null) {
+            mExperimentEditNotesFragment = new ExperimentEditNotesFragment();
         }
-        FragmentUtil.switchToFragment(this, mCreateExperimentNotesFragment, "editnotes");
+        FragmentUtil.switchToFragment(this, mExperimentEditNotesFragment, "editnotes");
 
     }
 

@@ -2,105 +2,87 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
-    <TextView
-        android:id="@+id/tv_experiment_view_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="@string/text_viewing_experiment"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/tv_experiment_view_name"
+        android:id="@+id/textview_experiment_view_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="12dp"
+        android:gravity="left"
+        android:text="@string/text_experiment_properties"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textview_experiment_view_name_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/tv_experiment_view_title"
+        android:layout_below="@id/textview_experiment_view_title"
         android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:layout_marginTop="12dp"
         android:text="@string/text_name"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <EditText
-        android:id="@+id/et_experiment_view_name"
+    <TextView
+        android:id="@+id/textview_experiment_view_name_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/tv_experiment_view_name"
-        android:layout_alignBottom="@+id/tv_experiment_view_name"
+        android:layout_alignBaseline="@id/textview_experiment_view_name_label"
+        android:layout_alignBottom="@id/textview_experiment_view_name_label"
         android:layout_alignParentRight="true"
-        android:layout_toRightOf="@+id/tv_experiment_view_name"
-        android:ems="10"
-        android:enabled="false"
-        android:inputType="text|textAutoCorrect|textAutoComplete"/>
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_toRightOf="@+id/textview_experiment_view_name_label"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:scrollHorizontally="false"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="visible" />
 
-    <RelativeLayout
-        android:id="@+id/layout_experiment_view_tags"
+    <View
+        android:id="@+id/view_experiment_view_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/textview_experiment_view_name_value"
+        android:layout_alignLeft="@id/textview_experiment_view_title"
+        android:layout_alignRight="@id/textview_experiment_view_name_value"
+        android:background="@android:color/darker_gray" />
+
+    <ListView
+        android:id="@+id/listview_experiment_view_operations"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tv_experiment_view_name"
-        android:layout_below="@+id/et_experiment_view_name">
-    </RelativeLayout>
+        android:layout_below="@id/view_experiment_view_divider"
+        android:layout_marginTop="12dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0sp" >
+    </ListView>
     
-    <RelativeLayout 
-        android:id="@+id/layout_experiment_view_notes"
-    	android:layout_width="match_parent"
-    	android:layout_height="wrap_content" 
-    	android:layout_alignLeft="@+id/layout_experiment_view_tags"
-        android:layout_below="@+id/layout_experiment_view_tags">
-    </RelativeLayout>    
-    
-    <RelativeLayout 
-        android:id="@+id/layout_experiment_view_sensors"
-    	android:layout_width="match_parent"
-    	android:layout_height="wrap_content" 
-    	android:layout_alignLeft="@+id/layout_experiment_view_notes"
-        android:layout_below="@+id/layout_experiment_view_notes">
-        
-	    <TextView
-	        android:id="@+id/tv_experiment_view_sensors"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="36dp"
-	        android:text="@string/text_sensors"
-	        android:textAppearance="?android:attr/textAppearanceSmall" />
 
-	    <ImageView
-	        android:id="@+id/imv_sensors_plusminus"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentTop="true"
-	        android:layout_marginLeft="12dp"
-	        android:layout_marginTop="19dp"
-	        android:layout_toRightOf="@+id/tv_experiment_view_sensors"
-	        android:contentDescription="@string/text_expand"
-	        android:paddingBottom="0dp"
-	        android:paddingLeft="0dp"
-	        android:paddingRight="0dp"
-	        android:paddingTop="0dp"
-	        android:src="@drawable/amplifying_glass"
-	        android:textAlignment="center" />
 
-    </RelativeLayout>
-    
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/layout_experiment_view_sensor_list"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/layout_experiment_view_buttons"
-        android:layout_below="@+id/layout_experiment_view_sensors" >
-        
-    </RelativeLayout>
+        android:layout_alignLeft="@id/textview_experiment_view_name_label"
+        android:layout_below="@id/listview_experiment_view_operations"
+        android:layout_marginRight="24dp"
+        android:orientation="vertical" />
 
+       
+    
     <RelativeLayout
         android:id="@+id/layout_experiment_view_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:gravity="center_horizontal"
-        android:layout_marginBottom="0dp" >
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="0dp"
+        android:gravity="center_horizontal" >
 
         <Button
             android:id="@+id/button_experiment_view_clone"
@@ -122,6 +104,5 @@
             android:layout_toRightOf="@+id/button_experiment_view_clone"
             android:text="@string/text_back" />
     </RelativeLayout>
-    
 
 </RelativeLayout>

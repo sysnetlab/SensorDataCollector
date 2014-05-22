@@ -13,9 +13,11 @@ import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class UserInterfaceUtil {
 
@@ -115,5 +117,11 @@ public class UserInterfaceUtil {
         } else {
             view.setBackgroundDrawable(background);
         }        
+    }
+    
+    public static void setEllipsizeforTextView(TextView textView, TextUtils.TruncateAt truncateAt) {
+        textView.setEllipsize(truncateAt);
+        textView.setSingleLine();
+        textView.setHorizontallyScrolling(false);
     }
 }
