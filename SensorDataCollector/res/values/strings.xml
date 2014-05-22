@@ -80,6 +80,7 @@
     <string name="text_note_x_of_y_taken_at_time_z">Note %1$d of %2$d taken at %3$s</string>
     <string name="text_for_experiment_name_x">For experiment %1$s</string>
     <string name="text_no_notes">No notes</string>
+    <string name="text_sensor_and_sensor_data">Sensor and Sensor Data</string>
         
     
 

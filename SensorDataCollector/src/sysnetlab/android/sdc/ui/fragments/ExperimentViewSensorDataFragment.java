@@ -96,33 +96,29 @@ public class ExperimentViewSensorDataFragment extends Fragment {
 
         Experiment experiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();
 
-        ((TextView) mView
-                .findViewById(R.id.textview_fragment_experiment_view_sensor_data_experiment_name))
-                .setText(experiment.getName());
+        String strHeadingSubTextFormatter = getResources().getString(
+                R.string.text_for_experiment_name_x);
+        String strHeadingSubText = String.format(strHeadingSubTextFormatter, experiment.getName());
+        ((TextView) mView.findViewById(R.id.textview_experiment_sensor_viewing_subtext))
+                .setText(strHeadingSubText);
 
         ((TextView) mView
-                .findViewById(R.id.textview_fragment_experiment_view_sensor_data_experiment_time_created))
+                .findViewById(R.id.textview_fragment_experiment_view_sensors_experiment_time_created))
                 .setText(experiment.getDateTimeCreated());
 
         ((TextView) mView
-                .findViewById(R.id.textview_fragment_experiment_view_sensor_data_experiment_time_done))
+                .findViewById(R.id.textview_fragment_experiment_view_sensors_experiment_time_done))
                 .setText(experiment.getDateTimeDone());
 
-        if (experiment.getSensors().size() > 0) {
-            updateSensorDataView(experiment.getSensors(), mSensorNo);
-        } else {
-            /*
-            ListView listView = (ListView) mView
-                    .findViewById(R.id.listview_fragment_experiment_view_sensor_data_sensor_properties);
-                    */
-            
+        updateSensorDataView(experiment.getSensors(), mSensorNo);
 
-            ((TextView) mView
-                    .findViewById(R.id.textview_fragment_experiment_view_sensor_data_text))
-                    .setText(getResources().getString(
-                            R.string.text_sensor_has_not_recorded_any_data));
-        }
         return mView;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mSensorNo = 0;
     }
 
     @Override
@@ -138,22 +134,29 @@ public class ExperimentViewSensorDataFragment extends Fragment {
     }
 
     private void updateSensorDataView(ArrayList<AbstractSensor> lstSensors, int sensorNo) {
+        if (lstSensors == null || lstSensors.isEmpty()) {
+            ((TextView) mView.findViewById(R.id.textview_fragment_experiment_view_notes_note_text))
+                    .setText(mView.getResources()
+                            .getString(R.string.text_experiment_has_no_sensors));
+            return;
+        }
+
         AbstractSensor sensor = lstSensors.get(sensorNo);
         ListView listView = (ListView) mView
                 .findViewById(R.id.listview_fragment_experiment_view_sensor_data_sensor_properties);
-        
+
         UserInterfaceUtil.fillSensorProperties(getActivity(), listView, sensor, true);
 
         String sensorData = getSensorData(sensor, MAXIMUM_LINES_OF_DATA_TO_READ);
 
         if (sensorData.trim().equals("")) {
             ((TextView) mView
-                    .findViewById(R.id.textview_fragment_experiment_view_sensor_data_text))
+                    .findViewById(R.id.textview_fragment_experiment_view_notes_note_text))
                     .setText(getResources().getString(
                             R.string.text_sensor_has_not_recorded_any_data));
         } else {
             TextView textView = (TextView) mView
-                    .findViewById(R.id.textview_fragment_experiment_view_sensor_data_text);
+                    .findViewById(R.id.textview_fragment_experiment_view_notes_note_text);
             textView.setText(sensorData);
             textView.setMovementMethod(new ScrollingMovementMethod());
         }
@@ -175,7 +178,7 @@ public class ExperimentViewSensorDataFragment extends Fragment {
                 break;
             data = data + line + "\n";
         }
-        
+
         channel.reset();
 
         return data;
