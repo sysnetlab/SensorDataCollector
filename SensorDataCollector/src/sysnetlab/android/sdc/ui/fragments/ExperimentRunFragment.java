@@ -59,37 +59,16 @@ public class ExperimentRunFragment extends Fragment{
             throw new ClassCastException(activity.toString()
                     + " must implement ExperimentRunFragment.OnFragmentClickedListener");
         }
-
         try {
             mHandler = (ExperimentHandler) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement ExperimentRunFragment.ExperimentHandler");
         }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
+        
         if (mCallback == null) {
             Log.e("SensorDataCollector", "ExperimentRunFragment.mCallback should not be null");
         }
-
-        if (this.mView == null) {
-            Log.e("SensorDataCollector", "ExperimentRunFragment.mView should not be null");
-        }
-        mHandler.stopExperiment_ExperimentRunFragment(mView);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (mCallback == null) {
-            Log.e("SensorDataCollector", "ExperimentRunFragment.mCallback should not be null");
-        }
-
         if (this.mView == null) {
             Log.e("SensorDataCollector", "ExperimentRunFragment.mView should not be null");
         }
@@ -124,12 +103,42 @@ public class ExperimentRunFragment extends Fragment{
         setHasOptionsMenu(true);
         
         return mView;
-    }    
+    }
+    
+    @Override
+    public void onPause() {
+    	
+    	super.onPause();
+        if (mCallback == null) {
+            Log.e("SensorDataCollector", "ExperimentRunFragment.mCallback should not be null");
+        }
+
+        if (this.mView == null) {
+            Log.e("SensorDataCollector", "ExperimentRunFragment.mView should not be null");
+        }
+        mHandler.stopExperiment_ExperimentRunFragment(mView);
+        
+    }
+    
+    @Override
+    public void onStop() {
+    	super.onStop();
+    }
+    
+    @Override
+    public void onDestroyView() {
+    	super.onDestroyView();
+    }
+    
+    @Override
+    public void onDestroy() {
+    	super.onDestroy();
+    }
     
     @Override
     public void onDetach() {
-        super.onDetach();
-
+    	super.onDetach();
+    	
         /*
          * it appears that there is a bug in the support library that dealing
          * with nested fragments as discussed in
