@@ -1,16 +1,15 @@
 
 package sysnetlab.android.sdc.datacollector;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.io.FileNotFoundException;
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import sysnetlab.android.sdc.datastore.AbstractStore;
-import sysnetlab.android.sdc.datastore.SimpleFileStore;
-import sysnetlab.android.sdc.datastore.SimpleFileStoreSingleton;
-import sysnetlab.android.sdc.datastore.StoreClassUtil;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
+import sysnetlab.android.sdc.datastore.SimpleFileStore;
+import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.SensorUtilSingleton;
 import android.os.Parcel;
@@ -27,9 +26,9 @@ public class Experiment implements Parcelable {
     private ArrayList<TaggingAction> mTaggingActions;
 
     private ArrayList<AbstractSensor> mSensors;
-    private AbstractStore mStore;
+    //private AbstractStore mStore;
 
-    public Experiment(String n, String dt, AbstractStore store) {
+    public Experiment(String n, String dt) {
         mDeviceInfo = new DeviceInformation();
         mName = n;
         mDateTimeCreated = dt;
@@ -38,24 +37,15 @@ public class Experiment implements Parcelable {
         mNotes = new ArrayList<Note>();
         mSensors = new ArrayList<AbstractSensor>();
         mTaggingActions = new ArrayList<TaggingAction>();
-        mStore = store;
     }
 
-    public Experiment(AbstractStore store) {
+    public Experiment() {
         this("Unnamed Experiment", DateFormat.getDateTimeInstance().format(
-                Calendar.getInstance().getTime()), store);
+                Calendar.getInstance().getTime()));
     }
 
     public Experiment clone() {
-        Experiment experiment;
-        if (mStore instanceof SimpleFileStore) {
-            experiment = new Experiment(SimpleFileStoreSingleton.getInstance());
-        } else {
-            experiment = new Experiment(SimpleFileStoreSingleton.getInstance());
-            Log.i("SensorDataCollector", "Experiment class needs support on data stype "
-                    + mStore.getClass().getName());
-        }
-        
+        Experiment experiment = new Experiment();
         experiment.setDeviceInformation(new DeviceInformation(mDeviceInfo));
         experiment.setName(new String(mName));
         experiment.setTags(new ArrayList<Tag>(mTags));
@@ -131,14 +121,6 @@ public class Experiment implements Parcelable {
     public void setDateTimeDone(String dateTimeDone) {
         mDateTimeDone = dateTimeDone;
     }
-
-    public AbstractStore getStore() {
-        return mStore;
-    }
-
-    public void setStore(AbstractStore store) {
-        mStore = store;
-    }
     
     public ArrayList<TaggingAction> getTaggingActions() {
         return mTaggingActions;
@@ -182,8 +164,6 @@ public class Experiment implements Parcelable {
 
         outParcel.writeParcelable(mDeviceInfo, flags);
 
-        outParcel.writeString(mStore.getClass().getName());
-
         outParcel.writeInt(mSensors.size());
         for (AbstractSensor sensor : mSensors) {
             outParcel.writeString(sensor.getName());
@@ -207,10 +187,7 @@ public class Experiment implements Parcelable {
 
         mDeviceInfo = inParcel.readParcelable(DeviceInformation.class.getClassLoader());
 
-        String storeClassName = inParcel.readString();
-        AbstractStore store = StoreClassUtil.getStoreInstanceFromClassName(storeClassName);
-        mStore = store;
-
+        AbstractStore store = StoreSingleton.getInstance();
         mSensors = new ArrayList<AbstractSensor>();
         int numSensors = inParcel.readInt();
         for (int i = 0; i < numSensors; i++) {

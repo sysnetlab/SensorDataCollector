@@ -120,8 +120,24 @@ public class UserInterfaceUtil {
     }
     
     public static void setEllipsizeforTextView(TextView textView, TextUtils.TruncateAt truncateAt) {
+        // truncateAt can be any of the 4 values
+        /*
+         * TextUtils.TruncateAt.END      
+         * TextUtils.TruncateAt.MARQUEE      
+         * TextUtils.TruncateAt.MIDDLE       
+         * TextUtils.TruncateAt.START 
+         */
         textView.setEllipsize(truncateAt);
         textView.setSingleLine();
         textView.setHorizontallyScrolling(false);
+    }
+    
+    public static String filterOutNewLines(String text) {
+        String[] lines = text.split(System.getProperty("line.separator"));
+        String strLongLine = "";
+        for (String s : lines) {
+            strLongLine += s + " ";
+        }
+        return strLongLine;
     }
 }

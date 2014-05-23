@@ -144,8 +144,12 @@ public class OperationAdapter extends BaseAdapter {
 	
 	private void listTagsInView(View view) {
         if (mExperiment == null || mExperiment.getTags() == null || mExperiment.getTags().isEmpty()) {
-            ((TextView) view.findViewById(R.id.tv_subtext)).setText(view.getResources().getString(
+            TextView textview = (TextView) view.findViewById(R.id.tv_subtext);
+            textview.setText(view.getResources().getString(
                     R.string.text_no_tagging_action_performed));
+            textview.setVisibility(View.VISIBLE);
+            LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout_subtext);
+            layout.setVisibility(View.GONE);
             return;
         }
         
@@ -173,8 +177,11 @@ public class OperationAdapter extends BaseAdapter {
     private void listNotesInView(View view) {
         if (mExperiment == null || mExperiment.getNotes() == null
                 || mExperiment.getNotes().isEmpty()) {
-            ((TextView) view.findViewById(R.id.tv_subtext)).setText(view.getResources().getString(
-                    R.string.text_no_notes_were_taken));
+            TextView textview = (TextView) view.findViewById(R.id.tv_subtext);
+            textview.setText(view.getResources().getString(R.string.text_no_notes_were_taken));
+            textview.setVisibility(View.VISIBLE);
+            LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout_subtext);
+            layout.setVisibility(View.GONE);
             return;
         }
         
@@ -203,15 +210,15 @@ public class OperationAdapter extends BaseAdapter {
     }
     
     private void listSensorsSummaryInView(View view) {
+        TextView textview = (TextView) view.findViewById(R.id.tv_subtext);
         if (mExperiment == null || mExperiment.getSensors() == null
                 || mExperiment.getSensors().isEmpty()) {
-            ((TextView) view.findViewById(R.id.tv_subtext)).setText(view.getResources().getString(
-                    R.string.text_no_sensors_were_selected));    
-            return;
+            textview.setText(view.getResources().getString(R.string.text_no_sensors_were_selected));
+        } else {
+            textview.setText(view.getResources().getString(R.string.text_tap_to_see_more_sensors));
         }
-        ((TextView) view.findViewById(R.id.tv_subtext)).setText(view.getResources().getString(
-                R.string.text_tap_to_see_more_sensors));  
-        ((TextView) view.findViewById(R.id.tv_subtext)).setVisibility(View.VISIBLE);
+        textview.setVisibility(View.VISIBLE);
+        return;
     }
 	
 }

@@ -63,27 +63,25 @@
         android:layout_marginBottom="12dp"
         android:layout_marginTop="12dp"
         android:orientation="horizontal"
-        android:weightSum="2" >
+        android:weightSum="1" >
 
         <Button
             android:id="@+id/button_experiment_run"
-            android:layout_width="match_parent"
+            android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
-            android:layout_marginRight="6dp"
-            android:minHeight="30dp"
+            android:layout_marginRight="12dp"
             android:layout_weight="1"
             android:text="@string/text_run" />
 
-        <Button            
+<!--         <Button            
             android:id="@+id/button_experiment_back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="6dp"
             android:layout_marginRight="12dp"
-            android:minHeight="30dp"
             android:layout_weight="1"
-            android:text="@string/text_back" />
+            android:text="@string/text_back" /> -->
     </LinearLayout>
 
 </RelativeLayout>

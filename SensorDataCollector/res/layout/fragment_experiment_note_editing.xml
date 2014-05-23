@@ -51,7 +51,6 @@
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
         android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
         android:gravity="top|left"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:background="@drawable/layerlist_background_border_lines"
@@ -68,29 +67,20 @@
         android:layout_marginBottom="12dp"
         android:layout_marginTop="12dp"
         android:orientation="horizontal"
-        android:weightSum="2" >
+        android:weightSum="1" >
 
         <!-- save the note and then return -->
 
         <Button
-            android:id="@+id/button_experiment_note_editing_confirm"
-            android:layout_width="match_parent"
+            android:id="@+id/button_experiment_note_editing_add_note"
+            android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
-            android:layout_marginRight="6dp"
-            android:layout_weight="1"
-            android:text="@string/text_confirm" />
-
-        <!-- return -->
-
-        <Button
-            android:id="@+id/button_experiment_note_editing_cancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="6dp"
             android:layout_marginRight="12dp"
             android:layout_weight="1"
-            android:text="@string/text_cancel" />
+            android:text="@string/text_add_note" />
+
+        <!-- return -->
     </LinearLayout>
 
 </RelativeLayout>

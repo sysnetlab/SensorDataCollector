@@ -10,7 +10,6 @@ import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.ui.GestureEventListener;
 import sysnetlab.android.sdc.ui.UserInterfaceUtil;
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
@@ -18,21 +17,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class ExperimentViewSensorDataFragment extends Fragment {
 
     private View mView;
-    private OnFragmentClickListener mCallback;
     private int mSensorNo;
 
     private int MAXIMUM_LINES_OF_DATA_TO_READ = 100;
-
-    public interface OnFragmentClickListener {
-        public void onBtnBackClicked_ExperimentViewSensorDataFragment();
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -78,14 +71,6 @@ public class ExperimentViewSensorDataFragment extends Fragment {
 
         });
 
-        ((Button) mView.findViewById(R.id.button_fragment_experiment_view_sensor_data_back))
-                .setOnClickListener(new Button.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        mCallback.onBtnBackClicked_ExperimentViewSensorDataFragment();
-                    }
-                });
     }
 
     @Override
@@ -96,64 +81,55 @@ public class ExperimentViewSensorDataFragment extends Fragment {
 
         Experiment experiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();
 
-        ((TextView) mView
-                .findViewById(R.id.textview_fragment_experiment_view_sensor_data_experiment_name))
-                .setText(experiment.getName());
+        String strHeadingSubTextFormatter = getResources().getString(
+                R.string.text_for_experiment_name_x);
+        String strHeadingSubText = String.format(strHeadingSubTextFormatter, experiment.getName());
+        ((TextView) mView.findViewById(R.id.textview_experiment_sensor_viewing_subtext))
+                .setText(strHeadingSubText);
 
         ((TextView) mView
-                .findViewById(R.id.textview_fragment_experiment_view_sensor_data_experiment_time_created))
+                .findViewById(R.id.textview_fragment_experiment_view_sensors_experiment_time_created))
                 .setText(experiment.getDateTimeCreated());
 
         ((TextView) mView
-                .findViewById(R.id.textview_fragment_experiment_view_sensor_data_experiment_time_done))
+                .findViewById(R.id.textview_fragment_experiment_view_sensors_experiment_time_done))
                 .setText(experiment.getDateTimeDone());
 
-        if (experiment.getSensors().size() > 0) {
-            updateSensorDataView(experiment.getSensors(), mSensorNo);
-        } else {
-            /*
-            ListView listView = (ListView) mView
-                    .findViewById(R.id.listview_fragment_experiment_view_sensor_data_sensor_properties);
-                    */
-            
+        updateSensorDataView(experiment.getSensors(), mSensorNo);
 
-            ((TextView) mView
-                    .findViewById(R.id.textview_fragment_experiment_view_sensor_data_text))
-                    .setText(getResources().getString(
-                            R.string.text_sensor_has_not_recorded_any_data));
-        }
         return mView;
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        try {
-            mCallback = (OnFragmentClickListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentClickListener");
-        }
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mSensorNo = 0;
     }
 
     private void updateSensorDataView(ArrayList<AbstractSensor> lstSensors, int sensorNo) {
+        if (lstSensors == null || lstSensors.isEmpty()) {
+            ((TextView) mView.findViewById(R.id.textview_fragment_experiment_view_notes_note_text))
+                    .setText(mView.getResources()
+                            .getString(R.string.text_experiment_has_no_sensors));
+            return;
+        }
+
         AbstractSensor sensor = lstSensors.get(sensorNo);
         ListView listView = (ListView) mView
                 .findViewById(R.id.listview_fragment_experiment_view_sensor_data_sensor_properties);
-        
+
         UserInterfaceUtil.fillSensorProperties(getActivity(), listView, sensor, true);
 
         String sensorData = getSensorData(sensor, MAXIMUM_LINES_OF_DATA_TO_READ);
 
         if (sensorData.trim().equals("")) {
             ((TextView) mView
-                    .findViewById(R.id.textview_fragment_experiment_view_sensor_data_text))
+                    .findViewById(R.id.textview_fragment_experiment_view_notes_note_text))
                     .setText(getResources().getString(
                             R.string.text_sensor_has_not_recorded_any_data));
         } else {
             TextView textView = (TextView) mView
-                    .findViewById(R.id.textview_fragment_experiment_view_sensor_data_text);
+                    .findViewById(R.id.textview_fragment_experiment_view_notes_note_text);
             textView.setText(sensorData);
             textView.setMovementMethod(new ScrollingMovementMethod());
         }
@@ -175,7 +151,7 @@ public class ExperimentViewSensorDataFragment extends Fragment {
                 break;
             data = data + line + "\n";
         }
-        
+
         channel.reset();
 
         return data;

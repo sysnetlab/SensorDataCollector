@@ -24,7 +24,7 @@ public class ExperimentManager {
     public List<Experiment> getExperiments() {
         List<Experiment> allExperiments = new ArrayList<Experiment>();
         for (AbstractStore store : mStores) {
-            List<Experiment> experiments = store.listExperiments();
+            List<Experiment> experiments = store.listStoredExperiments();
             allExperiments.addAll(experiments);
         }
         return allExperiments;

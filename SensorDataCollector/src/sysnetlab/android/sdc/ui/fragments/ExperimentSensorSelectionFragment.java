@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -32,8 +33,6 @@ public class ExperimentSensorSelectionFragment extends Fragment {
     private OnFragmentClickListener mCallback;
 
     public interface OnFragmentClickListener {
-        public void onBtnConfirmClicked_ExperimentSensorSelectionFragment();
-
         public void onBtnClearClicked_ExperimentSensorSelectionFragment();
 
         public void onSensorClicked_ExperimentSensorSelectionFragment(AndroidSensor sensor);
@@ -70,7 +69,7 @@ public class ExperimentSensorSelectionFragment extends Fragment {
         }
 
         if (mHavingFooter) {
-            RelativeLayout layout = (RelativeLayout) mView
+            LinearLayout layout = (LinearLayout) mView
                     .findViewById(R.id.layout_sensor_selection_footer);
             layout.setVisibility(View.VISIBLE);
         }
@@ -131,14 +130,6 @@ public class ExperimentSensorSelectionFragment extends Fragment {
                 e.printStackTrace();
                 throw new RuntimeException("Failed to cast Activity to OnFragmentClickListener");
             }
-
-            ((Button) mView.findViewById(R.id.button_sensor_selection_confirm))
-                    .setOnClickListener(new Button.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mCallback.onBtnConfirmClicked_ExperimentSensorSelectionFragment();
-                        }
-                    });
 
             ((Button) mView.findViewById(R.id.button_sensor_selection_clear))
                     .setOnClickListener(new Button.OnClickListener() {

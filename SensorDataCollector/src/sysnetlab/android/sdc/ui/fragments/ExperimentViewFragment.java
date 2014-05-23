@@ -21,8 +21,6 @@ public class ExperimentViewFragment extends Fragment {
     private OnFragmentClickListener mCallback;
 
     public interface OnFragmentClickListener {
-        public void onBtnBackClicked_ExperimentViewFragment();
-
         public void onBtnCloneClicked_ExperimentViewFragment();
 
         public void onTagsClicked_ExperimentViewFragment();
@@ -87,15 +85,6 @@ public class ExperimentViewFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         mCallback.onBtnCloneClicked_ExperimentViewFragment();
-                    }
-                });
-
-        ((Button) getActivity().findViewById(R.id.button_experiment_view_back))
-                .setOnClickListener(new Button.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        mCallback.onBtnBackClicked_ExperimentViewFragment();
                     }
                 });
     }
