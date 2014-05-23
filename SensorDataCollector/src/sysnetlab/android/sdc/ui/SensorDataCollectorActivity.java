@@ -4,7 +4,7 @@ package sysnetlab.android.sdc.ui;
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
-import sysnetlab.android.sdc.datastore.SimpleFileStoreSingleton;
+import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.SensorUtilSingleton;
 import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
 import android.content.Intent;
@@ -29,7 +29,7 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
         setContentView(R.layout.fragment_container);
 
         ExperimentManagerSingleton.getInstance().addExperimentStore(
-                SimpleFileStoreSingleton.getInstance());
+                StoreSingleton.getInstance());
 
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {

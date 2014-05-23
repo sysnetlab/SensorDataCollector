@@ -9,17 +9,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import sysnetlab.android.sdc.R;
-import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
 import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datacollector.ExperimentTime;
 import sysnetlab.android.sdc.datacollector.Note;
 import sysnetlab.android.sdc.datacollector.StateTag;
-import sysnetlab.android.sdc.datacollector.TaggingState;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
-import sysnetlab.android.sdc.datastore.SimpleFileStoreSingleton;
-import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
+import sysnetlab.android.sdc.datacollector.TaggingState;
+import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
@@ -34,7 +32,6 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.hardware.Sensor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -96,7 +93,7 @@ public class CreateExperimentActivity extends FragmentActivity
              * create an experiment using SimpleFileStore. It can be set using
              * UI in the future when different types of Store are corrected.
              */
-            mExperiment = new Experiment(SimpleFileStoreSingleton.getInstance());
+            mExperiment = new Experiment();
         }
 
         if (findViewById(R.id.fragment_container) != null) {
@@ -256,9 +253,9 @@ public class CreateExperimentActivity extends FragmentActivity
         mExperiment.setDateTimeDone(DateFormat.getDateTimeInstance().format(
                 Calendar.getInstance().getTime()));
 
-        mExperiment.getStore().writeExperimentMetaData(mExperiment);
+        StoreSingleton.getInstance().writeExperimentMetaData(mExperiment);
 
-        mExperiment.getStore().closeAllChannels();
+        StoreSingleton.getInstance().closeAllChannels();
 
         // TODO: retrieve the number of sensors checked from the service (getter?)
         CharSequence text = "Stopped data collection for " + mExperiment.getSensors().size() + " Sensors";

@@ -67,7 +67,7 @@ public class SimpleFileStore extends AbstractStore {
     }
 
     @Override
-    public void addExperiment() throws RuntimeException {
+    public void setupExperiment() throws RuntimeException {
         DecimalFormat f = new DecimalFormat("00000");
         mNewExperimentPath = mParentPath + "/" + DIR_PREFIX
                 + f.format(mNextExperimentNumber);
@@ -127,8 +127,6 @@ public class SimpleFileStore extends AbstractStore {
             out.println(experiment.getDeviceInformation().getManufacturer());
             out.println(experiment.getDeviceInformation().getModel());
 
-            out.println(experiment.getStore().getClass().getName());
-
             out.println(experiment.getSensors().size());
             for (AbstractSensor sensor : experiment.getSensors()) {
                 out.println(sensor.getName());
@@ -173,7 +171,7 @@ public class SimpleFileStore extends AbstractStore {
                 dateTimeCreated = in.readLine();
 
                 dateTimeDone = in.readLine();
-                experiment = new Experiment(name, dateTimeCreated, this);
+                experiment = new Experiment(name, dateTimeCreated);
                 experiment.setDateTimeDone(dateTimeDone);
 
                 int n;
@@ -214,10 +212,6 @@ public class SimpleFileStore extends AbstractStore {
 
                 experiment.setDeviceInformation(deviceInfo);
 
-                String storeClassName = in.readLine();
-                AbstractStore store = StoreClassUtil.getStoreInstanceFromClassName(storeClassName);
-                experiment.setStore(store);
-
                 ArrayList<AbstractSensor> lstSensors = new ArrayList<AbstractSensor>();
                 int numSensors = Integer.parseInt(in.readLine());
                 for (int i = 0; i < numSensors; i++) {
@@ -252,14 +246,14 @@ public class SimpleFileStore extends AbstractStore {
                         "SimpleFileStore::loadExperiment(): no configuraiton file is found for "
                                 + name + ", " + dateTimeCreated);
 
-                return new Experiment(name, dateTimeCreated, this);
+                return new Experiment(name, dateTimeCreated);
             }
         } catch (NumberFormatException e) {
             if (name != null && dateTimeCreated != null) {
                 Log.w("SensorDataCollector",
                         "SimpleFileStore::loadExperiment(): Found an old configuration file for "
                                 + name + ", " + dateTimeCreated);
-                return new Experiment(name, dateTimeCreated, this);
+                return new Experiment(name, dateTimeCreated);
             }
 
             Log.e("SensorDataCollector", "SimpleFileStore::loadExperiment(): " +
@@ -274,7 +268,7 @@ public class SimpleFileStore extends AbstractStore {
                 Log.w("SensorDataCollector",
                         "SimpleFileStore::loadExperiment(): Found an old configuration file for "
                                 + name + ", " + dateTimeCreated);
-                return new Experiment(name, dateTimeCreated, this);
+                return new Experiment(name, dateTimeCreated);
             }
 
             Log.e("SensorDataCollector", "SimpleFileStore::loadExperiment(): " +
@@ -376,7 +370,7 @@ public class SimpleFileStore extends AbstractStore {
     }
 
     @Override
-    public Channel getChannel(String tag) {
+    public Channel createChannel(String tag) {
 
         String path;
 
@@ -403,11 +397,6 @@ public class SimpleFileStore extends AbstractStore {
 
             return null;
         }
-    }
-
-    @Override
-    public Channel getChannel() {
-        return getChannel(null);
     }
 
     @Override

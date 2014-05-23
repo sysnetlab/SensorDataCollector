@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.Note;
 import sysnetlab.android.sdc.datacollector.Tag;
-import sysnetlab.android.sdc.datastore.SimpleFileStoreSingleton;
+import sysnetlab.android.sdc.datastore.StoreSingleton;
 import android.test.AndroidTestCase;
 
 public class ExperimentTests extends AndroidTestCase{
@@ -18,7 +18,7 @@ public class ExperimentTests extends AndroidTestCase{
 	}
 	
 	protected void setUp() {
-		mExperiment = new Experiment(SimpleFileStoreSingleton.getInstance());
+		mExperiment = new Experiment();
 	}
 	
 	public void testDefaultConstructor(){

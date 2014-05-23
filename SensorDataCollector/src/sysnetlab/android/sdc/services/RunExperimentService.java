@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
 import sysnetlab.android.sdc.datacollector.Experiment;
+import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
@@ -28,7 +29,7 @@ public class RunExperimentService extends IntentService{
 		
 		Experiment experiment=intent.getParcelableExtra("experiment");
 		
-		experiment.getStore().addExperiment();
+		StoreSingleton.getInstance().setupExperiment();
 
         Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
         ArrayList<AbstractSensor> lstSensors = new ArrayList<AbstractSensor>();
@@ -36,7 +37,7 @@ public class RunExperimentService extends IntentService{
         while (iter.hasNext()) {
             AndroidSensor sensor = (AndroidSensor) iter.next();
             if (sensor.isSelected()) {
-                Channel channel = experiment.getStore().getChannel(sensor.getName());
+                Channel channel = StoreSingleton.getInstance().createChannel(sensor.getName());
                 AndroidSensorEventListener listener =
                         new AndroidSensorEventListener(channel);
                 sensor.setListener(listener);

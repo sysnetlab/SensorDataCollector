@@ -7,6 +7,7 @@ import java.util.List;
 import sysnetlab.android.sdc.datacollector.Experiment;
 
 public abstract class AbstractStore {
+	
     protected List<Channel> mChannels;
 
     public abstract class Channel {
@@ -30,15 +31,13 @@ public abstract class AbstractStore {
         public abstract String describe();
     };
 
-    public abstract void addExperiment();
+    public abstract void setupExperiment();
 
     public abstract boolean writeExperimentMetaData(Experiment experiment);
 
     public abstract List<Experiment> listExperiments();
 
-    public abstract Channel getChannel();
-
-    public abstract Channel getChannel(String tag);
+    public abstract Channel createChannel(String tag);
 
     public abstract void closeAllChannels() throws IOException;
 }
