@@ -22,8 +22,8 @@ public class DataStoreTests extends AndroidTestCase {
     	boolean foundCreatedExperiment = false;
     	for (Experiment storedExp : storedExps)
     	{
-    		if(storedExp.getName() == "testExperiment" && 
-    		   storedExp.getDateTimeCreated() == "01/01/2011")
+    		if(storedExp.getName().equals("testExperiment") && 
+    		   storedExp.getDateTimeCreated().equals("01/01/2011"))
     		{
     			foundCreatedExperiment = true;
     		}
