@@ -15,7 +15,7 @@ public class DataStoreTests extends AndroidTestCase {
     public void testAbstractStoreBehavior() {
     	AbstractStore store = StoreSingleton.getInstance();
     	Experiment exp = new Experiment("testExperiment","01/01/2011");
-    	store.setupExperimentStorage(exp);
+    	store.setupNewExperimentStorage(exp);
     	store.writeExperimentMetaData(exp);
     	List<Experiment> storedExps = store.listStoredExperiments();
     	
@@ -34,16 +34,19 @@ public class DataStoreTests extends AndroidTestCase {
     public void testAbstractChannelBehavior()
     {
     	AbstractStore store = StoreSingleton.getInstance();
+    	store.setupNewExperimentStorage(null);
     	Channel channel = store.createChannel("testTag");
     	assertNotNull("Created null channel", channel);
-	
-    	
+    	channel.open();
+    	channel.write("aaa");
+    	channel.close();
+    	store.closeAllChannels();    	
     }
     
     public void testSimpleFileStore()
     {
     	SimpleFileStore store = new SimpleFileStore();
-    	store.setupExperimentStorage(null);
+    	store.setupNewExperimentStorage(null);
     	assertNotNull(store.getNewExperimentPath());	
     }
 }

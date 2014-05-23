@@ -67,7 +67,7 @@ public class SimpleFileStore extends AbstractStore {
     }
 
     @Override
-    public void setupExperimentStorage(Experiment experiment) throws RuntimeException {
+    public void setupNewExperimentStorage(Experiment experiment) throws RuntimeException {
         DecimalFormat f = new DecimalFormat("00000");
         mNewExperimentPath = mParentPath + "/" + DIR_PREFIX
                 + f.format(mNextExperimentNumber);
@@ -398,7 +398,7 @@ public class SimpleFileStore extends AbstractStore {
     }
 
     @Override
-    public void closeAllChannels() throws IOException {
+    public void closeAllChannels() {
         for (Channel channel : mChannels)
             channel.close();
         // create new channel list and garbage-collect the old channel list

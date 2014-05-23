@@ -240,7 +240,7 @@ public class CreateExperimentActivity extends FragmentActivity
         mExperiment.setSensors(lstSensors); 
     }
 
-    private void stopExperiment() throws IOException {
+    private void stopExperiment() {
     	
     	Intent intent=new Intent(this,RunExperimentService.class);
     	stopService(intent);
@@ -422,11 +422,7 @@ public class CreateExperimentActivity extends FragmentActivity
     @Override
     public void stopExperiment_ExperimentRunFragment(View v) {
         if (mCollectionState == DataCollectionState.DATA_COLLECTION_IN_PROGRESS) {
-            try {
-                stopExperiment();
-            } catch (IOException e) {
-                Log.e("SensorDataCollector", e.toString());
-            }
+            stopExperiment();
             mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
         } else {
         	Toast.makeText(CreateExperimentActivity.this, "Unsupported Button Action", Toast.LENGTH_LONG).show();
