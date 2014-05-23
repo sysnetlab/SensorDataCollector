@@ -147,25 +147,9 @@ public class CreateExperimentActivity extends FragmentActivity
                 break;
         }
 
-        getSupportFragmentManager().popBackStack();
+        //getSupportFragmentManager().popBackStack();
         // FragmentUtil.switchToFragment(this,
         // mExperimentSensorSelectionFragment, "sensorselection");
-    }
-
-    @Override
-    public void onBtnCancelClicked_SensorSetupFragment() {
-        Log.i("SensorDataCollector", "Button Cancel clicked.");
-        getSupportFragmentManager().popBackStack();
-        // FragmentUtil.switchToFragment(this,
-        // mExperimentSensorSelectionFragment, "sensorlist");
-    }
-
-    @Override
-    public void onButtonCancelClicked_ExperimentEditNotesFragment() {
-        Log.i("SensorDataCollector", "ExperimentEditNotesFragment: Button Cancel clicked.");
-        getSupportFragmentManager().popBackStack();
-        // FragmentUtil.switchToFragment(this, mExperimentSetupFragment,
-        // "experimentsetup");
     }
 
     @Override
@@ -176,7 +160,7 @@ public class CreateExperimentActivity extends FragmentActivity
         Log.i("SensorDataCollector", "Filtered note: [" + note + "]");         
         if (note.trim().length() > 0)
             mExperiment.getNotes().add(new Note(note));
-        getSupportFragmentManager().popBackStack();
+        // getSupportFragmentManager().popBackStack();
     }   
 
     public ExperimentSensorSelectionFragment getExperimentSensorSensorSelectionFragment()
@@ -445,7 +429,7 @@ public class CreateExperimentActivity extends FragmentActivity
     public void onBtnConfirmClicked_ExperimentSensorSelectionFragment() {
         getIntent().putExtra("havingheader", false);
         getIntent().putExtra("havingfooter", false);
-        FragmentUtil.switchToFragment(this, mExperimentSetupFragment, "sensorsetup");
+        //FragmentUtil.switchToFragment(this, mExperimentSetupFragment, "sensorsetup");
     }
 
     @Override
@@ -461,13 +445,6 @@ public class CreateExperimentActivity extends FragmentActivity
         mExperimentSensorSelectionFragment.getSensorListAdapter().notifyDataSetChanged();
     }
 
-    @Override
-    public void onBtnConfirmClicked_ExperimentEditTagsFragment() {
-        Log.i("SensorDataCollector", "Button Cancel clicked.");
-        getSupportFragmentManager().popBackStack();
-        // FragmentUtil.switchToFragment(this, mExperimentSetupFragment,
-        // "sensorsetup");
-    }
 
     @Override
     protected void onStop() {

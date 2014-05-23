@@ -26,7 +26,6 @@ public class ExperimentEditTagsFragment extends Fragment {
     private TagListAdapter mTagListAdapter;
     
     public interface OnFragmentClickListener {
-    	public void onBtnConfirmClicked_ExperimentEditTagsFragment();
     	public void onBtnAddTagClicked_ExperimentEditTagsFragment(String strTag, String strDescription);
     }
 
@@ -106,14 +105,6 @@ public class ExperimentEditTagsFragment extends Fragment {
                 mTagListAdapter.notifyDataSetChanged();
                 editTextTag.setText("");
                 editTextDescription.setText("");
-            }
-        });
-        
-        ((Button) mView.findViewById(R.id.btn_tag_edit_confirm))
-        .setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onBtnConfirmClicked_ExperimentEditTagsFragment();
             }
         });
 

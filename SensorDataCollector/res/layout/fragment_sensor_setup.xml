@@ -27,34 +27,28 @@
 
     <!-- buttons -->
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/layout_sensor_setup_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="8dp"
-        android:gravity="center_horizontal" >
+        android:orientation="horizontal"
+        android:weightSum="1" >
 
         <Button
             android:id="@+id/button_sensor_setup_confirm"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
+            android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1"
             android:text="@string/text_confirm" />
 
-        <Button
-            android:id="@+id/button_sensor_setup_cancel"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_toRightOf="@id/button_sensor_setup_confirm"
-            android:text="@string/text_cancel" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <!-- user input for sampling rate if applicable -->
 

@@ -25,8 +25,6 @@ public class ExperimentSensorSetupFragment extends Fragment {
 
     public interface OnFragmentClickListener {
         public void onBtnConfirmClicked_SensorSetupFragment(View v, AbstractSensor sensor);
-
-        public void onBtnCancelClicked_SensorSetupFragment();
     }
 
     @Override
@@ -77,13 +75,6 @@ public class ExperimentSensorSetupFragment extends Fragment {
                 .setOnClickListener(new Button.OnClickListener() {
                     public void onClick(View v) {
                         mCallback.onBtnConfirmClicked_SensorSetupFragment(v, mSensor);
-                    }
-                });
-
-        ((Button) mView.findViewById(R.id.button_sensor_setup_cancel))
-                .setOnClickListener(new Button.OnClickListener() {
-                    public void onClick(View v) {
-                        mCallback.onBtnCancelClicked_SensorSetupFragment();
                     }
                 });
     }

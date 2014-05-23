@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -70,7 +71,7 @@ public class ExperimentSensorSelectionFragment extends Fragment {
         }
 
         if (mHavingFooter) {
-            RelativeLayout layout = (RelativeLayout) mView
+            LinearLayout layout = (LinearLayout) mView
                     .findViewById(R.id.layout_sensor_selection_footer);
             layout.setVisibility(View.VISIBLE);
         }
