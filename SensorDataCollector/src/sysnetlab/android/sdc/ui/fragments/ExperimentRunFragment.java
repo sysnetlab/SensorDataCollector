@@ -5,9 +5,7 @@ import java.lang.reflect.Field;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
-import sysnetlab.android.sdc.ui.SensorDataCollectorActivity;
 import android.app.Activity;
-import android.app.Application;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -18,8 +16,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;

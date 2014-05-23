@@ -112,7 +112,7 @@ public class CreateExperimentActivity extends FragmentActivity
     }           
     
     @Override
-    public void onBtnConfirmClicked_SensorSetupFragment(View v, AbstractSensor sensor) {
+    public void onBtnSetSamplingRateClicked_SensorSetupFragment(View v, AbstractSensor sensor) {
         Log.i("SensorDataCollector", "SensorSetupFragment: Button Confirm clicked.");
 
         EditText et = (EditText) findViewById(R.id.edittext_sensor_steup_sampling_rate);
@@ -123,6 +123,14 @@ public class CreateExperimentActivity extends FragmentActivity
                 if (androidSensor.isStreamingSensor()) {
                     androidSensor.setSamplingInterval((int) (1000000. / Double.parseDouble(et
                             .getText().toString())));
+                    String strSamplingRateMsgFormatter = getResources().getString(
+                            R.string.text_sampling_rate_is_now_x);
+                    String strSamplingRateMsg = String.format(strSamplingRateMsgFormatter,
+                            1. / androidSensor.getSamplingInterval());
+                    Toast.makeText(this, strSamplingRateMsg, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, getResources().getString(R.string.text_not_applicable),
+                            Toast.LENGTH_LONG).show();
                 }
                 break;
             case AbstractSensor.AUDIO_SENSOR:
@@ -147,7 +155,7 @@ public class CreateExperimentActivity extends FragmentActivity
                 break;
         }
 
-        //getSupportFragmentManager().popBackStack();
+        // getSupportFragmentManager().popBackStack();
         // FragmentUtil.switchToFragment(this,
         // mExperimentSensorSelectionFragment, "sensorselection");
     }
@@ -215,7 +223,7 @@ public class CreateExperimentActivity extends FragmentActivity
     	
     	// TODO: retrieve the number of sensors checked from the service (getter?)
         CharSequence text = "Started data collection for "+ mExperiment.getSensors().size() + " Sensors";
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
     }
     
     private void updateSensorList() {
@@ -246,7 +254,7 @@ public class CreateExperimentActivity extends FragmentActivity
 
         // TODO: retrieve the number of sensors checked from the service (getter?)
         CharSequence text = "Stopped data collection for " + mExperiment.getSensors().size() + " Sensors";
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -407,7 +415,7 @@ public class CreateExperimentActivity extends FragmentActivity
             runExperiment();
 			mCollectionState = DataCollectionState.DATA_COLLECTION_IN_PROGRESS;
         } else {
-            Toast.makeText(this, "Unsupported Button Action", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Unsupported Button Action", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -421,7 +429,7 @@ public class CreateExperimentActivity extends FragmentActivity
             }
             mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
         } else {
-        	Toast.makeText(CreateExperimentActivity.this, "Unsupported Button Action", Toast.LENGTH_SHORT).show();
+        	Toast.makeText(CreateExperimentActivity.this, "Unsupported Button Action", Toast.LENGTH_LONG).show();
         }
     }
      

@@ -1,7 +1,6 @@
 
 package sysnetlab.android.sdc.ui;
 
-import java.io.StringReader;
 import java.util.ArrayList;
 
 import sysnetlab.android.sdc.R;

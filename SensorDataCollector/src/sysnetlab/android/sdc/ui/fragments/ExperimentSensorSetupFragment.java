@@ -24,7 +24,7 @@ public class ExperimentSensorSetupFragment extends Fragment {
     private AbstractSensor mSensor;
 
     public interface OnFragmentClickListener {
-        public void onBtnConfirmClicked_SensorSetupFragment(View v, AbstractSensor sensor);
+        public void onBtnSetSamplingRateClicked_SensorSetupFragment(View v, AbstractSensor sensor);
     }
 
     @Override
@@ -71,10 +71,10 @@ public class ExperimentSensorSetupFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((Button) mView.findViewById(R.id.button_sensor_setup_confirm))
+        ((Button) mView.findViewById(R.id.button_sensor_setup_set_sampling_rate))
                 .setOnClickListener(new Button.OnClickListener() {
                     public void onClick(View v) {
-                        mCallback.onBtnConfirmClicked_SensorSetupFragment(v, mSensor);
+                        mCallback.onBtnSetSamplingRateClicked_SensorSetupFragment(v, mSensor);
                     }
                 });
     }
@@ -91,17 +91,26 @@ public class ExperimentSensorSetupFragment extends Fragment {
                 
                 EditText etSamplingRate = (EditText) mView
                         .findViewById(R.id.edittext_sensor_steup_sampling_rate);
+                Button btnSetSamplingRate = (Button) mView.findViewById(R.id.button_sensor_setup_set_sampling_rate);
                 TextView tvSamplingRate = (TextView) mView.findViewById(R.id.textview_sensor_setup_sampling_rate);
                 
                 if (((AndroidSensor) sensor).isStreamingSensor()) {
                     etSamplingRate.setText(String.valueOf(1000000. / ((AndroidSensor) sensor)
                             .getSamplingInterval()));
+                    etSamplingRate.setEnabled(true);
+                    tvSamplingRate.setEnabled(true);
+                    etSamplingRate.setVisibility(View.VISIBLE);
+                    tvSamplingRate.setVisibility(View.VISIBLE);
+                    btnSetSamplingRate.setVisibility(View.VISIBLE);
                     Log.i("SensorDataCollector", "Streaming sensor.");
                 } else {
                     etSamplingRate.setText(getActivity().getResources().getString(
                             R.string.text_not_applicable));
                     etSamplingRate.setEnabled(false);
                     tvSamplingRate.setEnabled(false);
+                    etSamplingRate.setVisibility(View.GONE);
+                    tvSamplingRate.setVisibility(View.GONE);
+                    btnSetSamplingRate.setVisibility(View.GONE);
                     Log.i("SensorDataCollector", "Non-streaming (onchange) sensor.");
                 }
                 break;
