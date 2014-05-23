@@ -26,8 +26,6 @@ public class ExperimentSetupFragment extends Fragment {
         public void onSensorsClicked_ExperimentSetupFragment();
 
         public void onBtnRunClicked_ExperimentSetupFragment(View v);
-
-        public void onBtnBackClicked_ExperimentSetupFragment();
     }
 
     
@@ -73,14 +71,6 @@ public class ExperimentSetupFragment extends Fragment {
                     }
                 });
 
-        ((Button) mView.findViewById(R.id.button_experiment_back))
-                .setOnClickListener(new Button.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mCallback.onBtnBackClicked_ExperimentSetupFragment();
-                    }
-                });
-        
     }
 
     @Override

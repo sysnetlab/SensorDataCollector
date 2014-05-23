@@ -16,7 +16,7 @@ public class ExperimentEditNotesFragment extends Fragment {
     private OnFragmentClickListener mCallback;
 
     public interface OnFragmentClickListener {
-        public void onButtonConfirmClicked_ExperimentEditNotesFragment(String note);
+        public void onButtonAddNoteClicked_ExperimentEditNotesFragment(String note);
     }
 
     @Override
@@ -42,10 +42,10 @@ public class ExperimentEditNotesFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((Button) getActivity().findViewById(R.id.button_experiment_note_editing_confirm))
+        ((Button) getActivity().findViewById(R.id.button_experiment_note_editing_add_note))
                 .setOnClickListener(new Button.OnClickListener() {
                     public void onClick(View v) {
-                        mCallback.onButtonConfirmClicked_ExperimentEditNotesFragment(
+                        mCallback.onButtonAddNoteClicked_ExperimentEditNotesFragment(
                                 ((EditText) getActivity().findViewById(
                                         R.id.edittext_experiment_note_editing_note)).getText()
                                         .toString()

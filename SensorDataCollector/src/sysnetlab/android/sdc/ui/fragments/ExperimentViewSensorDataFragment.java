@@ -10,7 +10,6 @@ import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.ui.GestureEventListener;
 import sysnetlab.android.sdc.ui.UserInterfaceUtil;
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
@@ -18,21 +17,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class ExperimentViewSensorDataFragment extends Fragment {
 
     private View mView;
-    private OnFragmentClickListener mCallback;
     private int mSensorNo;
 
     private int MAXIMUM_LINES_OF_DATA_TO_READ = 100;
-
-    public interface OnFragmentClickListener {
-        public void onBtnBackClicked_ExperimentViewSensorDataFragment();
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -78,14 +71,6 @@ public class ExperimentViewSensorDataFragment extends Fragment {
 
         });
 
-        ((Button) mView.findViewById(R.id.button_fragment_experiment_view_sensor_data_back))
-                .setOnClickListener(new Button.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        mCallback.onBtnBackClicked_ExperimentViewSensorDataFragment();
-                    }
-                });
     }
 
     @Override
@@ -119,18 +104,6 @@ public class ExperimentViewSensorDataFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSensorNo = 0;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        try {
-            mCallback = (OnFragmentClickListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentClickListener");
-        }
     }
 
     private void updateSensorDataView(ArrayList<AbstractSensor> lstSensors, int sensorNo) {

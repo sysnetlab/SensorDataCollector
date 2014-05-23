@@ -18,12 +18,10 @@ import android.widget.Toast;
 
 public class ViewExperimentActivity extends FragmentActivity implements
         ExperimentViewFragment.OnFragmentClickListener,
-        ExperimentSensorListFragment.OnFragmentClickListener,
-        ExperimentViewSensorDataFragment.OnFragmentClickListener,
-        ExperimentViewNotesFragment.OnFragmentClickListener {
+        ExperimentSensorListFragment.OnFragmentClickListener {
 
     private ExperimentViewFragment mExperimentViewFragment;
-    private ExperimentViewNotesFragment mExperimentViewMoreNotesFragment;
+    private ExperimentViewNotesFragment mExperimentViewNotesFragment;
     private ExperimentViewSensorDataFragment mExperimentViewSensorDataFragment;
     private Experiment mExperiment;
 
@@ -68,12 +66,6 @@ public class ViewExperimentActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onBtnBackClicked_ExperimentViewFragment() {
-        Intent intent = new Intent(this, SensorDataCollectorActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
     public void onBtnCloneClicked_ExperimentViewFragment() {
         Intent intent = new Intent(this, CreateExperimentActivity.class);
         intent.putExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
@@ -90,10 +82,10 @@ public class ViewExperimentActivity extends FragmentActivity implements
 
     @Override
     public void onNotesClicked_ExperimentViewFragment() {
-        if (mExperimentViewMoreNotesFragment == null) {
-            mExperimentViewMoreNotesFragment = new ExperimentViewNotesFragment();
+        if (mExperimentViewNotesFragment == null) {
+            mExperimentViewNotesFragment = new ExperimentViewNotesFragment();
         }
-        FragmentUtil.switchToFragment(this, mExperimentViewMoreNotesFragment,
+        FragmentUtil.switchToFragment(this, mExperimentViewNotesFragment,
                 "experimentviewmorenotes");
 
     }
@@ -108,11 +100,6 @@ public class ViewExperimentActivity extends FragmentActivity implements
     }  
 
     @Override
-    public void onBtnBackClicked_ExperimentViewMoreNotesFragment() {
-        FragmentUtil.switchToFragment(this, mExperimentViewFragment, "experimentview");
-    }
-
-    @Override
     public void onListItemClicked_ExperimentSensorListFragment(int sensorNo) {
         if (mExperimentViewSensorDataFragment == null) {
             mExperimentViewSensorDataFragment = new ExperimentViewSensorDataFragment();
@@ -124,8 +111,4 @@ public class ViewExperimentActivity extends FragmentActivity implements
                 "experimentviewsensordata");
     }
 
-    @Override
-    public void onBtnBackClicked_ExperimentViewSensorDataFragment() {
-        FragmentUtil.switchToFragment(this, mExperimentViewFragment, "experimentview");
-    }
 }

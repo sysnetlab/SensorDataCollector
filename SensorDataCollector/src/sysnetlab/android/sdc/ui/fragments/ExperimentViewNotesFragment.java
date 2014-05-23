@@ -8,24 +8,17 @@ import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datacollector.Note;
 import sysnetlab.android.sdc.ui.GestureEventListener;
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 public class ExperimentViewNotesFragment extends Fragment {
 
     private View mView;
-    private OnFragmentClickListener mCallback;
     private int mCurrentNoteNo;
-
-    public interface OnFragmentClickListener {
-        public void onBtnBackClicked_ExperimentViewMoreNotesFragment();
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -71,14 +64,6 @@ public class ExperimentViewNotesFragment extends Fragment {
 
         });
 
-        ((Button) mView.findViewById(R.id.button_fragment_experiment_view_notes_back))
-                .setOnClickListener(new Button.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        mCallback.onBtnBackClicked_ExperimentViewMoreNotesFragment();
-                    }
-                });
     }
 
     @Override
@@ -107,18 +92,6 @@ public class ExperimentViewNotesFragment extends Fragment {
         updateNoteView(experiment.getNotes(), mCurrentNoteNo);
 
         return mView;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        try {
-            mCallback = (OnFragmentClickListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnSwipeListener");
-        }
     }
 
     private void updateNoteView(ArrayList<Note> notes, int noteNo) {

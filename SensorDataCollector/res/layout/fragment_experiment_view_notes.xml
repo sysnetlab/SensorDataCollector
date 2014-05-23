@@ -100,22 +100,12 @@
         android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_below="@id/textview_fragment_experiment_view_notes_note_caption"
-		android:layout_above="@+id/button_fragment_experiment_view_notes_back"
 		android:layout_alignLeft="@id/layout_experiment_note_viewing_heading"
 		android:layout_alignRight="@id/layout_experiment_note_viewing_heading"
+		android:layout_marginBottom="24dp"
 		android:gravity="left|top"
 		android:background="@drawable/layerlist_background_border_lines"
 		android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/text_experiment"/>     
-    
-	<Button 
-	    android:id="@id/button_fragment_experiment_view_notes_back"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true"
-		android:layout_alignParentBottom="true"
-		android:gravity="center|center_horizontal"
-		android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/text_back"/>    
                       
 </RelativeLayout>

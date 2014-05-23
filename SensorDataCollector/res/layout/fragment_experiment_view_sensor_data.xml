@@ -99,7 +99,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/button_fragment_experiment_view_sensor_data_back"
+        android:layout_alignParentBottom="true"
         android:layout_alignLeft="@id/layout_experiment_sensor_viewing_heading"
         android:layout_alignRight="@id/layout_experiment_sensor_viewing_heading"
         android:layout_below="@id/view_experiment_view_divider"
@@ -117,13 +117,14 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="382"
+            android:layout_marginBottom="24dp"
             android:background="@drawable/layerlist_background_border_lines"
             android:gravity="left|top"
             android:text="@string/text_experiment"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
-    <Button
+<!--     <Button
         android:id="@id/button_fragment_experiment_view_sensor_data_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -131,6 +132,6 @@
         android:layout_centerHorizontal="true"
         android:gravity="center|center_horizontal"
         android:text="@string/text_back"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall" /> -->
 
 </RelativeLayout>

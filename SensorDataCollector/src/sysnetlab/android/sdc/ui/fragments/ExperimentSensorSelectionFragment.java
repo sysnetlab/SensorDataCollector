@@ -33,8 +33,6 @@ public class ExperimentSensorSelectionFragment extends Fragment {
     private OnFragmentClickListener mCallback;
 
     public interface OnFragmentClickListener {
-        public void onBtnConfirmClicked_ExperimentSensorSelectionFragment();
-
         public void onBtnClearClicked_ExperimentSensorSelectionFragment();
 
         public void onSensorClicked_ExperimentSensorSelectionFragment(AndroidSensor sensor);
@@ -132,14 +130,6 @@ public class ExperimentSensorSelectionFragment extends Fragment {
                 e.printStackTrace();
                 throw new RuntimeException("Failed to cast Activity to OnFragmentClickListener");
             }
-
-            ((Button) mView.findViewById(R.id.button_sensor_selection_confirm))
-                    .setOnClickListener(new Button.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mCallback.onBtnConfirmClicked_ExperimentSensorSelectionFragment();
-                        }
-                    });
 
             ((Button) mView.findViewById(R.id.button_sensor_selection_clear))
                     .setOnClickListener(new Button.OnClickListener() {

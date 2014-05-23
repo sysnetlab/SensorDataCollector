@@ -153,14 +153,14 @@ public class CreateExperimentActivity extends FragmentActivity
     }
 
     @Override
-    public void onButtonConfirmClicked_ExperimentEditNotesFragment(String note) {
+    public void onButtonAddNoteClicked_ExperimentEditNotesFragment(String note) {
         Log.i("SensorDataCollector", "ExperimentEditNotesFragment: Button Cancel clicked.");
         Log.i("SensorDataCollector", "Entered note: [" + note + "]");        
         note = UserInterfaceUtil.filterOutNewLines(note); 
         Log.i("SensorDataCollector", "Filtered note: [" + note + "]");         
         if (note.trim().length() > 0)
             mExperiment.getNotes().add(new Note(note));
-        // getSupportFragmentManager().popBackStack();
+        getSupportFragmentManager().popBackStack();
     }   
 
     public ExperimentSensorSelectionFragment getExperimentSensorSensorSelectionFragment()
@@ -395,11 +395,11 @@ public class CreateExperimentActivity extends FragmentActivity
                 "experimentrun");
     }
 
-    @Override
+/*    @Override
     public void onBtnBackClicked_ExperimentSetupFragment() {
         Intent intent = new Intent(this, SensorDataCollectorActivity.class);
         startActivity(intent);
-    }
+    }*/
     
     @Override
     public void runExperiment_ExperimentRunFragment(View v) {
@@ -425,12 +425,12 @@ public class CreateExperimentActivity extends FragmentActivity
         }
     }
      
-    @Override
+/*    @Override
     public void onBtnConfirmClicked_ExperimentSensorSelectionFragment() {
         getIntent().putExtra("havingheader", false);
         getIntent().putExtra("havingfooter", false);
         //FragmentUtil.switchToFragment(this, mExperimentSetupFragment, "sensorsetup");
-    }
+    }*/
 
     @Override
     public void onBtnClearClicked_ExperimentSensorSelectionFragment() {
