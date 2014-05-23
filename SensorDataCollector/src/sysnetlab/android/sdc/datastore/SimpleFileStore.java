@@ -67,7 +67,7 @@ public class SimpleFileStore extends AbstractStore {
     }
 
     @Override
-    public void setupExperiment() throws RuntimeException {
+    public void setupExperimentStorage(Experiment experiment) throws RuntimeException {
         DecimalFormat f = new DecimalFormat("00000");
         mNewExperimentPath = mParentPath + "/" + DIR_PREFIX
                 + f.format(mNextExperimentNumber);
@@ -84,7 +84,7 @@ public class SimpleFileStore extends AbstractStore {
     }
 
     @Override
-    public List<Experiment> listExperiments() {
+    public List<Experiment> listStoredExperiments() {
         List<Experiment> listExperiments = new ArrayList<Experiment>();
 
         DecimalFormat f = new DecimalFormat("00000");
@@ -100,7 +100,7 @@ public class SimpleFileStore extends AbstractStore {
     }
 
     @Override
-    public boolean writeExperimentMetaData(Experiment experiment) {
+    public void writeExperimentMetaData(Experiment experiment) {
         String configFilePath = mNewExperimentPath + "/.experiment";
         PrintStream out;
         try {
@@ -141,13 +141,11 @@ public class SimpleFileStore extends AbstractStore {
             }
 
             out.close();
-            return true;
         } catch (FileNotFoundException e) {
             Log.e("SensorDataCollector",
                     "SimpleFileStore::writeExperimentMetaData(): failed to write to " +
                             configFilePath);
             e.printStackTrace();
-            return false;
         }
     }
 

@@ -29,7 +29,7 @@ public class RunExperimentService extends IntentService{
 		
 		Experiment experiment=intent.getParcelableExtra("experiment");
 		
-		StoreSingleton.getInstance().setupExperiment();
+		StoreSingleton.getInstance().setupExperimentStorage(null);
 
         Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
         ArrayList<AbstractSensor> lstSensors = new ArrayList<AbstractSensor>();
