@@ -171,6 +171,9 @@ public class CreateExperimentActivity extends FragmentActivity
     @Override
     public void onButtonConfirmClicked_ExperimentEditNotesFragment(String note) {
         Log.i("SensorDataCollector", "ExperimentEditNotesFragment: Button Cancel clicked.");
+        Log.i("SensorDataCollector", "Entered note: [" + note + "]");        
+        note = UserInterfaceUtil.filterOutNewLines(note); 
+        Log.i("SensorDataCollector", "Filtered note: [" + note + "]");         
         if (note.trim().length() > 0)
             mExperiment.getNotes().add(new Note(note));
         getSupportFragmentManager().popBackStack();
@@ -474,7 +477,7 @@ public class CreateExperimentActivity extends FragmentActivity
     @Override
     protected void onDestroy() {
     	super.onDestroy();
-    	Toast.makeText(this, "onDestroy()", Toast.LENGTH_LONG).show();
+    	// Toast.makeText(this, "onDestroy()", Toast.LENGTH_LONG).show();
     	Log.i("onDestroy", "onDestroy()");
 
     }

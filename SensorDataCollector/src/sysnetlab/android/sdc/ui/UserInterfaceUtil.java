@@ -1,6 +1,7 @@
 
 package sysnetlab.android.sdc.ui;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 
 import sysnetlab.android.sdc.R;
@@ -130,5 +131,14 @@ public class UserInterfaceUtil {
         textView.setEllipsize(truncateAt);
         textView.setSingleLine();
         textView.setHorizontallyScrolling(false);
+    }
+    
+    public static String filterOutNewLines(String text) {
+        String[] lines = text.split(System.getProperty("line.separator"));
+        String strLongLine = "";
+        for (String s : lines) {
+            strLongLine += s + " ";
+        }
+        return strLongLine;
     }
 }
