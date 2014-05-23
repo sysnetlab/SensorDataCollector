@@ -4,22 +4,12 @@ package sysnetlab.android.sdc.ui.fragments;
 import java.lang.reflect.Field;
 
 import sysnetlab.android.sdc.R;
-import sysnetlab.android.sdc.ui.CreateExperimentActivity;
-import sysnetlab.android.sdc.ui.SensorDataCollectorActivity;
 import android.app.Activity;
-import android.app.Application;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -38,9 +28,10 @@ public class ExperimentRunFragment extends Fragment{
 
     public interface ExperimentHandler {
         public void runExperiment_ExperimentRunFragment(View v);
-
         public void stopExperiment_ExperimentRunFragment(View v);
-    }
+        public void notifyInBackground_ExperimentRunFragment();
+        public void removeInBackgroundNotification_ExperimentRunFragment();
+    }       
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -85,20 +76,7 @@ public class ExperimentRunFragment extends Fragment{
     @Override
     public void onStop(){
 	    if(!mIsUserTrigger){
-    		Intent intent = new Intent(getActivity().getBaseContext(), CreateExperimentActivity.class);        
-	        PendingIntent pIntent = PendingIntent.getActivity(getActivity(), 0, intent, 0);
-	        
-	        NotificationCompat.Builder mBuilder = 
-	        	new NotificationCompat.Builder(getActivity())
-	        	.setSmallIcon(R.drawable.ic_launcher)
-	        	.setContentTitle("Running")
-	        	.setContentText("Data collection is running in background")
-	        	.setAutoCancel(true)
-	        	.setContentIntent(pIntent);
-	        
-	        NotificationManager mNotificationManager =
-	        		(NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-	        mNotificationManager.notify(1, mBuilder.build());
+	    	mHandler.notifyInBackground_ExperimentRunFragment();    		
 	    }
         super.onStop();
     }
@@ -107,6 +85,7 @@ public class ExperimentRunFragment extends Fragment{
     public void onResume() {
         super.onResume();
         mIsUserTrigger = false;
+        mHandler.removeInBackgroundNotification_ExperimentRunFragment();
     }    
     
     public boolean isFragmentUIActive() {
@@ -144,16 +123,6 @@ public class ExperimentRunFragment extends Fragment{
     	}    	
     	super.onPause();
         
-    }
-    
-    @Override
-    public void onDestroyView() {
-    	super.onDestroyView();
-    }
-    
-    @Override
-    public void onDestroy() {
-    	super.onDestroy();
     }
     
     @Override

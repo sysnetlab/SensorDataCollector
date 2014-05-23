@@ -3,14 +3,12 @@ package sysnetlab.android.sdc.ui;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.DataCollectionState;
-import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datacollector.ExperimentTime;
@@ -18,7 +16,6 @@ import sysnetlab.android.sdc.datacollector.Note;
 import sysnetlab.android.sdc.datacollector.StateTag;
 import sysnetlab.android.sdc.datacollector.TaggingState;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
-import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.datastore.SimpleFileStoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
@@ -32,16 +29,12 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
@@ -51,7 +44,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.view.MenuItem;
 
 public class CreateExperimentActivity extends FragmentActivity
         implements
@@ -88,7 +80,6 @@ public class CreateExperimentActivity extends FragmentActivity
         // TODO handle configuration change
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
-
 
         mPreviousTagPosition = -1;
         
@@ -340,7 +331,7 @@ public class CreateExperimentActivity extends FragmentActivity
     }
     
     @Override
-    public void onBackPressed() {
+    public void onBackPressed() {    	
         if(mExperimentRunFragment!=null){
         	if(mExperimentRunFragment.isFragmentUIActive()){
         		mExperimentRunFragment.setIsUserTrigger(true);
@@ -432,7 +423,30 @@ public class CreateExperimentActivity extends FragmentActivity
         	Toast.makeText(CreateExperimentActivity.this, "Unsupported Button Action", Toast.LENGTH_SHORT).show();
         }
     }
-     
+    
+    public void notifyInBackground_ExperimentRunFragment(){
+    	Intent intent = new Intent(getBaseContext(), CreateExperimentActivity.class);        
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        
+        NotificationCompat.Builder builder = 
+        	new NotificationCompat.Builder(this)
+        	.setSmallIcon(R.drawable.ic_launcher)
+        	.setContentTitle(mExperiment.getName())
+        	.setContentText(getText(R.string.running_in_background))
+        	.setAutoCancel(true)
+        	.setContentIntent(pIntent);
+        
+        NotificationManager notificationManager =
+        		(NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, builder.build());
+    }
+    
+    public void removeInBackgroundNotification_ExperimentRunFragment(){
+    	NotificationManager notificationManager =
+        		(NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+    	notificationManager.cancel(1);
+    }
+    
     @Override
     public void onBtnConfirmClicked_ExperimentSensorSelectionFragment() {
         getIntent().putExtra("havingheader", false);
@@ -456,9 +470,7 @@ public class CreateExperimentActivity extends FragmentActivity
     @Override
     public void onBtnConfirmClicked_ExperimentEditTagsFragment() {
         Log.i("SensorDataCollector", "Button Cancel clicked.");
-        getSupportFragmentManager().popBackStack();
-        // FragmentUtil.switchToFragment(this, mExperimentSetupFragment,
-        // "sensorsetup");
+        getSupportFragmentManager().popBackStack();        
     }
 
     @Override
@@ -468,10 +480,7 @@ public class CreateExperimentActivity extends FragmentActivity
     
     @Override
     protected void onDestroy() {
-    	super.onDestroy();
-    	Toast.makeText(this, "onDestroy()", Toast.LENGTH_LONG).show();
-    	Log.i("onDestroy", "onDestroy()");
-
+    	super.onDestroy();    	
     }
     
     @Override
@@ -504,7 +513,6 @@ public class CreateExperimentActivity extends FragmentActivity
 	@Override
 	public void onBtnAddTagClicked_ExperimentEditTagsFragment(String strTag, String strDescription) {
 		mExperiment.addTag(strTag, strDescription);
-
 	}
 
 	public RunExperimentService getRunExperimentService() {
@@ -514,4 +522,5 @@ public class CreateExperimentActivity extends FragmentActivity
 	public void setRunExperimentService(RunExperimentService runExperimentService) {
 		this.mRunExperimentService = runExperimentService;
 	}
+	
 }

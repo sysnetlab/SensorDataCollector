@@ -75,6 +75,9 @@
     <string name="text_run_sensor_operation_text">
         Configure the sensors to use during the experiment.
     </string>
+    <string name="running_in_background">
+        Data collection is running in background.
+    </string>
     
 
 </resources>
