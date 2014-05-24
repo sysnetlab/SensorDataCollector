@@ -53,6 +53,7 @@ public void testExperimentSensorSetupFragment() {
 		
 		lView = (ListView) createExperimentActivity.findViewById(R.id.lv_operations);
 	    assertNotNull("Menu with operations has not been loaded", lView);
+	    assertTrue("lView.getCount() is not 3", lView.getCount() == 3);
 	    
 	    lView.performItemClick(lView.getAdapter().getView(2, null, null), 2, lView.getAdapter().getItemId(2));
 	    sensorSelectionFragment=createExperimentActivity.getExperimentSensorSelectionFragment();

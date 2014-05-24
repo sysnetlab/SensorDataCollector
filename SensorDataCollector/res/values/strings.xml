@@ -2,7 +2,7 @@
 <resources>
     <!--  conform naming vention below -->
     <!--  for reusing strings, name it as text_engligh_word_seperated_by_underscore -->
-    <string name="app_name">SensorDataCollector</string>
+    <string name="app_name">Sensor Data Collector</string>
     <string name="text_settings">Settings</string>
 	<string name="text_sensors">Sensors</string>
 	<string name="text_sensors_description_text">Sensors from which data were collected.</string>
@@ -75,9 +75,10 @@
     <string name="text_run_sensor_operation_text">
         Configure the sensors to use during the experiment.
     </string>
-    <string name="running_in_background">
+    <string name="text_running_in_background">
         Data collection is running in background.
     </string>
+    <string name="text_is_sleeping">is sleeping</string>
     <string name="text_from">From</string>
     <string name="text_to">To</string>
     <string name="text_note_x_of_y_taken_at_time_z">Note %1$d of %2$d taken at %3$s</string>

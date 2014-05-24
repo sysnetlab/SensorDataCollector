@@ -491,7 +491,7 @@ public class CreateExperimentActivity extends FragmentActivity
         	new NotificationCompat.Builder(this)
         	.setSmallIcon(R.drawable.ic_launcher)
         	.setContentTitle(mExperiment.getName())
-        	.setContentText(getText(R.string.running_in_background))
+        	.setContentText(getText(R.string.text_running_in_background))
         	.setAutoCancel(true)
         	.setContentIntent(pIntent);
         
