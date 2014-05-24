@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class TagListAdapter extends ArrayAdapter<Tag> {
@@ -37,14 +38,14 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
         if (convertView == null) {
             LayoutInflater inflator = mContext.getLayoutInflater();
             view = inflator.inflate(R.layout.tag_row_layout, null);
-            final ViewHolder viewHolder = new ViewHolder();
-            viewHolder.text = (TextView) view.findViewById(R.id.tagName);            
-            view.setTag(viewHolder);
         } else {
             view = convertView;
         }
-        ViewHolder holder = (ViewHolder) view.getTag();
-        holder.text.setText(mList.get(position).getName());        
+        TextView tagName = (TextView) view.findViewById(R.id.tv_tagname);
+        TextView tagDescription = (TextView) view.findViewById(R.id.tv_tagdescription);
+        // TODO: If the Tag description exceeds one line, cut off and add elipses.
+        tagName.setText(mList.get(position).getName());
+        tagDescription.setText(mList.get(position).getShortDescription());
         return view;
     }
 }
