@@ -10,6 +10,10 @@ import sysnetlab.android.sdc.sensor.SensorProperty;
 import sysnetlab.android.sdc.ui.adaptors.SensorPropertyListAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Notification;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.os.Build;
@@ -110,6 +114,7 @@ public class UserInterfaceUtil {
     }
     
     
+    @SuppressWarnings("deprecation")
     @SuppressLint("NewApi")
     public static void setViewBackgroundCompatible(View view, Drawable background) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -139,5 +144,14 @@ public class UserInterfaceUtil {
             strLongLine += s + " ";
         }
         return strLongLine;
+    }
+    
+    @SuppressLint("InlinedApi")
+    public static boolean bindRunExperimentServiceCompatible(Context context, Intent service, ServiceConnection conn) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            return context.bindService(service, conn, Context.BIND_ABOVE_CLIENT); 
+        } else {
+            return context.bindService(service, conn, Context.BIND_AUTO_CREATE);             
+        }
     }
 }

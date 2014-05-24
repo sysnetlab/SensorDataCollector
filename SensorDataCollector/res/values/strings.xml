@@ -87,7 +87,8 @@
     <string name="text_add_note">Add Note</string>
     <string name="text_set_sampling_rate">Set Sampling Rate</string>
     <string name="text_sampling_rate_is_now_x">The sampling rate is now set to $1%f samples/second.</string>
-
-    
+	<string name="text_local_service_started">SDCRunExperimentService started.</string>
+    <string name="text_local_service_stopped">SDCRunExperimentService stopped.</string>
+    <string name="text_local_service_label">SDCRunExperimentService</string>
 
 </resources>

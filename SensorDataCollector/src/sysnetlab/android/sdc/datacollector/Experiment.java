@@ -59,8 +59,8 @@ public class Experiment implements Parcelable {
         return mTags;
     }
 
-    public void setTags(ArrayList<Tag> mTags) {
-        this.mTags = mTags;
+    public void setTags(ArrayList<Tag> tags) {
+        this.mTags = tags;
     }
 
     public void addTag(String strTag, String strDescription) {
@@ -171,9 +171,15 @@ public class Experiment implements Parcelable {
             outParcel.writeInt(sensor.getMinorType());
             outParcel.writeString(sensor.getListener().getChannel().describe());
         }
+        
+        // TODO write the tagging action properly to parcel.
     }
 
     public Experiment(Parcel inParcel) {
+        Log.i("SensorDataCollector", "Experiment(Parcel) called.");
+        //TODO read it properly from parcel.
+        mTaggingActions = new ArrayList<TaggingAction>();
+        
         mName = inParcel.readString();
 
         mDateTimeCreated = inParcel.readString();
@@ -188,6 +194,7 @@ public class Experiment implements Parcelable {
         mDeviceInfo = inParcel.readParcelable(DeviceInformation.class.getClassLoader());
 
         AbstractStore store = StoreSingleton.getInstance();
+        
         mSensors = new ArrayList<AbstractSensor>();
         int numSensors = inParcel.readInt();
         for (int i = 0; i < numSensors; i++) {

@@ -27,8 +27,8 @@ public class ExperimentRunFragment extends Fragment{
     }
 
     public interface ExperimentHandler {
-        public void runExperiment_ExperimentRunFragment(View v);
-        public void stopExperiment_ExperimentRunFragment(View v);
+        public void runExperiment_ExperimentRunFragment();
+        public void stopExperiment_ExperimentRunFragment();
         public void notifyInBackground_ExperimentRunFragment();
         public void removeInBackgroundNotification_ExperimentRunFragment();
     }       
@@ -67,10 +67,7 @@ public class ExperimentRunFragment extends Fragment{
             Log.e("SensorDataCollector", "ExperimentRunFragment.mCallback should not be null");
         }
 
-        if (this.mView == null) {
-            Log.e("SensorDataCollector", "ExperimentRunFragment.mView should not be null");
-        }
-        mHandler.runExperiment_ExperimentRunFragment(mView);
+        mHandler.runExperiment_ExperimentRunFragment();
     }
 
     @Override
@@ -119,7 +116,7 @@ public class ExperimentRunFragment extends Fragment{
 	        if (this.mView == null) {
 	            Log.e("SensorDataCollector", "ExperimentRunFragment.mView should not be null");
 	        }
-	        mHandler.stopExperiment_ExperimentRunFragment(mView);
+	        mHandler.stopExperiment_ExperimentRunFragment();
     	}    	
     	super.onPause();
         
