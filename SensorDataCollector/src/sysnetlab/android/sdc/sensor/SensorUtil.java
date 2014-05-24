@@ -44,7 +44,7 @@ public class SensorUtil {
 
                 return androidSensor;
             default:
-                throw new RuntimeException("SensorClassUtil: unexpected major sensor type = "
+                throw new RuntimeException("SensorUtil: unexpected major sensor type = "
                         + majorType);
         }
     }

@@ -288,14 +288,11 @@ public class SimpleFileStore extends AbstractStore {
         private String mPath;
 
         protected SimpleFileChannel() {
-            // prohibit from creating SimpleFileChannel object with an argument
+            // prohibit from creating SimpleFileChannel object without an argument
         }
 
         public SimpleFileChannel(String path) throws FileNotFoundException {
-            mOut = new PrintStream(new BufferedOutputStream(
-                    new FileOutputStream(path)));
-            mIn = null;
-            mPath = path;
+            this(path, WRITE_ONLY);
         }
         
         public SimpleFileChannel(String path, int flags) throws FileNotFoundException {
@@ -305,9 +302,17 @@ public class SimpleFileStore extends AbstractStore {
                 if (file.exists()) {
                     mIn = new BufferedReader(new FileReader(path));
                 } else {
-                    mIn = null;
+                    throw new RuntimeException("SimpleFileChannel: cannot open file " + path);
                 }
                 mPath = path;
+            } else if (flags == WRITE_ONLY) {
+                mOut = new PrintStream(new BufferedOutputStream(
+                        new FileOutputStream(path)));
+                mIn = null;
+                mPath = path;
+            } else {
+                throw new RuntimeException(
+                        "SimpleFileChannel: encountered unsupported creation flag " + flags);
             }
         }
 
@@ -399,8 +404,9 @@ public class SimpleFileStore extends AbstractStore {
 
     @Override
     public void closeAllChannels() {
-        for (Channel channel : mChannels)
+        for (Channel channel : mChannels) {
             channel.close();
+        }
         // create new channel list and garbage-collect the old channel list
         mChannels = new ArrayList<Channel>();
     }

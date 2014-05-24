@@ -1,3 +1,4 @@
+
 package sysnetlab.android.sdc.services;
 
 import java.text.DateFormat;
@@ -25,33 +26,31 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 public class RunExperimentService extends Service {
-    private int NOTIFICATION = R.string.text_local_service_started;
+    private final int NOTIFICATION_ID = R.string.text_local_service_started;
 
     private final IBinder mBinder = new LocalBinder();
-    
+
     public class LocalBinder extends Binder {
         public RunExperimentService getService() {
             return RunExperimentService.this;
-        }       
-    }    
-    
+        }
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
-    
+
     @Override
     public void onCreate() {
-        mNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        // Display a notification about us starting.  We put an icon in the status bar.
+        // Display a notification about us starting. We put an icon in the
+        // status bar.
         showNotification();
     }
-    
-    
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -60,48 +59,51 @@ public class RunExperimentService extends Service {
         // stopped, so return sticky.
         return START_STICKY;
     }
-    
+
     @Override
     public void onDestroy() {
         // Cancel the persistent notification.
-        mNotificationManager.cancel(NOTIFICATION);
+        mNotificationManager.cancel(NOTIFICATION_ID);
 
         // Tell the user we stopped.
-        Toast.makeText(this, R.string.text_local_service_stopped, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, R.string.text_local_service_stopped, Toast.LENGTH_SHORT).show();
     }
 
     /**
      * Show a notification while this service is running.
      */
     private void showNotification() {
-        // In this sample, we'll use the same text for the ticker and the
-        // expanded notification
-        CharSequence text = getText(R.string.text_local_service_started);
-
         // The PendingIntent to launch our activity if the user selects this
         // notification
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, CreateExperimentActivity.class), 0);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(
-                this);
-        Notification notification = builder.setContentIntent(contentIntent)
-                .setSmallIcon(R.drawable.icon_sensors).setTicker(text)
-                .setWhen(System.currentTimeMillis())
-                .setAutoCancel(true).setContentTitle(text)
-                .setContentText(text).build();
-
-        // Send the notification.
-        mNotificationManager.notify(NOTIFICATION, notification);
-    }  
-    
-    
-    private NotificationManager mNotificationManager;
-    private boolean mIsExperimentRunning = false; 
-     
-    public void runExperimentInService(SensorManager sensorManager, Experiment experiment) {
-        if (mIsExperimentRunning) return;
+        // In this sample, we'll use the same text for the ticker and the
+        // expanded notification
+        CharSequence text = getText(R.string.text_local_service_started);        
         
+        Notification notification = (new NotificationCompat.Builder(this))
+                .setContentIntent(contentIntent)
+                .setSmallIcon(R.drawable.icon_sensors)
+                .setContentTitle(getText(R.string.app_name))
+                .setContentText(text)
+                .setTicker(text)
+                .setWhen(System.currentTimeMillis())
+                .setAutoCancel(true)
+                .build();
+        
+        // Send the notification.
+        mNotificationManager.notify(NOTIFICATION_ID, notification);
+    }
+
+    private NotificationManager mNotificationManager;
+    private boolean mIsExperimentRunning = false;
+
+    public void runExperimentInService(SensorManager sensorManager, Experiment experiment) {
+        if (mIsExperimentRunning) {
+            return;
+        }
+
         StoreSingleton.getInstance().setupNewExperimentStorage(null);
 
         Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
@@ -113,7 +115,7 @@ public class RunExperimentService extends Service {
                 Log.i("SensorDataCollector",
                         "RunExperimentService::onHandleIntent(): process sensor "
                                 + sensor.getName());
-                
+
                 Channel channel = StoreSingleton.getInstance().createChannel(sensor.getName());
                 AndroidSensorEventListener listener =
                         new AndroidSensorEventListener(channel);
@@ -125,13 +127,15 @@ public class RunExperimentService extends Service {
             }
         }
 
-        experiment.setSensors(lstSensors);    
+        experiment.setSensors(lstSensors);
         mIsExperimentRunning = true;
     }
-    
+
     public void stopExperimentInService(SensorManager sensorManager, Experiment experiment) {
-        if (!mIsExperimentRunning) return;
-        
+        if (!mIsExperimentRunning) {
+            return;
+        }
+
         Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
         while (iter.hasNext()) {
             AndroidSensor sensor = (AndroidSensor) iter.next();
@@ -140,17 +144,17 @@ public class RunExperimentService extends Service {
                 sensorManager.unregisterListener(listener);
             }
         }
-        
+
         experiment.setDateTimeDone(DateFormat.getDateTimeInstance().format(
                 Calendar.getInstance().getTime()));
 
         StoreSingleton.getInstance().writeExperimentMetaData(experiment);
 
-        StoreSingleton.getInstance().closeAllChannels();  
-        
+        StoreSingleton.getInstance().closeAllChannels();
+
         mIsExperimentRunning = false;
     }
-    
+
     public boolean isExperimentRunning() {
         return mIsExperimentRunning;
     }
