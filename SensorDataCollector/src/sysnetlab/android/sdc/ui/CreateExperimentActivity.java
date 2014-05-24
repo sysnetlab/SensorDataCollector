@@ -40,6 +40,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -516,6 +517,21 @@ public class CreateExperimentActivity extends FragmentActivity
         }
 
         mExperimentSensorSelectionFragment.getSensorListAdapter().notifyDataSetChanged();
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+	        case android.R.id.home:
+	        	if(mExperimentRunFragment!=null){
+	            	if(mExperimentRunFragment.isFragmentUIActive()){
+	            		mExperimentRunFragment.setIsUserTrigger(true);	    	        	
+	            	}
+	            }
+	            return super.onOptionsItemSelected(item);
+	        default:
+	            return super.onOptionsItemSelected(item);
+	        }
     }
     
     public void onSensorClicked_ExperimentSensorSelectionFragment(AndroidSensor sensor) {
