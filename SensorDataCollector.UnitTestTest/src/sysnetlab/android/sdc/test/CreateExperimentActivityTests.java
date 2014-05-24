@@ -57,8 +57,8 @@ public void testExperimentSensorSetupFragment() {
 	    lView.performItemClick(lView.getAdapter().getView(2, null, null), 2, lView.getAdapter().getItemId(2));
 	    sensorSelectionFragment=createExperimentActivity.getExperimentSensorSelectionFragment();
 	    assertNotNull("Sensors selection fragment failed to load",sensorSelectionFragment);
-		
-		lView= (ListView) sensorSelectionFragment.getSensorListView();
+
+		lView = (ListView) sensorSelectionFragment.getSensorListView();
 		assertNotNull("The list of sensors was not loaded",lView);
 		
 		if(lView!=null && !(lView.getCount()==0)){

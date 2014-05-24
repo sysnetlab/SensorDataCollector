@@ -10,7 +10,6 @@ import sysnetlab.android.sdc.sensor.SensorProperty;
 import sysnetlab.android.sdc.ui.adaptors.SensorPropertyListAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
