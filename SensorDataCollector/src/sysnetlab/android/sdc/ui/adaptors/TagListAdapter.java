@@ -23,7 +23,8 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
     }
 
     static class ViewHolder {
-        protected TextView text;        
+        protected TextView tag;
+        protected TextView description;
     }
     
     @Override
@@ -37,14 +38,19 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
         if (convertView == null) {
             LayoutInflater inflator = mContext.getLayoutInflater();
             view = inflator.inflate(R.layout.tag_row_layout, null);
+
+            final ViewHolder viewHolder = new ViewHolder();
+            viewHolder.tag = (TextView) view.findViewById(R.id.tv_tagname);
+            viewHolder.description = (TextView) view.findViewById(R.id.tv_tagdescription);
+            view.setTag(viewHolder);
         } else {
             view = convertView;
         }
-        TextView tagName = (TextView) view.findViewById(R.id.tv_tagname);
-        TextView tagDescription = (TextView) view.findViewById(R.id.tv_tagdescription);
-        // TODO: If the Tag description exceeds one line, cut off and add elipses.
-        tagName.setText(mList.get(position).getName());
-        tagDescription.setText(mList.get(position).getShortDescription());
+        
+        ViewHolder holder = (ViewHolder) view.getTag();
+        // TODO: If the Tag description exceeds one line, cut off and add ellipses.
+        holder.tag.setText(mList.get(position).getName());
+        holder.description.setText(mList.get(position).getShortDescription());
         return view;
     }
 }

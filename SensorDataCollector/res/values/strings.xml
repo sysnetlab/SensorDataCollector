@@ -91,5 +91,6 @@
 	<string name="text_local_service_started">SDCRunExperimentService started.</string>
     <string name="text_local_service_stopped">SDCRunExperimentService stopped.</string>
     <string name="text_local_service_label">SDCRunExperimentService</string>
+    <string name="text_clear_selection">Clear Selection</string>
 
 </resources>

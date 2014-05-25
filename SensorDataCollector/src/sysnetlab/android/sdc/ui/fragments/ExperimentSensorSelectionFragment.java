@@ -63,7 +63,7 @@ public class ExperimentSensorSelectionFragment extends Fragment {
         mHavingFooter = getActivity().getIntent().getBooleanExtra("havingfooter", false);
 
         if (mHavingHeader) {
-            RelativeLayout layout = (RelativeLayout) mView
+            LinearLayout layout = (LinearLayout) mView
                     .findViewById(R.id.layout_sensor_selection_header);
             layout.setVisibility(View.VISIBLE);
         }
