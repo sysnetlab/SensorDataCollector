@@ -96,8 +96,8 @@
         Do you want to stop the experiment?
     </string>
     <string name="text_stop_experiment">Stop Experiment</string>
-    <string name="text_resume_experiment">Resume Experiment</string>
+    <string name="text_continue_experiment">Continue Experiment</string>
     <string name="text_stopping_experiment">Stopping the experiment &#8230;</string>
-    <string name="text_experiment_undisturbed">The experiment is undisturbed.</string>
+    <string name="text_continuing_experiment">Continuing the experiment &#8230;</string>
 
 </resources>

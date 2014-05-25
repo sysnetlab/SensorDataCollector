@@ -588,11 +588,11 @@ public class CreateExperimentActivity extends FragmentActivity
                     }
                 });
         
-        builder.setNegativeButton(R.string.text_resume_experiment,
+        builder.setNegativeButton(R.string.text_continue_experiment,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(CreateExperimentActivity.this,
-                                R.string.text_experiment_undisturbed, Toast.LENGTH_SHORT).show();
+                                R.string.text_continuing_experiment, Toast.LENGTH_SHORT).show();
                     }
                 });
 
