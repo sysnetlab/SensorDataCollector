@@ -92,5 +92,12 @@
     <string name="text_local_service_stopped">SDCRunExperimentService stopped.</string>
     <string name="text_local_service_label">SDCRunExperimentService</string>
     <string name="text_clear_selection">Clear Selection</string>
+    <string name="text_do_you_want_to_stop_experiment">
+        Do you want to stop the experiment?
+    </string>
+    <string name="text_stop_experiment">Stop Experiment</string>
+    <string name="text_resume_experiment">Resume Experiment</string>
+    <string name="text_stopping_experiment">Stopping the experiment &#8230;</string>
+    <string name="text_experiment_undisturbed">The experiment is undisturbed.</string>
 
 </resources>
