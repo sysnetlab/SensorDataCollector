@@ -25,10 +25,12 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
@@ -244,7 +246,6 @@ public class CreateExperimentActivity extends FragmentActivity
             //Toast.makeText(CreateExperimentActivity.this, "Disconnected", Toast.LENGTH_SHORT).show();
         }
     };
-    
 
     private void runExperiment() {
         
@@ -394,24 +395,19 @@ public class CreateExperimentActivity extends FragmentActivity
     }
     
     @Override
-    public void onBackPressed() {    	
-        if(mExperimentRunFragment!=null){
-        	if(mExperimentRunFragment.isFragmentUIActive()){
-        		mExperimentRunFragment.setIsUserTrigger(true);
-	        	Intent homeIntent = new Intent(this, SensorDataCollectorActivity.class);
-	        	homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	        	startActivity(homeIntent);
-        	}
+    public void onBackPressed() {
+        if (mExperimentRunFragment != null) {
+            if (mExperimentRunFragment.isFragmentUIActive()) {
+                confirmToStopExperiment();
+            }
+        } else {
+            super.onBackPressed();
         }
-        else
-        	super.onBackPressed();
     }
     
     @Override
     public void onBtnDoneClicked_ExperimentRunFragment() {
-    	mExperimentRunFragment.setIsUserTrigger(true);
-        Intent intent = new Intent(this, SensorDataCollectorActivity.class);
-        startActivity(intent);
+        confirmToStopExperiment();
     }
      
     @Override
@@ -569,4 +565,39 @@ public class CreateExperimentActivity extends FragmentActivity
 		this.mRunExperimentService = runExperimentService;
 	}
 	
+    private void confirmToStopExperiment() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(R.string.text_do_you_want_to_stop_experiment)
+                .setTitle(R.string.text_experiment);
+
+        builder.setPositiveButton(R.string.text_stop_experiment,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(CreateExperimentActivity.this,
+                                R.string.text_stopping_experiment, Toast.LENGTH_SHORT).show();
+
+                        dialog.dismiss();
+
+                        mExperimentRunFragment.setIsUserTrigger(true);
+                        Intent homeIntent = new Intent(CreateExperimentActivity.this,
+                                SensorDataCollectorActivity.class);
+                        homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(homeIntent);
+                    }
+                });
+        
+        builder.setNegativeButton(R.string.text_resume_experiment,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(CreateExperimentActivity.this,
+                                R.string.text_experiment_undisturbed, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+    }
 }
