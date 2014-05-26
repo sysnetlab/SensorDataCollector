@@ -1,7 +1,7 @@
 
 package sysnetlab.android.sdc.services;
 
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -145,7 +145,7 @@ public class RunExperimentService extends Service {
             }
         }
 
-        experiment.setDateTimeDone(DateFormat.getDateTimeInstance().format(
+        experiment.setDateTimeDone(SimpleDateFormat.getDateTimeInstance().format(
                 Calendar.getInstance().getTime()));
 
         StoreSingleton.getInstance().writeExperimentMetaData(experiment);

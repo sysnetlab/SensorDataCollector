@@ -429,6 +429,8 @@ public class CreateExperimentActivity extends FragmentActivity
 
     @Override
     public void onSensorsClicked_ExperimentSetupFragment() {
+        Log.i("SensorDataCollector", this.getClass().getSimpleName()
+                + "::onSensorsClicked_ExperimentSetupFragment() called");
         if (mExperimentSensorSelectionFragment == null) {
             mExperimentSensorSelectionFragment = new ExperimentSensorSelectionFragment();
         }

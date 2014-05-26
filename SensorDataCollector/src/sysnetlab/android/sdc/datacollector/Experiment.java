@@ -2,7 +2,7 @@
 package sysnetlab.android.sdc.datacollector;
 
 import java.io.FileNotFoundException;
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -40,7 +40,7 @@ public class Experiment implements Parcelable {
     }
 
     public Experiment() {
-        this("Unnamed Experiment", DateFormat.getDateTimeInstance().format(
+        this("Unnamed Experiment", SimpleDateFormat.getDateTimeInstance().format(
                 Calendar.getInstance().getTime()));
     }
 

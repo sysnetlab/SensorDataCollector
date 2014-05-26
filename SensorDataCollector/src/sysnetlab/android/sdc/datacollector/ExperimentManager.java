@@ -1,8 +1,8 @@
 
 package sysnetlab.android.sdc.datacollector;
 
-import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,8 +39,8 @@ public class ExperimentManager {
         Collections.sort(allExperiments, new Comparator<Experiment>() {
             public int compare(Experiment e1, Experiment e2) {
                 try {
-                    Date d1 = DateFormat.getInstance().parse(e1.getDateTimeCreated());
-                    Date d2 = DateFormat.getInstance().parse(e2.getDateTimeCreated());
+                    Date d1 = SimpleDateFormat.getDateTimeInstance().parse(e1.getDateTimeCreated());
+                    Date d2 = SimpleDateFormat.getDateTimeInstance().parse(e2.getDateTimeCreated());
                     return -d1.compareTo(d2);
                 } catch (ParseException e) {
                     Log.i("SensorDataCollector", "ExperimentManager::getExperimentSortedByDate: "

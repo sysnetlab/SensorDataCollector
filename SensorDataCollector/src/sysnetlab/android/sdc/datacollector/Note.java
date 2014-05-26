@@ -2,6 +2,7 @@
 package sysnetlab.android.sdc.datacollector;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import android.os.Parcel;
@@ -15,7 +16,7 @@ public class Note implements Parcelable {
     public Note(String note) {
         mNote = note != null ? note : "";
 
-        DateFormat df = DateFormat.getDateTimeInstance();
+        DateFormat df = SimpleDateFormat.getDateTimeInstance();
         mDateTime = df.format(Calendar.getInstance().getTime());
     }
 
