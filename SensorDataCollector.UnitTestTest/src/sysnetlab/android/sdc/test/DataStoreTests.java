@@ -46,7 +46,15 @@ public class DataStoreTests extends AndroidTestCase {
     public void testSimpleFileStore()
     {
     	SimpleFileStore store = new SimpleFileStore();
+    	
+    	int expNumber = store.getNextExperimentNumber();
     	store.setupNewExperimentStorage(null);
+    	assertTrue(expNumber == (store.getNextExperimentNumber() - 1));
     	assertNotNull(store.getNewExperimentPath());	
+    	
+    	int channelNumber = store.getNextChannelNumber();
+    	store.createChannel("");
+    	store.createChannel("");
+    	assertTrue(channelNumber == (store.getNextChannelNumber() - 2));
     }
 }

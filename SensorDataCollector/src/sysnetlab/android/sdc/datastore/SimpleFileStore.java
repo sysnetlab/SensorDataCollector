@@ -414,4 +414,13 @@ public class SimpleFileStore extends AbstractStore {
     public String getNewExperimentPath() {
         return mNewExperimentPath;
     }
+    
+    public int getNextExperimentNumber() {
+        return mNextExperimentNumber;
+    }
+    
+    public int getNextChannelNumber() {
+        return mNextChannelNumber;
+    }
+
 }
