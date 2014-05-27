@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sensordata xmlns="http://schemas.sysnetlab.net/apps/sdc"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sysnetlab.net/apps/sdc ExperimentMetaData.xsd">    
+    <experiment>
+        <name>Unnamed Experiment</name>
+    </experiment>
+    <datadescription>
+        <sensor id="0">goldfish acceleration sensor</sensor>
+        <definition>
+            <location type="csv">goldfish_acceleration_sensor.txt</location>
+            <column id="0" pos="0" type="long" description="threadtimemillis"/>
+            <column id="1" pos="1" type="long" description="elapsedrealtime"/>
+            <column id="2" pos="2" type="long" description="elapsedrealtimenanos"/>
+            <column id="3" pos="3" type="double" description="value"/>
+            <column id="4" pos="4" type="double" description="value"/>
+            <column id="5" pos="5" type="double" description="value"/>
+        </definition>
+    </datadescription>
+</sensordata>

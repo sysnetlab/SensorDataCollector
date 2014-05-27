@@ -7,6 +7,8 @@ public abstract class AbstractSensor {
     private int mMajorType;
     private int mMinorType;
     private boolean mSelected;
+    // add multiple listeners later. which one to use depending
+    // on sensor types (major & minor types)
     private AndroidSensorEventListener mListener;
 
     public final static int ANDROID_SENSOR = 1;

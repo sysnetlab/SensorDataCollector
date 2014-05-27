@@ -61,7 +61,8 @@
 	            android:value="sysnetlab.android.sdc.ui.ViewExperimentActivity" />           
         </activity>   
         
-        <service android:name="sysnetlab.android.sdc.services.RunExperimentService"/>
+        <service android:name="sysnetlab.android.sdc.services.RunExperimentService"
+            android:enabled="true"/>
     </application>
 
 </manifest>

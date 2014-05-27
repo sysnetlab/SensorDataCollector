@@ -77,5 +77,10 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
     public ExperimentListFragment getExperimentListFragment() {
         return mExperimentListFragment;
     }
+    
+    @Override
+	public void onBackPressed(){
+    	moveTaskToBack(true);
+	}
 
 }

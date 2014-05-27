@@ -8,6 +8,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.os.Build;
 import android.os.SystemClock;
+import android.util.Log;
 
 public class AndroidSensorEventListener implements SensorEventListener {
     private Channel mChannel;
@@ -21,6 +22,7 @@ public class AndroidSensorEventListener implements SensorEventListener {
 
     @SuppressLint("NewApi")
     public void onSensorChanged(SensorEvent event) {
+        Log.i("SensorDataCollector", "onSensorChanged(): get a data point from a sensor.");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
             mChannel.write(
                     SystemClock.currentThreadTimeMillis() + ", "

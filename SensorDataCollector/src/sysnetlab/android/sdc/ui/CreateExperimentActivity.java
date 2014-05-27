@@ -1,10 +1,6 @@
 
 package sysnetlab.android.sdc.ui;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,12 +13,10 @@ import sysnetlab.android.sdc.datacollector.Note;
 import sysnetlab.android.sdc.datacollector.StateTag;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
 import sysnetlab.android.sdc.datacollector.TaggingState;
-import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.services.RunExperimentService;
-import sysnetlab.android.sdc.ui.adaptors.ServiceConnectionAdapter;
 import sysnetlab.android.sdc.ui.fragments.ExperimentEditNotesFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentEditTagsFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentRunFragment;
@@ -31,17 +25,24 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
+import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -75,15 +76,13 @@ public class CreateExperimentActivity extends FragmentActivity
     private StateTag mStateTagPrevious;
     private Drawable mDrawableBackground;
     
-    private RunExperimentService mRunExperimentService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO handle configuration change
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
-
-
+        
         mPreviousTagPosition = -1;
         
         ViewPager vp=new ViewPager(this);
@@ -99,6 +98,11 @@ public class CreateExperimentActivity extends FragmentActivity
              * UI in the future when different types of Store are corrected.
              */
             mExperiment = new Experiment();
+            /*
+             * Note that this experiment object should be passed in/out to the service
+             * that runs in the service. 
+             */
+            ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);
         }
 
         if (findViewById(R.id.fragment_container) != null) {
@@ -117,7 +121,7 @@ public class CreateExperimentActivity extends FragmentActivity
     }           
     
     @Override
-    public void onBtnConfirmClicked_SensorSetupFragment(View v, AbstractSensor sensor) {
+    public void onBtnSetSamplingRateClicked_SensorSetupFragment(View v, AbstractSensor sensor) {
         Log.i("SensorDataCollector", "SensorSetupFragment: Button Confirm clicked.");
 
         EditText et = (EditText) findViewById(R.id.edittext_sensor_steup_sampling_rate);
@@ -128,6 +132,14 @@ public class CreateExperimentActivity extends FragmentActivity
                 if (androidSensor.isStreamingSensor()) {
                     androidSensor.setSamplingInterval((int) (1000000. / Double.parseDouble(et
                             .getText().toString())));
+                    String strSamplingRateMsgFormatter = getResources().getString(
+                            R.string.text_sampling_rate_is_now_x);
+                    String strSamplingRateMsg = String.format(strSamplingRateMsgFormatter,
+                            1. / androidSensor.getSamplingInterval());
+                    Toast.makeText(this, strSamplingRateMsg, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, getResources().getString(R.string.text_not_applicable),
+                            Toast.LENGTH_LONG).show();
                 }
                 break;
             case AbstractSensor.AUDIO_SENSOR:
@@ -152,7 +164,7 @@ public class CreateExperimentActivity extends FragmentActivity
                 break;
         }
 
-        //getSupportFragmentManager().popBackStack();
+        // getSupportFragmentManager().popBackStack();
         // FragmentUtil.switchToFragment(this,
         // mExperimentSensorSelectionFragment, "sensorselection");
     }
@@ -210,57 +222,92 @@ public class CreateExperimentActivity extends FragmentActivity
             }
         }
     }
-
-    private void runExperiment(){
-    	Intent intent=new Intent(this,RunExperimentService.class);
-    	intent.putExtra("experiment", mExperiment);
-    	startService(intent);
-    	
-    	updateSensorList();
-    	
-    	// TODO: retrieve the number of sensors checked from the service (getter?)
-        CharSequence text = "Started data collection for "+ mExperiment.getSensors().size() + " Sensors";
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-    }
     
-    private void updateSensorList() {
-        Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
-        ArrayList<AbstractSensor> lstSensors = new ArrayList<AbstractSensor>();
+    private RunExperimentService mRunExperimentService;
+    private boolean mRunExperimentServiceBound = false; 
+    
+    /** Defines call backs for service binding, passed to bindService() */
+    private ServiceConnection mRunExperimentServiceConnection = new ServiceConnection() {
 
-        while (iter.hasNext()) {
-            AndroidSensor sensor = (AndroidSensor) iter.next();
-            if (sensor.isSelected()) {
-                lstSensors.add(sensor);
-            }
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder service) {
+
+            mRunExperimentService = ((RunExperimentService.LocalBinder) service).getService();
+
+            mRunExperimentServiceBound = true;
+
+            Log.i("SensorDataCollector", "ServiceConnection::onServiceConnected() called.");
+            //Toast.makeText(CreateExperimentActivity.this, "Connected", Toast.LENGTH_SHORT).show();
         }
 
-        mExperiment.setSensors(lstSensors); 
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mRunExperimentServiceBound = false;
+            //Toast.makeText(CreateExperimentActivity.this, "Disconnected", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    private void runExperiment() {
+        
+        if (mRunExperimentServiceBound) {
+            SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+            mRunExperimentService.runExperimentInService(sensorManager, mExperiment);
+
+            CharSequence text = "Started data collection for " + mExperiment.getSensors().size()
+                    + " Sensors";
+            Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+        }
     }
 
-    private void stopExperiment() throws IOException {
-    	int checked;
-    	
-    	Intent intent=new Intent(this,RunExperimentService.class);
-    	ServiceConnectionAdapter conncetion=new ServiceConnectionAdapter();
-    	bindService(intent, conncetion, 0);
-    	
-    	checked=conncetion.getCheckedSensors();
-    	
-    	unbindService(conncetion);
-    	
-    	stopService(intent);
-    	
-        mExperiment.setDateTimeDone(DateFormat.getDateTimeInstance().format(
-                Calendar.getInstance().getTime()));
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Start the local service      
+        startService(new Intent(this, RunExperimentService.class));
+    }
 
-        StoreSingleton.getInstance().writeExperimentMetaData(mExperiment);
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // Stop the local service
+        //stopService(new Intent(this, RunExperimentService.class));
+    }
 
-        StoreSingleton.getInstance().closeAllChannels();
+    @Override
+    protected void onPause() {
+        super.onPause();      
+        
+        // unbind the local service 
+        if (mRunExperimentServiceBound) {
+            unbindService(mRunExperimentServiceConnection);
+            mRunExperimentServiceBound = false;      
+        }        
+    }
 
-        // TODO: retrieve the number of sensors checked from the service (getter?)
-        //CharSequence text = "Stopped data collection for " + mExperiment.getSensors().size() + " Sensors";
-        CharSequence text = "Stopped data collection for " + checked + " Sensors";
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // bind the local service
+        boolean status = UserInterfaceUtil.bindRunExperimentServiceCompatible(this, new Intent(
+                this, RunExperimentService.class), mRunExperimentServiceConnection);
+        Log.i("SensorDataCollector", "CreateExperimentActivity::onStart() called. status = "
+                + status);
+    }
+
+    private void stopExperiment() {
+
+        if (mRunExperimentServiceBound) {
+
+            SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+            mRunExperimentService.stopExperimentInService(sensorManager, mExperiment);
+
+            CharSequence text = "Stopped data collection for " + mExperiment.getSensors().size()
+                    + " Sensors";
+            Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -347,23 +394,18 @@ public class CreateExperimentActivity extends FragmentActivity
     
     @Override
     public void onBackPressed() {
-        if(mExperimentRunFragment!=null){
-        	if(mExperimentRunFragment.isFragmentUIActive()){
-        		mExperimentRunFragment.setIsUserTrigger(true);
-	        	Intent homeIntent = new Intent(this, SensorDataCollectorActivity.class);
-	        	homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	        	startActivity(homeIntent);
-        	}
+        if (mExperimentRunFragment != null) {
+            if (mExperimentRunFragment.isFragmentUIActive()) {
+                confirmToStopExperiment();
+            }
+        } else {
+            super.onBackPressed();
         }
-        else
-        	super.onBackPressed();
     }
     
     @Override
     public void onBtnDoneClicked_ExperimentRunFragment() {
-    	mExperimentRunFragment.setIsUserTrigger(true);
-        Intent intent = new Intent(this, SensorDataCollectorActivity.class);
-        startActivity(intent);
+        confirmToStopExperiment();
     }
      
     @Override
@@ -385,6 +427,8 @@ public class CreateExperimentActivity extends FragmentActivity
 
     @Override
     public void onSensorsClicked_ExperimentSetupFragment() {
+        Log.i("SensorDataCollector", this.getClass().getSimpleName()
+                + "::onSensorsClicked_ExperimentSetupFragment() called");
         if (mExperimentSensorSelectionFragment == null) {
             mExperimentSensorSelectionFragment = new ExperimentSensorSelectionFragment();
         }
@@ -416,36 +460,48 @@ public class CreateExperimentActivity extends FragmentActivity
     }*/
     
     @Override
-    public void runExperiment_ExperimentRunFragment(View v) {
+    public void runExperiment_ExperimentRunFragment() {
         if (mCollectionState == DataCollectionState.DATA_COLLECTION_STOPPED) {
             runExperiment();
 			mCollectionState = DataCollectionState.DATA_COLLECTION_IN_PROGRESS;
         } else {
-            Toast.makeText(this, "Unsupported Button Action", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Unsupported Button Action", Toast.LENGTH_LONG).show();
         }
     }
 
     @Override
-    public void stopExperiment_ExperimentRunFragment(View v) {
+    public void stopExperiment_ExperimentRunFragment() {
         if (mCollectionState == DataCollectionState.DATA_COLLECTION_IN_PROGRESS) {
-            try {
-                stopExperiment();
-            } catch (IOException e) {
-                Log.e("SensorDataCollector", e.toString());
-            }
+            stopExperiment();
             mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
         } else {
-        	Toast.makeText(CreateExperimentActivity.this, "Unsupported Button Action", Toast.LENGTH_SHORT).show();
+        	Toast.makeText(CreateExperimentActivity.this, "Unsupported Button Action", Toast.LENGTH_LONG).show();
         }
     }
-     
-/*    @Override
-    public void onBtnConfirmClicked_ExperimentSensorSelectionFragment() {
-        getIntent().putExtra("havingheader", false);
-        getIntent().putExtra("havingfooter", false);
-        //FragmentUtil.switchToFragment(this, mExperimentSetupFragment, "sensorsetup");
-    }*/
-
+    
+    public void notifyInBackground_ExperimentRunFragment(){
+    	Intent intent = new Intent(getBaseContext(), CreateExperimentActivity.class);        
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        
+        NotificationCompat.Builder builder = 
+        	new NotificationCompat.Builder(this)
+        	.setSmallIcon(R.drawable.ic_launcher)
+        	.setContentTitle(mExperiment.getName())
+        	.setContentText(getText(R.string.text_running_in_background))
+        	.setAutoCancel(true)
+        	.setContentIntent(pIntent);
+        
+        NotificationManager notificationManager =
+        		(NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, builder.build());
+    }
+    
+    public void removeInBackgroundNotification_ExperimentRunFragment(){
+    	NotificationManager notificationManager =
+        		(NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+    	notificationManager.cancel(1);
+    }
+    
     @Override
     public void onBtnClearClicked_ExperimentSensorSelectionFragment() {
         Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
@@ -458,24 +514,20 @@ public class CreateExperimentActivity extends FragmentActivity
 
         mExperimentSensorSelectionFragment.getSensorListAdapter().notifyDataSetChanged();
     }
-
-
-    @Override
-    protected void onStop() {
-    	super.onStop();
-    }
     
     @Override
-    protected void onDestroy() {
-    	super.onDestroy();
-    	// Toast.makeText(this, "onDestroy()", Toast.LENGTH_LONG).show();
-    	Log.i("onDestroy", "onDestroy()");
-
-    }
-    
-    @Override
-    public void onDetachedFromWindow() {
-    	super.onDetachedFromWindow();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+	        case android.R.id.home:
+	        	if(mExperimentRunFragment!=null){
+	            	if(mExperimentRunFragment.isFragmentUIActive()){
+	            		mExperimentRunFragment.setIsUserTrigger(true);	    	        	
+	            	}
+	            }
+	            return super.onOptionsItemSelected(item);
+	        default:
+	            return super.onOptionsItemSelected(item);
+	        }
     }
     
     public void onSensorClicked_ExperimentSensorSelectionFragment(AndroidSensor sensor) {
@@ -503,7 +555,6 @@ public class CreateExperimentActivity extends FragmentActivity
 	@Override
 	public void onBtnAddTagClicked_ExperimentEditTagsFragment(String strTag, String strDescription) {
 		mExperiment.addTag(strTag, strDescription);
-
 	}
 
 	public RunExperimentService getRunExperimentService() {
@@ -513,4 +564,40 @@ public class CreateExperimentActivity extends FragmentActivity
 	public void setRunExperimentService(RunExperimentService runExperimentService) {
 		this.mRunExperimentService = runExperimentService;
 	}
+	
+    private void confirmToStopExperiment() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(R.string.text_do_you_want_to_stop_experiment)
+                .setTitle(R.string.text_experiment);
+
+        builder.setPositiveButton(R.string.text_stop_experiment,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(CreateExperimentActivity.this,
+                                R.string.text_stopping_experiment, Toast.LENGTH_SHORT).show();
+
+                        dialog.dismiss();
+
+                        mExperimentRunFragment.setIsUserTrigger(true);
+                        Intent homeIntent = new Intent(CreateExperimentActivity.this,
+                                SensorDataCollectorActivity.class);
+                        homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(homeIntent);
+                    }
+                });
+        
+        builder.setNegativeButton(R.string.text_continue_experiment,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(CreateExperimentActivity.this,
+                                R.string.text_continuing_experiment, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+    }
 }

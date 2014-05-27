@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<experiment xmlns="http://schemas.sysnetlab.net/apps/sdc"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sysnetlab.net/apps/sdc ExperimentMetaData.xsd">    
+	
+	<name>
+	    unnamed experiment
+	</name>
+	
+	<device>
+		<android>
+			<make>Google</make>
+			<model>Nexus 2000</model>
+			<sdk-int>9</sdk-int>
+			<sdk-codename>GINGERBREAD</sdk-codename>
+		</android>
+	</device>
+
+	<datetimecreation>
+		<datetime locale="US">
+			<year>2014</year>
+			<month>5</month>
+			<day>28</day>
+			<hour>18</hour>
+			<minute>44</minute>
+			<second>11</second>
+			<millisecond>234</millisecond>
+		</datetime>
+	</datetimecreation>
+
+	<datetimecompletion>
+		<datetime locale="US">
+			<year>2014</year>
+			<month>5</month>
+			<day>28</day>
+			<hour>18</hour>
+			<minute>48</minute>
+			<second>11</second>
+			<millisecond>234</millisecond>
+		</datetime>
+	</datetimecompletion>
+
+	<taglist>
+		<tag>
+			<name>Run</name>
+			<shortdescriptioin>Chicken run</shortdescriptioin>
+			<longdescription>Chicken run and run</longdescription>
+		</tag>
+		<tag>
+			<name>Walk</name>
+			<shortdescription>Clown walk</shortdescription>
+			<longdescription>Clown walk and walk</longdescription>
+		</tag>
+	</taglist>
+	
+	<notelist>
+		<note>
+			<datetime locale="US">
+				<year>2014</year>
+				<month>5</month>
+				<day>28</day>
+				<hour>18</hour>
+				<minute>44</minute>
+				<second>11</second>
+				<millisecond>234</millisecond>
+			</datetime>
+			<notetext>
+				this is a note.
+			</notetext>
+		</note>
+		<note>
+			<datetime locale="US">
+				<year>2014</year>
+				<month>5</month>
+				<day>28</day>
+				<hour>18</hour>
+				<minute>45</minute>
+				<second>11</second>
+				<millisecond>234</millisecond>
+			</datetime>
+			<notetext>
+				this is a note.
+			</notetext>
+		</note>
+	</notelist>
+	
+	<taggingactionlist>
+		<taggingaction>
+			<tagreference name="Run"/>
+			<experimenttime>
+				<threadtimemillis>199</threadtimemillis>
+				<elapsedrealtime>201</elapsedrealtime>
+				<elapsedrealtimenanos>199001</elapsedrealtimenanos>
+			</experimenttime>
+			<taggingstate>
+				<name>TAG_ON</name>
+			</taggingstate>
+		</taggingaction>
+		<taggingaction>
+			<tagreference name="Run"/>
+			<experimenttime>
+				<threadtimemillis>199</threadtimemillis>
+				<elapsedrealtime>201</elapsedrealtime>
+				<elapsedrealtimenanos>199001</elapsedrealtimenanos>
+			</experimenttime>
+			<taggingstate>
+				<name>TAG_OFF</name>
+			</taggingstate>
+		</taggingaction>
+	</taggingactionlist>
+	
+	<sensorlist>
+		<sensor id="0">
+			<name>goldfish acceleration sensor</name>
+			<majortype>1</majortype>
+			<minortype>2</minortype>
+		</sensor>
+		<sensor id="1">
+			<name>goldfish proximity sensor</name>
+			<majortype>1</majortype>
+			<minortype>3</minortype>
+		</sensor>
+	</sensorlist>
+</experiment>

@@ -15,4 +15,5 @@ public class StoreSingleton {
         }
         return instance;
     }
+    
 }

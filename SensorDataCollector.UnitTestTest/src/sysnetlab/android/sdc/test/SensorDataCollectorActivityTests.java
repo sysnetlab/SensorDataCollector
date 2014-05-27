@@ -51,7 +51,6 @@ public class SensorDataCollectorActivityTests
 	}
 	
 	public void testExperimentListFragmentCreated() {
-		// TODO test if mExperimentListFragment is instantiated
 		assertNotNull("ExperimentListFragment is null",mExperimentListFragment);
 	}
 	
@@ -73,7 +72,5 @@ public class SensorDataCollectorActivityTests
 			assertNotNull("The loaded experiment is null", mExperiment);			
 			assertEquals("The loaded experiment is not correct",mExperiment,mExperimentList.getItem(0));	
 		}		
-	}
-	
-	
+	}		
 }
