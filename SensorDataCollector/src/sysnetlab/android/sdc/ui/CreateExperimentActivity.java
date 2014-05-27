@@ -22,6 +22,7 @@ import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.services.RunExperimentService;
+import sysnetlab.android.sdc.ui.adaptors.ServiceConnectionAdapter;
 import sysnetlab.android.sdc.ui.fragments.ExperimentEditNotesFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentEditTagsFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentRunFragment;
@@ -30,9 +31,13 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -233,8 +238,16 @@ public class CreateExperimentActivity extends FragmentActivity
     }
 
     private void stopExperiment() throws IOException {
+    	int checked;
     	
     	Intent intent=new Intent(this,RunExperimentService.class);
+    	ServiceConnectionAdapter conncetion=new ServiceConnectionAdapter();
+    	bindService(intent, conncetion, 0);
+    	
+    	checked=conncetion.getCheckedSensors();
+    	
+    	unbindService(conncetion);
+    	
     	stopService(intent);
     	
         mExperiment.setDateTimeDone(DateFormat.getDateTimeInstance().format(
@@ -245,7 +258,8 @@ public class CreateExperimentActivity extends FragmentActivity
         StoreSingleton.getInstance().closeAllChannels();
 
         // TODO: retrieve the number of sensors checked from the service (getter?)
-        CharSequence text = "Stopped data collection for " + mExperiment.getSensors().size() + " Sensors";
+        //CharSequence text = "Stopped data collection for " + mExperiment.getSensors().size() + " Sensors";
+        CharSequence text = "Stopped data collection for " + checked + " Sensors";
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 

@@ -15,22 +15,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.os.Binder;
+import android.os.IBinder;
 
 public class RunExperimentService extends IntentService{
 
 	private SensorManager mSensorManager;
+	private int mCheckedSensors;
+	private IBinder mBinder;
 	
 	public RunExperimentService() {
 		super("runexperimentservice");
+		mBinder=new RunExperimentBinder();
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		mCheckedSensors=0;
 		
 		Experiment experiment=intent.getParcelableExtra("experiment");
-		
 		StoreSingleton.getInstance().setupExperiment();
-
         Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
         ArrayList<AbstractSensor> lstSensors = new ArrayList<AbstractSensor>();
 
@@ -43,12 +47,22 @@ public class RunExperimentService extends IntentService{
                 sensor.setListener(listener);
                 mSensorManager.registerListener(listener, (Sensor) sensor.getSensor(),
                         sensor.getSamplingInterval());
-
                 lstSensors.add(sensor);
+                mCheckedSensors++;
             }
         }
-
         experiment.setSensors(lstSensors);
+	}
+	
+	@Override
+	public IBinder onBind(Intent intent) {
+		return mBinder;
+	}
+	
+	public class RunExperimentBinder extends Binder {
+		public int getCheckedSensors(){
+			return mCheckedSensors;
+		}
 	}
 	
 	@Override
