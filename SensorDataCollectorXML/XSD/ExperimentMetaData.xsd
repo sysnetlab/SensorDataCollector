@@ -1,64 +1,46 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xs:schema id="sdcexperiment" 
-	xmlns="" 
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-	xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://schemas.sysnetlab.net/apps/sdc"
+	elementFormDefault="qualified">
 	
-  <xs:element name="datetime">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="year" type="xs:string" minOccurs="0" msdata:Ordinal="0" />
-        <xs:element name="month" type="xs:string" minOccurs="0" msdata:Ordinal="1" />
-        <xs:element name="day" type="xs:string" minOccurs="0" msdata:Ordinal="2" />
-        <xs:element name="hour" type="xs:string" minOccurs="0" msdata:Ordinal="3" />
-        <xs:element name="minute" type="xs:string" minOccurs="0" msdata:Ordinal="4" />
-        <xs:element name="second" type="xs:string" minOccurs="0" msdata:Ordinal="5" />
-        <xs:element name="millisecond" type="xs:string" minOccurs="0" msdata:Ordinal="6" />
-      </xs:sequence>
-      <xs:attribute name="locale" type="xs:string" />
-    </xs:complexType>
-  </xs:element>
   <xs:element name="experiment">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="name" type="xs:string" minOccurs="0" />
-        <xs:element name="device" minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        
+        <xs:element name="device" minOccurs="1" maxOccurs="1">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="android" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
                   <xs:sequence>
-                    <xs:element name="make" type="xs:string" minOccurs="0" />
-                    <xs:element name="model" type="xs:string" minOccurs="0" />
-                    <xs:element name="sdk-int" type="xs:string" minOccurs="0" />
-                    <xs:element name="sdk-codename" type="xs:string" minOccurs="0" />
+                    <xs:element name="make" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="model" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="sdk-int" type="xs:int" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="sdk-codename" type="xs:string" minOccurs="1" maxOccurs="1"/>
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="datetimecreation" minOccurs="0" maxOccurs="unbounded">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element ref="datetime" minOccurs="0" maxOccurs="unbounded" />
-            </xs:sequence>
-          </xs:complexType>
+        
+        <xs:element name="datetimecreation" minOccurs="1" maxOccurs="1"
+        	type="xs:dateTime">
         </xs:element>
-        <xs:element name="datetimecompletion" minOccurs="0" maxOccurs="unbounded">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element ref="datetime" minOccurs="0" maxOccurs="unbounded" />
-            </xs:sequence>
-          </xs:complexType>
+        
+        <xs:element name="datetimecompletion" minOccurs="1"
+        	maxOccurs="1" type="xs:dateTime">
         </xs:element>
+        
         <xs:element name="taglist" minOccurs="0" maxOccurs="unbounded">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="tag" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
                   <xs:sequence>
-                    <xs:element name="name" type="xs:string" minOccurs="0" />
+                    <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"/>
                     <xs:element name="shortdescription" type="xs:string" minOccurs="0" />
                     <xs:element name="shortdescriptioin" type="xs:string" minOccurs="0" />
                     <xs:element name="longdescription" type="xs:string" minOccurs="0" />
@@ -74,8 +56,9 @@
               <xs:element name="note" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
                   <xs:sequence>
-                    <xs:element name="notetext" type="xs:string" minOccurs="0" />
-                    <xs:element ref="datetime" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:element name="notetext" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="datetime" type="xs:dateTime" minOccurs="1"
+                    	maxOccurs="1" />
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
@@ -88,24 +71,25 @@
               <xs:element name="taggingaction" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
                   <xs:sequence>
-                    <xs:element name="tagreference" minOccurs="0" maxOccurs="unbounded">
+                    <xs:element name="tagreference" minOccurs="1" maxOccurs="1">
                       <xs:complexType>
                         <xs:attribute name="name" type="xs:string" />
                       </xs:complexType>
                     </xs:element>
-                    <xs:element name="experimenttime" minOccurs="0" maxOccurs="unbounded">
+                    <xs:element name="experimenttime" minOccurs="1" maxOccurs="1">
                       <xs:complexType>
                         <xs:sequence>
-                          <xs:element name="threadtimemillis" type="xs:string" minOccurs="0" />
-                          <xs:element name="elapsedrealtime" type="xs:string" minOccurs="0" />
-                          <xs:element name="elapsedrealtimenanos" type="xs:string" minOccurs="0" />
+                          <xs:element name="threadtimemillis"
+                          	type="xs:long" minOccurs="1" maxOccurs="1"/>
+                          <xs:element name="elapsedrealtime" type="xs:long" minOccurs="1" maxOccurs="1"/>
+                          <xs:element name="elapsedrealtimenanos" type="xs:long" minOccurs="0" />
                         </xs:sequence>
                       </xs:complexType>
                     </xs:element>
-                    <xs:element name="taggingstate" minOccurs="0" maxOccurs="unbounded">
+                    <xs:element name="taggingstate" minOccurs="1" maxOccurs="1">
                       <xs:complexType>
                         <xs:sequence>
-                          <xs:element name="name" type="xs:string" minOccurs="0" />
+                          <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"/>
                         </xs:sequence>
                       </xs:complexType>
                     </xs:element>
@@ -121,9 +105,9 @@
               <xs:element name="sensor" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
                   <xs:sequence>
-                    <xs:element name="name" type="xs:string" minOccurs="0" msdata:Ordinal="0" />
-                    <xs:element name="majortype" type="xs:string" minOccurs="0" msdata:Ordinal="1" />
-                    <xs:element name="minortype" type="xs:string" minOccurs="0" msdata:Ordinal="2" />
+                    <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="majortype" type="xs:int" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="minortype" type="xs:int" minOccurs="1" maxOccurs="1"/>
                   </xs:sequence>
                   <xs:attribute name="id" type="xs:string" />
                 </xs:complexType>
@@ -134,7 +118,7 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-<xs:element name="sensordata" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+<xs:element name="sensordata">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="experiment">
@@ -149,7 +133,7 @@
             <xs:sequence>
               <xs:element name="sensor" nillable="true" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
-                  <xs:simpleContent msdata:ColumnName="sensor_Text" msdata:Ordinal="1">
+                  <xs:simpleContent>
                     <xs:extension base="xs:string">
                       <xs:attribute name="id" type="xs:string" />
                     </xs:extension>
@@ -161,7 +145,7 @@
                   <xs:sequence>
                     <xs:element name="location" nillable="true" minOccurs="0" maxOccurs="unbounded">
                       <xs:complexType>
-                        <xs:simpleContent msdata:ColumnName="location_Text" msdata:Ordinal="1">
+                        <xs:simpleContent>
                           <xs:extension base="xs:string">
                             <xs:attribute name="type" type="xs:string" />
                           </xs:extension>
@@ -185,12 +169,4 @@
       </xs:choice>
     </xs:complexType>
   </xs:element>  
-  <xs:element name="sdcexperiment" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element ref="datetime" />
-        <xs:element ref="experiment" />
-      </xs:choice>
-    </xs:complexType>
-  </xs:element>
 </xs:schema>
