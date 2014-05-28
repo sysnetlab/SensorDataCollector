@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
+    android:layout_height="match_parent">
     <TextView
         android:id="@+id/textview_experiment_view_title"
         android:layout_width="match_parent"
@@ -69,13 +68,14 @@
         android:layout_height="fill_parent"
         android:layout_alignLeft="@id/textview_experiment_view_name_label"
         android:layout_below="@id/listview_experiment_view_operations"
+        android:layout_above="@+id/layout_experiment_view_buttons"
         android:layout_marginRight="24dp"
         android:orientation="vertical" />
 
        
     
     <RelativeLayout
-        android:id="@+id/layout_experiment_view_buttons"
+        android:id="@id/layout_experiment_view_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

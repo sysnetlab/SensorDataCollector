@@ -2,15 +2,18 @@ package sysnetlab.android.sdc.test;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
-import sysnetlab.android.sdc.datastore.StoreSingleton;
+import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.ui.ViewExperimentActivity;
 import android.content.Intent;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 
 
 public class ViewExperimentActivityTests extends android.test.ActivityUnitTestCase<ViewExperimentActivity> {
 
 	private ViewExperimentActivity veActivity;
+	private Experiment mExperiment;
 	
 	public ViewExperimentActivityTests() {
 		super(ViewExperimentActivity.class);
@@ -19,8 +22,8 @@ public class ViewExperimentActivityTests extends android.test.ActivityUnitTestCa
 	protected void setUp() throws Exception {
 		super.setUp();		
 	    Intent intent = new Intent(getInstrumentation().getTargetContext(), ViewExperimentActivity.class);
-	    Experiment mExperiment= new Experiment();	
-	    intent.putExtra("experiment", mExperiment);
+	    mExperiment= new Experiment();
+	    ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);	    
         startActivity(intent, null, null);
         veActivity = getActivity();
         getInstrumentation().callActivityOnStart(veActivity);
@@ -32,7 +35,8 @@ public class ViewExperimentActivityTests extends android.test.ActivityUnitTestCa
 	
 	public void testViewExperimentActivityLoaded()
 	{
-		assertNotNull(veActivity.findViewById(R.id.fragment_container));		
-	}
+		assertNotNull("The ExperimentViewFragment was not loaded", veActivity.getExperimentViewFragment());
+		assertNotNull("The activity was not loaded", veActivity.findViewById(R.id.fragment_container));		
+	}			
 
 }

@@ -483,14 +483,14 @@ public class CreateExperimentActivity extends FragmentActivity
     
     public void notifyInBackground_ExperimentRunFragment(){
     	Intent intent = new Intent(getBaseContext(), CreateExperimentActivity.class);        
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);        
         NotificationCompat.Builder builder = 
         	new NotificationCompat.Builder(this)
         	.setSmallIcon(R.drawable.ic_launcher)
         	.setContentTitle(mExperiment.getName())
         	.setContentText(getText(R.string.text_running_in_background))
         	.setAutoCancel(true)
+        	.setTicker(getText(R.string.text_running_in_background))
         	.setContentIntent(pIntent);
         
         NotificationManager notificationManager =

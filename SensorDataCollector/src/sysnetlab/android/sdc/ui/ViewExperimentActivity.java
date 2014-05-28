@@ -110,5 +110,9 @@ public class ViewExperimentActivity extends FragmentActivity implements
         FragmentUtil.switchToFragment(this, mExperimentViewSensorDataFragment,
                 "experimentviewsensordata");
     }
+    
+    public ExperimentViewFragment getExperimentViewFragment(){
+    	return mExperimentViewFragment;
+    }
 
 }
