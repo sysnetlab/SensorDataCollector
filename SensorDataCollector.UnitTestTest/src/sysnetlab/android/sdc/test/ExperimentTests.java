@@ -22,11 +22,11 @@ public class ExperimentTests extends AndroidTestCase{
 	
 	public void testDefaultConstructor(){
 		assertNotSame("The name was not set by the default constructor",null,mExperiment.getName());
-		assertNotSame("The date was not set by the default constructor",null,mExperiment.getDateTimeCreated());
+		assertNotSame("The date was not set by the default constructor",null,mExperiment.getDateTimeCreatedAsString());
 		assertNotSame("The device info was not set by the default constructor",null,mExperiment.getDeviceInformation());
 		
 		assertNotSame("The name was set empty by the default constructor","",mExperiment.getName());
-		assertNotSame("The date was set empty by the default constructor","",mExperiment.getDateTimeCreated());
+		assertNotSame("The date was set empty by the default constructor","",mExperiment.getDateTimeCreatedAsString());
 		assertNotSame("The device info was set empty by the default constructor","",mExperiment.getDeviceInformation());
 	}
 	

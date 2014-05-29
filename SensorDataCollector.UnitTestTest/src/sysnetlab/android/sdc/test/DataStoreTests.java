@@ -14,7 +14,7 @@ public class DataStoreTests extends AndroidTestCase {
 	
     public void testAbstractStoreBehavior() {
     	AbstractStore store = StoreSingleton.getInstance();
-    	Experiment exp = new Experiment("testExperiment","01/01/2011");
+    	Experiment exp = new Experiment("testExperiment");
     	store.setupNewExperimentStorage(exp);
     	store.writeExperimentMetaData(exp);
     	List<Experiment> storedExps = store.listStoredExperiments();
@@ -22,8 +22,7 @@ public class DataStoreTests extends AndroidTestCase {
     	boolean foundCreatedExperiment = false;
     	for (Experiment storedExp : storedExps)
     	{
-    		if(storedExp.getName().equals("testExperiment") && 
-    		   storedExp.getDateTimeCreated().equals("01/01/2011"))
+    		if(storedExp.getName().equals("testExperiment"))
     		{
     			foundCreatedExperiment = true;
     		}

@@ -6,6 +6,7 @@ import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
+import sysnetlab.android.sdc.sensor.SensorUtilSingleton;
 import sysnetlab.android.sdc.ui.ViewExperimentActivity;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
@@ -35,15 +36,19 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
     protected void setUp() throws Exception {
         super.setUp();
         setActivityInitialTouchMode(true);
+        
+        
+        mExperiment=new Experiment();
+        ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);        
+        mViewExperimentActivity = (ViewExperimentActivity) getActivity();
+        SensorUtilSingleton.getInstance().setContext(mViewExperimentActivity.getBaseContext());
         ExperimentManagerSingleton.getInstance().addExperimentStore(
                 StoreSingleton.getInstance());
-        List<Experiment> listExperiments= ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate();
+        List<Experiment> listExperiments= ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate();        
         mExperiment = listExperiments.get(0);
-        mExperiment.setName("Test Experiment");
         ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);
         Intent intent = new Intent(getInstrumentation().getTargetContext(), ViewExperimentActivity.class);
         setActivityIntent(intent);
-        mViewExperimentActivity = (ViewExperimentActivity) getActivity();
         mViewExperimentActivity.startActivity(intent);
     }
     

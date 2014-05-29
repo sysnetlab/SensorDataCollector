@@ -25,12 +25,10 @@ public class NoteTests extends AndroidTestCase {
         assertEquals("The constructor failed to initialize the object with null arguments", "",
                 mNote.getNote());
         assertEquals("The constructor failed to initialize the object with null arguments", "",
-                mNote.getDateTime());
+                mNote.getDateCreatedAsString());
 
-        mNote = new Note("testNote", "testDate");
+        mNote = new Note("testNote");
         assertEquals("The constructor failed to initialize the Note", "testNote", mNote.getNote());
-        assertEquals("The constructor failed to initialize the Note", "testDate",
-                mNote.getDateTime());
 
         mNote = new Note("test");
         parcel = Parcel.obtain();

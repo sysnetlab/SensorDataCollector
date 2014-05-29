@@ -82,11 +82,11 @@ public class ExperimentViewNotesFragment extends Fragment {
 
         ((TextView) mView
                 .findViewById(R.id.textview_fragment_experiment_view_notes_experiment_time_created))
-                .setText(experiment.getDateTimeCreated());
+                .setText(experiment.getDateTimeCreatedAsString());
 
         ((TextView) mView
                 .findViewById(R.id.textview_fragment_experiment_view_notes_experiment_time_done))
-                .setText(experiment.getDateTimeDone());
+                .setText(experiment.getDateTimeDoneAsString());
 
         mCurrentNoteNo = 0;
         updateNoteView(experiment.getNotes(), mCurrentNoteNo);
@@ -104,7 +104,7 @@ public class ExperimentViewNotesFragment extends Fragment {
         } else {
             String strNoteCaptionFormatter = mView.getResources().getString(
                     R.string.text_note_x_of_y_taken_at_time_z);
-            strNoteCaption = String.format(strNoteCaptionFormatter, noteNo + 1, notes.size(), notes.get(noteNo).getDateTime());
+            strNoteCaption = String.format(strNoteCaptionFormatter, noteNo + 1, notes.size(), notes.get(noteNo).getDateCreatedAsString());
             strNoteText = notes.get(noteNo).getNote();
         }
 
