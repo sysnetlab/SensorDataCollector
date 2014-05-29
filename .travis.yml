@@ -1,5 +1,0 @@
-language: android
-android:
-  components:
-    - SensorDataCollector.UnitTest
-    
