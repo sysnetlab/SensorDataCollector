@@ -82,11 +82,11 @@ public class ExperimentViewNotesFragment extends Fragment {
 
         ((TextView) mView
                 .findViewById(R.id.textview_fragment_experiment_view_notes_experiment_time_created))
-                .setText(experiment.getDateTimeCreated());
+                .setText(experiment.getDateTimeCreatedAsString());
 
         ((TextView) mView
                 .findViewById(R.id.textview_fragment_experiment_view_notes_experiment_time_done))
-                .setText(experiment.getDateTimeDone());
+                .setText(experiment.getDateTimeDoneAsString());
 
         mCurrentNoteNo = 0;
         updateNoteView(experiment.getNotes(), mCurrentNoteNo);

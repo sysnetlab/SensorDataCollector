@@ -10,15 +10,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import sysnetlab.android.sdc.datacollector.DeviceInformation;
 import sysnetlab.android.sdc.datacollector.Experiment;
-import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.datacollector.Note;
+import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.SensorUtilSingleton;
@@ -108,8 +107,8 @@ public class SimpleFileStore extends AbstractStore {
                     new FileOutputStream(configFilePath)));
 
             out.println(experiment.getName());
-            out.println(experiment.getDateTimeCreated());
-            out.println(experiment.getDateTimeDone());
+            out.println(experiment.getDateTimeCreatedAsString());
+            out.println(experiment.getDateTimeDoneAsString());
 
             out.println(experiment.getTags().size());
             for (Tag tag : experiment.getTags()) {
@@ -167,9 +166,11 @@ public class SimpleFileStore extends AbstractStore {
 
                 name = in.readLine();
                 dateTimeCreated = in.readLine();
-
                 dateTimeDone = in.readLine();
-                experiment = new Experiment(name, dateTimeCreated);
+                
+                experiment = new Experiment();
+                experiment.setName(name);
+                experiment.setDateTimeCreated(dateTimeCreated);
                 experiment.setDateTimeDone(dateTimeDone);
 
                 int n;
@@ -230,28 +231,25 @@ public class SimpleFileStore extends AbstractStore {
 
                 Log.i("SensorDataCollector",
                         "SimpleFileStore::loadExperiment(): load experiment("
-                                + experiment.getName() + ", " + experiment.getDateTimeCreated()
+                                + experiment.getName() + ", " + experiment.getDateTimeCreatedAsString()
                                 + ") successfully.");
                 return experiment;
             } else {
                 file = new File(parentDir);
 
-                dateTimeCreated = SimpleDateFormat.getDateTimeInstance().format(
-                        (new Date(file.lastModified())));
+                Date dateCreated = new Date(file.lastModified());
                 name = dirName;
 
                 Log.w("SensorDataCollector",
-                        "SimpleFileStore::loadExperiment(): no configuraiton file is found for "
-                                + name + ", " + dateTimeCreated);
+                        "SimpleFileStore::loadExperiment(): no configuraiton file is found for " + name);
 
-                return new Experiment(name, dateTimeCreated);
+                return new Experiment(name, dateCreated);
             }
         } catch (NumberFormatException e) {
             if (name != null && dateTimeCreated != null) {
                 Log.w("SensorDataCollector",
-                        "SimpleFileStore::loadExperiment(): Found an old configuration file for "
-                                + name + ", " + dateTimeCreated);
-                return new Experiment(name, dateTimeCreated);
+                        "SimpleFileStore::loadExperiment(): Found an old configuration file for " + name);
+                return new Experiment(name);
             }
 
             Log.e("SensorDataCollector", "SimpleFileStore::loadExperiment(): " +
@@ -264,9 +262,8 @@ public class SimpleFileStore extends AbstractStore {
 
             if (name != null && dateTimeCreated != null) {
                 Log.w("SensorDataCollector",
-                        "SimpleFileStore::loadExperiment(): Found an old configuration file for "
-                                + name + ", " + dateTimeCreated);
-                return new Experiment(name, dateTimeCreated);
+                        "SimpleFileStore::loadExperiment(): Found an old configuration file for " + name);
+                return new Experiment(name);
             }
 
             Log.e("SensorDataCollector", "SimpleFileStore::loadExperiment(): " +
@@ -277,7 +274,7 @@ public class SimpleFileStore extends AbstractStore {
         } catch (RuntimeException e) {
             Log.w("SensorDataCollector",
                     "SimpleFileStore::loadExperiment(): Found an old configuration file "
-                            + experiment.getName() + ", " + experiment.getDateTimeCreated());
+                            + experiment.getName() + ", " + experiment.getDateTimeCreatedAsString());
             return experiment;
         }
     }
