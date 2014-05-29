@@ -1,14 +1,13 @@
 package sysnetlab.android.sdc.services;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 
 import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
 import sysnetlab.android.sdc.datacollector.Experiment;
-import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
+import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
@@ -98,8 +97,7 @@ public class RunExperimentService extends Service {
             }
         }
 
-        experiment.setDateTimeDone(SimpleDateFormat.getDateTimeInstance().format(
-                Calendar.getInstance().getTime()));
+        experiment.setDateTimeDone(Calendar.getInstance().getTime());
 
         StoreSingleton.getInstance().writeExperimentMetaData(experiment);
 

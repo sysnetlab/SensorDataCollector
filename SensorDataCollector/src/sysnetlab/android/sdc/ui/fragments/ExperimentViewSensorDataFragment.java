@@ -96,11 +96,11 @@ public class ExperimentViewSensorDataFragment extends Fragment {
 
         ((TextView) mView
                 .findViewById(R.id.textview_fragment_experiment_view_sensors_experiment_time_created))
-                .setText(experiment.getDateTimeCreated());
+                .setText(experiment.getDateTimeCreatedAsString());
 
         ((TextView) mView
                 .findViewById(R.id.textview_fragment_experiment_view_sensors_experiment_time_done))
-                .setText(experiment.getDateTimeDone());
+                .setText(experiment.getDateTimeDoneAsString());
 
         updateSensorDataView(experiment.getSensors(), mSensorNo);
 

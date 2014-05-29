@@ -2,9 +2,11 @@
 package sysnetlab.android.sdc.datacollector;
 
 import java.io.FileNotFoundException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import sysnetlab.android.sdc.datastore.AbstractStore;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
@@ -19,8 +21,8 @@ import android.util.Log;
 public class Experiment implements Parcelable {
     private DeviceInformation mDeviceInfo; // on what device?
     private String mName;
-    private String mDateTimeCreated;
-    private String mDateTimeDone;
+    private Date mDateTimeCreated;
+    private Date mDateTimeDone;
     private ArrayList<Tag> mTags;
     private ArrayList<Note> mNotes;
     private ArrayList<TaggingAction> mTaggingActions;
@@ -28,20 +30,23 @@ public class Experiment implements Parcelable {
     private ArrayList<AbstractSensor> mSensors;
     //private AbstractStore mStore;
 
-    public Experiment(String n, String dt) {
+    public Experiment(String name, Date dateCreated) {
         mDeviceInfo = new DeviceInformation();
-        mName = n;
-        mDateTimeCreated = dt;
-        mDateTimeDone = dt;
+        mName = name;
+        mDateTimeCreated = dateCreated;
+        mDateTimeDone = dateCreated;
         mTags = new ArrayList<Tag>();
         mNotes = new ArrayList<Note>();
         mSensors = new ArrayList<AbstractSensor>();
         mTaggingActions = new ArrayList<TaggingAction>();
     }
 
+    public Experiment(String name) {
+        this(name, Calendar.getInstance().getTime());
+    }
+    
     public Experiment() {
-        this("Unnamed Experiment", SimpleDateFormat.getDateTimeInstance().format(
-                Calendar.getInstance().getTime()));
+        this("Unnamed Experiment", Calendar.getInstance().getTime());
     }
 
     public Experiment clone() {
@@ -94,10 +99,23 @@ public class Experiment implements Parcelable {
         mName = name;
     }
 
-    public String getDateTimeCreated() {
-        return mDateTimeCreated;
+    public String getDateTimeCreatedAsString() {
+        return SimpleDateFormat.getDateTimeInstance().format(mDateTimeCreated);
     }
 
+    public Date getDateTimeCreated() {
+        return mDateTimeCreated;
+    }
+    
+    public void setDateTimeCreatedFromString(String dateCreated) {
+        try {
+			mDateTimeCreated = SimpleDateFormat.getDateTimeInstance().parse(dateCreated);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
     public ArrayList<AbstractSensor> getSensors() {
         return mSensors;
     }
@@ -114,12 +132,25 @@ public class Experiment implements Parcelable {
         mDeviceInfo = deviceInfo;
     }
 
-    public String getDateTimeDone() {
-        return mDateTimeDone;
+    public String getDateTimeDoneAsString() {
+        return SimpleDateFormat.getDateTimeInstance().format(mDateTimeDone);
     }
 
-    public void setDateTimeDone(String dateTimeDone) {
-        mDateTimeDone = dateTimeDone;
+    public Date getDateTimeDone() {
+        return mDateTimeDone;
+    }
+    
+    public void setDateTimeDoneFromString(String dateDone) {
+    	try {
+ 			mDateTimeDone = SimpleDateFormat.getDateTimeInstance().parse(dateDone);
+ 		} catch (ParseException e) {
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+ 		}
+    }
+    
+    public void setDateTimeDone(Date dateDone) {
+		mDateTimeDone = dateDone;
     }
     
     public ArrayList<TaggingAction> getTaggingActions() {
@@ -155,8 +186,8 @@ public class Experiment implements Parcelable {
     public void writeToParcel(Parcel outParcel, int flags) {
         outParcel.writeString(mName);
 
-        outParcel.writeString(mDateTimeCreated);
-        outParcel.writeString(mDateTimeDone);
+        outParcel.writeString(getDateTimeCreatedAsString());
+        outParcel.writeString(getDateTimeDoneAsString());
 
         outParcel.writeTypedList(mTags);
 
@@ -182,8 +213,8 @@ public class Experiment implements Parcelable {
         
         mName = inParcel.readString();
 
-        mDateTimeCreated = inParcel.readString();
-        mDateTimeDone = inParcel.readString();
+        setDateTimeCreatedFromString(inParcel.readString());
+        setDateTimeDoneFromString(inParcel.readString());
 
         mTags = new ArrayList<Tag>();
         inParcel.readTypedList(mTags, Tag.CREATOR);
