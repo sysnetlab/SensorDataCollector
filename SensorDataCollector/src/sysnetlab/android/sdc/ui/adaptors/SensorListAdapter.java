@@ -66,4 +66,8 @@ public class SensorListAdapter extends ArrayAdapter<AbstractSensor> {
         holder.checkbox.setVisibility(mCheckBoxVisiblity);
         return view;
     }
+    
+    public List<AbstractSensor> getSensors() {
+		return mList;
+	}
 }

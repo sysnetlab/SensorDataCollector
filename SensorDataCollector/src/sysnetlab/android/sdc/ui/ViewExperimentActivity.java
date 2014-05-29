@@ -1,9 +1,12 @@
 
 package sysnetlab.android.sdc.ui;
 
+import java.util.List;
+
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
+import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewNotesFragment;
@@ -109,6 +112,10 @@ public class ViewExperimentActivity extends FragmentActivity implements
 
         FragmentUtil.switchToFragment(this, mExperimentViewSensorDataFragment,
                 "experimentviewsensordata");
+    }
+    
+    public ExperimentViewFragment getExperimentViewFragment(){
+    	return mExperimentViewFragment;
     }
 
 }
