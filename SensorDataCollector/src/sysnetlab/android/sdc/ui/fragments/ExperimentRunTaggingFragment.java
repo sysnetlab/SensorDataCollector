@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
+import sysnetlab.android.sdc.ui.TaggingGridView;
 import sysnetlab.android.sdc.ui.adaptors.TaggingTagListAdapter;
 import android.app.Activity;
 import android.os.Bundle;
@@ -28,7 +29,7 @@ public class ExperimentRunTaggingFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        GridView gridview = (GridView) mView.findViewById(R.id.gridview_experiment_tagging);
+        TaggingGridView gridview = (TaggingGridView) mView.findViewById(R.id.gridview_experiment_tagging);
 
         gridview.setOnItemClickListener(new GridView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> gridview, View view, int position, long id) {
@@ -52,13 +53,13 @@ public class ExperimentRunTaggingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+        // super.onCreateView(inflater, container, savedInstanceState);
 
         mView = inflater.inflate(R.layout.fragment_experiment_tagging, container, false);
 
         ArrayList<Tag> tags = ((CreateExperimentActivity) getActivity()).getExperiment().getTags();
 
-        GridView gridview = (GridView) mView.findViewById(R.id.gridview_experiment_tagging);
+        TaggingGridView gridview = (TaggingGridView) mView.findViewById(R.id.gridview_experiment_tagging);
         
         TaggingTagListAdapter taggingAdapter = new TaggingTagListAdapter(getActivity(), tags);
 

@@ -2,7 +2,6 @@ package sysnetlab.android.sdc.ui.adaptors;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.StateTag;
 import sysnetlab.android.sdc.datacollector.Tag;
@@ -48,14 +47,11 @@ public class TaggingTagListAdapter extends BaseAdapter {
         View view = null;
         if (convertView == null) {
             LayoutInflater inflator = mActivity.getLayoutInflater();
-            view = inflator.inflate(R.layout.tag_cell, null);
+            view = inflator.inflate(R.layout.tag_cell, parent, false);
             
             final ViewHolder viewHolder = new ViewHolder();
             
             viewHolder.text = (TextView) view.findViewById(R.id.textview_tag_cell);
-            
-            // make the tag big (a square)
-            // viewHolder.text.setHeight(viewHolder.text.getWidth());
             
             view.setTag(viewHolder);
         } else {
