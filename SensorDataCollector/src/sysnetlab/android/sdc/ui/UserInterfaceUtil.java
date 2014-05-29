@@ -170,4 +170,13 @@ public class UserInterfaceUtil {
             return columns > 0 ? columns : GridView.AUTO_FIT;
         }
     }
+    
+    @SuppressLint("NewApi")
+    public static boolean isInLayoutCompatible(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            return view.isInLayout();
+        } else {
+            return false;
+        }
+    }
 }

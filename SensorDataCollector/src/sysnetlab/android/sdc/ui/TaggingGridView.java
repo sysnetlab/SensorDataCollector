@@ -8,6 +8,7 @@ import android.widget.GridView;
 public class TaggingGridView extends GridView {
     private int mChildHeight;
     private int mChildWidth;
+    private boolean mTagResized = false;
     
     public TaggingGridView(Context context) {
         super(context);
@@ -47,6 +48,7 @@ public class TaggingGridView extends GridView {
     @Override
     protected void layoutChildren() {
         super.layoutChildren();
+        if (mTagResized && UserInterfaceUtil.isInLayoutCompatible(this)) return;
 
         for(int i = 0; i < getChildCount(); i++) {
             LayoutParams params = (LayoutParams) getChildAt(i).getLayoutParams();
@@ -54,5 +56,6 @@ public class TaggingGridView extends GridView {
             params.width = mChildWidth;
             getChildAt(i).setLayoutParams(params);
         }
+        mTagResized = true;
     }  
 }
