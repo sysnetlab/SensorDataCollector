@@ -200,7 +200,7 @@ public class OperationAdapter extends BaseAdapter {
         TextView tvNote = new TextView(mActivity);
         //tvNote.setBackgroundResource(R.drawable.rounded_corner);
         tvNote.setTextAppearance(mActivity, android.R.attr.textAppearanceSmall);
-        tvNote.setText(note.getDateTime() + ": " + note.getNote());
+        tvNote.setText(note.getDateCreatedAsString() + ": " + note.getNote());
         tvNote.setPadding(0, 2, 8, 2);
         UserInterfaceUtil.setEllipsizeforTextView(tvNote, TextUtils.TruncateAt.END);
 

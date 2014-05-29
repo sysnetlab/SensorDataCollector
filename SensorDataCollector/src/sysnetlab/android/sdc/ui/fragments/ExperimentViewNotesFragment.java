@@ -104,7 +104,7 @@ public class ExperimentViewNotesFragment extends Fragment {
         } else {
             String strNoteCaptionFormatter = mView.getResources().getString(
                     R.string.text_note_x_of_y_taken_at_time_z);
-            strNoteCaption = String.format(strNoteCaptionFormatter, noteNo + 1, notes.size(), notes.get(noteNo).getDateTime());
+            strNoteCaption = String.format(strNoteCaptionFormatter, noteNo + 1, notes.size(), notes.get(noteNo).getDateCreatedAsString());
             strNoteText = notes.get(noteNo).getNote();
         }
 

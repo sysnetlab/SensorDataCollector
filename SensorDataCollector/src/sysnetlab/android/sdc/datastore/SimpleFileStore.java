@@ -119,7 +119,7 @@ public class SimpleFileStore extends AbstractStore {
 
             out.println(experiment.getNotes().size());
             for (Note note : experiment.getNotes()) {
-                out.println(note.getDateTime());
+                out.println(note.getDateCreatedAsString());
                 out.println(note.getNote());
             }
 
@@ -170,8 +170,8 @@ public class SimpleFileStore extends AbstractStore {
                 
                 experiment = new Experiment();
                 experiment.setName(name);
-                experiment.setDateTimeCreated(dateTimeCreated);
-                experiment.setDateTimeDone(dateTimeDone);
+                experiment.setDateTimeCreatedFromString(dateTimeCreated);
+                experiment.setDateTimeDoneFromString(dateTimeDone);
 
                 int n;
                 n = Integer.parseInt(in.readLine());
@@ -198,7 +198,8 @@ public class SimpleFileStore extends AbstractStore {
                         String dateTime = in.readLine();
                         String noteText = in.readLine();
 
-                        Note note = new Note(noteText, dateTime);
+                        Note note = new Note(noteText);
+                        note.setDateCreatedFromString(dateTime);
                         notes.add(note);
                     }
                     

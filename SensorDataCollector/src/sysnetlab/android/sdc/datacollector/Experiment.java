@@ -107,7 +107,7 @@ public class Experiment implements Parcelable {
         return mDateTimeCreated;
     }
     
-    public void setDateTimeCreated(String dateCreated) {
+    public void setDateTimeCreatedFromString(String dateCreated) {
         try {
 			mDateTimeCreated = SimpleDateFormat.getDateTimeInstance().parse(dateCreated);
 		} catch (ParseException e) {
@@ -140,7 +140,7 @@ public class Experiment implements Parcelable {
         return mDateTimeDone;
     }
     
-    public void setDateTimeDone(String dateDone) {
+    public void setDateTimeDoneFromString(String dateDone) {
     	try {
  			mDateTimeDone = SimpleDateFormat.getDateTimeInstance().parse(dateDone);
  		} catch (ParseException e) {
@@ -213,8 +213,8 @@ public class Experiment implements Parcelable {
         
         mName = inParcel.readString();
 
-        setDateTimeCreated(inParcel.readString());
-        setDateTimeDone(inParcel.readString());
+        setDateTimeCreatedFromString(inParcel.readString());
+        setDateTimeDoneFromString(inParcel.readString());
 
         mTags = new ArrayList<Tag>();
         inParcel.readTypedList(mTags, Tag.CREATOR);
