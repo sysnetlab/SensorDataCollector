@@ -6,6 +6,7 @@ import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datastore.AbstractStore;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.datastore.SimpleFileStore;
+import sysnetlab.android.sdc.datastore.SimpleXMLFileStore;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
 import android.test.AndroidTestCase;
 
@@ -55,5 +56,22 @@ public class DataStoreTests extends AndroidTestCase {
     	store.createChannel("");
     	store.createChannel("");
     	assertTrue(channelNumber == (store.getNextChannelNumber() - 2));
+    }
+    
+    public void testSimpleXMLFileStore() {
+        SimpleXMLFileStore store = new SimpleXMLFileStore();
+        
+        int expNumber = store.getNextExperimentNumber();
+        store.setupNewExperimentStorage(null);
+        assertTrue(expNumber == (store.getNextExperimentNumber() - 1));
+        assertNotNull(store.getNewExperimentPath());
+        
+        int channelNumber = store.getNextChannelNumber();
+        store.createChannel("");
+        store.createChannel("");
+        assertTrue(channelNumber == (store.getNextChannelNumber() - 2));
+
+        Experiment experiment = new Experiment();
+        store.writeExperimentMetaData(experiment);
     }
 }

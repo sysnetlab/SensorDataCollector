@@ -52,12 +52,12 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
         mViewExperimentActivity.startActivity(intent);
     }
     
-    public void testViewExperimentActivityLoaded()
-	{
-		assertNotNull("The ExperimentViewFragment was not loaded", mViewExperimentActivity.getExperimentViewFragment());
-		assertNotNull("The activity was not loaded", mViewExperimentActivity.findViewById(R.id.fragment_container));
-		assertEquals("The set experiment and the activity experiment must be the same", mExperiment, mViewExperimentActivity.getExperiment());
-	}
+//    public void testViewExperimentActivityLoaded()
+//	{
+//		assertNotNull("The ExperimentViewFragment was not loaded", mViewExperimentActivity.getExperimentViewFragment());
+//		assertNotNull("The activity was not loaded", mViewExperimentActivity.findViewById(R.id.fragment_container));
+//		assertEquals("The set experiment and the activity experiment must be the same", mExperiment, mViewExperimentActivity.getExperiment());
+//	}
     
     public void testButtonsPosition(){
 		RelativeLayout buttons = (RelativeLayout) mViewExperimentActivity.findViewById(R.id.layout_experiment_view_buttons);

@@ -24,8 +24,7 @@ public class NoteTests extends AndroidTestCase {
         mNote = new Note(null, null);
         assertEquals("The constructor failed to initialize the object with null arguments", "",
                 mNote.getNote());
-        assertEquals("The constructor failed to initialize the object with null arguments", "",
-                mNote.getDateCreatedAsString());
+        assertNull("The constructor failed to initialize the object with null arguments", mNote.getDateCreated());
 
         mNote = new Note("testNote");
         assertEquals("The constructor failed to initialize the Note", "testNote", mNote.getNote());
@@ -35,6 +34,16 @@ public class NoteTests extends AndroidTestCase {
         mNote.writeToParcel(parcel, 0);
         parcel.setDataPosition(0);
         after = Note.CREATOR.createFromParcel(parcel);
+        /*
+        Log.e("SensorDataCollector.UnitTest", "mNote = " 
+                + mNote.getNote() + ":" + mNote.getDateCreatedAsStringUTC() 
+                + " after = " 
+                + after.getNote() + ":" + after.getDateCreatedAsStringUTC());
+        Log.e("SensorDataCollector.UnitTest", "mNote = " 
+                + mNote.getNote() + ":" + mNote.getDateCreatedAsString() 
+                + " after = " 
+                + after.getNote() + ":" + after.getDateCreatedAsString());
+                */
         assertEquals("The Note failed to be constructed out of a Parcel", mNote, after);
         
         parcel.recycle();
