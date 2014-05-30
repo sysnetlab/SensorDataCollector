@@ -1,4 +1,3 @@
-
 package sysnetlab.android.sdc.services;
 
 import java.util.ArrayList;
@@ -75,12 +74,11 @@ public class RunExperimentService extends Service {
                 sensor.setListener(listener);
                 sensorManager.registerListener(listener, (Sensor) sensor.getSensor(),
                         sensor.getSamplingInterval());
-
                 lstSensors.add(sensor);
             }
         }
-
         experiment.setSensors(lstSensors);
+
         mIsExperimentRunning = true;
     }
 
@@ -90,6 +88,7 @@ public class RunExperimentService extends Service {
         }
 
         Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
+
         while (iter.hasNext()) {
             AndroidSensor sensor = (AndroidSensor) iter.next();
             if (sensor.isSelected()) {

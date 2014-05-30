@@ -263,7 +263,6 @@ public class CreateExperimentActivity extends FragmentActivity
     @Override
     protected void onStart() {
         super.onStart();
-
         // Start the local service      
         startService(new Intent(this, RunExperimentService.class));
     }
@@ -271,7 +270,6 @@ public class CreateExperimentActivity extends FragmentActivity
     @Override
     protected void onStop() {
         super.onStop();
-
         // Stop the local service
         //stopService(new Intent(this, RunExperimentService.class));
     }

@@ -10,6 +10,7 @@ import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.ui.GestureEventListener;
 import sysnetlab.android.sdc.ui.UserInterfaceUtil;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
@@ -26,7 +27,13 @@ public class ExperimentViewSensorDataFragment extends Fragment {
     private int mSensorNo;
 
     private int MAXIMUM_LINES_OF_DATA_TO_READ = 100;
-
+    
+    public static ExperimentViewSensorDataFragment newInstance() {
+    	ExperimentViewSensorDataFragment f=new ExperimentViewSensorDataFragment();
+		f.setSensorNo(0);
+		return f;
+	}
+    
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -98,12 +105,6 @@ public class ExperimentViewSensorDataFragment extends Fragment {
         updateSensorDataView(experiment.getSensors(), mSensorNo);
 
         return mView;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mSensorNo = 0;
     }
 
     private void updateSensorDataView(ArrayList<AbstractSensor> lstSensors, int sensorNo) {

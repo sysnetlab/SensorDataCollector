@@ -46,4 +46,7 @@ public class SensorPropertyListAdapter extends ArrayAdapter<SensorProperty> {
             return view;
         }
         
+        public List<SensorProperty> getProperties(){
+        	return mList;
+        }
     }

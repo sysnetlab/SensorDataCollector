@@ -100,4 +100,9 @@ public class ExperimentViewFragment extends Fragment {
                     + " must implement OnFragmentClickListener");
         }
     }
+    
+    public ExperimentSensorListFragment getExperimentSensorListFragment(){
+    	return mExperimentSensorListFragment;
+    }
+    
 }

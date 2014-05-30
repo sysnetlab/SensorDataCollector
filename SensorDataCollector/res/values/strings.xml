@@ -99,5 +99,32 @@
     <string name="text_continue_experiment">Continue Experiment</string>
     <string name="text_stopping_experiment">Stopping the experiment &#8230;</string>
     <string name="text_continuing_experiment">Continuing the experiment &#8230;</string>
-
+    
+    <!-- Audio Record -->
+    <string name="text_channel_in_back">Channel in back</string>
+    <string name="text_channel_in_back_processed">Channel-in back processed</string>
+    <string name="text_channel_in_default">Channel in default</string>
+    <string name="text_channel_in_front">Channel in front</string>
+    <string name="text_channel_in_front_processed">Channel in front processed</string>
+	<string name="text_channel_in_left">Channel in left</string>
+	<string name="text_channel_in_left_processed">Channel in left processed</string>
+	<string name="text_channel_in_mono">Channel in mono</string>
+	<string name="text_channel_in_pressure">Channel in pressure</string>
+	<string name="text_channel_in_right">Channel in right</string>
+	<string name="text_channel_in_right_processed">Channel in right processed</string>
+	<string name="text_channel_in_stereo">Channel in stereo</string>
+	<string name="text_channel_in_voice_dnlink">Channel in voice downlink</string>
+	<string name="text_channel_in_voice_uplink">Channel in voice uplink</string>
+	<string name="text_channel_in_x_axis">Channel in X axis</string>
+	<string name="text_channel_in_y_axis">Channel in Y axis</string>
+	<string name="text_channel_in_z_axis">Channel in Z axis</string>
+	
+	<string name="text_audio_encoding_default">Encoding Default</string>
+	<string name="text_audio_encoding_pcm_16bit">Encoding PCM 16bit</string>
+	<string name="text_audio_encoding_pcm_8bit">Encoding PCM 8bit</string>
+	
+	<string name="text_audio_source_mic">Microphone</string>
+	<string name="text_audio_source_camcorder">Camcorder</string>
+	<string name="text_audio_source_default">Default</string>
+    
 </resources>

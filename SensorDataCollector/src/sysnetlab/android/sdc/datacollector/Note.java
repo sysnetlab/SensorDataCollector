@@ -22,8 +22,8 @@ public class Note implements Parcelable {
     }
 
     public Note(String note, Date dateCreated) {
-        mNote = note != null ? note : "";
-        mDateCreated = dateCreated;
+        mNote = note != null ? note : "";        
+        mDateCreated = dateCreated != null ? dateCreated : Calendar.getInstance().getTime();
     }
 
     public String getNote() {
@@ -48,7 +48,7 @@ public class Note implements Parcelable {
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         return formatter.format(mDateCreated);    
     }
-
+    
     public void setDateCreatedFromString(String dateTime) {
     	try {
  			mDateCreated = SimpleDateFormat.getDateTimeInstance().parse(dateTime);
@@ -56,6 +56,14 @@ public class Note implements Parcelable {
  			// TODO Auto-generated catch block
  			e.printStackTrace();
  		}
+    }
+    
+    public long getDateCreatedAsLong(){
+    	return mDateCreated.getTime();
+    }
+    
+    public void setDateCreatedFromLong(long dateTime){    	
+    		mDateCreated = new Date(dateTime);    	
     }
     
     public void setDateCreatedFromStringUTC(String dateTime) {
@@ -78,6 +86,7 @@ public class Note implements Parcelable {
         Note note = (Note) rhs;
         // Considering that mNote or mDateTime may be null, use TextUtils  
         if (!TextUtils.equals(mNote,  note.mNote)) return false;
+        //When writing the date as string to a parcel it loses precision, need to compare both as strings
         if (!mDateCreated.equals(note.mDateCreated)) return false;
         
         return true;
@@ -99,7 +108,7 @@ public class Note implements Parcelable {
 
     public Note(Parcel inParcel) {
         mNote = inParcel.readString();
-        setDateCreatedFromStringUTC(inParcel.readString());
+        setDateCreatedFromLong(inParcel.readLong());
     }
 
     @Override
@@ -110,6 +119,6 @@ public class Note implements Parcelable {
     @Override
     public void writeToParcel(Parcel outParcel, int flags) {
         outParcel.writeString(mNote);
-        outParcel.writeString(getDateCreatedAsStringUTC());
+        outParcel.writeLong(getDateCreatedAsLong());        
     }
 }
