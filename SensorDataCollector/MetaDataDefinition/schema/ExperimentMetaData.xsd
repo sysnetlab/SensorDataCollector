@@ -41,8 +41,7 @@
                 <xs:complexType>
                   <xs:sequence>
                     <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"/>
-                    <xs:element name="shortdescription" type="xs:string" minOccurs="0" />
-                    <xs:element name="shortdescriptioin" type="xs:string" minOccurs="0" />
+                    <xs:element name="shortdescription" type="xs:string" minOccurs="0" />
                     <xs:element name="longdescription" type="xs:string" minOccurs="0" />
                   </xs:sequence>
                 </xs:complexType>

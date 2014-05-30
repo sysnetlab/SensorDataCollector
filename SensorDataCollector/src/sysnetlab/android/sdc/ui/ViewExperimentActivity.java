@@ -114,5 +114,9 @@ public class ViewExperimentActivity extends FragmentActivity implements
     public ExperimentViewFragment getExperimentViewFragment(){
     	return mExperimentViewFragment;
     }
+    
+    public ExperimentViewNotesFragment getExperimentViewNotesFragment(){
+    	return mExperimentViewNotesFragment;
+    }
 
 }

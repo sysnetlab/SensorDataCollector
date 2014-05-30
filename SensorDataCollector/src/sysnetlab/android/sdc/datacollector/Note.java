@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -30,9 +32,20 @@ public class Note implements Parcelable {
     public void setNote(String mNote) {
         this.mNote = mNote;
     }
+    
+    public Date getDateCreated() {
+        return mDateCreated;
+    }
 
     public String getDateCreatedAsString() {
         return SimpleDateFormat.getDateTimeInstance().format(mDateCreated);
+    }
+    
+    public String getDateCreatedAsStringUTC() {
+        // use XML dateTimeType format
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm:ss.SSSZ", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return formatter.format(mDateCreated);    
     }
     
     public void setDateCreatedFromString(String dateTime) {
@@ -50,6 +63,18 @@ public class Note implements Parcelable {
     
     public void setDateCreatedFromLong(long dateTime){    	
     		mDateCreated = new Date(dateTime);    	
+    }
+    
+    public void setDateCreatedFromStringUTC(String dateTime) {
+        try {
+            // use XML dateTimeType format
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm:ss.SSSZ", Locale.US);
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            mDateCreated = formatter.parse(dateTime);                
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
     
     public boolean equals(Object object) {
