@@ -25,7 +25,8 @@ public class DeviceInformation implements Parcelable {
 
 
     public void setDeviceInformation(String manufacturer, String model) {
-        mManufacturer = manufacturer;
+        mManufacturer = manufacturer != null ? manufacturer : "";
+        model = model !=null ? model: "";
         if (model.startsWith(mManufacturer)) {
             mModel = model.replaceFirst(mManufacturer + "(\\ *)", "");
         } else {
@@ -83,5 +84,18 @@ public class DeviceInformation implements Parcelable {
     public void writeToParcel(Parcel outParcel, int flags) {
         outParcel.writeString(mManufacturer);
         outParcel.writeString(mModel);
+    }
+    
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        // it also takes care of the case that object is null
+        if (!(object instanceof DeviceInformation)) return false;
+        
+        DeviceInformation experiment = (DeviceInformation) object;
+        
+        if (!this.mModel.equals(experiment.mModel)) return false;
+        if (!this.mManufacturer.equals(experiment.mManufacturer)) return false;
+                
+        return true;
     }
 }

@@ -45,4 +45,18 @@ public class TaggingAction {
     public String toString() {
         return mTag.toString() + "\n" + mTime.toString() + "\n" + mTagState;
     }
+    
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        // it also takes care of the case that object is null
+        if (!(object instanceof TaggingAction)) return false;
+        
+        TaggingAction taggingAction = (TaggingAction) object;
+        if (!this.mTag.equals(taggingAction.mTag)) return false;
+        if (!this.mTime.equals(taggingAction.mTime)) return false;
+        if (!(this.mTagState == taggingAction.mTagState)) return false;
+        
+        return true;
+    }
+
 }

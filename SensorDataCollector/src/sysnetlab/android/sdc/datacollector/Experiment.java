@@ -32,9 +32,9 @@ public class Experiment implements Parcelable {
 
     public Experiment(String name, Date dateCreated) {
         mDeviceInfo = new DeviceInformation();
-        mName = name;
-        mDateTimeCreated = dateCreated;
-        mDateTimeDone = dateCreated;
+        mName = name != null ? name : "";
+        mDateTimeCreated = dateCreated != null ? dateCreated : Calendar.getInstance().getTime();
+        mDateTimeDone = dateCreated != null ? dateCreated : Calendar.getInstance().getTime();
         mTags = new ArrayList<Tag>();
         mNotes = new ArrayList<Note>();
         mSensors = new ArrayList<AbstractSensor>();
@@ -96,15 +96,15 @@ public class Experiment implements Parcelable {
     }
 
     public void setName(String name) {
-        mName = name;
-    }
-
-    public String getDateTimeCreatedAsString() {
-        return SimpleDateFormat.getDateTimeInstance().format(mDateTimeCreated);
+        mName = name != null ? name : "";
     }
 
     public Date getDateTimeCreated() {
         return mDateTimeCreated;
+    }
+    
+    public String getDateTimeCreatedAsString() {
+        return SimpleDateFormat.getDateTimeInstance().format(mDateTimeCreated);
     }
     
     public void setDateTimeCreatedFromString(String dateCreated) {
@@ -114,6 +114,22 @@ public class Experiment implements Parcelable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+    }
+    
+    public long getDateTimeCreatedAsLong(){
+    	return mDateTimeCreated.getTime();
+    }
+    
+    public void setDateTimeCreatedFromLong(long dateCreated){    	
+    		mDateTimeCreated = new Date(dateCreated);    	
+    }
+    
+    public long getDateTimeDoneAsLong(){
+    	return mDateTimeDone.getTime();
+    }
+    
+    public void setDateTimeDoneFromLong(long dateDone){    	
+    		mDateTimeDone = new Date(dateDone);    	
     }
     
     public ArrayList<AbstractSensor> getSensors() {
@@ -186,8 +202,8 @@ public class Experiment implements Parcelable {
     public void writeToParcel(Parcel outParcel, int flags) {
         outParcel.writeString(mName);
 
-        outParcel.writeString(getDateTimeCreatedAsString());
-        outParcel.writeString(getDateTimeDoneAsString());
+        outParcel.writeLong(getDateTimeCreatedAsLong());
+        outParcel.writeLong(getDateTimeDoneAsLong());
 
         outParcel.writeTypedList(mTags);
 
@@ -213,8 +229,8 @@ public class Experiment implements Parcelable {
         
         mName = inParcel.readString();
 
-        setDateTimeCreatedFromString(inParcel.readString());
-        setDateTimeDoneFromString(inParcel.readString());
+        setDateTimeCreatedFromLong(inParcel.readLong());
+        setDateTimeDoneFromLong(inParcel.readLong());
 
         mTags = new ArrayList<Tag>();
         inParcel.readTypedList(mTags, Tag.CREATOR);
@@ -257,6 +273,24 @@ public class Experiment implements Parcelable {
         }
     }
 
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        // it also takes care of the case that object is null
+        if (!(object instanceof Experiment)) return false;
+        
+        Experiment experiment = (Experiment) object;
+        
+        if (!this.mDeviceInfo.equals(experiment.mDeviceInfo)) return false;
+        if (!this.mName.equals(experiment.mName)) return false;
+        if (!this.mDateTimeCreated.equals(experiment.mDateTimeCreated)) return false;
+        if (!this.mDateTimeDone.equals(experiment.mDateTimeDone)) return false;                               
+        if (!this.mTags.equals(experiment.mTags)) return false;
+        if (!this.mNotes.equals(experiment.mNotes)) return false;
+        if (!this.mTaggingActions.equals(experiment.mTaggingActions)) return false;
+        if (!this.mSensors.equals(experiment.mSensors)) return false;        
+        return true;
+    }
+    
     public Parcelable.Creator<Experiment> getCreator() {
         return CREATOR;
     }

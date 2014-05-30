@@ -39,4 +39,5 @@ public class AndroidSensorEventListener implements SensorEventListener {
     public Channel getChannel() {
         return mChannel;
     }
+        
 }

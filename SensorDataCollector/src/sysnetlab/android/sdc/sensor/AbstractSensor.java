@@ -62,4 +62,17 @@ public abstract class AbstractSensor {
     public AndroidSensorEventListener getListener() {
         return mListener;
     }
+    
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        // it also takes care of the case that object is null
+        if (!(object instanceof AbstractSensor)) return false;
+        
+        AbstractSensor abstractSensor = (AbstractSensor) object; 
+        if (!(this.mMajorType == abstractSensor.mMajorType)) return false;
+        if (!(this.mMinorType == abstractSensor.mMinorType)) return false; 
+        if (!(this.mSelected == abstractSensor.mSelected)) return false; 
+        
+        return true;
+    }
 }

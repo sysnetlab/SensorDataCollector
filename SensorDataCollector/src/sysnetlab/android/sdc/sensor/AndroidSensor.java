@@ -92,4 +92,20 @@ public class AndroidSensor extends AbstractSensor {
     public int getVersion() {
         return mSensor.getVersion();
     }
+    
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        // it also takes care of the case that object is null
+        if (!(object instanceof AndroidSensor)) return false;
+        
+        AndroidSensor androidSensor = (AndroidSensor) object;
+        if (!(this.mSamplingInterval == androidSensor.mSamplingInterval)) return false;
+        if (!(this.mSensingType == androidSensor.mSensingType)) return false;
+        if (!(this.mIsStreamingSensor == androidSensor.mIsStreamingSensor)) return false;
+        if (!this.mSensor.equals(androidSensor.mSensor)) return false;
+        if (!this.mSensor.toString().equals(androidSensor.mSensor.toString()));
+
+        return super.equals(object);
+    }
 }

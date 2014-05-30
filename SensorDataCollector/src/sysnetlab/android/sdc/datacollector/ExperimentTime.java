@@ -70,4 +70,18 @@ public class ExperimentTime {
         return Long.toString(mThreadTimeMillis) + "\n" + Long.toString(mElapsedRealtime) + "\n"
                 + mElapsedRealtimeNanos;
     }
+    
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        // it also takes care of the case that rhs is null
+        if (!(object instanceof ExperimentTime)) return false;
+        
+        ExperimentTime experimentTime = (ExperimentTime) object;
+        // Considering that mNote or mDateTime may be null, use TextUtils  
+        if (!(this.mElapsedRealtime == experimentTime.mElapsedRealtime)) return false;
+        if (!(this.mElapsedRealtimeNanos == experimentTime.mElapsedRealtimeNanos)) return false;
+        if (!(this.mThreadTimeMillis == experimentTime.mThreadTimeMillis)) return false;
+        
+        return true;
+    }
 }

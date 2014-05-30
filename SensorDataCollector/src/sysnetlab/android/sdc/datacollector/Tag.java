@@ -52,15 +52,19 @@ public class Tag implements Parcelable {
     }
 
     @Override
-    public boolean equals(Object object) {
-        boolean sameSame = false;
+    public boolean equals(Object object) {        
 
-        if (object != null && object instanceof Tag)
-        {
-            sameSame = this.mName.equals(((Tag) object).mName);
-        }
+        if (this == object) return true;
+        // it also takes care of the case that object is null
+        if (!(object instanceof Tag)) return false;
+        
+        Tag tag = (Tag) object; 
+        if (!this.mName.endsWith(tag.mName)) return false;
+        if (!this.mLongDescription.equals(tag.mLongDescription)) return false;
+        if (!this.mShortDescription.equals(tag.mShortDescription)) return false;
+        
 
-        return sameSame;
+        return true;
     }
     
     public static final Parcelable.Creator<Tag> CREATOR = new Parcelable.Creator<Tag>() {
