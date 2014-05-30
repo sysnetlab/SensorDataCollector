@@ -12,12 +12,17 @@ import sysnetlab.android.sdc.sensor.SensorUtilSingleton;
 import sysnetlab.android.sdc.ui.ViewExperimentActivity;
 import sysnetlab.android.sdc.ui.adaptors.SensorListAdapter;
 import sysnetlab.android.sdc.ui.adaptors.SensorPropertyListAdapter;
+import sysnetlab.android.sdc.ui.fragments.ExperimentViewNotesFragment;
+import android.R.bool;
 import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.TouchUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class ViewExperimentActivityFunctionTests extends
 ActivityInstrumentationTestCase2<ViewExperimentActivity> {
@@ -43,7 +48,7 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        setActivityInitialTouchMode(true);
+        setActivityInitialTouchMode(false);
         
         //setup the store and the sensorUtilSingleton
         mContext = getInstrumentation().getTargetContext();
@@ -67,7 +72,7 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
         }
         else
         	Log.e("Test Setup Error", "At least one sensor is required in one of the created experimentes in order to run some tests");
-    }
+        }
     
     public void testViewExperimentActivityLoaded()
 	{
@@ -120,5 +125,85 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
 					sensorClicked,
 					sensorDisplayed);
 		}
+	}
+    
+    public void testNoteSwipeDirection(){
+    	final ListView listOperations;
+    	ExperimentViewNotesFragment mExperimentViewNotesFragment;
+    	
+    	if(loadExperimentWithNotes()){
+	    	listOperations = (ListView) mViewExperimentActivity
+	                .findViewById(R.id.listview_experiment_view_operations);
+	        assertNotNull("Menu with operations has not been loaded", listOperations);
+	        assertTrue("listOperations.getCount() is not 3", listOperations.getCount() == 3);
+	
+	        getInstrumentation().runOnMainSync(new Runnable() {
+	
+	            @Override
+	            public void run() {
+	
+	                listOperations.performItemClick(listOperations.getAdapter().getView(1, null, null),
+	                        1, listOperations.getAdapter()
+	                                .getItemId(1));
+	            }
+	        });
+	        
+	        getInstrumentation().waitForIdleSync();
+	        
+	        mExperimentViewNotesFragment=mViewExperimentActivity.getExperimentViewNotesFragment();
+	        assertNotNull("View notes fragment failed to load", mExperimentViewNotesFragment);
+	        
+	        swipeRight();
+	        
+	        getInstrumentation().waitForIdleSync();
+	        System.out.println();
+    	}
+    	else
+    		Log.e("Notes missing","A experiment with a least two notes is required in order to execute this test");
+    	
+    }
+
+	private void swipeRight() {
+		final float fromX,fromY,toX;
+		int[] fragmentPosition=new int[2];
+		View v=mViewExperimentActivity.getExperimentViewNotesFragment().getView();
+		v.getLocationOnScreen(fragmentPosition);
+		
+		fromX=fragmentPosition[0]+v.getWidth()/2;
+		fromY=fragmentPosition[1]+v.getHeight()/2;
+		toX=10;//mViewExperimentActivity.getWindowManager().getDefaultDisplay().getWidth();
+		
+		final ActivityInstrumentationTestCase2<ViewExperimentActivity> t=this;
+		getInstrumentation().runOnMainSync(new Runnable() {
+			@Override
+			public void run() {
+				TouchUtils.drag(t, toX, fromX, fromY, fromY, 5);
+			}
+		});
+		
+		
+	}
+
+	private boolean loadExperimentWithNotes() {
+		if(mExperiment.getNotes().size()>1)
+			return true;
+		
+		List<Experiment> listExperiments= ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate();
+        Iterator<Experiment> it=listExperiments.iterator();
+        while(it.hasNext()){
+        	mExperiment=(Experiment) it.next();
+        	if(mExperiment.getNotes().size()>1)
+        		break;
+        }
+        if(mExperiment.getNotes().size()>1){
+	        ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);
+	        mViewExperimentActivity.finish();
+	        setActivity(null);
+	        mViewExperimentActivity=getActivity();
+	        getInstrumentation().waitForIdleSync();
+	        return true;
+        }
+        else
+        	return false;
 	}
 }
