@@ -37,7 +37,11 @@ public class TaggingGridView extends GridView {
 
         int height = MeasureSpec.getSize(heightMeasureSpec);
         int n = (getCount() + 1)/2;
-        mChildHeight = height / n;
+        if (n > 0) {
+            mChildHeight = height / n;
+        } else {
+            mChildHeight = height;
+        }
         
         int width = MeasureSpec.getSize(widthMeasureSpec);
         mChildWidth = width / UserInterfaceUtil.getNumColumnsCompatible(this);
