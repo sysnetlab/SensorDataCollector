@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import sysnetlab.android.sdc.datastore.AbstractStore;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
@@ -102,6 +104,13 @@ public class Experiment implements Parcelable {
     public String getDateTimeCreatedAsString() {
         return SimpleDateFormat.getDateTimeInstance().format(mDateTimeCreated);
     }
+    
+    public String getDateTimeCreatedAsStringUTC() {
+        // use XML dateTimeType format
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm:ss.SSSZ", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return formatter.format(mDateTimeCreated);
+    }
 
     public Date getDateTimeCreated() {
         return mDateTimeCreated;
@@ -135,6 +144,14 @@ public class Experiment implements Parcelable {
     public String getDateTimeDoneAsString() {
         return SimpleDateFormat.getDateTimeInstance().format(mDateTimeDone);
     }
+    
+    public String getDateTimeDoneAsStringUTC() {
+        // use XML dateTimeType format
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm:ss.SSSZ", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return formatter.format(mDateTimeDone);
+    }
+
 
     public Date getDateTimeDone() {
         return mDateTimeDone;
