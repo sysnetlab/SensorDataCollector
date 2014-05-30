@@ -6,6 +6,7 @@ import java.util.List;
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
+import sysnetlab.android.sdc.datastore.AbstractStore;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.SensorProperty;
 import sysnetlab.android.sdc.sensor.SensorUtilSingleton;
@@ -16,6 +17,7 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentSensorListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewSensorDataFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.test.ActivityInstrumentationTestCase2;
@@ -32,6 +34,8 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
 	
 	private ViewExperimentActivity mViewExperimentActivity;
 	private Experiment mExperiment;
+	private Context mContext;
+	private AbstractStore mStore;
 
 	public ViewExperimentActivityFunctionTests() {
         super(ViewExperimentActivity.class);
@@ -51,12 +55,14 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
         super.setUp();
         setActivityInitialTouchMode(true);
         
-        mExperiment=new Experiment();
-        ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);        
-        mViewExperimentActivity = (ViewExperimentActivity) getActivity();
-        SensorUtilSingleton.getInstance().setContext(mViewExperimentActivity.getBaseContext());
+        //setup the store and the sensorUtilSingleton
+        mContext = getInstrumentation().getTargetContext();
+        SensorUtilSingleton.getInstance().setContext(mContext);
+        mStore = StoreSingleton.getInstance();
         ExperimentManagerSingleton.getInstance().addExperimentStore(
-                StoreSingleton.getInstance());
+                mStore);
+        
+        //list all experiments and get one suitable experiment
         List<Experiment> listExperiments= ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate();
         Iterator it=listExperiments.iterator();
         while(it.hasNext()){
@@ -65,11 +71,7 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
         		break;
         }
         if(mExperiment.getSensors().size()>0){
-	        ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);
-	        Intent intent = new Intent(getInstrumentation().getTargetContext(), ViewExperimentActivity.class);
-	        mViewExperimentActivity.finish();
-	        setActivity(null);
-	        setActivityIntent(intent);
+	        ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);	        
 	        mViewExperimentActivity=getActivity();
 	        getInstrumentation().waitForIdleSync();
         }
@@ -79,6 +81,9 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
     
     public void testViewExperimentActivityLoaded()
 	{
+    	assertNotNull("Failed to get ViewExperimentActivity", mViewExperimentActivity);
+    	assertNotNull("Failed to get the context", mContext);
+    	assertNotNull("Failed to get the store", mStore);
 		assertNotNull("The ExperimentViewFragment was not loaded", mViewExperimentActivity.getExperimentViewFragment());
 		assertNotNull("The activity was not loaded", mViewExperimentActivity.findViewById(R.id.fragment_container));
 		assertEquals("The set experiment and the activity experiment must be the same", mExperiment, mViewExperimentActivity.getExperiment());

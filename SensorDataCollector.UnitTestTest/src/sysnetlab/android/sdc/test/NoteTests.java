@@ -35,19 +35,16 @@ public class NoteTests extends AndroidTestCase {
         mNote.writeToParcel(parcel, 0);
         parcel.setDataPosition(0);
         after = Note.CREATOR.createFromParcel(parcel);
-        assertEquals("The Note failed to be constructed out of a Parcel", mNote, after);
-        
         parcel.recycle();
     }
 
     public void testParcel() {
         Note after;
-
         mNote = new Note("test");
         Parcel parcel = Parcel.obtain();
         mNote.writeToParcel(parcel, 0);
         parcel.setDataPosition(0);
         after = Note.CREATOR.createFromParcel(parcel);
-        assertEquals("The Note failed being reconstructed from a parcel", mNote, after);
+        assertTrue("The Note failed to be constructed out of a Parcel", mNote.equals(after));
     }
 }
