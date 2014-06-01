@@ -10,19 +10,31 @@ public class DeviceInformation implements Parcelable {
     private String mModel;
     private int mSdkInt;
     private String mSdkCodeName; 
+    
+    public DeviceInformation(String manufacturer, String model, int sdkInt, String sdkCodeName) {
+        setDeviceInformation(manufacturer, model);
+        mSdkInt = sdkInt;
+        mSdkCodeName = sdkCodeName;
+    }
 
     public DeviceInformation() {
         setDeviceInformation(Build.MANUFACTURER, Build.MODEL);
+        mSdkInt = Build.VERSION.SDK_INT;
+        mSdkCodeName = Build.VERSION.CODENAME;
     }
     
     public DeviceInformation(String manufacturer, String model) {
         setDeviceInformation(manufacturer, model);
+        mSdkInt = Build.VERSION.SDK_INT;
+        mSdkCodeName = Build.VERSION.CODENAME;
     }
     
 
     public DeviceInformation(DeviceInformation deviceInfo) {
         mManufacturer = deviceInfo.mManufacturer;
         mModel = deviceInfo.mModel;
+        mSdkInt = deviceInfo.mSdkInt;
+        mSdkCodeName = deviceInfo.mSdkCodeName;
     }
 
 

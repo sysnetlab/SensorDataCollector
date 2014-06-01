@@ -334,58 +334,71 @@ public class SimpleXMLFileStore extends SimpleFileStore {
         return experiment;
     }
     
-    private DeviceInformation readDevice(XmlPullParser xpp) throws XmlPullParserException, IllegalStateException, IOException {
-        DeviceInformation device = new DeviceInformation();
-
+    private DeviceInformation readDevice(XmlPullParser xpp) throws XmlPullParserException, IOException {
         xpp.require(XmlPullParser.START_TAG, XMLNS, "device");
         
-        int depth = 1;
-        String elem = "";
-        boolean isAndroid = false;
-        while (depth != 0) {          
-            switch (xpp.next()) {
-            case XmlPullParser.END_TAG:              
-                depth--;
-                break;
-            case XmlPullParser.START_TAG:
-                depth++;
-                if (depth == 2 && xpp.getName().equals("android")) {
-                    isAndroid = true;
-                } else {
-                    isAndroid = false;
-                }
-                elem = xpp.getName();
-                break;
-            case XmlPullParser.TEXT:
-                Log.d("SensorDataCollector.UnitTest", "Depth = " + depth + " Element Start Tag = " + xpp.getName());
-                // TODO only android is supported at present
-                if (isAndroid && depth == 3) {
-                    String elemText = xpp.getText();
-                    Log.d("SensorDataCollector.UnitTest", "Depth = " + depth + " Element Text = " + elemText);
-                    
-                    if (elem.equals("make")) {
-                        device.setManufacturer(elemText);
-                    } else if (elem.equals("model")) {
-                        device.setModel(elemText);
-                    } else if (elem.equals("sdk-int")) {
-                        if (elem != null) {
-                            device.setSdkInt(Integer.parseInt(elemText));
-                        }
-                    } else if (elem.equals("sdk-codename")) {
-                        device.setSdkCodeName(elemText);
-                    }
-                }                  
-                break;                
+        DeviceInformation deviceInfo = null; 
+        
+        while (xpp.next() != XmlPullParser.END_TAG) {
+            if (xpp.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = xpp.getName();
+            if (name.equals("android")) {
+                deviceInfo = readAndroidDevice(xpp);
+            } else {
+                skip(xpp);
             }
         }
         
-        Log.d("SensorDataCollector.UnitTest", "device = " + "Make: " + device.getManufacturer()
-                + " Model: " + device.getModel() + " SDK-INT: " + device.getSdkCodeName()
-                + " SDK-CodeName: " + device.getSdkInt());
-        
-        return device;
+        return deviceInfo;        
     }
     
+    private DeviceInformation readAndroidDevice(XmlPullParser xpp) throws XmlPullParserException, IOException {
+        xpp.require(XmlPullParser.START_TAG, XMLNS, "android");
+        
+        String make = null;
+        String model = null;
+        int sdkInt = -1;
+        String sdkCodeName = null;
+        
+        while (xpp.next() != XmlPullParser.END_TAG) {
+            if (xpp.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = xpp.getName();
+            if (name.equals("make")) {
+                make = readAndroidDeviceMake(xpp);
+            } else if (name.equals("model")) {
+                model = readAndroidDeviceModel(xpp);
+            } else if (name.equals("sdk-int")) {
+                sdkInt = readAndroidDeviceSdkInt(xpp);
+            } else if (name.equals("sdk-codename")) {
+                sdkCodeName = readAndroidDeviceSdkCodeName(xpp);
+            } else {
+                skip(xpp);
+            }
+        }
+        
+        return new DeviceInformation(make, model, sdkInt, sdkCodeName);          
+    }
+    
+    private String readAndroidDeviceMake(XmlPullParser xpp) throws XmlPullParserException, IOException {
+        return readXmlElementText(xpp, "make");
+    }
+    
+    private String readAndroidDeviceModel(XmlPullParser xpp) throws XmlPullParserException, IOException {
+        return readXmlElementText(xpp, "model");
+    }
+    
+    private int readAndroidDeviceSdkInt(XmlPullParser xpp) throws XmlPullParserException, IOException {
+        return Integer.parseInt(readXmlElementText(xpp, "sdk-int"));
+    }
+    
+    private String readAndroidDeviceSdkCodeName(XmlPullParser xpp) throws XmlPullParserException, IOException {
+        return readXmlElementText(xpp, "sdk-codename");
+    }
+   
     private List<Tag> readTags(XmlPullParser xpp) throws XmlPullParserException, IOException {
         List<Tag> listTags = new ArrayList<Tag>();
             
