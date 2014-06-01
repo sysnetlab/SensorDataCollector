@@ -52,6 +52,33 @@ public class AndroidSensor extends AbstractSensor {
     public String toString() {
         return mSensor.toString();
     }
+ 
+    @Override
+    public boolean equals(Object rhs) {
+        if (rhs == this) {
+            return true;
+        }
+        
+        if (!(rhs instanceof AndroidSensor)) {
+            return false;
+        }
+        
+        AndroidSensor s = (AndroidSensor) rhs;
+        
+        if (!getName().equals(s.getName())) {
+            return false;
+        }
+        
+        if (getMajorType() != s.getMajorType()) {
+            return false;
+        }
+        
+        if (getMinorType() != s.getMinorType()) {
+            return false;
+        }
+        
+        return true;
+    }
 
     @Override
     public void setSensor(Object sensor) {

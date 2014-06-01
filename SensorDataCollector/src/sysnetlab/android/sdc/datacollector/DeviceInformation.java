@@ -4,6 +4,7 @@ package sysnetlab.android.sdc.datacollector;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 public class DeviceInformation implements Parcelable {
     private String mManufacturer;
@@ -85,11 +86,41 @@ public class DeviceInformation implements Parcelable {
     public void setSdkCodeName(String codeName) {
         mSdkCodeName = codeName;
     }
-
+    
     public String toString() {
         return mManufacturer + " " + mModel;
     }
 
+    public boolean equals(Object rhs) {
+        if (rhs == this) {
+            return true;
+        }
+        
+        if (!(rhs instanceof DeviceInformation)) {
+            return false;
+        }
+        
+        DeviceInformation deviceInfo = (DeviceInformation) rhs;
+        
+        if (!TextUtils.equals(mManufacturer, deviceInfo.mManufacturer)) {
+            return false;
+        }
+        
+        if (!TextUtils.equals(mModel, deviceInfo.mModel)) {
+            return false;
+        }
+
+        if (mSdkInt != deviceInfo.mSdkInt) {
+            return false;
+        }
+        
+        if (!TextUtils.equals(mSdkCodeName, deviceInfo.mSdkCodeName)) {
+            return false;
+        }        
+
+        return true;
+    }
+    
     public static final Parcelable.Creator<DeviceInformation> CREATOR = new Parcelable.Creator<DeviceInformation>() {
         @Override
         public DeviceInformation createFromParcel(Parcel inParcel) {

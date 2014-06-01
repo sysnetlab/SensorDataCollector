@@ -70,4 +70,30 @@ public class ExperimentTime {
         return Long.toString(mThreadTimeMillis) + "\n" + Long.toString(mElapsedRealtime) + "\n"
                 + mElapsedRealtimeNanos;
     }
+    
+    public boolean equals(Object rhs) {
+        if (rhs == this) {
+            return true;
+        }
+        
+        if (!(rhs instanceof ExperimentTime)) {
+            return false;
+        }
+        
+        ExperimentTime t = (ExperimentTime) rhs;
+        
+        if (mThreadTimeMillis != t.mThreadTimeMillis) {
+            return false;
+        }
+        
+        if (mElapsedRealtime != t.mElapsedRealtime) {
+            return false;
+        }
+        
+        if (mElapsedRealtimeNanos != t.mElapsedRealtimeNanos) {
+            return false;
+        }
+        
+        return true;
+    }
 }

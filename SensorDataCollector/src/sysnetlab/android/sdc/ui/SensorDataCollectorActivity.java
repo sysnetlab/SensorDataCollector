@@ -5,7 +5,7 @@ import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
-import sysnetlab.android.sdc.sensor.SensorUtilSingleton;
+import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,7 +43,7 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
             transaction.commit();
         }
 
-        SensorUtilSingleton.getInstance().setContext(getBaseContext());
+        SensorUtilsSingleton.getInstance().setContext(getBaseContext());
     }
 
     public void onStart() {

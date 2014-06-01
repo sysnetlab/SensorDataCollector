@@ -16,9 +16,10 @@ import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.datastore.SimpleFileStore;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
-import sysnetlab.android.sdc.sensor.SensorUtilSingleton;
+import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class Experiment implements Parcelable {
@@ -122,7 +123,7 @@ public class Experiment implements Parcelable {
             // use XML dateTimeType format
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm:ss.SSSZ", Locale.US);
             formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-            mDateTimeDone = formatter.parse(dateCreated);                
+            mDateTimeCreated = formatter.parse(dateCreated);                
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -206,6 +207,88 @@ public class Experiment implements Parcelable {
 
     public String toString() {
         return mName + " " + mDateTimeCreated;
+    }
+    
+    public boolean equals(Object rhs) {
+        if (rhs == this) {
+            return true;
+        }
+        
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #1");
+        
+        if (!(rhs instanceof Experiment)) {
+            return false;
+        }
+
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #2");        
+        
+        Experiment e = (Experiment) rhs;
+        
+        if (!TextUtils.equals(mName, e.mName)) {
+            return false;
+        } 
+        
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #3");
+        
+        // Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): " +
+        //        mDeviceInfo.toString() + " - " + e.mDeviceInfo.toString());
+        
+        if (mDeviceInfo != null && e.mDeviceInfo == null) {
+            return false;
+        } else if (!mDeviceInfo.equals(e.mDeviceInfo)) {
+            return false;
+        }
+        
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #4"); 
+        
+        if (mDateTimeCreated != null && e.mDateTimeCreated == null) {
+            return false;
+        } else if (!mDateTimeCreated.equals(e.mDateTimeCreated)) {
+            return false;
+        }        
+        
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #5");
+        
+        if (mDateTimeDone != null && e.mDateTimeDone == null) {
+            return false;
+        } else if (!mDateTimeDone.equals(e.mDateTimeDone)) {
+            return false;
+        }
+        
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #6");        
+        if (mTags != null && e.mTags == null) {
+            return false;
+        } else if (!mTags.equals(e.mTags)) {
+            return false;
+        }
+        
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #7");        
+        
+        if (mNotes != null && e.mNotes == null) {
+            return false;
+        } else if (!mNotes.equals(e.mNotes)){
+            return false;
+        }
+        
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #8");        
+
+        if (mTaggingActions != null && e.mTaggingActions == null) {
+            return false;
+        } else if (!mTaggingActions.equals(e.mTaggingActions)){
+            return false;
+        }
+        
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #9");        
+
+        if (mSensors != null && e.mSensors == null) {
+            return false;
+        } else if (!mSensors.equals(e.mSensors)){
+            return false;
+        }
+
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #10");        
+        
+        return true;
     }
 
     public static final Parcelable.Creator<Experiment> CREATOR = new Parcelable.Creator<Experiment>() {
@@ -293,7 +376,7 @@ public class Experiment implements Parcelable {
                                     store.getClass().getName());
                 }
             }
-            AbstractSensor sensor = SensorUtilSingleton.getInstance().getSensor(sensorName,
+            AbstractSensor sensor = SensorUtilsSingleton.getInstance().getSensor(sensorName,
                     sensorMajorType,
                     sensorMinorType, channel);
             mSensors.add(sensor);

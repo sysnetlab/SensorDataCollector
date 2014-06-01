@@ -10,6 +10,7 @@ import java.io.PrintStream;
 import java.io.StringWriter;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -28,7 +29,7 @@ import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
 import sysnetlab.android.sdc.datacollector.TaggingState;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
-import sysnetlab.android.sdc.sensor.SensorUtilSingleton;
+import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 
 public class SimpleXMLFileStore extends SimpleFileStore {
 
@@ -53,161 +54,8 @@ public class SimpleXMLFileStore extends SimpleFileStore {
             StringWriter stringWriter = new StringWriter();
             xmlSerializer.setOutput(stringWriter);
             
-            xmlSerializer.startDocument("UTF-8", false);
-            xmlSerializer.startTag("", "experiment");
-            xmlSerializer.attribute("", "xmlns", XMLNS);
-            xmlSerializer.attribute("", "xmlns:xsi", XMLNS_XSI);
-            xmlSerializer.attribute("", "xsi:schemaLocation", XSI_SCHEMA_LOCATION);
-
-            // <name> ... </name>
-            xmlSerializer.startTag("", "name");
-            xmlSerializer.text(experiment.getName());
-            xmlSerializer.endTag("", "name");
-
-            // <device> ... </device>
-            xmlSerializer.startTag("", "device");
-            xmlSerializer.startTag("", "android");
-
-            xmlSerializer.startTag("", "make");
-            xmlSerializer.text(experiment.getDeviceInformation().getManufacturer());
-            xmlSerializer.endTag("", "make");
-
-            xmlSerializer.startTag("", "model");
-            xmlSerializer.text(experiment.getDeviceInformation().getModel());
-            xmlSerializer.endTag("", "model");
-
-            xmlSerializer.endTag("", "android");
-            xmlSerializer.endTag("", "device");
-
-            // <datetimecreation> ... </datetimecreation>
-            xmlSerializer.startTag("", "datetimecreation");
-            xmlSerializer.text(experiment.getDateTimeCreatedAsStringUTC());
-            xmlSerializer.endTag("", "datetimecreation");
-
-            // <datetimecompletion> ... </datetimecompletion>
-            xmlSerializer.startTag("", "datetimecompletion");
-            xmlSerializer.text(experiment.getDateTimeCreatedAsStringUTC());
-            xmlSerializer.endTag("", "datetimecompletion");
-
-            // <taglist> ... </taglist>
-            if (!experiment.getTags().isEmpty()) {
-                xmlSerializer.startTag("", "taglist");
-
-                for (Tag tag : experiment.getTags()) {
-                    xmlSerializer.startTag("", "tag");
-
-                    xmlSerializer.startTag("", "name");
-                    xmlSerializer.text(tag.getName());
-                    xmlSerializer.endTag("", "name");
-
-                    if (tag.getShortDescription().trim().length() > 0) {
-                        xmlSerializer.startTag("", "shortdescription");
-                        xmlSerializer.text(tag.getShortDescription());
-                        xmlSerializer.endTag("", "shortdescription");
-                    }
-
-                    if (tag.getLongDescription().trim().length() > 0) {
-                        xmlSerializer.startTag("", "longdescription");
-                        xmlSerializer.text(tag.getLongDescription());
-                        xmlSerializer.endTag("", "longdescription");
-                    }
-
-                    xmlSerializer.endTag("", "tag");
-                }
-
-                xmlSerializer.endTag("", "taglist");
-            }
-
-            // <notelist> ... </notelist>
-            if (!experiment.getNotes().isEmpty()) {
-                xmlSerializer.startTag("", "notelist");
-
-                for (Note note : experiment.getNotes()) {
-                    xmlSerializer.startTag("", "note");
-
-                    xmlSerializer.startTag("", "notetext");
-                    xmlSerializer.text(note.getNote());
-                    xmlSerializer.endTag("", "noteteext");
-
-                    xmlSerializer.startTag("", "datetime");
-                    xmlSerializer.text(note.getDateCreatedAsStringUTC());
-                    xmlSerializer.endTag("", "datetime");
-
-                    xmlSerializer.endTag("", "note");
-                }
-
-                xmlSerializer.endTag("", "notelist");
-            }
-
-            // <taggingactionlist> ... </taggingactionlist>
-            if (!experiment.getTaggingActions().isEmpty()) {
-                xmlSerializer.startTag("", "taggingactionlist");
-
-                for (TaggingAction action : experiment.getTaggingActions()) {
-                    xmlSerializer.startTag("", "tagreference");
-                    xmlSerializer.attribute("", "name", action.getTag().getName());
-                    xmlSerializer.endTag("", "tagreference");
-
-                    xmlSerializer.startTag("", "experimenttime");
-
-                    xmlSerializer.startTag("", "threadtimemillis");
-                    xmlSerializer.text(Long.toString(action.getTime().getThreadTimeMillis()));
-                    xmlSerializer.endTag("", "threadtimemillis");
-
-                    xmlSerializer.startTag("", "elapsedrealtime");
-                    xmlSerializer.text(Long.toString(action.getTime().getElapsedRealtime()));
-                    xmlSerializer.endTag("", "elapsedrealtime");
-
-                    if (action.getTime().getElapsedRealtimeNanos() >= 0) {
-                        xmlSerializer.startTag("", "elapsedrealtimenanos");
-                        xmlSerializer.text(Long
-                                .toString(action.getTime().getElapsedRealtimeNanos()));
-                        xmlSerializer.endTag("", "elapsedrealtimenanos");
-                    }
-
-                    xmlSerializer.endTag("", "experimenttime");
-
-                    xmlSerializer.startTag("", "taggingstate");
-                    xmlSerializer.startTag("", "name");
-                    xmlSerializer.text(action.getTagState().toString());
-                    xmlSerializer.endTag("", "name");
-                    xmlSerializer.endTag("", "taggingstate");
-                }
-
-                xmlSerializer.endTag("", "taggingactionlist");
-            }
-
-            // <sensorlist> ... </sensorlist>
-            if (!experiment.getSensors().isEmpty()) {
-                xmlSerializer.startTag("",  "sensorlist");
-                
-                int id = 0;
-                for (AbstractSensor sensor : experiment.getSensors()) {
-                
-                xmlSerializer.startTag("",  "sensor");
-                xmlSerializer.attribute("", "id", Integer.toString(id));
-                xmlSerializer.startTag("",  "name");
-                xmlSerializer.text(sensor.getName());
-                xmlSerializer.endTag("",  "name");
-                
-                xmlSerializer.startTag("", "majortype");
-                xmlSerializer.text(Integer.toString(sensor.getMajorType()));
-                xmlSerializer.endTag("", "majortype");
-                
-                xmlSerializer.startTag("", "minortype");
-                xmlSerializer.text(Integer.toString(sensor.getMinorType()));
-                xmlSerializer.endTag("", "minortype");
-                
-                xmlSerializer.endTag("",  "sensor");
-                }
-                
-                xmlSerializer.endTag("",  "sensorlist");
-            }
-
-            xmlSerializer.endTag("", "experiment");
-
-            xmlSerializer.endDocument();
-
+            serializeExperiment(xmlSerializer, experiment); 
+            
             String configFilePath = getNewExperimentPath() + "/" + XML_EXPERIMENT_META_DATA_FILE;
             PrintStream out;
             out = new PrintStream(new BufferedOutputStream(new FileOutputStream(configFilePath)));
@@ -234,6 +82,208 @@ public class SimpleXMLFileStore extends SimpleFileStore {
             Log.e("SensorDataCollector.UnitTest", e.toString());            
         } 
     }
+    
+    private void serializeExperiment(XmlSerializer xs, Experiment e)
+            throws IllegalArgumentException, IllegalStateException, IOException {
+        xs.startDocument("UTF-8", false);
+        xs.startTag("", "experiment");
+        xs.attribute("", "xmlns", XMLNS);
+        xs.attribute("", "xmlns:xsi", XMLNS_XSI);
+        xs.attribute("", "xsi:schemaLocation", XSI_SCHEMA_LOCATION);
+
+        // <name> ... </name>
+        serializeExperimentNameElement(xs, e.getName());
+
+        // <device> ... </device>
+        serializeExperimentDeviceInfo(xs, e.getDeviceInformation());
+
+        // <date time creation></date time creation><date time done></date time
+        // done>
+        serializeExperimentTimes(xs, e.getDateTimeCreated(), e.getDateTimeCreated());
+
+        // <tag list> ... </tag list>
+        serializeExperimentTagList(xs, e.getTags());
+
+        // <note list> ... </note list>
+        serializeExperimentNoteList(xs, e.getNotes());
+
+        // <tagging action list> ... </tagging action list>
+        serializeExperimentTaggingActionList(xs, e.getTaggingActions());
+
+        // <sensor list> ... </sensor list>
+        serializeExperimentSensorList(xs, e.getSensors());
+
+        xs.endTag("", "experiment");
+
+        xs.endDocument();
+    }
+    
+    private void serializeExperimentNameElement(XmlSerializer xs, String name)
+            throws IllegalArgumentException, IllegalStateException, IOException {
+        xs.startTag("", "name");
+        xs.text(name);
+        xs.endTag("", "name");
+    }
+    
+    private void serializeExperimentDeviceInfo(XmlSerializer xs, DeviceInformation deviceInfo)
+            throws IllegalArgumentException, IllegalStateException, IOException {
+        xs.startTag("", "device");
+        xs.startTag("", "android");
+
+        xs.startTag("", "make");
+        xs.text(deviceInfo.getManufacturer());
+        xs.endTag("", "make");
+
+        xs.startTag("", "model");
+        xs.text(deviceInfo.getModel());
+        xs.endTag("", "model");
+        
+        xs.startTag("", "sdk-int");
+        xs.text(Integer.toString(deviceInfo.getSdkInt()));
+        xs.endTag("", "sdk-int");
+        
+        xs.startTag("", "sdk-codename");
+        xs.text(deviceInfo.getSdkCodeName());
+        xs.endTag("",  "sdk-codename");
+
+        xs.endTag("", "android");
+        xs.endTag("", "device");
+    }
+    
+    private void serializeExperimentTimes(XmlSerializer xs, Date dateCreated,
+            Date dateDone) throws IllegalArgumentException, IllegalStateException, IOException {
+        xs.startTag("", "datetimecreation");
+        xs.text(DateUtils.getStringUTCFromDate(dateCreated));
+        xs.endTag("", "datetimecreation");
+
+        xs.startTag("", "datetimecompletion");
+        xs.text(DateUtils.getStringUTCFromDate(dateDone));
+        xs.endTag("", "datetimecompletion");
+    }
+    
+    private void serializeExperimentTagList(XmlSerializer xs, List<Tag> listTags)
+            throws IllegalArgumentException, IllegalStateException, IOException {
+        if (!listTags.isEmpty()) {
+            xs.startTag("", "taglist");
+
+            for (Tag tag : listTags) {
+                xs.startTag("", "tag");
+
+                xs.startTag("", "name");
+                xs.text(tag.getName());
+                xs.endTag("", "name");
+
+                if (tag.getShortDescription().trim().length() > 0) {
+                    xs.startTag("", "shortdescription");
+                    xs.text(tag.getShortDescription());
+                    xs.endTag("", "shortdescription");
+                }
+
+                if (tag.getLongDescription().trim().length() > 0) {
+                    xs.startTag("", "longdescription");
+                    xs.text(tag.getLongDescription());
+                    xs.endTag("", "longdescription");
+                }
+
+                xs.endTag("", "tag");
+            }
+
+            xs.endTag("", "taglist");
+        }
+    }
+    
+    private void serializeExperimentNoteList(XmlSerializer xs, List<Note> listNotes)
+            throws IllegalArgumentException, IllegalStateException, IOException {
+        if (!listNotes.isEmpty()) {
+            xs.startTag("", "notelist");
+
+            for (Note note : listNotes) {
+                xs.startTag("", "note");
+
+                xs.startTag("", "notetext");
+                xs.text(note.getNote());
+                xs.endTag("", "notetext");
+
+                xs.startTag("", "datetime");
+                xs.text(note.getDateCreatedAsStringUTC());
+                xs.endTag("", "datetime");
+
+                xs.endTag("", "note");
+            }
+
+            xs.endTag("", "notelist");
+        }
+    }
+    
+    private void serializeExperimentTaggingActionList(XmlSerializer xs,
+            List<TaggingAction> listTaggingActions) throws IllegalArgumentException,
+            IllegalStateException, IOException {
+        if (!listTaggingActions.isEmpty()) {
+            xs.startTag("", "taggingactionlist");
+
+            for (TaggingAction action : listTaggingActions) {
+                xs.startTag("", "tagreference");
+                xs.attribute("", "name", action.getTag().getName());
+                xs.endTag("", "tagreference");
+
+                xs.startTag("", "experimenttime");
+
+                xs.startTag("", "threadtimemillis");
+                xs.text(Long.toString(action.getTime().getThreadTimeMillis()));
+                xs.endTag("", "threadtimemillis");
+
+                xs.startTag("", "elapsedrealtime");
+                xs.text(Long.toString(action.getTime().getElapsedRealtime()));
+                xs.endTag("", "elapsedrealtime");
+
+                if (action.getTime().getElapsedRealtimeNanos() >= 0) {
+                    xs.startTag("", "elapsedrealtimenanos");
+                    xs.text(Long
+                            .toString(action.getTime().getElapsedRealtimeNanos()));
+                    xs.endTag("", "elapsedrealtimenanos");
+                }
+
+                xs.endTag("", "experimenttime");
+
+                xs.startTag("", "taggingstate");
+                xs.startTag("", "name");
+                xs.text(action.getTagState().toString());
+                xs.endTag("", "name");
+                xs.endTag("", "taggingstate");
+            }
+
+            xs.endTag("", "taggingactionlist");
+        }
+    }
+    
+    private void serializeExperimentSensorList(XmlSerializer xs, List<AbstractSensor> listSensors)
+            throws IllegalArgumentException, IllegalStateException, IOException {
+        if (!listSensors.isEmpty()) {
+            xs.startTag("", "sensorlist");
+
+            for (AbstractSensor sensor : listSensors) {
+
+                xs.startTag("", "sensor");
+                xs.attribute("", "id", Integer.toString(sensor.getId()));
+                xs.startTag("", "name");
+                xs.text(sensor.getName());
+                xs.endTag("", "name");
+
+                xs.startTag("", "majortype");
+                xs.text(Integer.toString(sensor.getMajorType()));
+                xs.endTag("", "majortype");
+
+                xs.startTag("", "minortype");
+                xs.text(Integer.toString(sensor.getMinorType()));
+                xs.endTag("", "minortype");
+
+                xs.endTag("", "sensor");
+            }
+
+            xs.endTag("", "sensorlist");
+        }
+    }
+
     
     public Experiment loadExperiment(String experimentPath) {
         Experiment experiment = null;
@@ -649,7 +699,13 @@ public class SimpleXMLFileStore extends SimpleFileStore {
     private AbstractSensor readSensor(XmlPullParser xpp) throws XmlPullParserException, IOException {
         xpp.require(XmlPullParser.START_TAG, XMLNS, "sensor");
         
-        int id = Integer.parseInt(xpp.getAttributeValue(XMLNS, "id"));
+        Log.d("SensorDataCollector.UnitTest", "sensor id = " + xpp.getAttributeValue(XMLNS, "id"));
+        Log.d("SensorDataCollector.UnitTest", "sensor count = " + xpp.getAttributeCount());
+        Log.d("SensorDataCollector.UnitTest", "sensor name = " + xpp.getAttributeName(0));
+        Log.d("SensorDataCollector.UnitTest", "sensor namespace = " + xpp.getAttributeNamespace(0));
+
+        
+        int id = Integer.parseInt(xpp.getAttributeValue("", "id"));
         
         String sensorName = null;
         int majorType = -1;
@@ -670,7 +726,7 @@ public class SimpleXMLFileStore extends SimpleFileStore {
             }
         } 
         
-        AbstractSensor sensor = SensorUtilSingleton.getInstance().getSensor(sensorName, majorType, minorType, id, null);
+        AbstractSensor sensor = SensorUtilsSingleton.getInstance().getSensor(sensorName, majorType, minorType, id, null);
         return sensor;
     }
     

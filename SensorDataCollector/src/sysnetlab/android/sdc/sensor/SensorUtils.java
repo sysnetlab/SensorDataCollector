@@ -9,7 +9,7 @@ import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 
-public class SensorUtil {
+public class SensorUtils {
 
     private Context mContext;
 

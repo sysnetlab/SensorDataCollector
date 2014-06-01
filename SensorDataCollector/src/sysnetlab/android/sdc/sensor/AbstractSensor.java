@@ -63,6 +63,8 @@ public abstract class AbstractSensor {
     }
 
     public abstract String toString();
+    
+    public abstract boolean equals(Object rhs);
 
     public void setListener(AndroidSensorEventListener listener) {
         mListener = listener;

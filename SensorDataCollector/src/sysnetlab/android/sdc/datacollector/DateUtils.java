@@ -18,4 +18,11 @@ public class DateUtils {
 
         return date;
     }
+    
+    public static String getStringUTCFromDate(Date date) {
+        // use XML dateTimeType format
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm:ss.SSSZ", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return formatter.format(date);          
+    }
 }

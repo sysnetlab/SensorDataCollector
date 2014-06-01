@@ -8,7 +8,7 @@ import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datastore.AbstractStore;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
-import sysnetlab.android.sdc.sensor.SensorUtilSingleton;
+import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import sysnetlab.android.sdc.ui.ViewExperimentActivity;
 import sysnetlab.android.sdc.ui.adaptors.SensorListAdapter;
 import sysnetlab.android.sdc.ui.adaptors.SensorPropertyListAdapter;
@@ -47,7 +47,7 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
         
         //setup the store and the sensorUtilSingleton
         mContext = getInstrumentation().getTargetContext();
-        SensorUtilSingleton.getInstance().setContext(mContext);
+        SensorUtilsSingleton.getInstance().setContext(mContext);
         mStore = StoreSingleton.getInstance();
         ExperimentManagerSingleton.getInstance().addExperimentStore(
                 mStore);

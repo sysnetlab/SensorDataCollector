@@ -45,4 +45,34 @@ public class TaggingAction {
     public String toString() {
         return mTag.toString() + "\n" + mTime.toString() + "\n" + mTagState;
     }
+    
+    public boolean equals(Object rhs) {
+        if (rhs == this) {
+            return true;
+        }
+        
+        if (!(rhs instanceof TaggingAction)) {
+            return false;
+        }
+        
+        TaggingAction action = (TaggingAction) rhs;
+        
+        if (mTag != null && action.mTag == null) {
+            return false;
+        } else if (!mTag.equals(action.mTag)) {
+            return false;
+        }
+        
+        if (mTime != null && action.mTime == null) {
+            return false;
+        } else if (!mTime.equals(action.mTime)) {
+            return false;
+        }
+        
+        if (mTagState != action.mTagState) {
+            return false;
+        }
+        
+        return true;
+    }
 }

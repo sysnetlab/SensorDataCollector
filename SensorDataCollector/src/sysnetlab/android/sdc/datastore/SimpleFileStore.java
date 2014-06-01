@@ -20,7 +20,7 @@ import sysnetlab.android.sdc.datacollector.Note;
 import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
-import sysnetlab.android.sdc.sensor.SensorUtilSingleton;
+import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import android.os.Environment;
 import android.util.Log;
 
@@ -221,7 +221,7 @@ public class SimpleFileStore extends AbstractStore {
                     String channelDescriptor = in.readLine();
                     // TODO make sure channel is read-only
                     Channel channel = new SimpleFileChannel(channelDescriptor, Channel.READ_ONLY);
-                    AbstractSensor sensor = SensorUtilSingleton.getInstance().getSensor(sensorName,
+                    AbstractSensor sensor = SensorUtilsSingleton.getInstance().getSensor(sensorName,
                             sensorMajorType,
                             sensorMinorType, channel);
                     lstSensors.add(sensor);

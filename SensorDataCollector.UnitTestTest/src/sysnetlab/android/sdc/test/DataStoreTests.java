@@ -1,15 +1,21 @@
 package sysnetlab.android.sdc.test;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import sysnetlab.android.sdc.datacollector.Experiment;
+import sysnetlab.android.sdc.datacollector.Note;
 import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.datastore.AbstractStore;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.datastore.SimpleFileStore;
 import sysnetlab.android.sdc.datastore.SimpleXMLFileStore;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
+import sysnetlab.android.sdc.sensor.AbstractSensor;
+import sysnetlab.android.sdc.sensor.SensorDiscoverer;
+import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import android.test.AndroidTestCase;
 
 public class DataStoreTests extends AndroidTestCase {
@@ -76,7 +82,8 @@ public class DataStoreTests extends AndroidTestCase {
         Experiment exp1 = new Experiment();
         
         List<Tag> listTags = new ArrayList<Tag>();
-        for (int i = 0; i < 3; i ++) {
+        int n = (int)(Math.random() * 5) + 1;
+        for (int i = 0; i < n; i ++) {
             String name = "Tag_" + i;
             String shortDescription = "Short description for tag " + i;
             String longDescription = "Long description for tag " + i;
@@ -85,7 +92,21 @@ public class DataStoreTests extends AndroidTestCase {
         }
         exp1.setTags(listTags);
         
+        List<Note> listNotes = new ArrayList<Note>();
+        n = (int)(Math.random() * 5) + 1;
+        for (int i = 0; i < n; i ++) {
+            String text = "Note_" + i;
+            Date date = Calendar.getInstance().getTime();
+            Note note = new Note(text, date);
+            listNotes.add(note);
+        }
+        exp1.setNotes(listNotes);
+        
+        List<AbstractSensor> listSensors = SensorDiscoverer.discoverSensorList(getContext());
+        exp1.setSensors(listSensors);
+        
         store.writeExperimentMetaData(exp1);
+        SensorUtilsSingleton.getInstance().setContext(getContext());
         Experiment exp2 = store.loadExperiment(store.getNewExperimentPath());
         assertEquals("experiment written and experiment read should be the same", exp1, exp2);
     }
