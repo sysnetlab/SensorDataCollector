@@ -40,7 +40,8 @@ public class DeviceInformation implements Parcelable {
 
 
     public void setDeviceInformation(String manufacturer, String model) {
-        mManufacturer = manufacturer;
+        mManufacturer = manufacturer != null ? manufacturer : "";
+        model = model !=null ? model: "";
         if (model.startsWith(mManufacturer)) {
             mModel = model.replaceFirst(mManufacturer + "(\\ *)", "");
         } else {

@@ -10,7 +10,6 @@ import java.util.TimeZone;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 
 public class Note implements Parcelable {
     private String mNote;
@@ -78,16 +77,14 @@ public class Note implements Parcelable {
         }
     }
     
-    public boolean equals(Object rhs) {
-        if (this == rhs) return true;
+    public boolean equals(Object object) {
+        if (this == object) return true;
         // it also takes care of the case that rhs is null
-        if (!(rhs instanceof Note)) return false;
+        if (!(object instanceof Note)) return false;
         
-        Note note = (Note) rhs;
-        // Considering that mNote or mDateTime may be null, use TextUtils  
-        if (!TextUtils.equals(mNote,  note.mNote)) return false;
-        //When writing the date as string to a parcel it loses precision, need to compare both as strings
-        if (!mDateCreated.equals(note.mDateCreated)) return false;
+        Note note = (Note) object;        
+        if (!this.mNote.equals(note.mNote)) return false;
+        if (!this.mDateCreated.equals(note.mDateCreated)) return false;
         
         return true;
     }

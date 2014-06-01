@@ -32,8 +32,8 @@ public class ExperimentViewNotesFragment extends Fragment {
 
                 Experiment experiment = ExperimentManagerSingleton.getInstance()
                         .getActiveExperiment();
-                if (mCurrentNoteNo > 0) {
-                    mCurrentNoteNo--;
+                if (mCurrentNoteNo < experiment.getNotes().size() - 1) {
+                    mCurrentNoteNo++;
                     updateNoteView(experiment.getNotes(), mCurrentNoteNo);
                 }
             }
@@ -44,8 +44,8 @@ public class ExperimentViewNotesFragment extends Fragment {
 
                 Experiment experiment = ExperimentManagerSingleton.getInstance()
                         .getActiveExperiment();
-                if (mCurrentNoteNo < experiment.getNotes().size() - 1) {
-                    mCurrentNoteNo++;
+                if (mCurrentNoteNo > 0) {
+                    mCurrentNoteNo--;
                     updateNoteView(experiment.getNotes(), mCurrentNoteNo);
                 }
             }

@@ -36,9 +36,9 @@ public class Experiment implements Parcelable {
 
     public Experiment(String name, Date dateCreated) {
         mDeviceInfo = new DeviceInformation();
-        mName = name;
-        mDateTimeCreated = dateCreated;
-        mDateTimeDone = dateCreated;
+        mName = name != null ? name : "";
+        mDateTimeCreated = dateCreated != null ? dateCreated : Calendar.getInstance().getTime();
+        mDateTimeDone = dateCreated != null ? dateCreated : Calendar.getInstance().getTime();
         mTags = new ArrayList<Tag>();
         mNotes = new ArrayList<Note>();
         mSensors = new ArrayList<AbstractSensor>();
@@ -100,11 +100,7 @@ public class Experiment implements Parcelable {
     }
 
     public void setName(String name) {
-        mName = name;
-    }
-
-    public String getDateTimeCreatedAsString() {
-        return SimpleDateFormat.getDateTimeInstance().format(mDateTimeCreated);
+        mName = name != null ? name : "";
     }
     
     public String getDateTimeCreatedAsStringUTC() {
@@ -118,6 +114,7 @@ public class Experiment implements Parcelable {
         return mDateTimeCreated;
     }
     
+
     public void setDateTimeCreatedFromStringUTC(String dateCreated) {
         try {
             // use XML dateTimeType format
@@ -129,6 +126,11 @@ public class Experiment implements Parcelable {
             e.printStackTrace();
         }        
     }    
+
+    public String getDateTimeCreatedAsString() {
+        return SimpleDateFormat.getDateTimeInstance().format(mDateTimeCreated);
+    }
+
     
     public void setDateTimeCreatedFromString(String dateCreated) {
         try {
@@ -138,8 +140,25 @@ public class Experiment implements Parcelable {
 			e.printStackTrace();
 		}
     }
+
+    public long getDateTimeCreatedAsLong(){
+    	return mDateTimeCreated.getTime();
+    }
+    
+    public void setDateTimeCreatedFromLong(long dateCreated){    	
+    		mDateTimeCreated = new Date(dateCreated);    	
+    }
+    
+    public long getDateTimeDoneAsLong(){
+    	return mDateTimeDone.getTime();
+    }
+    
+    public void setDateTimeDoneFromLong(long dateDone){    	
+    		mDateTimeDone = new Date(dateDone);    	
+    }
     
     public List<AbstractSensor> getSensors() {
+
         return mSensors;
     }
 
@@ -312,8 +331,8 @@ public class Experiment implements Parcelable {
     public void writeToParcel(Parcel outParcel, int flags) {
         outParcel.writeString(mName);
 
-        outParcel.writeString(getDateTimeCreatedAsString());
-        outParcel.writeString(getDateTimeDoneAsString());
+        outParcel.writeLong(getDateTimeCreatedAsLong());
+        outParcel.writeLong(getDateTimeDoneAsLong());
 
         outParcel.writeTypedList(mTags);
 
@@ -339,8 +358,8 @@ public class Experiment implements Parcelable {
         
         mName = inParcel.readString();
 
-        setDateTimeCreatedFromString(inParcel.readString());
-        setDateTimeDoneFromString(inParcel.readString());
+        setDateTimeCreatedFromLong(inParcel.readLong());
+        setDateTimeDoneFromLong(inParcel.readLong());
 
         mTags = new ArrayList<Tag>();
         inParcel.readTypedList(mTags, Tag.CREATOR);
@@ -382,7 +401,7 @@ public class Experiment implements Parcelable {
             mSensors.add(sensor);
         }
     }
-
+    
     public Parcelable.Creator<Experiment> getCreator() {
         return CREATOR;
     }

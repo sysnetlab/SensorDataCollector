@@ -54,33 +54,6 @@ public class AndroidSensor extends AbstractSensor {
     }
  
     @Override
-    public boolean equals(Object rhs) {
-        if (rhs == this) {
-            return true;
-        }
-        
-        if (!(rhs instanceof AndroidSensor)) {
-            return false;
-        }
-        
-        AndroidSensor s = (AndroidSensor) rhs;
-        
-        if (!getName().equals(s.getName())) {
-            return false;
-        }
-        
-        if (getMajorType() != s.getMajorType()) {
-            return false;
-        }
-        
-        if (getMinorType() != s.getMinorType()) {
-            return false;
-        }
-        
-        return true;
-    }
-
-    @Override
     public void setSensor(Object sensor) {
         this.mSensor = (Sensor) sensor;
     }
@@ -115,8 +88,61 @@ public class AndroidSensor extends AbstractSensor {
         return mSensor.getVendor();
     }
 
+    // TODO carefully check how Sensor objects should be reconstructed from 
+    // persistent storage and copied from one instance to another.  
     @Override
     public int getVersion() {
         return mSensor.getVersion();
     }
+    
+    @Override
+    public boolean equals(Object rhs) {
+        if (!super.equals(rhs)) {
+            return false;
+        }
+        
+        AndroidSensor s = (AndroidSensor) rhs;
+        
+        if (!getName().equals(s.getName())) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+/*
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        
+        Log.d("SensorDataCollector.UnitTes", "AndroidSensor::equals(): checkpoint #1.");
+        
+        // it also takes care of the case that object is null
+        if (!(object instanceof AndroidSensor)) return false;
+        
+        Log.d("SensorDataCollector.UnitTes", "AndroidSensor::equals(): checkpoint #2.");
+        
+        AndroidSensor androidSensor = (AndroidSensor) object;
+        if (!(this.mSamplingInterval == androidSensor.mSamplingInterval)) return false;
+        
+        Log.d("SensorDataCollector.UnitTes", "AndroidSensor::equals(): checkpoint #3.");
+        
+        if (!(this.mSensingType == androidSensor.mSensingType)) return false;
+        
+        Log.d("SensorDataCollector.UnitTes", "AndroidSensor::equals(): checkpoint #4.");
+        
+        if (!(this.mIsStreamingSensor == androidSensor.mIsStreamingSensor)) return false;
+        
+        Log.d("SensorDataCollector.UnitTes", "AndroidSensor::equals(): checkpoint #5.");
+        
+        if (!this.mSensor.equals(androidSensor.mSensor)) return false;
+        
+        Log.d("SensorDataCollector.UnitTes", "AndroidSensor::equals(): checkpoint #6.");
+        
+        if (!this.mSensor.toString().equals(androidSensor.mSensor.toString())) return false;
+
+        return super.equals(object);
+    }
+    */
+
 }
