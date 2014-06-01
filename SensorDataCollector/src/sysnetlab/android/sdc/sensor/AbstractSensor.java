@@ -4,6 +4,7 @@ package sysnetlab.android.sdc.sensor;
 import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
 
 public abstract class AbstractSensor {
+    private int mSensorId;
     private int mMajorType;
     private int mMinorType;
     private boolean mSelected;
@@ -16,6 +17,14 @@ public abstract class AbstractSensor {
     public final static int AUDIO_SENSOR = 3;
     public final static int WIFI_SENSOR = 4; /* RSSI */
     public final static int BLUETOOTH_SENSOR = 5; /* RSSI */
+    
+    public int getId() {
+        return mSensorId;
+    }
+    
+    public void setId(int id) {
+        mSensorId = id;
+    }
 
     public int getMajorType() {
         return mMajorType;

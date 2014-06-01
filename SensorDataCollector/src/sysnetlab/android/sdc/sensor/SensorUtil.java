@@ -13,8 +13,12 @@ public class SensorUtil {
 
     private Context mContext;
 
-    public AbstractSensor getSensor(String sensorName,
-            int majorType, int minorType, Channel channel) {
+    public AbstractSensor getSensor(String sensorName, int majorType, int minorType, Channel channel) {
+        return getSensor(sensorName, majorType, minorType, -1, channel);
+    }
+
+    public AbstractSensor getSensor(String sensorName, int majorType, int minorType, int id,
+            Channel channel) {
         switch (majorType) {
             case AbstractSensor.ANDROID_SENSOR:
                 AndroidSensor androidSensor = new AndroidSensor();
@@ -41,6 +45,8 @@ public class SensorUtil {
                 AndroidSensorEventListener listener =
                         new AndroidSensorEventListener(channel);
                 androidSensor.setListener(listener);
+
+                androidSensor.setId(id);
 
                 return androidSensor;
             default:

@@ -1,8 +1,10 @@
 package sysnetlab.android.sdc.test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import sysnetlab.android.sdc.datacollector.Experiment;
+import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.datastore.AbstractStore;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.datastore.SimpleFileStore;
@@ -71,7 +73,20 @@ public class DataStoreTests extends AndroidTestCase {
         store.createChannel("");
         assertTrue(channelNumber == (store.getNextChannelNumber() - 2));
 
-        Experiment experiment = new Experiment();
-        store.writeExperimentMetaData(experiment);
+        Experiment exp1 = new Experiment();
+        
+        List<Tag> listTags = new ArrayList<Tag>();
+        for (int i = 0; i < 3; i ++) {
+            String name = "Tag_" + i;
+            String shortDescription = "Short description for tag " + i;
+            String longDescription = "Long description for tag " + i;
+            Tag tag = new Tag(name, shortDescription, longDescription);
+            listTags.add(tag);        
+        }
+        exp1.setTags(listTags);
+        
+        store.writeExperimentMetaData(exp1);
+        Experiment exp2 = store.loadExperiment(store.getNewExperimentPath());
+        assertEquals("experiment written and experiment read should be the same", exp1, exp2);
     }
 }

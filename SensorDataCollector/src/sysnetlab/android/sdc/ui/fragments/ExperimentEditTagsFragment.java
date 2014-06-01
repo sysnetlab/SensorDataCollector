@@ -49,9 +49,9 @@ public class ExperimentEditTagsFragment extends Fragment {
         
 
         if (activity instanceof CreateExperimentActivity) {
-            tmpTags = ((CreateExperimentActivity) activity).getExperiment().getTags();
+            tmpTags = (ArrayList<Tag>)((CreateExperimentActivity) activity).getExperiment().getTags();
         }  else {
-            tmpTags = ((ViewExperimentActivity) activity).getExperiment().getTags();
+            tmpTags = (ArrayList<Tag>)((ViewExperimentActivity) activity).getExperiment().getTags();
         }
         mTagListAdapter = new TagListAdapter(activity, tmpTags);     
         

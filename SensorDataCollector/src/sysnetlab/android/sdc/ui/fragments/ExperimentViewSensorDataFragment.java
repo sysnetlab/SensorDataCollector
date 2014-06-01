@@ -1,7 +1,7 @@
 
 package sysnetlab.android.sdc.ui.fragments;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
@@ -10,7 +10,6 @@ import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.ui.GestureEventListener;
 import sysnetlab.android.sdc.ui.UserInterfaceUtil;
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
@@ -107,7 +106,7 @@ public class ExperimentViewSensorDataFragment extends Fragment {
         return mView;
     }
 
-    private void updateSensorDataView(ArrayList<AbstractSensor> lstSensors, int sensorNo) {
+    private void updateSensorDataView(List<AbstractSensor> lstSensors, int sensorNo) {
         if (lstSensors == null || lstSensors.isEmpty()) {
             ((TextView) mView.findViewById(R.id.textview_fragment_experiment_view_notes_note_text))
                     .setText(mView.getResources()

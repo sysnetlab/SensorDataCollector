@@ -36,7 +36,7 @@ public class ExperimentSensorListFragment extends Fragment {
         ListView listView = (ListView) view.findViewById(R.id.listview_experiment_view_sensor_list);
         TextView textView = (TextView) view.findViewById(R.id.textview_experiment_view_no_sensors);
 
-        ArrayList<AbstractSensor> lstSensors = ExperimentManagerSingleton.getInstance()
+        ArrayList<AbstractSensor> lstSensors = (ArrayList<AbstractSensor>)ExperimentManagerSingleton.getInstance()
                 .getActiveExperiment()
                 .getSensors();
 

@@ -148,7 +148,7 @@ public class SimpleFileStore extends AbstractStore {
         }
     }
 
-    private Experiment loadExperiment(String dirName, String parentDir) {
+    protected Experiment loadExperiment(String dirName, String parentDir) {
         String configFilePath = parentDir + "/.experiment";
         String name = null, dateTimeCreated = null;
         Experiment experiment = null;

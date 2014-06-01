@@ -8,6 +8,8 @@ import android.os.Parcelable;
 public class DeviceInformation implements Parcelable {
     private String mManufacturer;
     private String mModel;
+    private int mSdkInt;
+    private String mSdkCodeName; 
 
     public DeviceInformation() {
         setDeviceInformation(Build.MANUFACTURER, Build.MODEL);
@@ -35,6 +37,9 @@ public class DeviceInformation implements Parcelable {
         if (Character.isLowerCase(first)) {
             mModel = Character.toUpperCase(first) + mModel.substring(1);
         }
+        
+        mSdkInt = -1;
+        mSdkCodeName = "unknown";
     }
 
     public String getModel() {
@@ -51,6 +56,22 @@ public class DeviceInformation implements Parcelable {
 
     public void setManufacturer(String mManufacturer) {
         this.mManufacturer = mManufacturer;
+    }
+    
+    public int getSdkInt() {
+        return mSdkInt;
+    }
+    
+    public void setSdkInt(int sdkint) {
+        mSdkInt = sdkint;
+    }
+    
+    public String getSdkCodeName() {
+        return mSdkCodeName;
+    }
+    
+    public void setSdkCodeName(String codeName) {
+        mSdkCodeName = codeName;
     }
 
     public String toString() {

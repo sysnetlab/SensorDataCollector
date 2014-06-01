@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -25,11 +26,11 @@ public class Experiment implements Parcelable {
     private String mName;
     private Date mDateTimeCreated;
     private Date mDateTimeDone;
-    private ArrayList<Tag> mTags;
-    private ArrayList<Note> mNotes;
-    private ArrayList<TaggingAction> mTaggingActions;
+    private List<Tag> mTags;
+    private List<Note> mNotes;
+    private List<TaggingAction> mTaggingActions;
 
-    private ArrayList<AbstractSensor> mSensors;
+    private List<AbstractSensor> mSensors;
     //private AbstractStore mStore;
 
     public Experiment(String name, Date dateCreated) {
@@ -62,11 +63,11 @@ public class Experiment implements Parcelable {
         return experiment;
     }
 
-    public ArrayList<Tag> getTags() {
+    public List<Tag> getTags() {
         return mTags;
     }
 
-    public void setTags(ArrayList<Tag> tags) {
+    public void setTags(List<Tag> tags) {
         this.mTags = tags;
     }
 
@@ -84,11 +85,11 @@ public class Experiment implements Parcelable {
         }
     }
 
-    public ArrayList<Note> getNotes() {
+    public List<Note> getNotes() {
         return mNotes;
     }
 
-    public void setNotes(ArrayList<Note> mNotes) {
+    public void setNotes(List<Note> mNotes) {
         if (mNotes != null)
             this.mNotes = mNotes;
     }
@@ -116,6 +117,18 @@ public class Experiment implements Parcelable {
         return mDateTimeCreated;
     }
     
+    public void setDateTimeCreatedFromStringUTC(String dateCreated) {
+        try {
+            // use XML dateTimeType format
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm:ss.SSSZ", Locale.US);
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            mDateTimeDone = formatter.parse(dateCreated);                
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }        
+    }    
+    
     public void setDateTimeCreatedFromString(String dateCreated) {
         try {
 			mDateTimeCreated = SimpleDateFormat.getDateTimeInstance().parse(dateCreated);
@@ -125,11 +138,11 @@ public class Experiment implements Parcelable {
 		}
     }
     
-    public ArrayList<AbstractSensor> getSensors() {
+    public List<AbstractSensor> getSensors() {
         return mSensors;
     }
 
-    public void setSensors(ArrayList<AbstractSensor> sensors) {
+    public void setSensors(List<AbstractSensor> sensors) {
         this.mSensors = sensors;
     }
 
@@ -157,6 +170,19 @@ public class Experiment implements Parcelable {
         return mDateTimeDone;
     }
     
+    
+    public void setDateTimeDoneFromStringUTC(String dateDone) {
+        try {
+            // use XML dateTimeType format
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm:ss.SSSZ", Locale.US);
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            mDateTimeDone = formatter.parse(dateDone);                
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }        
+    }
+    
     public void setDateTimeDoneFromString(String dateDone) {
     	try {
  			mDateTimeDone = SimpleDateFormat.getDateTimeInstance().parse(dateDone);
@@ -170,11 +196,11 @@ public class Experiment implements Parcelable {
 		mDateTimeDone = dateDone;
     }
     
-    public ArrayList<TaggingAction> getTaggingActions() {
+    public List<TaggingAction> getTaggingActions() {
         return mTaggingActions;
     }
     
-    public void setTaggingActions(ArrayList<TaggingAction> taggingActions) {
+    public void setTaggingActions(List<TaggingAction> taggingActions) {
         mTaggingActions = taggingActions;
     }
 
