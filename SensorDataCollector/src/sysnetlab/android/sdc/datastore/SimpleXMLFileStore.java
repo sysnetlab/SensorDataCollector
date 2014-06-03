@@ -39,7 +39,7 @@ public class SimpleXMLFileStore extends SimpleFileStore {
     private final String XMLNS = "http://schemas.sysnetlab.net/apps/sdc";
     private final String XMLNS_XSI = "http://www.w3.org/2001/XMLSchema-instance";
     private final String XSI_SCHEMA_LOCATION = "http://schemas.sysnetlab.net/apps/sdc ExperimentMetaData.xsd";
-    private final String XML_EXPERIMENT_META_DATA_FILE = ".experiment.xml";
+    private final String XML_EXPERIMENT_META_DATA_FILE = "experiment.xml";
 
     public SimpleXMLFileStore() throws RuntimeException {
     }
@@ -904,26 +904,4 @@ public class SimpleXMLFileStore extends SimpleFileStore {
             }
         }
      }    
-
-    @Override
-    public Channel createChannel(String tag) {
-        // TODO Auto-generated method stub
-        return super.createChannel(tag);
-    }
-
-    @Override
-    public void closeAllChannels() {
-        // TODO Auto-generated method stub
-        super.closeAllChannels();
-    }
-
-
-    @Override
-    public int getNextChannelNumber() {
-        // TODO Auto-generated method stub
-        return super.getNextChannelNumber();
-    }
-    
-
-
 }

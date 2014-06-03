@@ -13,10 +13,12 @@ import sysnetlab.android.sdc.datacollector.Note;
 import sysnetlab.android.sdc.datacollector.StateTag;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
 import sysnetlab.android.sdc.datacollector.TaggingState;
+import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.services.RunExperimentService;
+import sysnetlab.android.sdc.ui.fragments.ExperimentDataStoreFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentEditNotesFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentEditTagsFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentRunFragment;
@@ -66,6 +68,7 @@ public class CreateExperimentActivity extends FragmentActivity
     private ExperimentSensorSetupFragment mSensorSetupFragment;
     private ExperimentEditNotesFragment mExperimentEditNotesFragment;
     private ExperimentEditTagsFragment mExperimentEditTagsFragment;
+    private ExperimentDataStoreFragment mExperimentDataStoreFragment;
     private ExperimentRunFragment mExperimentRunFragment;
 
     private DataCollectionState mCollectionState;
@@ -436,6 +439,16 @@ public class CreateExperimentActivity extends FragmentActivity
         getIntent().putExtra("havingfooter", true);
         FragmentUtil.switchToFragment(this, mExperimentSensorSelectionFragment, "sensorselection");
     }
+    
+    @Override
+    public void onDataStoreClicked_ExperimentSetupFragment() {
+        Log.i("SensorDataCollector", this.getClass().getSimpleName()
+                + "::onDataStoreClicked_ExperimentSetupFragment() called");
+        if (mExperimentDataStoreFragment == null) {
+            mExperimentDataStoreFragment = new ExperimentDataStoreFragment();
+        }
+        FragmentUtil.switchToFragment(this, mExperimentDataStoreFragment, "datastoreselection");
+    }
 
     @Override
     public void onBtnRunClicked_ExperimentSetupFragment(View view) {
@@ -449,6 +462,8 @@ public class CreateExperimentActivity extends FragmentActivity
                 .findViewById(R.id.et_experiment_setup_name)).getText()
                 .toString());
 
+        StoreSingleton.setStoreInstance(ExperimentManagerSingleton.getInstance().getStores()
+                .get(mExperimentDataStoreFragment.getStorePositionChecked()));
         FragmentUtil.switchToFragment(this, mExperimentRunFragment,
                 "experimentrun");
     }

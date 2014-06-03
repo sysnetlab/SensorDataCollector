@@ -75,9 +75,16 @@
     <string name="text_run_sensor_operation_text">
         Configure the sensors to use during the experiment.
     </string>
+    <string name="text_run_datastore_operation_text">
+        Choose a data storage method.
+    </string>
     <string name="text_running_in_background">
         Data collection is running in background.
     </string>
+    <string name="text_select_a_data_store_for_the_experiment">
+        Select a data store for the experiment.
+    </string>
+    <string name="text_data_store">Data Store</string>
     <string name="text_is_sleeping">is sleeping</string>
     <string name="text_from">From</string>
     <string name="text_to">To</string>
@@ -99,6 +106,13 @@
     <string name="text_continue_experiment">Continue Experiment</string>
     <string name="text_stopping_experiment">Stopping the experiment &#8230;</string>
     <string name="text_continuing_experiment">Continuing the experiment &#8230;</string>
+    
+    <!-- Data Stores -->
+    <string name="text_simple_xml_file_store">Simple XML File Store</string>
+    <string name="text_simple_file_store">Simple File Store</string>
+    <string name="text_simple_xml_file_store_subtext_text">Store the experiment meta data in an XML file.</string>
+    <string name="text_simple_file_store_subtext_text">Store the experiment meta data in an unstructured text file.</string>
+    
     
     <!-- Audio Record -->
     <string name="text_channel_in_back">Channel in back</string>
