@@ -13,6 +13,7 @@ import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -42,10 +43,8 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
     final static private String DROPBOX_ACCESS_KEY_NAME = "DROPBOX_ACCESS_KEY";
     final static private String DROPBOX_ACCESS_SECRET_NAME = "DROPBOX_ACCESS_SECRET";
     private DropboxAPI<AndroidAuthSession> mDropboxApi;
-    private boolean mDropboxLoggedIn = false;
-    // End Dropbox
+    private boolean mDropboxLoggedIn;
     
-    private Menu mMenu;
     private ExperimentListFragment mExperimentListFragment;
 
     @Override
@@ -72,9 +71,9 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
         
       // Dropbox
       dropboxCheckAppKeySetup();
-      AppKeyPair appKeys = new AppKeyPair(DROPBOX_APP_KEY, DROPBOX_APP_SECRET);
-      AndroidAuthSession session = new AndroidAuthSession(appKeys);
-      mDropboxApi = new DropboxAPI<AndroidAuthSession>(session);
+	  AndroidAuthSession session = dropboxBuildSession();
+	  mDropboxApi = new DropboxAPI<AndroidAuthSession>(session);
+     
     }
 
     public void onStart() {
@@ -87,7 +86,7 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
         // Complete the Dropbox Authorization
         AndroidAuthSession session = mDropboxApi.getSession();
 
-        if (session.authenticationSuccessful()) {
+        if (!mDropboxLoggedIn && session.authenticationSuccessful()) {
             try {
                 // Mandatory call to complete the auth
                 session.finishAuthentication();
@@ -95,6 +94,7 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
                 // Store it locally in our app for later use
                 dropboxStoreAuth(session);
                 dropboxSetLoggedIn(true);
+        		showToast("Successfully linked to Dropbox.");
             } catch (IllegalStateException e) {
                 showToast("Couldn't authenticate with Dropbox:" + e.getLocalizedMessage());
                 Log.i("CreateExperimentActivity", "Error authenticating", e);
@@ -107,8 +107,18 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.sensordatacollector_activity_menu, menu);
-        mMenu = menu;
         return super.onCreateOptionsMenu(menu);
+    }
+    
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.action_dropbox);
+    	if (mDropboxLoggedIn) {
+    		item.setTitle(getString(R.string.text_unlink_from_dropbox));
+    	} else {
+    		item.setTitle(getString(R.string.text_link_to_dropbox));
+    	}
+    	return super.onPrepareOptionsMenu(menu);
+    	
     }
     
     @Override
@@ -124,6 +134,7 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
 	              dropboxClearKeys();
 	              // Change UI state to display logged out version
 	              dropboxSetLoggedIn(false);
+	              showToast("Successfully unlinked from Dropbox.");
 	          } else {
 	              mDropboxApi.getSession().startOAuth2Authentication(SensorDataCollectorActivity.this);
 	          }
@@ -156,6 +167,7 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
                 SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT);
         startActivity(intent);
     }
+    
 
     public ExperimentListFragment getExperimentListFragment() {
         return mExperimentListFragment;
@@ -169,16 +181,42 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
     /**
      * Convenience function to change UI state based on being logged in
      */
+    @SuppressLint("NewApi")
     private void dropboxSetLoggedIn(boolean loggedIn) {
     	mDropboxLoggedIn = loggedIn;
-        MenuItem item = mMenu.findItem(R.id.action_dropbox);
-    	if (mDropboxLoggedIn) {
-    		item.setTitle(getString(R.string.text_unlink_from_dropbox));
-    		showToast("Successfulling linked to Dropbox.");
-    	} else {
-    		item.setTitle(getString(R.string.text_link_to_dropbox));
-    		showToast("Successfully unlinked from Dropbox.");
+    	if (android.os.Build.VERSION.SDK_INT >= 11) {
+        	invalidateOptionsMenu();
     	}
+
+    }
+    
+    private AndroidAuthSession dropboxBuildSession() {
+        AppKeyPair appKeyPair = new AppKeyPair(DROPBOX_APP_KEY, DROPBOX_APP_SECRET);
+
+        AndroidAuthSession session = new AndroidAuthSession(appKeyPair);
+        dropboxLoadAuth(session);
+        return session;
+    }
+    
+    /**
+     * Shows keeping the access keys returned from Trusted Authenticator in a local
+     * store, rather than storing user name & password, and re-authenticating each
+     * time (which is not to be done, ever).
+     */
+    private void dropboxLoadAuth(AndroidAuthSession session) {
+        SharedPreferences prefs = getSharedPreferences(DROPBOX_ACCOUNT_PREFS_NAME, 0);
+        String key = prefs.getString(DROPBOX_ACCESS_KEY_NAME, null);
+        String secret = prefs.getString(DROPBOX_ACCESS_SECRET_NAME, null);
+        if (key == null || secret == null || key.length() == 0 || secret.length() == 0) return;
+
+        mDropboxLoggedIn=true;
+        if (key.equals("oauth2:")) {
+            // If the key is set to "oauth2:", then we can assume the token is for OAuth 2.
+            session.setOAuth2AccessToken(secret);
+        } else {
+            // Still support using old OAuth 1 tokens.
+            session.setAccessTokenPair(new AccessTokenPair(key, secret));
+        }
     }
     
     private void dropboxCheckAppKeySetup() {
@@ -186,7 +224,6 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
         if (DROPBOX_APP_KEY.startsWith("CHANGE") ||
                 DROPBOX_APP_SECRET.startsWith("CHANGE")) {
             showToast("You must apply for an app key and secret from developers.dropbox.com, and add them to the DBRoulette ap before trying it.");
-            finish();
             return;
         }
 
@@ -201,7 +238,6 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
                     "manifest is not set up correctly. You should have a " +
                     "com.dropbox.client2.android.AuthActivity with the " +
                     "scheme: " + scheme);
-            finish();
         }
     }
 
