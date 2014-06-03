@@ -16,6 +16,7 @@ import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.datastore.SimpleFileStore;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
+import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -259,7 +260,7 @@ public class Experiment implements Parcelable {
         }
         
         Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #4"); 
-        
+
         if (mDateTimeCreated != null && e.mDateTimeCreated == null) {
             return false;
         } else if (!mDateTimeCreated.equals(e.mDateTimeCreated)) {
@@ -302,10 +303,11 @@ public class Experiment implements Parcelable {
         if (mSensors != null && e.mSensors == null) {
             return false;
         } else if (!mSensors.equals(e.mSensors)){
+            Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #10 - " + mSensors.size() + "|" + e.mSensors.size());            
             return false;
         }
 
-        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #10");        
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #11");        
         
         return true;
     }
@@ -345,7 +347,11 @@ public class Experiment implements Parcelable {
             outParcel.writeString(sensor.getName());
             outParcel.writeInt(sensor.getMajorType());
             outParcel.writeInt(sensor.getMinorType());
-            outParcel.writeString(sensor.getListener().getChannel().describe());
+            switch (sensor.getMajorType()) {
+                case AbstractSensor.ANDROID_SENSOR:
+                    outParcel.writeString(((AndroidSensor)sensor).getListener().getChannel().describe());
+                    break;
+            }
         }
         
         // TODO write the tagging action properly to parcel.
@@ -377,7 +383,12 @@ public class Experiment implements Parcelable {
             String sensorName = inParcel.readString();
             int sensorMajorType = inParcel.readInt();
             int sensorMinorType = inParcel.readInt();
-            String channelDescriptor = inParcel.readString();
+            String channelDescriptor = "";
+            switch (sensorMajorType) {
+                case AbstractSensor.ANDROID_SENSOR:
+                    channelDescriptor = inParcel.readString();
+                    break;
+            }
             // TODO make sure channel is read-only or write-only or
             // bidirectional
             Channel channel = null;

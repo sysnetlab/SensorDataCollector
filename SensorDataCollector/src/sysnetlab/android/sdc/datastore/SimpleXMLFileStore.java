@@ -18,6 +18,8 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
+import android.hardware.Sensor;
+import android.os.Build;
 import android.util.Log;
 import android.util.Xml;
 import sysnetlab.android.sdc.datacollector.DateUtils;
@@ -29,6 +31,7 @@ import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
 import sysnetlab.android.sdc.datacollector.TaggingState;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
+import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 
 public class SimpleXMLFileStore extends SimpleFileStore {
@@ -83,6 +86,47 @@ public class SimpleXMLFileStore extends SimpleFileStore {
         } 
     }
     
+    public Experiment loadExperiment(String experimentPath) {
+        Experiment experiment = null;
+        
+        String configFilePath = experimentPath + "/" + XML_EXPERIMENT_META_DATA_FILE;
+        
+        try {
+            
+            BufferedReader in = new BufferedReader(new FileReader(configFilePath));
+        
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            factory.setNamespaceAware(true);
+            XmlPullParser xpp = factory.newPullParser();
+            xpp.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, true);
+            
+            xpp.setInput(in);
+            
+            xpp.nextTag();
+            experiment = readExperiment(xpp);
+        
+            in.close();
+        } catch (FileNotFoundException e) {
+            experiment = null;
+            Log.d("SensorDataCollector.UnitTest", "not found " + configFilePath);
+        } catch (XmlPullParserException e) {
+            experiment = null;
+            Log.d("SensorDataCollector.UnitTest", e.toString());            
+        } catch (IOException e) {
+            experiment = null;
+            Log.d("SensorDataCollector.UnitTest", e.toString());            
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 
+        
+        return experiment;
+    }
+
+    
     private void serializeExperiment(XmlSerializer xs, Experiment e)
             throws IllegalArgumentException, IllegalStateException, IOException {
         xs.startDocument("UTF-8", false);
@@ -99,7 +143,7 @@ public class SimpleXMLFileStore extends SimpleFileStore {
 
         // <date time creation></date time creation><date time done></date time
         // done>
-        serializeExperimentTimes(xs, e.getDateTimeCreated(), e.getDateTimeCreated());
+        serializeExperimentTimes(xs, e.getDateTimeCreated(), e.getDateTimeDone());
 
         // <tag list> ... </tag list>
         serializeExperimentTagList(xs, e.getTags());
@@ -276,6 +320,16 @@ public class SimpleXMLFileStore extends SimpleFileStore {
                 xs.startTag("", "minortype");
                 xs.text(Integer.toString(sensor.getMinorType()));
                 xs.endTag("", "minortype");
+                
+                xs.startTag("",  "selected");
+                xs.text(Boolean.toString(sensor.isSelected()));
+                xs.endTag("", "selected");
+
+                switch(sensor.getMajorType()) {
+                    case AbstractSensor.ANDROID_SENSOR:
+                        serializeAndroidSensor(xs, (AndroidSensor) sensor);
+                        break;
+                }
 
                 xs.endTag("", "sensor");
             }
@@ -283,46 +337,80 @@ public class SimpleXMLFileStore extends SimpleFileStore {
             xs.endTag("", "sensorlist");
         }
     }
-
     
-    public Experiment loadExperiment(String experimentPath) {
-        Experiment experiment = null;
-        
-        String configFilePath = experimentPath + "/" + XML_EXPERIMENT_META_DATA_FILE;
-        
-        try {
+    @SuppressWarnings("deprecation")
+    private void serializeAndroidSensor(XmlSerializer xs, AndroidSensor sensor) throws IllegalArgumentException, IllegalStateException, IOException {
+        xs.startTag("",  "datadescription");
+        xs.attribute("",  "type",  "csv");
+
+        xs.startTag("",  "location");
+        xs.text(sensor.getChannel().describe());
+        xs.endTag("",  "location");
+
+        final String eventTimes[] = {"threadtimemillis", 
+                "elapsedrealtime",
+                "elapsedrealtimenanos"};
+        int pos = -1;
+        for (int i = 0; i < eventTimes.length; i ++) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1 && i == eventTimes.length - 1) {
+                break;
+            }
             
-            BufferedReader in = new BufferedReader(new FileReader(configFilePath));
+            pos ++;
+            xs.startTag("", "column");
+            xs.attribute("",  "id",  Integer.toString(pos));
+            xs.attribute("",  "pos",  Integer.toString(pos));
+            xs.attribute("",  "type",  "long");
+            xs.attribute("", "description", eventTimes[i]);
+            xs.endTag("", "column");
+        }
+        // http://developer.android.com/reference/android/hardware/SensorEvent.html#values
+        int nValues;
+        switch (sensor.getMinorType()) {
+            case Sensor.TYPE_ACCELEROMETER:
+            case Sensor.TYPE_MAGNETIC_FIELD:
+            case Sensor.TYPE_GYROSCOPE:
+            case Sensor.TYPE_GRAVITY:
+            case Sensor.TYPE_LINEAR_ACCELERATION:
+            case Sensor.TYPE_ORIENTATION:
+                nValues = 3;
+                break;
+
+            case Sensor.TYPE_LIGHT:
+            case Sensor.TYPE_PRESSURE:
+            case Sensor.TYPE_PROXIMITY:
+            case Sensor.TYPE_RELATIVE_HUMIDITY:
+            case Sensor.TYPE_AMBIENT_TEMPERATURE:
+                nValues = 1;
+                break;
+
+            case Sensor.TYPE_ROTATION_VECTOR:
+            case Sensor.TYPE_GAME_ROTATION_VECTOR:
+                nValues = 3;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    nValues = 5;
+                }
+                break;
+                
+            case Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED:
+            case Sensor.TYPE_GYROSCOPE_UNCALIBRATED:
+                nValues = 6;
+                break;
+                
+            default:
+                nValues = 3;
+        }
+        for (int i = 0; i < nValues; i ++) {
+            pos ++;
+            xs.startTag("", "column");
+            xs.attribute("",  "id",  Integer.toString(pos));
+            xs.attribute("",  "pos",  Integer.toString(pos));
+            xs.attribute("",  "type",  "double");
+            xs.attribute("", "description", "value");
+            xs.endTag("", "column");                    
+        }  
         
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            factory.setNamespaceAware(true);
-            XmlPullParser xpp = factory.newPullParser();
-            xpp.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, true);
-            
-            xpp.setInput(in);
-            
-            xpp.nextTag();
-            experiment = readExperiment(xpp);
-        
-            in.close();
-        } catch (FileNotFoundException e) {
-            experiment = null;
-            Log.d("SensorDataCollector.UnitTest", "not found " + configFilePath);
-        } catch (XmlPullParserException e) {
-            experiment = null;
-            Log.d("SensorDataCollector.UnitTest", e.toString());            
-        } catch (IOException e) {
-            experiment = null;
-            Log.d("SensorDataCollector.UnitTest", e.toString());            
-        } catch (IllegalStateException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } 
-        
-        return experiment;
+        xs.endTag("",  "datadescription");        
     }
     
     private Experiment readExperiment(XmlPullParser xpp) throws IllegalStateException,
@@ -331,7 +419,7 @@ public class SimpleXMLFileStore extends SimpleFileStore {
 
         xpp.require(XmlPullParser.START_TAG, XMLNS, "experiment");
 
-        while (xpp.next() != XmlPullParser.END_DOCUMENT) {
+        while (xpp.next() != XmlPullParser.END_TAG) {
             if (xpp.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
@@ -340,23 +428,20 @@ public class SimpleXMLFileStore extends SimpleFileStore {
             Log.d("SensorDataCollector.UnitTest", "element = " + elem);
 
             if (elem.equals("name")) {
-                if (xpp.next() != XmlPullParser.TEXT) {
-                    throw new IllegalStateException("SimpleXMLFileStore::readExperiment(): ill-formed XML for experiment name");
-                }
-                experiment.setName(xpp.getText());
+                String name = readXmlElementText(xpp, "name");
+                experiment.setName(name);
+                Log.d("SensorDataCollector.UnitTest", "readExperiment(): " + xpp.getText());                
             } else if (elem.equals("device")) {
                 DeviceInformation device = readDevice(xpp);
                 experiment.setDeviceInformation(device);
+                Log.d("SensorDataCollector.UnitTest", "readExperiment(): " + device.toString());                
             } else if (elem.equals("datetimecreation")) {
-                if (xpp.next() != XmlPullParser.TEXT) {
-                    throw new IllegalStateException("SimpleXMLFileStore::readExperiment(): ill-formed XML for experiment datetimecreation");                    
-                }
-                experiment.setDateTimeCreatedFromStringUTC(xpp.getText());
+                String datetime = readXmlElementText(xpp, "datetimecreation");
+                experiment.setDateTimeCreatedFromStringUTC(datetime);
+                Log.d("SensorDataCollector.UnitTest", "readExperiment(): " + xpp.getText());
             } else if (elem.equals("datetimecompletion")) {
-                if (xpp.next() != XmlPullParser.TEXT) {
-                    throw new IllegalStateException("SimpleXMLFileStore::readExperiment(): ill-formed XML for experiment datetimecompletion");                    
-                }
-                experiment.setDateTimeDoneFromStringUTC(xpp.getText());
+                String datetime = readXmlElementText(xpp, "datetimecompletion");
+                experiment.setDateTimeDoneFromStringUTC(datetime);
             } else if (elem.equals("taglist")) {
                 List<Tag> listTags = readTags(xpp);
                 experiment.setTags(listTags);                
@@ -369,6 +454,8 @@ public class SimpleXMLFileStore extends SimpleFileStore {
             } else if (elem.equals("sensorlist")) {
                 List<AbstractSensor> listSensors = readSensors(xpp);
                 experiment.setSensors(listSensors);
+            } else {
+                skip(xpp);
             }
         }
         
@@ -385,6 +472,8 @@ public class SimpleXMLFileStore extends SimpleFileStore {
     }
     
     private DeviceInformation readDevice(XmlPullParser xpp) throws XmlPullParserException, IOException {
+        Log.d("SensorDataCollector.UnitTest", "entered readDevice()");                
+
         xpp.require(XmlPullParser.START_TAG, XMLNS, "device");
         
         DeviceInformation deviceInfo = null; 
@@ -462,7 +551,9 @@ public class SimpleXMLFileStore extends SimpleFileStore {
 
             if (name.equals("tag")) {
                 listTags.add(readTag(xpp));
-            } 
+            } else {
+                skip(xpp);
+            }
         }  
 
         return listTags;
@@ -519,7 +610,9 @@ public class SimpleXMLFileStore extends SimpleFileStore {
 
             if (name.equals("note")) {
                 listNotes.add(readNote(xpp));
-            } 
+            } else {
+                skip(xpp);
+            }
         }  
 
         return listNotes;
@@ -569,7 +662,9 @@ public class SimpleXMLFileStore extends SimpleFileStore {
 
             if (name.equals("taggingaction")) {
                 listTaggingActions.add(readTaggingAction(xpp, listTags));
-            } 
+            } else {
+                skip(xpp);
+            }
         }  
 
         return listTaggingActions;
@@ -690,7 +785,10 @@ public class SimpleXMLFileStore extends SimpleFileStore {
 
             if (name.equals("sensor")) {
                 listSensors.add(readSensor(xpp));
-            } 
+                Log.d("SensorDataCollector.UnitTest", "SimpleXMLFileStore::readSensors(): read a sensor");
+            } else {
+                skip(xpp);
+            }
         }  
 
         return listSensors;
@@ -710,6 +808,7 @@ public class SimpleXMLFileStore extends SimpleFileStore {
         String sensorName = null;
         int majorType = -1;
         int minorType = -1;
+        AbstractStore.Channel channel = null;
 
         while (xpp.next() != XmlPullParser.END_TAG) {
             if (xpp.getEventType() != XmlPullParser.START_TAG) {
@@ -723,11 +822,41 @@ public class SimpleXMLFileStore extends SimpleFileStore {
                 majorType = readSensorMajorType(xpp);
             } else if (name.equals("minortype")) {
                 minorType = readSensorMinorType(xpp);
+            } else if (name.equals("datadescription")) {
+                channel = readSensorDataDefinition(xpp);
+            } else {
+                skip(xpp);
             }
         } 
         
-        AbstractSensor sensor = SensorUtilsSingleton.getInstance().getSensor(sensorName, majorType, minorType, id, null);
+        AbstractSensor sensor = SensorUtilsSingleton.getInstance().getSensor(sensorName, majorType, minorType, id, channel);
         return sensor;
+    }
+    
+    private AbstractStore.Channel readSensorDataDefinition(XmlPullParser xpp) throws XmlPullParserException, IOException {
+        xpp.require(XmlPullParser.START_TAG, XMLNS, "datadescription");
+        
+        String location = "";
+        while (xpp.next() != XmlPullParser.END_TAG) {
+            if (xpp.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = xpp.getName();
+
+            if (name.equals("location")) {
+                location = readChannelLocation(xpp);
+            } else {
+                skip(xpp);
+            }
+        } 
+        
+        String channelFilePath = location; 
+        
+        return new SimpleFileStore.SimpleFileChannel(channelFilePath, AbstractStore.Channel.READ_ONLY);   
+    }
+    
+    private String readChannelLocation(XmlPullParser xpp) throws XmlPullParserException, IOException {
+        return readXmlElementText(xpp, "location");
     }
     
     private String readSensorName(XmlPullParser xpp) throws XmlPullParserException, IOException {

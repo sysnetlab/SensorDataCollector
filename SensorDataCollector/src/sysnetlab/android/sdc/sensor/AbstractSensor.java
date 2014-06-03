@@ -1,16 +1,13 @@
 
 package sysnetlab.android.sdc.sensor;
 
-import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
+import android.util.Log;
 
 public abstract class AbstractSensor {
     private int mSensorId;
     private int mMajorType;
     private int mMinorType;
     private boolean mSelected;
-    // add multiple listeners later. which one to use depending
-    // on sensor types (major & minor types)
-    private AndroidSensorEventListener mListener;
 
     public final static int ANDROID_SENSOR = 1;
     public final static int CAMERA_SENSOR = 2;
@@ -64,15 +61,8 @@ public abstract class AbstractSensor {
 
     public abstract String toString();
     
-    public void setListener(AndroidSensorEventListener listener) {
-        mListener = listener;
-    }
-
-    public AndroidSensorEventListener getListener() {
-        return mListener;
-    }
-    
     public boolean equals(Object object) {
+        Log.d("SensorDataCollector.UnitTest", "AbstractSensor::equals(): checkpoint #1");
         if (this == object) return true;
         
         // it also takes care of the case that object is null

@@ -1,10 +1,12 @@
 package sysnetlab.android.sdc.test;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.Note;
 import sysnetlab.android.sdc.datacollector.Tag;
@@ -14,9 +16,11 @@ import sysnetlab.android.sdc.datastore.SimpleFileStore;
 import sysnetlab.android.sdc.datastore.SimpleXMLFileStore;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
+import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import android.test.AndroidTestCase;
+import android.util.Log;
 
 public class DataStoreTests extends AndroidTestCase {
 	
@@ -103,6 +107,27 @@ public class DataStoreTests extends AndroidTestCase {
         exp1.setNotes(listNotes);
         
         List<AbstractSensor> listSensors = SensorDiscoverer.discoverSensorList(getContext());
+
+        
+        for (AbstractSensor sensor : listSensors) {
+            Log.d("SensorDataCollector.UnitTest", "Sensor Properties: " + ((AndroidSensor) sensor).getSamplingInterval());                    
+
+            switch (sensor.getMajorType()) {
+                case AbstractSensor.ANDROID_SENSOR:
+                    String channelPath = store.getNewExperimentPath() + "/" + sensor.getName().replace(' ', '_') + ".txt";
+                    AbstractStore.Channel channel = null;
+                    try {
+                        channel = store.new SimpleFileChannel(channelPath, AbstractStore.Channel.WRITE_ONLY);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    AndroidSensorEventListener listener =
+                            new AndroidSensorEventListener(channel);
+                    ((AndroidSensor) sensor).setListener(listener);  
+                    break;
+            }
+        }
+        
         exp1.setSensors(listSensors);
         
         store.writeExperimentMetaData(exp1);

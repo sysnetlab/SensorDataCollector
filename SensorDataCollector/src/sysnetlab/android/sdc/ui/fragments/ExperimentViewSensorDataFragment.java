@@ -8,6 +8,7 @@ import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
+import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.ui.GestureEventListener;
 import sysnetlab.android.sdc.ui.UserInterfaceUtil;
 import android.os.Bundle;
@@ -143,16 +144,20 @@ public class ExperimentViewSensorDataFragment extends Fragment {
         Log.i("SensorDataCollector", "called ExperimentViewSensorDataFragment::getSensorData().");
         String data = "";
 
-        Channel channel = sensor.getListener().getChannel();
+        switch (sensor.getMajorType()) {
+            case AbstractSensor.ANDROID_SENSOR:
+                Channel channel = ((AndroidSensor) sensor).getListener().getChannel();
 
-        for (int i = 0; i < maximumLines; i++) {
-            String line = channel.read();
-            if (line == null)
+                for (int i = 0; i < maximumLines; i++) {
+                    String line = channel.read();
+                    if (line == null)
+                        break;
+                    data = data + line + "\n";
+                }
+
+                channel.reset();
                 break;
-            data = data + line + "\n";
         }
-
-        channel.reset();
 
         return data;
     }

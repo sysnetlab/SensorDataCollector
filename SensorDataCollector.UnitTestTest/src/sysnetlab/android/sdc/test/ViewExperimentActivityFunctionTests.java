@@ -13,7 +13,6 @@ import sysnetlab.android.sdc.ui.ViewExperimentActivity;
 import sysnetlab.android.sdc.ui.adaptors.SensorListAdapter;
 import sysnetlab.android.sdc.ui.adaptors.SensorPropertyListAdapter;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewNotesFragment;
-import android.R.bool;
 import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
@@ -22,7 +21,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 public class ViewExperimentActivityFunctionTests extends
 ActivityInstrumentationTestCase2<ViewExperimentActivity> {
