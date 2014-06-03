@@ -18,13 +18,6 @@
 	        android:text="@string/text_running_experiment"
 	        android:textAppearance="?android:attr/textAppearanceMedium">
 		</TextView>
-
-	    <ProgressBar
-	        android:id="@+id/progressbar_experiment_running"
-	        style="?android:attr/progressBarStyleHorizontal"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_below="@id/textview_experiment_run_title" />
 	    	    
     </RelativeLayout>
     
@@ -33,13 +26,27 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:layout_below="@+id/layout_experiment_run_indicator"
-	    android:layout_above="@+id/layout_experiment_run_actions"
+	    android:layout_above="@+id/layout_experiment_run_progress"
 	    android:layout_marginTop="12dp" 
 	    android:layout_marginBottom="12dp">
-	</RelativeLayout>
-
+	</RelativeLayout>	
+		
 	<RelativeLayout
-	    android:id="@+id/layout_experiment_run_actions"
+	    android:id="@+id/layout_experiment_run_progress"
+	    android:layout_above="@+id/layout_experiment_run_actions"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content">    
+		<ProgressBar
+		    android:id="@+id/progressbar_experiment_running"
+		    style="?android:attr/progressBarStyleHorizontal"		    
+		    android:layout_width="75dp"
+		    android:layout_height="wrap_content"
+		    android:layout_centerHorizontal="true"
+		    android:indeterminate="true" />
+	</RelativeLayout>
+	
+	<RelativeLayout
+	    android:id="@id/layout_experiment_run_actions"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_alignParentBottom="true"
@@ -54,7 +61,8 @@
 		    android:layout_marginLeft="12dp"
 		    android:layout_marginRight="12dp"
 		    android:text="@string/text_done" />
-		        
 	</RelativeLayout>
+
+	
 
 </RelativeLayout>

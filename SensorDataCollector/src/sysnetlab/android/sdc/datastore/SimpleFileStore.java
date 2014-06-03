@@ -250,7 +250,7 @@ public class SimpleFileStore extends AbstractStore {
             if (name != null && dateTimeCreated != null) {
                 Log.w("SensorDataCollector",
                         "SimpleFileStore::loadExperiment(): Found an old configuration file for " + name);
-                return new Experiment(name);
+                return null;
             }
 
             Log.e("SensorDataCollector", "SimpleFileStore::loadExperiment(): " +
@@ -264,7 +264,7 @@ public class SimpleFileStore extends AbstractStore {
             if (name != null && dateTimeCreated != null) {
                 Log.w("SensorDataCollector",
                         "SimpleFileStore::loadExperiment(): Found an old configuration file for " + name);
-                return new Experiment(name);
+                return null;
             }
 
             Log.e("SensorDataCollector", "SimpleFileStore::loadExperiment(): " +
