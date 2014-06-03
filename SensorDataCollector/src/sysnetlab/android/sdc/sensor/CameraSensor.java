@@ -58,4 +58,10 @@ public class CameraSensor extends AbstractSensor {
         // TODO Auto-generated method stub
         return 0;
     }
+
+    @Override
+    public boolean equals(Object rhs) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

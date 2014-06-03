@@ -23,16 +23,18 @@ public class AndroidSensorEventListener implements SensorEventListener {
     @SuppressLint("NewApi")
     public void onSensorChanged(SensorEvent event) {
         Log.i("SensorDataCollector", "onSensorChanged(): get a data point from a sensor.");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             mChannel.write(
                     SystemClock.currentThreadTimeMillis() + ", "
                             + SystemClock.elapsedRealtime() + ", "
                             + SystemClock.elapsedRealtimeNanos());
-        else
+        } else {
             mChannel.write(SystemClock.currentThreadTimeMillis()
                     + ", " + SystemClock.elapsedRealtime());
-        for (int i = 0; i < event.values.length; i++)
+        }
+        for (int i = 0; i < event.values.length; i++) {
             mChannel.write(", " + event.values[i]);
+        }
         mChannel.write("\n");
     }
     

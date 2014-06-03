@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -15,9 +16,11 @@ import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.datastore.SimpleFileStore;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
-import sysnetlab.android.sdc.sensor.SensorUtilSingleton;
+import sysnetlab.android.sdc.sensor.AndroidSensor;
+import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class Experiment implements Parcelable {
@@ -25,11 +28,11 @@ public class Experiment implements Parcelable {
     private String mName;
     private Date mDateTimeCreated;
     private Date mDateTimeDone;
-    private ArrayList<Tag> mTags;
-    private ArrayList<Note> mNotes;
-    private ArrayList<TaggingAction> mTaggingActions;
+    private List<Tag> mTags;
+    private List<Note> mNotes;
+    private List<TaggingAction> mTaggingActions;
 
-    private ArrayList<AbstractSensor> mSensors;
+    private List<AbstractSensor> mSensors;
     //private AbstractStore mStore;
 
     public Experiment(String name, Date dateCreated) {
@@ -62,11 +65,11 @@ public class Experiment implements Parcelable {
         return experiment;
     }
 
-    public ArrayList<Tag> getTags() {
+    public List<Tag> getTags() {
         return mTags;
     }
 
-    public void setTags(ArrayList<Tag> tags) {
+    public void setTags(List<Tag> tags) {
         this.mTags = tags;
     }
 
@@ -84,11 +87,11 @@ public class Experiment implements Parcelable {
         }
     }
 
-    public ArrayList<Note> getNotes() {
+    public List<Note> getNotes() {
         return mNotes;
     }
 
-    public void setNotes(ArrayList<Note> mNotes) {
+    public void setNotes(List<Note> mNotes) {
         if (mNotes != null)
             this.mNotes = mNotes;
     }
@@ -112,9 +115,23 @@ public class Experiment implements Parcelable {
         return mDateTimeCreated;
     }
     
+
+    public void setDateTimeCreatedFromStringUTC(String dateCreated) {
+        try {
+            // use XML dateTimeType format
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm:ss.SSSZ", Locale.US);
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            mDateTimeCreated = formatter.parse(dateCreated);                
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }        
+    }    
+
     public String getDateTimeCreatedAsString() {
         return SimpleDateFormat.getDateTimeInstance().format(mDateTimeCreated);
     }
+
     
     public void setDateTimeCreatedFromString(String dateCreated) {
         try {
@@ -124,7 +141,7 @@ public class Experiment implements Parcelable {
 			e.printStackTrace();
 		}
     }
-    
+
     public long getDateTimeCreatedAsLong(){
     	return mDateTimeCreated.getTime();
     }
@@ -141,11 +158,12 @@ public class Experiment implements Parcelable {
     		mDateTimeDone = new Date(dateDone);    	
     }
     
-    public ArrayList<AbstractSensor> getSensors() {
+    public List<AbstractSensor> getSensors() {
+
         return mSensors;
     }
 
-    public void setSensors(ArrayList<AbstractSensor> sensors) {
+    public void setSensors(List<AbstractSensor> sensors) {
         this.mSensors = sensors;
     }
 
@@ -173,6 +191,19 @@ public class Experiment implements Parcelable {
         return mDateTimeDone;
     }
     
+    
+    public void setDateTimeDoneFromStringUTC(String dateDone) {
+        try {
+            // use XML dateTimeType format
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm:ss.SSSZ", Locale.US);
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            mDateTimeDone = formatter.parse(dateDone);                
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }        
+    }
+    
     public void setDateTimeDoneFromString(String dateDone) {
     	try {
  			mDateTimeDone = SimpleDateFormat.getDateTimeInstance().parse(dateDone);
@@ -186,16 +217,99 @@ public class Experiment implements Parcelable {
 		mDateTimeDone = dateDone;
     }
     
-    public ArrayList<TaggingAction> getTaggingActions() {
+    public List<TaggingAction> getTaggingActions() {
         return mTaggingActions;
     }
     
-    public void setTaggingActions(ArrayList<TaggingAction> taggingActions) {
+    public void setTaggingActions(List<TaggingAction> taggingActions) {
         mTaggingActions = taggingActions;
     }
 
     public String toString() {
         return mName + " " + mDateTimeCreated;
+    }
+    
+    public boolean equals(Object rhs) {
+        if (rhs == this) {
+            return true;
+        }
+        
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #1");
+        
+        if (!(rhs instanceof Experiment)) {
+            return false;
+        }
+
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #2");        
+        
+        Experiment e = (Experiment) rhs;
+        
+        if (!TextUtils.equals(mName, e.mName)) {
+            return false;
+        } 
+        
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #3");
+        
+        // Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): " +
+        //        mDeviceInfo.toString() + " - " + e.mDeviceInfo.toString());
+        
+        if (mDeviceInfo != null && e.mDeviceInfo == null) {
+            return false;
+        } else if (!mDeviceInfo.equals(e.mDeviceInfo)) {
+            return false;
+        }
+        
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #4"); 
+
+        if (mDateTimeCreated != null && e.mDateTimeCreated == null) {
+            return false;
+        } else if (!mDateTimeCreated.equals(e.mDateTimeCreated)) {
+            return false;
+        }        
+        
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #5");
+        
+        if (mDateTimeDone != null && e.mDateTimeDone == null) {
+            return false;
+        } else if (!mDateTimeDone.equals(e.mDateTimeDone)) {
+            return false;
+        }
+        
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #6");        
+        if (mTags != null && e.mTags == null) {
+            return false;
+        } else if (!mTags.equals(e.mTags)) {
+            return false;
+        }
+        
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #7");        
+        
+        if (mNotes != null && e.mNotes == null) {
+            return false;
+        } else if (!mNotes.equals(e.mNotes)){
+            return false;
+        }
+        
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #8");        
+
+        if (mTaggingActions != null && e.mTaggingActions == null) {
+            return false;
+        } else if (!mTaggingActions.equals(e.mTaggingActions)){
+            return false;
+        }
+        
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #9");        
+
+        if (mSensors != null && e.mSensors == null) {
+            return false;
+        } else if (!mSensors.equals(e.mSensors)){
+            Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #10 - " + mSensors.size() + "|" + e.mSensors.size());            
+            return false;
+        }
+
+        Log.d("SensorDataCollotr.UnitTest", "Experiment::equals(): checkpoint #11");        
+        
+        return true;
     }
 
     public static final Parcelable.Creator<Experiment> CREATOR = new Parcelable.Creator<Experiment>() {
@@ -233,7 +347,11 @@ public class Experiment implements Parcelable {
             outParcel.writeString(sensor.getName());
             outParcel.writeInt(sensor.getMajorType());
             outParcel.writeInt(sensor.getMinorType());
-            outParcel.writeString(sensor.getListener().getChannel().describe());
+            switch (sensor.getMajorType()) {
+                case AbstractSensor.ANDROID_SENSOR:
+                    outParcel.writeString(((AndroidSensor)sensor).getListener().getChannel().describe());
+                    break;
+            }
         }
         
         // TODO write the tagging action properly to parcel.
@@ -265,7 +383,12 @@ public class Experiment implements Parcelable {
             String sensorName = inParcel.readString();
             int sensorMajorType = inParcel.readInt();
             int sensorMinorType = inParcel.readInt();
-            String channelDescriptor = inParcel.readString();
+            String channelDescriptor = "";
+            switch (sensorMajorType) {
+                case AbstractSensor.ANDROID_SENSOR:
+                    channelDescriptor = inParcel.readString();
+                    break;
+            }
             // TODO make sure channel is read-only or write-only or
             // bidirectional
             Channel channel = null;
@@ -283,29 +406,11 @@ public class Experiment implements Parcelable {
                                     store.getClass().getName());
                 }
             }
-            AbstractSensor sensor = SensorUtilSingleton.getInstance().getSensor(sensorName,
+            AbstractSensor sensor = SensorUtilsSingleton.getInstance().getSensor(sensorName,
                     sensorMajorType,
                     sensorMinorType, channel);
             mSensors.add(sensor);
         }
-    }
-
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        // it also takes care of the case that object is null
-        if (!(object instanceof Experiment)) return false;
-        
-        Experiment experiment = (Experiment) object;
-        
-        if (!this.mDeviceInfo.equals(experiment.mDeviceInfo)) return false;
-        if (!this.mName.equals(experiment.mName)) return false;
-        if (!this.mDateTimeCreated.equals(experiment.mDateTimeCreated)) return false;
-        if (!this.mDateTimeDone.equals(experiment.mDateTimeDone)) return false;                               
-        if (!this.mTags.equals(experiment.mTags)) return false;
-        if (!this.mNotes.equals(experiment.mNotes)) return false;
-        if (!this.mTaggingActions.equals(experiment.mTaggingActions)) return false;
-        if (!this.mSensors.equals(experiment.mSensors)) return false;        
-        return true;
     }
     
     public Parcelable.Creator<Experiment> getCreator() {

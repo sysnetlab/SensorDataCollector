@@ -5,8 +5,6 @@ import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.ui.ViewExperimentActivity;
 import android.content.Intent;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 
 

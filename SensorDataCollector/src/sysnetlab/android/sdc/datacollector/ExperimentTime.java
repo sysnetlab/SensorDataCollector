@@ -71,16 +71,28 @@ public class ExperimentTime {
                 + mElapsedRealtimeNanos;
     }
     
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        // it also takes care of the case that rhs is null
-        if (!(object instanceof ExperimentTime)) return false;
+    public boolean equals(Object rhs) {
+        if (rhs == this) {
+            return true;
+        }
         
-        ExperimentTime experimentTime = (ExperimentTime) object;
-        // Considering that mNote or mDateTime may be null, use TextUtils  
-        if (!(this.mElapsedRealtime == experimentTime.mElapsedRealtime)) return false;
-        if (!(this.mElapsedRealtimeNanos == experimentTime.mElapsedRealtimeNanos)) return false;
-        if (!(this.mThreadTimeMillis == experimentTime.mThreadTimeMillis)) return false;
+        if (!(rhs instanceof ExperimentTime)) {
+            return false;
+        }
+        
+        ExperimentTime t = (ExperimentTime) rhs;
+        
+        if (mThreadTimeMillis != t.mThreadTimeMillis) {
+            return false;
+        }
+        
+        if (mElapsedRealtime != t.mElapsedRealtime) {
+            return false;
+        }
+        
+        if (mElapsedRealtimeNanos != t.mElapsedRealtimeNanos) {
+            return false;
+        }
         
         return true;
     }

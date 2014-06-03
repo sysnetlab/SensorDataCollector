@@ -46,17 +46,33 @@ public class TaggingAction {
         return mTag.toString() + "\n" + mTime.toString() + "\n" + mTagState;
     }
     
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        // it also takes care of the case that object is null
-        if (!(object instanceof TaggingAction)) return false;
+    public boolean equals(Object rhs) {
+        if (rhs == this) {
+            return true;
+        }
         
-        TaggingAction taggingAction = (TaggingAction) object;
-        if (!this.mTag.equals(taggingAction.mTag)) return false;
-        if (!this.mTime.equals(taggingAction.mTime)) return false;
-        if (!(this.mTagState == taggingAction.mTagState)) return false;
+        if (!(rhs instanceof TaggingAction)) {
+            return false;
+        }
+        
+        TaggingAction action = (TaggingAction) rhs;
+        
+        if (mTag != null && action.mTag == null) {
+            return false;
+        } else if (!mTag.equals(action.mTag)) {
+            return false;
+        }
+        
+        if (mTime != null && action.mTime == null) {
+            return false;
+        } else if (!mTime.equals(action.mTime)) {
+            return false;
+        }
+        
+        if (mTagState != action.mTagState) {
+            return false;
+        }
         
         return true;
     }
-
 }

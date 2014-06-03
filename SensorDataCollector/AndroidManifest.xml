@@ -11,6 +11,9 @@
     <uses-permission
         android:name="android.permission.CAMERA"
         android:required="true" />
+    
+    <!--  For access to Dropbox -->
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -60,6 +63,20 @@
 	            android:name="android.support.PARENT_ACTIVITY"
 	            android:value="sysnetlab.android.sdc.ui.ViewExperimentActivity" />           
         </activity>   
+        
+        <!--  Dropbox Connectivity -->
+        <activity
+		  android:name="com.dropbox.client2.android.AuthActivity"
+		  android:launchMode="singleTask"
+		  android:configChanges="orientation|keyboard">
+		  <intent-filter>
+		    <!-- Change this to be db- followed by your app key -->
+		    <data android:scheme="db-t02om332sh6xycp" />
+		    <action android:name="android.intent.action.VIEW" />
+		    <category android:name="android.intent.category.BROWSABLE"/>
+		    <category android:name="android.intent.category.DEFAULT" />
+		  </intent-filter>
+		</activity>
         
         <service android:name="sysnetlab.android.sdc.services.RunExperimentService"
             android:enabled="true"/>

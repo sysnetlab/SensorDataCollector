@@ -4,23 +4,38 @@ package sysnetlab.android.sdc.datacollector;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 public class DeviceInformation implements Parcelable {
     private String mManufacturer;
     private String mModel;
+    private int mSdkInt;
+    private String mSdkCodeName; 
+    
+    public DeviceInformation(String manufacturer, String model, int sdkInt, String sdkCodeName) {
+        setDeviceInformation(manufacturer, model);
+        mSdkInt = sdkInt;
+        mSdkCodeName = sdkCodeName;
+    }
 
     public DeviceInformation() {
         setDeviceInformation(Build.MANUFACTURER, Build.MODEL);
+        mSdkInt = Build.VERSION.SDK_INT;
+        mSdkCodeName = Build.VERSION.CODENAME;
     }
     
     public DeviceInformation(String manufacturer, String model) {
         setDeviceInformation(manufacturer, model);
+        mSdkInt = Build.VERSION.SDK_INT;
+        mSdkCodeName = Build.VERSION.CODENAME;
     }
     
 
     public DeviceInformation(DeviceInformation deviceInfo) {
         mManufacturer = deviceInfo.mManufacturer;
         mModel = deviceInfo.mModel;
+        mSdkInt = deviceInfo.mSdkInt;
+        mSdkCodeName = deviceInfo.mSdkCodeName;
     }
 
 
@@ -36,6 +51,9 @@ public class DeviceInformation implements Parcelable {
         if (Character.isLowerCase(first)) {
             mModel = Character.toUpperCase(first) + mModel.substring(1);
         }
+        
+        mSdkInt = -1;
+        mSdkCodeName = "unknown";
     }
 
     public String getModel() {
@@ -53,11 +71,57 @@ public class DeviceInformation implements Parcelable {
     public void setManufacturer(String mManufacturer) {
         this.mManufacturer = mManufacturer;
     }
-
+    
+    public int getSdkInt() {
+        return mSdkInt;
+    }
+    
+    public void setSdkInt(int sdkint) {
+        mSdkInt = sdkint;
+    }
+    
+    public String getSdkCodeName() {
+        return mSdkCodeName;
+    }
+    
+    public void setSdkCodeName(String codeName) {
+        mSdkCodeName = codeName;
+    }
+    
     public String toString() {
         return mManufacturer + " " + mModel;
     }
 
+    public boolean equals(Object rhs) {
+        if (rhs == this) {
+            return true;
+        }
+        
+        if (!(rhs instanceof DeviceInformation)) {
+            return false;
+        }
+        
+        DeviceInformation deviceInfo = (DeviceInformation) rhs;
+        
+        if (!TextUtils.equals(mManufacturer, deviceInfo.mManufacturer)) {
+            return false;
+        }
+        
+        if (!TextUtils.equals(mModel, deviceInfo.mModel)) {
+            return false;
+        }
+
+        if (mSdkInt != deviceInfo.mSdkInt) {
+            return false;
+        }
+        
+        if (!TextUtils.equals(mSdkCodeName, deviceInfo.mSdkCodeName)) {
+            return false;
+        }        
+
+        return true;
+    }
+    
     public static final Parcelable.Creator<DeviceInformation> CREATOR = new Parcelable.Creator<DeviceInformation>() {
         @Override
         public DeviceInformation createFromParcel(Parcel inParcel) {
@@ -84,18 +148,5 @@ public class DeviceInformation implements Parcelable {
     public void writeToParcel(Parcel outParcel, int flags) {
         outParcel.writeString(mManufacturer);
         outParcel.writeString(mModel);
-    }
-    
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        // it also takes care of the case that object is null
-        if (!(object instanceof DeviceInformation)) return false;
-        
-        DeviceInformation experiment = (DeviceInformation) object;
-        
-        if (!this.mModel.equals(experiment.mModel)) return false;
-        if (!this.mManufacturer.equals(experiment.mManufacturer)) return false;
-                
-        return true;
     }
 }

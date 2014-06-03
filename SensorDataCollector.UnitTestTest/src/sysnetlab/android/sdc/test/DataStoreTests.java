@@ -1,14 +1,26 @@
 package sysnetlab.android.sdc.test;
 
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
 import sysnetlab.android.sdc.datacollector.Experiment;
+import sysnetlab.android.sdc.datacollector.Note;
+import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.datastore.AbstractStore;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.datastore.SimpleFileStore;
 import sysnetlab.android.sdc.datastore.SimpleXMLFileStore;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
+import sysnetlab.android.sdc.sensor.AbstractSensor;
+import sysnetlab.android.sdc.sensor.AndroidSensor;
+import sysnetlab.android.sdc.sensor.SensorDiscoverer;
+import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import android.test.AndroidTestCase;
+import android.util.Log;
 
 public class DataStoreTests extends AndroidTestCase {
 	
@@ -71,7 +83,56 @@ public class DataStoreTests extends AndroidTestCase {
         store.createChannel("");
         assertTrue(channelNumber == (store.getNextChannelNumber() - 2));
 
-        Experiment experiment = new Experiment();
-        store.writeExperimentMetaData(experiment);
+        Experiment exp1 = new Experiment();
+        
+        List<Tag> listTags = new ArrayList<Tag>();
+        int n = (int)(Math.random() * 5) + 1;
+        for (int i = 0; i < n; i ++) {
+            String name = "Tag_" + i;
+            String shortDescription = "Short description for tag " + i;
+            String longDescription = "Long description for tag " + i;
+            Tag tag = new Tag(name, shortDescription, longDescription);
+            listTags.add(tag);        
+        }
+        exp1.setTags(listTags);
+        
+        List<Note> listNotes = new ArrayList<Note>();
+        n = (int)(Math.random() * 5) + 1;
+        for (int i = 0; i < n; i ++) {
+            String text = "Note_" + i;
+            Date date = Calendar.getInstance().getTime();
+            Note note = new Note(text, date);
+            listNotes.add(note);
+        }
+        exp1.setNotes(listNotes);
+        
+        List<AbstractSensor> listSensors = SensorDiscoverer.discoverSensorList(getContext());
+
+        
+        for (AbstractSensor sensor : listSensors) {
+            Log.d("SensorDataCollector.UnitTest", "Sensor Properties: " + ((AndroidSensor) sensor).getSamplingInterval());                    
+
+            switch (sensor.getMajorType()) {
+                case AbstractSensor.ANDROID_SENSOR:
+                    String channelPath = store.getNewExperimentPath() + "/" + sensor.getName().replace(' ', '_') + ".txt";
+                    AbstractStore.Channel channel = null;
+                    try {
+                        channel = store.new SimpleFileChannel(channelPath, AbstractStore.Channel.WRITE_ONLY);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    AndroidSensorEventListener listener =
+                            new AndroidSensorEventListener(channel);
+                    ((AndroidSensor) sensor).setListener(listener);  
+                    break;
+            }
+        }
+        
+        exp1.setSensors(listSensors);
+        
+        store.writeExperimentMetaData(exp1);
+        SensorUtilsSingleton.getInstance().setContext(getContext());
+        Experiment exp2 = store.loadExperiment(store.getNewExperimentPath());
+        assertEquals("experiment written and experiment read should be the same", exp1, exp2);
     }
 }

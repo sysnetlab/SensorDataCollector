@@ -3,6 +3,7 @@ package sysnetlab.android.sdc.datacollector;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 public class Tag implements Parcelable {
     private String mName;
@@ -52,18 +53,29 @@ public class Tag implements Parcelable {
     }
 
     @Override
-    public boolean equals(Object object) {        
-
-        if (this == object) return true;
-        // it also takes care of the case that object is null
-        if (!(object instanceof Tag)) return false;
+    public boolean equals(Object rhs) {
+        if (rhs == this) {
+            return true;
+        }
         
-        Tag tag = (Tag) object; 
-        if (!this.mName.endsWith(tag.mName)) return false;
-        if (!this.mLongDescription.equals(tag.mLongDescription)) return false;
-        if (!this.mShortDescription.equals(tag.mShortDescription)) return false;
+        if (!(rhs instanceof Tag)) {
+            return false;
+        }
         
+        Tag tag = (Tag) rhs;
+       
+        if (!TextUtils.equals(mName, tag.mName)){
+            return false;
+        }
+        
+        if (!TextUtils.equals(mShortDescription, tag.mShortDescription)) {
+            return false;
+        }
 
+        if (!TextUtils.equals(mLongDescription, tag.mLongDescription)) {
+            return false;
+        }
+        
         return true;
     }
     

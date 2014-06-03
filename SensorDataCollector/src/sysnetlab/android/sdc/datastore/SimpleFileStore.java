@@ -20,7 +20,8 @@ import sysnetlab.android.sdc.datacollector.Note;
 import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
-import sysnetlab.android.sdc.sensor.SensorUtilSingleton;
+import sysnetlab.android.sdc.sensor.AndroidSensor;
+import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import android.os.Environment;
 import android.util.Log;
 
@@ -131,7 +132,11 @@ public class SimpleFileStore extends AbstractStore {
                 out.println(sensor.getName());
                 out.println(sensor.getMajorType());
                 out.println(sensor.getMinorType());
-                out.println(sensor.getListener().getChannel().describe());
+                switch(sensor.getMajorType()) {
+                    case AbstractSensor.ANDROID_SENSOR:
+                        out.println(((AndroidSensor) sensor).getListener().getChannel().describe());
+                        break;
+                }
             }
             
             out.println(experiment.getTaggingActions().size());
@@ -148,7 +153,7 @@ public class SimpleFileStore extends AbstractStore {
         }
     }
 
-    private Experiment loadExperiment(String dirName, String parentDir) {
+    protected Experiment loadExperiment(String dirName, String parentDir) {
         String configFilePath = parentDir + "/.experiment";
         String name = null, dateTimeCreated = null;
         Experiment experiment = null;
@@ -218,10 +223,16 @@ public class SimpleFileStore extends AbstractStore {
                     String sensorName = in.readLine();
                     int sensorMajorType = Integer.parseInt(in.readLine());
                     int sensorMinorType = Integer.parseInt(in.readLine());
-                    String channelDescriptor = in.readLine();
+                    String channelDescriptor = "";
+                    switch (sensorMajorType) {
+                        case AbstractSensor.ANDROID_SENSOR:
+                            channelDescriptor = in.readLine();
+                            break;
+                    }
+
                     // TODO make sure channel is read-only
                     Channel channel = new SimpleFileChannel(channelDescriptor, Channel.READ_ONLY);
-                    AbstractSensor sensor = SensorUtilSingleton.getInstance().getSensor(sensorName,
+                    AbstractSensor sensor = SensorUtilsSingleton.getInstance().getSensor(sensorName,
                             sensorMajorType,
                             sensorMinorType, channel);
                     lstSensors.add(sensor);

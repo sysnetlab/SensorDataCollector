@@ -99,7 +99,9 @@
     <string name="text_continue_experiment">Continue Experiment</string>
     <string name="text_stopping_experiment">Stopping the experiment &#8230;</string>
     <string name="text_continuing_experiment">Continuing the experiment &#8230;</string>
-    
+    <string name="text_link_to_dropbox">Link to Dropbox</string>
+    <string name="text_unlink_from_dropbox">Unlink from Dropbox</string>
+     
     <!-- Audio Record -->
     <string name="text_channel_in_back">Channel in back</string>
     <string name="text_channel_in_back_processed">Channel-in back processed</string>

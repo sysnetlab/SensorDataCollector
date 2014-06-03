@@ -57,7 +57,7 @@ public class ExperimentRunTaggingFragment extends Fragment {
 
         mView = inflater.inflate(R.layout.fragment_experiment_tagging, container, false);
 
-        ArrayList<Tag> tags = ((CreateExperimentActivity) getActivity()).getExperiment().getTags();
+        ArrayList<Tag> tags = (ArrayList<Tag>)((CreateExperimentActivity) getActivity()).getExperiment().getTags();
 
         TaggingGridView gridview = (TaggingGridView) mView.findViewById(R.id.gridview_experiment_tagging);
         

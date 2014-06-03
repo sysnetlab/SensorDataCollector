@@ -1,33 +1,40 @@
 
 package sysnetlab.android.sdc.sensor;
 
+import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
+import sysnetlab.android.sdc.datastore.AbstractStore;
 import android.annotation.SuppressLint;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Build;
+import android.util.Log;
 
 public class AndroidSensor extends AbstractSensor {
     private Sensor mSensor;
     private int mSamplingInterval; /* in microseconds */
     private int mSensingType;
     private boolean mIsStreamingSensor;
+    
+    private AndroidSensorEventListener mListener;
 
     public AndroidSensor() {
         mSensor = null;
-        mSamplingInterval = -1;
+        mSamplingInterval = 0;
         mSensingType = -1;
         mIsStreamingSensor = false;
     }
     
     @SuppressLint("NewApi")
     public AndroidSensor(Sensor sensor) {
-        this.mSensor = sensor;
+        mSamplingInterval = 0;
+        mSensingType = -1;
+        mSensor = sensor;
         super.setMajorType(ANDROID_SENSOR);
-        super.setMinorType(this.mSensor.getType());
+        super.setMinorType(mSensor.getType());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             mSamplingInterval = mSensor.getMinDelay();
-            if (mSamplingInterval != 0) {
+            if (mSamplingInterval > 0) {
                 mSamplingInterval = SensorManager.SENSOR_DELAY_NORMAL;
                 mIsStreamingSensor = true;
             } else {
@@ -52,7 +59,7 @@ public class AndroidSensor extends AbstractSensor {
     public String toString() {
         return mSensor.toString();
     }
-
+ 
     @Override
     public void setSensor(Object sensor) {
         this.mSensor = (Sensor) sensor;
@@ -88,24 +95,70 @@ public class AndroidSensor extends AbstractSensor {
         return mSensor.getVendor();
     }
 
+    // TODO carefully check how Sensor objects should be reconstructed from 
+    // persistent storage and copied from one instance to another.  
     @Override
     public int getVersion() {
         return mSensor.getVersion();
     }
     
+    
+    public void setListener(AndroidSensorEventListener listener) {
+        mListener = listener;
+    }
+
+    public AndroidSensorEventListener getListener() {
+        return mListener;
+    }    
+    
+    public AbstractStore.Channel getChannel() {
+        if (mListener != null) {
+            return mListener.getChannel();
+        } else {
+            return null;
+        }
+    }
+    
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
+        
+        Log.d("SensorDataCollector.UnitTes", "AndroidSensor::equals(): checkpoint #1.");
+        
         // it also takes care of the case that object is null
         if (!(object instanceof AndroidSensor)) return false;
         
-        AndroidSensor androidSensor = (AndroidSensor) object;
-        if (!(this.mSamplingInterval == androidSensor.mSamplingInterval)) return false;
-        if (!(this.mSensingType == androidSensor.mSensingType)) return false;
-        if (!(this.mIsStreamingSensor == androidSensor.mIsStreamingSensor)) return false;
-        if (!this.mSensor.equals(androidSensor.mSensor)) return false;
-        if (!this.mSensor.toString().equals(androidSensor.mSensor.toString()));
+        if (!super.equals(object)) {
+            return false;
+        }
+        
+        Log.d("SensorDataCollector.UnitTes", "AndroidSensor::equals(): checkpoint #2.");
+        
+        switch (getMajorType()) {
+            case AbstractSensor.ANDROID_SENSOR:
+                AndroidSensor androidSensor = (AndroidSensor) object;
+                
+                if (this.mSamplingInterval != androidSensor.mSamplingInterval)
+                    return false;
 
-        return super.equals(object);
+                Log.d("SensorDataCollector.UnitTes", "AndroidSensor::equals(): checkpoint #3.");
+
+                if (this.mSensingType != androidSensor.mSensingType)
+                    return false;
+
+                Log.d("SensorDataCollector.UnitTes", "AndroidSensor::equals(): checkpoint #4.");
+
+                if (this.mIsStreamingSensor != androidSensor.mIsStreamingSensor)
+                    return false;
+
+                Log.d("SensorDataCollector.UnitTes", "AndroidSensor::equals(): checkpoint #5.");
+
+                if (!this.mSensor.equals(androidSensor.mSensor))
+                    return false;
+
+                break;
+        }
+
+        return true;
     }
 }

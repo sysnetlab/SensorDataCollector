@@ -1,7 +1,7 @@
 
 package sysnetlab.android.sdc.ui.fragments;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
@@ -94,18 +94,18 @@ public class ExperimentViewNotesFragment extends Fragment {
         return mView;
     }
 
-    private void updateNoteView(ArrayList<Note> notes, int noteNo) {
+    private void updateNoteView(List<Note> list, int noteNo) {
 
         String strNoteCaption = "";
         String strNoteText = "";
-        if (notes == null || notes.isEmpty()) {
+        if (list == null || list.isEmpty()) {
             strNoteCaption = mView.getResources().getString(R.string.text_no_notes_were_taken);
             strNoteText = mView.getResources().getString(R.string.text_no_notes);
         } else {
             String strNoteCaptionFormatter = mView.getResources().getString(
                     R.string.text_note_x_of_y_taken_at_time_z);
-            strNoteCaption = String.format(strNoteCaptionFormatter, noteNo + 1, notes.size(), notes.get(noteNo).getDateCreatedAsString());
-            strNoteText = notes.get(noteNo).getNote();
+            strNoteCaption = String.format(strNoteCaptionFormatter, noteNo + 1, list.size(), list.get(noteNo).getDateCreatedAsString());
+            strNoteText = list.get(noteNo).getNote();
         }
 
         ((TextView) mView
