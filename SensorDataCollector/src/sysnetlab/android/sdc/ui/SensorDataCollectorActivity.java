@@ -59,6 +59,7 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
 
         SensorUtilsSingleton.getInstance().setContext(getBaseContext());
         mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(), DBX_APP_KEY, DBX_APP_SECRET);
+        ExperimentManagerSingleton.getInstance().setDbxAccountManager(mDbxAcctMgr);
     }
 
     public void onStart() {

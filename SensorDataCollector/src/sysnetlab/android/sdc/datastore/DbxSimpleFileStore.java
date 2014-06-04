@@ -24,6 +24,7 @@ import com.dropbox.sync.android.DbxPath.InvalidPathException;
 
 import sysnetlab.android.sdc.datacollector.DeviceInformation;
 import sysnetlab.android.sdc.datacollector.Experiment;
+import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datacollector.Note;
 import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
@@ -48,12 +49,13 @@ public class DbxSimpleFileStore extends AbstractStore {
     
     private DbxFileSystem mDbxFs; 
 
-    public DbxSimpleFileStore(DbxAccountManager dbxAcctMgr) throws RuntimeException {
+    public DbxSimpleFileStore() throws RuntimeException {
     	
         Log.i("SensorDataCollector",
                 "entering DbxSimpleFileStore.constructor() ...");
 
         mParentPath = "/SensorData";
+        DbxAccountManager dbxAcctMgr = ExperimentManagerSingleton.getInstance().getDbxAccountManager();
         try {
 			mDbxFs = DbxFileSystem.forAccount(dbxAcctMgr.getLinkedAccount());
 		} catch (Unauthorized e1) {
