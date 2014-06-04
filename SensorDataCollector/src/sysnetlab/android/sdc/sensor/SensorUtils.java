@@ -24,7 +24,7 @@ public class SensorUtils {
                 AndroidSensor androidSensor = new AndroidSensor();
 
                 if (mContext == null)
-                    throw new RuntimeException("SensorClassUtil: make sure context is set!");
+                    throw new RuntimeException("SensorUtils: make sure context is set!");
 
                 List<Sensor> lstSensors = ((SensorManager) mContext
                         .getSystemService(Context.SENSOR_SERVICE)).getSensorList(minorType);
@@ -35,7 +35,7 @@ public class SensorUtils {
                     }
                 }
                 if (androidSensor.getSensor() == null) {
-                    throw new RuntimeException("SensorClassUtil: unexpected sensor name = "
+                    throw new RuntimeException("SensorUtils: unexpected sensor name = "
                             + sensorName);
                 }
 
@@ -50,7 +50,7 @@ public class SensorUtils {
 
                 return androidSensor;
             default:
-                throw new RuntimeException("SensorUtil: unexpected major sensor type = "
+                throw new RuntimeException("SensorUtils: unexpected major sensor type = "
                         + majorType);
         }
     }

@@ -3,7 +3,7 @@ package sysnetlab.android.sdc.test;
 import sysnetlab.android.sdc.datacollector.DeviceInformation;
 import android.test.AndroidTestCase;
 
-public class AndroidUtilClassTests extends AndroidTestCase {
+public class DeviceInformationTests extends AndroidTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();

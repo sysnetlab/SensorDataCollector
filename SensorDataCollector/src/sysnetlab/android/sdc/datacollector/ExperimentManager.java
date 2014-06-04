@@ -48,4 +48,8 @@ public class ExperimentManager {
     public Experiment getActiveExperiment() {
         return mActiveExperiment;
     }
+    
+    public List<AbstractStore> getStores() {
+        return mStores;
+    }
 }

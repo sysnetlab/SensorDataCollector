@@ -13,7 +13,7 @@ import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.datastore.AbstractStore;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.datastore.SimpleFileStore;
-import sysnetlab.android.sdc.datastore.SimpleXMLFileStore;
+import sysnetlab.android.sdc.datastore.SimpleXmlFileStore;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
@@ -30,6 +30,9 @@ public class DataStoreTests extends AndroidTestCase {
     	Experiment exp = new Experiment("testExperiment");
     	store.setupNewExperimentStorage(exp);
     	store.writeExperimentMetaData(exp);
+    	
+    	SensorUtilsSingleton.getInstance().setContext(getContext());
+    	
     	List<Experiment> storedExps = store.listStoredExperiments();
     	
     	boolean foundCreatedExperiment = false;
@@ -71,7 +74,7 @@ public class DataStoreTests extends AndroidTestCase {
     }
     
     public void testSimpleXMLFileStore() {
-        SimpleXMLFileStore store = new SimpleXMLFileStore();
+        SimpleXmlFileStore store = new SimpleXmlFileStore();
         
         int expNumber = store.getNextExperimentNumber();
         store.setupNewExperimentStorage(null);

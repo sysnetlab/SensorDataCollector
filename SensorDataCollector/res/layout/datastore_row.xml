@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" 
+    android:descendantFocusability="blocksDescendants">
+    
+    <RadioButton
+        android:id="@+id/radiobutton_experiment_datastore_selecting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:clickable="false"/>
+    
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/textview_experiment_datastore_selecting_maintext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="@string/text_place_holder"/>
+        
+        <TextView
+            android:id="@+id/textview_experiment_datastore_selecting_subtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="@string/text_place_holder"/>        
+    </LinearLayout>
+</LinearLayout>

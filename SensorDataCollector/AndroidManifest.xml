@@ -11,7 +11,11 @@
     <uses-permission
         android:name="android.permission.CAMERA"
         android:required="true" />
-
+    
+    <!--  Necessary for Dropbox Sync API -->
+    <uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -63,6 +67,26 @@
         
         <service android:name="sysnetlab.android.sdc.services.RunExperimentService"
             android:enabled="true"/>
+        
+        <activity android:name="com.dropbox.sync.android.DbxAuthActivity" />
+
+        <!--  Start of Necessary for Dropbox Sync API -->
+       	<activity
+		  android:name="com.dropbox.client2.android.AuthActivity"
+		  android:launchMode="singleTask" >
+		  <intent-filter>
+		    <data android:scheme="db-t02om332sh6xycp" />
+		    <action android:name="android.intent.action.VIEW" />
+		    <category android:name="android.intent.category.BROWSABLE" />
+		    <category android:name="android.intent.category.DEFAULT" />
+		  </intent-filter>
+		</activity>
+		<service
+		  android:name="com.dropbox.sync.android.DbxSyncService"
+		  android:enabled="true"
+		  android:exported="false"
+		  android:label="Dropbox Sync" />
+		<!--  End of Necessary for Dropbox Sync API -->
     </application>
 
 </manifest>

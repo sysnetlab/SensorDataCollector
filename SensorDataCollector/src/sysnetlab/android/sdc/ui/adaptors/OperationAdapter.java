@@ -93,6 +93,10 @@ public class OperationAdapter extends BaseAdapter {
         ImageView icon = (ImageView) view.findViewById(R.id.iv_image);
         TextView operation = (TextView) view.findViewById(R.id.tv_maintext);
         TextView operationInfo = (TextView) view.findViewById(R.id.tv_subtext);
+        
+        icon.setVisibility(View.VISIBLE);
+        operation.setVisibility(View.VISIBLE);
+        operationInfo.setVisibility(View.VISIBLE);
 
         // TODO: Replace the help text with other information when available,
         // e.g., list of entered tags,
@@ -115,7 +119,7 @@ public class OperationAdapter extends BaseAdapter {
             operationInfo.setText(view.getResources().getString(
                     R.string.text_run_sensor_operation_text));
             //listSensorsSummaryInView(view);
-        }
+        } 
 
         return view;	    
 	}
@@ -124,6 +128,11 @@ public class OperationAdapter extends BaseAdapter {
 	    
         ImageView icon = (ImageView) view.findViewById(R.id.iv_image);
         TextView operation = (TextView) view.findViewById(R.id.tv_maintext);
+        TextView operationInfo = (TextView) view.findViewById(R.id.tv_subtext);
+        
+        icon.setVisibility(View.VISIBLE);
+        operation.setVisibility(View.VISIBLE);
+        operationInfo.setVisibility(View.VISIBLE);
 
         if (position == OP_TAGS) {
             icon.setImageResource(R.drawable.icon_tags);

@@ -71,9 +71,10 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
 	        mViewExperimentActivity=getActivity();
 	        getInstrumentation().waitForIdleSync();
         }
-        else
+        else {
         	Log.e("Test Setup Error", "At least one sensor is required in one of the created experimentes in order to run some tests");
         }
+    }
     
     public void testViewExperimentActivityLoaded()
 	{

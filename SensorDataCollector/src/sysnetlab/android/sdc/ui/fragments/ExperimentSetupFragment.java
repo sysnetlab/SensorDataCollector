@@ -24,6 +24,8 @@ public class ExperimentSetupFragment extends Fragment {
         public void onNotesClicked_ExperimentSetupFragment();
 
         public void onSensorsClicked_ExperimentSetupFragment();
+        
+        public void onDataStoreClicked_ExperimentSetupFragment();
 
         public void onBtnRunClicked_ExperimentSetupFragment(View v);
     }
@@ -56,8 +58,7 @@ public class ExperimentSetupFragment extends Fragment {
 				}
 				else if (position == OperationAdapter.OP_SENSORS) {
 					mCallback.onSensorsClicked_ExperimentSetupFragment();
-				}
-				
+				} 
 			}
 			
 		});
