@@ -1,6 +1,7 @@
 
-package sysnetlab.android.sdc.sensor;
+package sysnetlab.android.sdc.sensor.camera;
 
+import sysnetlab.android.sdc.sensor.AbstractSensor;
 import android.hardware.Camera;
 
 public class CameraSensor extends AbstractSensor {
