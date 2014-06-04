@@ -14,6 +14,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.dropbox.sync.android.DbxAccountManager;
+import com.dropbox.sync.android.DbxException;
+import com.dropbox.sync.android.DbxException.Unauthorized;
+import com.dropbox.sync.android.DbxFile;
+import com.dropbox.sync.android.DbxFileSystem;
+import com.dropbox.sync.android.DbxPath;
+import com.dropbox.sync.android.DbxPath.InvalidPathException;
+
 import sysnetlab.android.sdc.datacollector.DeviceInformation;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.Note;
@@ -29,41 +37,47 @@ import android.util.Log;
  * Assumptions The application allows a single experiment being run. No two
  * experiments are allowed to run concurrently.
  */
-public class SimpleFileStore extends AbstractStore {
-    protected final String DIR_PREFIX = "exp";
-    protected final String DEFAULT_DATAFILE_PREFIX = "sdc";
-    protected String mParentPath;
-    protected String mNewExperimentPath;
+public class DbxSimpleFileStore extends AbstractStore {
+    private final String DIR_PREFIX = "exp";
+    private final String DEFAULT_DATAFILE_PREFIX = "sdc";
+    private String mParentPath;
+    private String mNewExperimentPath;
 
-    protected int mNextExperimentNumber;
+    private int mNextExperimentNumber;
     private int mNextChannelNumber;
+    
+    private DbxFileSystem mDbxFs; 
 
-    public SimpleFileStore() throws RuntimeException {
-
+    public DbxSimpleFileStore(DbxAccountManager dbxAcctMgr) throws RuntimeException {
+    	
         Log.i("SensorDataCollector",
-                "entering SimpleFileStore.constructor() ...");
+                "entering DbxSimpleFileStore.constructor() ...");
 
-        String parentPath = Environment.getExternalStorageDirectory().getPath();
-        parentPath = parentPath + "/SensorData";
-        File dataDir = new File(parentPath);
-        if (!dataDir.exists() && !dataDir.mkdir()) {
-            throw new RuntimeException(
-                    "SimpleFileStore::SimpleFileStore(): failed to create directory "
-                            + parentPath);
-        }
-        mParentPath = parentPath;
+        mParentPath = "/SensorData";
+        try {
+			mDbxFs = DbxFileSystem.forAccount(dbxAcctMgr.getLinkedAccount());
+		} catch (Unauthorized e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        //mDbxFs.createFolder(new DbxPath(mParentPath));
+        
 
         String pathPrefix = mParentPath + "/" + DIR_PREFIX;
         DecimalFormat f = new DecimalFormat("00000");
-        String path;
+        String path = "";
 
         mNextExperimentNumber = 0;
-
-        do {
-            mNextExperimentNumber++;
-            path = pathPrefix + f.format(mNextExperimentNumber);
-            dataDir = new File(path);
-        } while (dataDir.exists());
+        try {
+        	do {
+        		mNextExperimentNumber++;
+        		path = pathPrefix + f.format(mNextExperimentNumber);
+        	} while (mDbxFs.exists(new DbxPath(path)));
+        } catch(DbxException e) {
+            throw new RuntimeException(
+                    "DbxSimpleFileStore::DbxSimpleFileStore(): failed to create directory "
+                            + path);
+        }
     }
 
     @Override
@@ -72,8 +86,9 @@ public class SimpleFileStore extends AbstractStore {
         mNewExperimentPath = mParentPath + "/" + DIR_PREFIX
                 + f.format(mNextExperimentNumber);
 
-        File dir = new File(mNewExperimentPath);
-        if (!dir.mkdir()) {
+        try {
+        	mDbxFs.createFolder(new DbxPath(mNewExperimentPath));
+        } catch (DbxException e) {
             throw new RuntimeException(
                     "SimpleFileStore::addExperiment(): failed to create directory "
                             + mNewExperimentPath);
@@ -102,10 +117,18 @@ public class SimpleFileStore extends AbstractStore {
     @Override
     public void writeExperimentMetaData(Experiment experiment) {
         String configFilePath = mNewExperimentPath + "/.experiment";
+        DbxFile file;
+    	try {
+    		file = mDbxFs.create(new DbxPath(configFilePath));
+    	}
+    	catch(DbxException e) {
+    		throw new RuntimeException(
+                    "SimpleFileStore::writeExperimentMetaData(): failed to create .experiment file");
+    	}
+
         PrintStream out;
         try {
-            out = new PrintStream(new BufferedOutputStream(
-                    new FileOutputStream(configFilePath)));
+            out = new PrintStream(new BufferedOutputStream(file.getWriteStream()));
 
             out.println(experiment.getName());
             out.println(experiment.getDateTimeCreatedAsString());
@@ -145,7 +168,7 @@ public class SimpleFileStore extends AbstractStore {
             }
 
             out.close();
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             Log.e("SensorDataCollector",
                     "SimpleFileStore::writeExperimentMetaData(): failed to write to " +
                             configFilePath);
@@ -160,11 +183,11 @@ public class SimpleFileStore extends AbstractStore {
 
         try {
             BufferedReader in;
-            File file;
+            DbxFile file;
 
-            file = new File(configFilePath);
+            file = mDbxFs.open(new DbxPath(configFilePath));
 
-            if (file.exists()) {
+            if (mDbxFs.exists(new DbxPath(configFilePath))) {
                 String dateTimeDone;
 
                 in = new BufferedReader(new FileReader(configFilePath));
@@ -247,9 +270,9 @@ public class SimpleFileStore extends AbstractStore {
                                 + ") successfully.");
                 return experiment;
             } else {
-                file = new File(parentDir);
+                file = mDbxFs.open(new DbxPath(parentDir));
 
-                Date dateCreated = new Date(file.lastModified());
+                Date dateCreated = file.getInfo().modifiedTime;
                 name = dirName;
 
                 Log.w("SensorDataCollector",
@@ -305,24 +328,26 @@ public class SimpleFileStore extends AbstractStore {
         }
         
         public SimpleFileChannel(String path, int flags) throws FileNotFoundException {
-            if (flags == READ_ONLY) {
-                mOut = null;
-                File file = new File(path);
-                if (file.exists()) {
-                    mIn = new BufferedReader(new FileReader(path));
-                } else {
-                    throw new RuntimeException("SimpleFileChannel: cannot open file " + path);
-                }
-                mPath = path;
-            } else if (flags == WRITE_ONLY) {
-                mOut = new PrintStream(new BufferedOutputStream(
-                        new FileOutputStream(path)));
-                mIn = null;
-                mPath = path;
-            } else {
-                throw new RuntimeException(
-                        "SimpleFileChannel: encountered unsupported creation flag " + flags);
-            }
+        	try {
+	            if (flags == READ_ONLY) {
+	                mOut = null;
+					if (mDbxFs.exists(new DbxPath(path))) {
+					    mIn = new BufferedReader(new FileReader(path));
+					} else {
+					    throw new RuntimeException("SimpleFileChannel: cannot open file " + path);
+					}
+	            } else if (flags == WRITE_ONLY) {
+	                mOut = new PrintStream(new BufferedOutputStream(
+	                        mDbxFs.create(new DbxPath(path)).getWriteStream()));
+	                mIn = null;
+	                mPath = path;
+	            } else {
+	                throw new RuntimeException(
+	                        "SimpleFileChannel: encountered unsupported creation flag " + flags);
+	            }
+        	} catch (Exception e) {
+        		throw new RuntimeException("SimpleFileChannel");
+        	}
         }
 
         public void close() {

@@ -114,6 +114,9 @@
     <string name="text_simple_file_store_subtext_text">Store the experiment meta data in an unstructured text file.</string>
     
     
+    <string name="text_link_to_dropbox">Link to Dropbox</string>
+    <string name="text_unlink_from_dropbox">Unlink from Dropbox</string>
+     
     <!-- Audio Record -->
     <string name="text_channel_in_back">Channel in back</string>
     <string name="text_channel_in_back_processed">Channel-in back processed</string>
