@@ -13,7 +13,7 @@ import java.util.TimeZone;
 
 import sysnetlab.android.sdc.datastore.AbstractStore;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
-import sysnetlab.android.sdc.datastore.DbxSimpleFileStore;
+import sysnetlab.android.sdc.datastore.SimpleFileStore;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
@@ -393,9 +393,9 @@ public class Experiment implements Parcelable {
             // bidirectional
             Channel channel = null;
             if (channelDescriptor != null && !channelDescriptor.trim().equals("")) {
-                if (store instanceof DbxSimpleFileStore) {
+                if (store instanceof SimpleFileStore) {
                     try {
-                        channel = ((DbxSimpleFileStore) store).new SimpleFileChannel(channelDescriptor);
+                        channel = ((SimpleFileStore) store).new SimpleFileChannel(channelDescriptor);
                     } catch (FileNotFoundException e) {
                         Log.i("SensordataCollector",
                                 "Experiment::Expriment(Parcel): calling new SimpleFileChannel");

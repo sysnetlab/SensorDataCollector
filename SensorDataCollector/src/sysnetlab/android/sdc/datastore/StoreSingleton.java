@@ -11,7 +11,7 @@ public class StoreSingleton {
 
     public static AbstractStore getInstance() {
         if (instance == null) {
-            instance = new DbxSimpleFileStore();
+            instance = new SimpleFileStore();
         }
         return instance;
     }
