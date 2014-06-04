@@ -29,10 +29,7 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
         setContentView(R.layout.fragment_container);
 
         ExperimentManagerSingleton.getInstance().addExperimentStore(
-                StoreSingleton.getSimpleXmlFileStoreInstance());
-        ExperimentManagerSingleton.getInstance().addExperimentStore(
-                StoreSingleton.getSimpleFileStoreInstance());
-
+                StoreSingleton.getInstance());
 
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {

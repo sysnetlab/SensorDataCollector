@@ -59,9 +59,6 @@ public class ExperimentSetupFragment extends Fragment {
 				else if (position == OperationAdapter.OP_SENSORS) {
 					mCallback.onSensorsClicked_ExperimentSetupFragment();
 				} 
-				else if (position == OperationAdapter.OP_DATASTORE) {
-				    mCallback.onDataStoreClicked_ExperimentSetupFragment();
-				}
 			}
 			
 		});

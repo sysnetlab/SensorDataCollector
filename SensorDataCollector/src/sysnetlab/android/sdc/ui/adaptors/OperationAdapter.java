@@ -29,19 +29,17 @@ public class OperationAdapter extends BaseAdapter {
     public static final int VIEW_EXPERIMENT = 2;
 
 	// Total number of operations.
-	public static final int OP_COUNT = 4;
+	public static final int OP_COUNT = 3;
 
 	// Must start from zero and increment by 1.
 	public static final int OP_TAGS = 0;
 	public static final int OP_NOTES = 1;
 	public static final int OP_SENSORS = 2;
-	public static final int OP_DATASTORE = 3;
 
 	// Names corresponding to the above operations
 	private static final String OP_TAGS_NAME = "Tags";
 	private static final String OP_NOTES_NAME = "Notes";
 	private static final String OP_SENSORS_NAME = "Sensors";
-	private static final String OP_DATASTORE_NAME = "Data Store";
 
 	private Activity mActivity;
 	private Experiment mExperiment;
@@ -121,12 +119,7 @@ public class OperationAdapter extends BaseAdapter {
             operationInfo.setText(view.getResources().getString(
                     R.string.text_run_sensor_operation_text));
             //listSensorsSummaryInView(view);
-        } else if (position == OP_DATASTORE) {
-            icon.setImageResource(R.drawable.icon_datastore);
-            operation.setText(OP_DATASTORE_NAME);
-            operationInfo.setText(view.getResources().getString(
-                    R.string.text_run_datastore_operation_text));
-        }
+        } 
 
         return view;	    
 	}
@@ -153,10 +146,6 @@ public class OperationAdapter extends BaseAdapter {
             icon.setImageResource(R.drawable.icon_sensors);
             operation.setText(OP_SENSORS_NAME);
             listSensorsSummaryInView(view);
-        } else if (position == OP_DATASTORE) {
-            icon.setVisibility(View.GONE);
-            operation.setVisibility(View.GONE);
-            operationInfo.setVisibility(View.GONE);
         }
         
         return view;

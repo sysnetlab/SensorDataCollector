@@ -173,13 +173,15 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
 		toX=10;//mViewExperimentActivity.getWindowManager().getDefaultDisplay().getWidth();
 		
 		final ActivityInstrumentationTestCase2<ViewExperimentActivity> t=this;
+        TouchUtils.drag(t, toX, fromX, fromY, fromY, 5);
+        /*
 		getInstrumentation().runOnMainSync(new Runnable() {
 			@Override
 			public void run() {
 				TouchUtils.drag(t, toX, fromX, fromY, fromY, 5);
 			}
 		});
-		
+		*/
 		
 	}
 

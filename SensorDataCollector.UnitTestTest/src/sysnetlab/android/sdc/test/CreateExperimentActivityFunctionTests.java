@@ -43,7 +43,7 @@ public class CreateExperimentActivityFunctionTests extends
         final ListView listOperations = (ListView) mCreateExperimentActivity
                 .findViewById(R.id.lv_operations);
         assertNotNull("Menu with operations has not been loaded", listOperations);
-        assertTrue("listOperations.getCount() is not 4", listOperations.getCount() == 4);
+        assertTrue("listOperations.getCount() is not 3", listOperations.getCount() == 3);
 
         getInstrumentation().runOnMainSync(new Runnable() {
 

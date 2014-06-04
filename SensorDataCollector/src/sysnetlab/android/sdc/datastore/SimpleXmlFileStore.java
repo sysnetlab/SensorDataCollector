@@ -2,12 +2,14 @@ package sysnetlab.android.sdc.datastore;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringWriter;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,19 +36,41 @@ import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 
-public class SimpleXMLFileStore extends SimpleFileStore {
+public class SimpleXmlFileStore extends SimpleFileStore {
 
     private final String XMLNS = "http://schemas.sysnetlab.net/apps/sdc";
     private final String XMLNS_XSI = "http://www.w3.org/2001/XMLSchema-instance";
     private final String XSI_SCHEMA_LOCATION = "http://schemas.sysnetlab.net/apps/sdc ExperimentMetaData.xsd";
     private final String XML_EXPERIMENT_META_DATA_FILE = "experiment.xml";
 
-    public SimpleXMLFileStore() throws RuntimeException {
+    public SimpleXmlFileStore() throws RuntimeException {
+        super();
     }
 
     @Override
     public List<Experiment> listStoredExperiments() {
-        return super.listStoredExperiments();
+        List<Experiment> listExperiments = new ArrayList<Experiment>();
+
+        DecimalFormat f = new DecimalFormat("00000");
+        for (int i = 1; i < mNextExperimentNumber; i++) {
+            String dirName = DIR_PREFIX + f.format(i);
+            String pathPrefix = mParentPath + "/" + dirName;
+
+            Experiment experiment; 
+            
+            String xmlConfigFile = pathPrefix + "/" + XML_EXPERIMENT_META_DATA_FILE;
+            File configFile = new File(xmlConfigFile);
+            
+            if (!configFile.exists()) {
+                experiment = super.loadExperiment(dirName, pathPrefix);
+            } else {
+                experiment = loadExperiment(pathPrefix);
+            }
+            if (experiment != null) {
+                listExperiments.add(experiment);
+            }
+        }
+        return listExperiments;
     }
 
     @Override

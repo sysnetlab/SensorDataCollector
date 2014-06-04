@@ -13,7 +13,6 @@ import sysnetlab.android.sdc.datacollector.Note;
 import sysnetlab.android.sdc.datacollector.StateTag;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
 import sysnetlab.android.sdc.datacollector.TaggingState;
-import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
@@ -462,8 +461,6 @@ public class CreateExperimentActivity extends FragmentActivity
                 .findViewById(R.id.et_experiment_setup_name)).getText()
                 .toString());
 
-        StoreSingleton.setStoreInstance(ExperimentManagerSingleton.getInstance().getStores()
-                .get(mExperimentDataStoreFragment.getStorePositionChecked()));
         FragmentUtil.switchToFragment(this, mExperimentRunFragment,
                 "experimentrun");
     }

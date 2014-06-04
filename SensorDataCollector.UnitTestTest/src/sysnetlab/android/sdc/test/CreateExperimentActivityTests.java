@@ -60,7 +60,7 @@ public class CreateExperimentActivityTests
 
         lView = (ListView) createExperimentActivity.findViewById(R.id.lv_operations);
         assertNotNull("Menu with operations has not been loaded", lView);
-        assertTrue("lView.getCount() is not 3", lView.getCount() == 4);
+        assertTrue("lView.getCount() is not 3", lView.getCount() == 3);
         
         /* The tests below will never be performed correctly. The issue is that it takes time
          * for a fragment to load. You can observe from the onCreateView method's log messages

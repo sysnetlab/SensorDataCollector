@@ -6,7 +6,7 @@ import java.util.List;
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datastore.AbstractStore;
 import sysnetlab.android.sdc.datastore.SimpleFileStore;
-import sysnetlab.android.sdc.datastore.SimpleXMLFileStore;
+import sysnetlab.android.sdc.datastore.SimpleXmlFileStore;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,7 +75,7 @@ public class DataStoreListAdapter extends BaseAdapter {
         }
 
         ViewHolder holder = (ViewHolder) view.getTag();
-        if (mStores.get(position) instanceof SimpleXMLFileStore) {
+        if (mStores.get(position) instanceof SimpleXmlFileStore) {
             holder.mainText.setText(mActivity.getResources().getString(
                     R.string.text_simple_xml_file_store));
             holder.subText.setText(mActivity.getResources().getString(

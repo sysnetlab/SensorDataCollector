@@ -24,9 +24,6 @@ public class ExperimentManagerTests extends AndroidTestCase {
         
         manager.addExperimentStore(StoreSingleton.getInstance());
         assertTrue("ExperimentManager should now have 1 store.", manager.getStores().size() == 1);
-        
-        manager.addExperimentStore(StoreSingleton.getSimpleXmlFileStoreInstance());
-        assertTrue("ExperimentManager should now have 2 stores.", manager.getStores().size() == 2);
     }
 
 }

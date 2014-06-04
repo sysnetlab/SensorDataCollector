@@ -137,6 +137,8 @@ public class DeviceInformation implements Parcelable {
     public DeviceInformation(Parcel inParcel) {
         mManufacturer = inParcel.readString();
         mModel = inParcel.readString();
+        mSdkInt = inParcel.readInt();
+        mSdkCodeName = inParcel.readString();
     }
 
     @Override
@@ -148,5 +150,7 @@ public class DeviceInformation implements Parcelable {
     public void writeToParcel(Parcel outParcel, int flags) {
         outParcel.writeString(mManufacturer);
         outParcel.writeString(mModel);
+        outParcel.writeInt(mSdkInt);
+        outParcel.writeString(mSdkCodeName);
     }
 }

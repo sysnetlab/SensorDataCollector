@@ -30,12 +30,12 @@ import android.util.Log;
  * experiments are allowed to run concurrently.
  */
 public class SimpleFileStore extends AbstractStore {
-    private final String DIR_PREFIX = "exp";
-    private final String DEFAULT_DATAFILE_PREFIX = "sdc";
-    private String mParentPath;
-    private String mNewExperimentPath;
+    protected final String DIR_PREFIX = "exp";
+    protected final String DEFAULT_DATAFILE_PREFIX = "sdc";
+    protected String mParentPath;
+    protected String mNewExperimentPath;
 
-    private int mNextExperimentNumber;
+    protected int mNextExperimentNumber;
     private int mNextChannelNumber;
 
     public SimpleFileStore() throws RuntimeException {
