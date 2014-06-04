@@ -31,6 +31,7 @@ public class ExperimentRunFragment extends Fragment{
         public void stopExperiment_ExperimentRunFragment();
         public void notifyInBackground_ExperimentRunFragment();
         public void removeInBackgroundNotification_ExperimentRunFragment();
+        public void runTimer_ExperimentRunFragment();
     }       
 
     @Override
@@ -103,6 +104,8 @@ public class ExperimentRunFragment extends Fragment{
         transaction.replace(R.id.layout_experiment_run_tags, mExperimenRunTaggingFragment).commit();
         setHasOptionsMenu(true);
         
+        mHandler.runTimer_ExperimentRunFragment();
+        
         return mView;
     }
     
@@ -119,7 +122,6 @@ public class ExperimentRunFragment extends Fragment{
 	        mHandler.stopExperiment_ExperimentRunFragment();
     	}    	
     	super.onPause();
-        
     }
     
     @Override
@@ -150,11 +152,17 @@ public class ExperimentRunFragment extends Fragment{
         }
     }
     
+    
+    
     public void setIsUserTrigger(boolean isUserTrigger){
     	mIsUserTrigger=isUserTrigger;
     }
     
     public boolean getIsUserTrigger(){
     	return mIsUserTrigger;
+    }
+    
+    public View getView(){
+    	return mView;
     }
 }

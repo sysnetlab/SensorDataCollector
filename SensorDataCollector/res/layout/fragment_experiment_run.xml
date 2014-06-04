@@ -35,14 +35,28 @@
 	    android:id="@+id/layout_experiment_run_progress"
 	    android:layout_above="@+id/layout_experiment_run_actions"
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content">    
+	    android:layout_height="wrap_content">
+	    
+	    
+	    
+	    <TextView
+	        android:id="@+id/textview_experiment_run_timer"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+        	android:gravity="center_horizontal"
+        	android:layout_centerHorizontal="true"
+	        android:text="00:00:00"
+	        android:textAppearance="?android:attr/textAppearanceMedium"/>		
+		
 		<ProgressBar
 		    android:id="@+id/progressbar_experiment_running"
-		    style="?android:attr/progressBarStyleHorizontal"		    
+		    style="?android:attr/progressBarStyleHorizontal"
+		    android:layout_below="@id/textview_experiment_run_timer"		    	   
 		    android:layout_width="75dp"
 		    android:layout_height="wrap_content"
 		    android:layout_centerHorizontal="true"
 		    android:indeterminate="true" />
+		
 	</RelativeLayout>
 	
 	<RelativeLayout

@@ -3,6 +3,8 @@ package sysnetlab.android.sdc.ui;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.DataCollectionState;
@@ -47,6 +49,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class CreateExperimentActivity extends FragmentActivity
@@ -77,6 +80,7 @@ public class CreateExperimentActivity extends FragmentActivity
     private int mPreviousTagPosition;
     private StateTag mStateTagPrevious;
     private Drawable mDrawableBackground;
+    private TextView mTextView;
     
 
     @Override
@@ -611,5 +615,32 @@ public class CreateExperimentActivity extends FragmentActivity
         AlertDialog dialog = builder.create();
 
         dialog.show();
+    }
+    
+    public void runTimer_ExperimentRunFragment(){
+    	mTextView = (TextView) mExperimentRunFragment.getView().findViewById(R.id.textview_experiment_run_timer);
+    	Timer T=new Timer();
+    	T.scheduleAtFixedRate(new TimerTask() {
+    		int seconds=0;
+    		@Override
+    		public void run() {
+    			runOnUiThread(new Runnable()
+    			{
+    				@Override
+    				public void run()
+    				{
+    					int hr = seconds/3600;
+    					int rem = seconds%3600;
+    					int min = seconds/60;
+    					int sec = rem%60;
+    					String hrStr = (hr<10 ? "0" : "")+hr;
+    					String mnStr = (min<10 ? "0" : "")+min;
+    					String secStr = (sec<10 ? "0" : "")+sec; 
+    					mTextView.setText(hrStr+":"+mnStr+":"+secStr);                        
+    					seconds++;
+    				}
+    			});
+    		}
+    	}, 1000, 1000);
     }
 }
