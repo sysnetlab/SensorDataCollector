@@ -14,13 +14,16 @@ import sysnetlab.android.sdc.ui.adaptors.SensorListAdapter;
 import sysnetlab.android.sdc.ui.adaptors.SensorPropertyListAdapter;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewNotesFragment;
 import android.content.Context;
+import android.graphics.Rect;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class ViewExperimentActivityFunctionTests extends
 ActivityInstrumentationTestCase2<ViewExperimentActivity> {
@@ -129,6 +132,9 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
     public void testNoteSwipeDirection(){
     	final ListView listOperations;
     	ExperimentViewNotesFragment mExperimentViewNotesFragment;
+    	TextView textView;
+    	int note1,note2;
+    	Rect rect=new Rect();
     	
     	if(loadExperimentWithNotes()){
 	    	listOperations = (ListView) mViewExperimentActivity
@@ -137,53 +143,37 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
 	        assertTrue("listOperations.getCount() is not 3", listOperations.getCount() == 3);
 	
 	        getInstrumentation().runOnMainSync(new Runnable() {
-	
 	            @Override
 	            public void run() {
-	
 	                listOperations.performItemClick(listOperations.getAdapter().getView(1, null, null),
 	                        1, listOperations.getAdapter()
 	                                .getItemId(1));
 	            }
 	        });
-	        
 	        getInstrumentation().waitForIdleSync();
 	        
 	        mExperimentViewNotesFragment=mViewExperimentActivity.getExperimentViewNotesFragment();
 	        assertNotNull("View notes fragment failed to load", mExperimentViewNotesFragment);
+	        mExperimentViewNotesFragment.getView().getHitRect(rect);
 	        
-	        swipeRight();
+	        textView=(TextView) mExperimentViewNotesFragment.getView().findViewById(R.id.textview_fragment_experiment_view_notes_note_caption);
+	        note1=Integer.parseInt(String.valueOf(textView.getText().charAt(5)));
 	        
-	        getInstrumentation().waitForIdleSync();
-	        System.out.println();
+	        //swipe to the left
+	        do{
+		        TouchUtils.dragViewToX(this, mExperimentViewNotesFragment.getView(), Gravity.CENTER, rect.left);
+		        getInstrumentation().waitForIdleSync();
+		        
+		        textView=(TextView) mExperimentViewNotesFragment.getView().findViewById(R.id.textview_fragment_experiment_view_notes_note_caption);
+		        note2=Integer.parseInt(String.valueOf(textView.getText().charAt(5)));
+	        }while(note2==note1);
+	        
+	        assertEquals("The swipping loaded the wrong note",note1+1, note2);
     	}
     	else
     		Log.e("Notes missing","A experiment with a least two notes is required in order to execute this test");
     	
     }
-
-	private void swipeRight() {
-		final float fromX,fromY,toX;
-		int[] fragmentPosition=new int[2];
-		View v=mViewExperimentActivity.getExperimentViewNotesFragment().getView();
-		v.getLocationOnScreen(fragmentPosition);
-		
-		fromX=fragmentPosition[0]+v.getWidth()/2;
-		fromY=fragmentPosition[1]+v.getHeight()/2;
-		toX=10;//mViewExperimentActivity.getWindowManager().getDefaultDisplay().getWidth();
-		
-		final ActivityInstrumentationTestCase2<ViewExperimentActivity> t=this;
-        TouchUtils.drag(t, toX, fromX, fromY, fromY, 5);
-        /*
-		getInstrumentation().runOnMainSync(new Runnable() {
-			@Override
-			public void run() {
-				TouchUtils.drag(t, toX, fromX, fromY, fromY, 5);
-			}
-		});
-		*/
-		
-	}
 
 	private boolean loadExperimentWithNotes() {
 		if(mExperiment.getNotes().size()>1)

@@ -1,5 +1,5 @@
 
-package sysnetlab.android.sdc.sensor;
+package sysnetlab.android.sdc.sensor.camera;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
