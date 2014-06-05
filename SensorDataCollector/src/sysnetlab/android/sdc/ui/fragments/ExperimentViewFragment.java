@@ -22,6 +22,8 @@ public class ExperimentViewFragment extends Fragment {
 
     public interface OnFragmentClickListener {
         public void onBtnCloneClicked_ExperimentViewFragment();
+        
+        public void onBtnDropboxClicked_ExperimentViewFragment();
 
         public void onTagsClicked_ExperimentViewFragment();
 
@@ -87,6 +89,15 @@ public class ExperimentViewFragment extends Fragment {
                         mCallback.onBtnCloneClicked_ExperimentViewFragment();
                     }
                 });
+        
+        ((Button) getActivity().findViewById(R.id.button_experiment_view_dropbox))
+        .setOnClickListener(new Button.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                mCallback.onBtnDropboxClicked_ExperimentViewFragment();
+            }
+        });
     }
 
     @Override
