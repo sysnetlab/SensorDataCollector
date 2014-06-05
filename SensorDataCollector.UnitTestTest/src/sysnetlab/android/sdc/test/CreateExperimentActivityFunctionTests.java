@@ -1,10 +1,17 @@
 package sysnetlab.android.sdc.test;
 
+import java.util.List;
+
 import sysnetlab.android.sdc.R;
+import sysnetlab.android.sdc.datacollector.Experiment;
+import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
+import sysnetlab.android.sdc.ui.fragments.ExperimentEditTagsFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
 import android.test.ActivityInstrumentationTestCase2;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 public class CreateExperimentActivityFunctionTests extends
@@ -90,5 +97,63 @@ public class CreateExperimentActivityFunctionTests extends
 
         getInstrumentation().waitForIdleSync();
     }
+    
+    public void testExperimentTagSetupFunction() throws Exception {
 
+        // Set up an ActivityMonitor if necessary 
+        /*
+         * ActivityMonitor createExperimentActivityMonitor =
+         * getInstrumentation()
+         * .addMonitor(CreateExperimentActivity.class.getName(), null, false);
+         */
+        final ListView listOperations = (ListView) mCreateExperimentActivity
+                .findViewById(R.id.lv_operations);
+        assertNotNull("Menu with operations has not been loaded", listOperations);
+        assertTrue("listOperations.sgetCount() is not 3", listOperations.getCount() == 3);
+
+        getInstrumentation().runOnMainSync(new Runnable() {
+
+            @Override
+            public void run() {
+            	listOperations.performItemClick(listOperations.getAdapter().getView(0, null, null),
+                        0, listOperations.getAdapter()
+                                .getItemId(0));
+            }
+
+        });
+
+        getInstrumentation().waitForIdleSync();
+
+        ExperimentEditTagsFragment tagFragment = mCreateExperimentActivity
+                .getExperimentEditTagsFragment();
+        assertNotNull("Tag selection fragment failed to load", tagFragment);
+        final EditText editTextTag = (EditText) tagFragment.getView().findViewById(R.id.edittext_tag);
+        assertNotNull("Failed to get EditText from View", editTextTag); 
+        getInstrumentation().runOnMainSync(new Runnable() {
+
+            @Override
+            public void run() {
+            	editTextTag.setText("Test tag"); 
+            }
+
+        });
+
+        getInstrumentation().waitForIdleSync();
+        final Button addButton = (Button) tagFragment.getView().findViewById(R.id.btn_add_tag);
+        assertNotNull("Button selection failed to load", addButton);
+        getInstrumentation().runOnMainSync(new Runnable() {
+
+            @Override
+            public void run() {
+            	 addButton.performClick();
+            }
+
+        });
+
+        getInstrumentation().waitForIdleSync();
+        Experiment tagExperiment = mCreateExperimentActivity.getExperiment();
+        List<Tag> tagList = tagExperiment.getTags();
+        assertNotNull("TagList failed to load", tagList);
+        assertTrue("Tag is less than 1",tagList.size() > 0);
+    }
 }

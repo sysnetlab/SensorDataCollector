@@ -11,11 +11,11 @@ import sysnetlab.android.sdc.datastore.AbstractStore;
 public class ExperimentManager {
     private List<AbstractStore> mStores;    
     private Experiment mActiveExperiment;
-
+    
     public ExperimentManager() {
         mStores = new ArrayList<AbstractStore>();
     }
-
+    
     public void addExperimentStore(AbstractStore store) {
     	if(!mStores.contains(store))
     		mStores.add(store);
