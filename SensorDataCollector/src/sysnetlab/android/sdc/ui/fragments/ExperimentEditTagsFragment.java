@@ -26,7 +26,7 @@ public class ExperimentEditTagsFragment extends Fragment {
     private TagListAdapter mTagListAdapter;
     
     public interface OnFragmentClickListener {
-    	public void onBtnAddTagClicked_ExperimentEditTagsFragment(String strTag, String strDescription);
+    	public boolean onBtnAddTagClicked_ExperimentEditTagsFragment(String strTag, String strDescription);
     }
 
     @Override
@@ -99,12 +99,16 @@ public class ExperimentEditTagsFragment extends Fragment {
             public void onClick(View v) {
                 Log.i("ExperimentEditTagsFragment", "Add Tag Clicked");
                 EditText editTextTag = (EditText) mView.findViewById(R.id.edittext_tag);
+                
                 EditText editTextDescription = (EditText) mView.findViewById(R.id.edittext_description);
-                mCallback.onBtnAddTagClicked_ExperimentEditTagsFragment(editTextTag.getText().toString(),
-                		editTextDescription.getText().toString());
-                mTagListAdapter.notifyDataSetChanged();
-                editTextTag.setText("");
-                editTextDescription.setText("");
+	               if(mCallback.onBtnAddTagClicked_ExperimentEditTagsFragment(editTextTag.getText().toString(),
+	               		editTextDescription.getText().toString()))
+	               {
+		               mTagListAdapter.notifyDataSetChanged();
+		               editTextTag.setText("");
+		               editTextDescription.setText("");
+	               }
+               
             }
         });
 

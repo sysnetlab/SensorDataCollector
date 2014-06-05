@@ -569,8 +569,13 @@ public class CreateExperimentActivity extends FragmentActivity
 	}
 	
 	@Override
-	public void onBtnAddTagClicked_ExperimentEditTagsFragment(String strTag, String strDescription) {
+	public boolean onBtnAddTagClicked_ExperimentEditTagsFragment(String strTag, String strDescription) {
+		if (strTag.equals("")){
+			  Toast.makeText(this, "Please enter a tag", Toast.LENGTH_LONG).show();
+			  return false;
+		}
 		mExperiment.addTag(strTag, strDescription);
+		return true;
 	}
 
 	public RunExperimentService getRunExperimentService() {
