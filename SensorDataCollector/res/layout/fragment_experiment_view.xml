@@ -85,11 +85,20 @@
         android:gravity="center_horizontal" >
 
         <Button
+            android:id="@+id/button_experiment_view_dropbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:text="@string/text_send_to_dropbox" />
+        
+        <Button
             android:id="@+id/button_experiment_view_clone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
+        	android:layout_below="@id/button_experiment_view_dropbox"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
             android:text="@string/text_clone" />

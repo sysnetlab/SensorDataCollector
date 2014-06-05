@@ -1,12 +1,6 @@
 
 package sysnetlab.android.sdc.ui;
 
-import com.dropbox.client2.DropboxAPI;
-import com.dropbox.client2.android.AndroidAuthSession;
-import com.dropbox.client2.android.AuthActivity;
-import com.dropbox.client2.session.AccessTokenPair;
-import com.dropbox.client2.session.AppKeyPair;
-
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
@@ -14,12 +8,7 @@ import sysnetlab.android.sdc.datastore.DropboxHelper;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -28,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class SensorDataCollectorActivity extends FragmentActivity implements
         ExperimentListFragment.OnFragmentClickListener {
@@ -37,14 +25,6 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
     public final static int APP_OPERATION_CREATE_NEW_EXPERIMENT = 1;
     public final static int APP_OPERATION_CLONE_EXPERIMENT = 2;
     
-    // Dropbox 
-    final static private String DROPBOX_APP_KEY = "t02om332sh6xycp";
-    final static private String DROPBOX_APP_SECRET = "ynuhmqusy8b4gt8";
-    final static private String DROPBOX_ACCOUNT_PREFS_NAME = "dropbox_prefs";
-    final static private String DROPBOX_ACCESS_KEY_NAME = "DROPBOX_ACCESS_KEY";
-    final static private String DROPBOX_ACCESS_SECRET_NAME = "DROPBOX_ACCESS_SECRET";
-    private DropboxAPI<AndroidAuthSession> mDropboxApi;
-    private boolean mDropboxLoggedIn;
     
     private ExperimentListFragment mExperimentListFragment;
 
