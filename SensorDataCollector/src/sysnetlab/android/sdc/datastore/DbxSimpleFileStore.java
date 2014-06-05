@@ -55,7 +55,7 @@ public class DbxSimpleFileStore extends AbstractStore {
                 "entering DbxSimpleFileStore.constructor() ...");
 
         mParentPath = "/SensorData";
-        DbxAccountManager dbxAcctMgr = ExperimentManagerSingleton.getInstance().getDbxAccountManager();
+        DbxAccountManager dbxAcctMgr = StoreSingleton.getDbxAccountManager();
         try {
 			mDbxFs = DbxFileSystem.forAccount(dbxAcctMgr.getLinkedAccount());
 		} catch (Unauthorized e1) {

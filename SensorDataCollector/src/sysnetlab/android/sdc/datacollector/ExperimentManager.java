@@ -13,22 +13,11 @@ import sysnetlab.android.sdc.datastore.AbstractStore;
 public class ExperimentManager {
     private List<AbstractStore> mStores;    
     private Experiment mActiveExperiment;
-    
-    // TODO: Not sure if this is the best spot for this, but will do for now.
-    private DbxAccountManager mDbxAccountManager;
 
     public ExperimentManager() {
         mStores = new ArrayList<AbstractStore>();
     }
 
-    public void setDbxAccountManager(DbxAccountManager m) {
-    	mDbxAccountManager = m;
-    }
-    
-    public DbxAccountManager getDbxAccountManager() {
-    	return mDbxAccountManager;
-    }
-    
     public void addExperimentStore(AbstractStore store) {
     	if(!mStores.contains(store))
     		mStores.add(store);

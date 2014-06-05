@@ -42,6 +42,13 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
 
+        // Needs to happen before we get the StoreSingletone so that it can 
+        // determine if a Dropbox account has been linked and construct the 
+        // appropriate type of store.
+        SensorUtilsSingleton.getInstance().setContext(getBaseContext());
+        mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(), DBX_APP_KEY, DBX_APP_SECRET);
+        StoreSingleton.setDbxAccountManager(mDbxAcctMgr);
+        
         ExperimentManagerSingleton.getInstance().addExperimentStore(
                 StoreSingleton.getInstance());
 
@@ -57,9 +64,6 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
             transaction.commit();
         }
 
-        SensorUtilsSingleton.getInstance().setContext(getBaseContext());
-        mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(), DBX_APP_KEY, DBX_APP_SECRET);
-        ExperimentManagerSingleton.getInstance().setDbxAccountManager(mDbxAcctMgr);
     }
 
     public void onStart() {
