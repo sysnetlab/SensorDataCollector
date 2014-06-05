@@ -42,7 +42,7 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
 
-        // Needs to happen before we get the StoreSingletone so that it can 
+        // Needs to happen before we get the StoreSingleton so that it can 
         // determine if a Dropbox account has been linked and construct the 
         // appropriate type of store.
         SensorUtilsSingleton.getInstance().setContext(getBaseContext());

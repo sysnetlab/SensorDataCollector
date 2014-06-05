@@ -3,11 +3,10 @@ package sysnetlab.android.sdc.datastore;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -20,18 +19,15 @@ import com.dropbox.sync.android.DbxException.Unauthorized;
 import com.dropbox.sync.android.DbxFile;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
-import com.dropbox.sync.android.DbxPath.InvalidPathException;
 
 import sysnetlab.android.sdc.datacollector.DeviceInformation;
 import sysnetlab.android.sdc.datacollector.Experiment;
-import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datacollector.Note;
 import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
-import android.os.Environment;
 import android.util.Log;
 
 /**
@@ -102,6 +98,7 @@ public class DbxSimpleFileStore extends AbstractStore {
 
     @Override
     public List<Experiment> listStoredExperiments() {
+    	Log.i("DbxSimpleFileStore", "listStoredExperiments called");
         List<Experiment> listExperiments = new ArrayList<Experiment>();
 
         DecimalFormat f = new DecimalFormat("00000");
@@ -179,20 +176,25 @@ public class DbxSimpleFileStore extends AbstractStore {
     }
 
     protected Experiment loadExperiment(String dirName, String parentDir) {
+    	Log.v("DbxSimpleFileStore", "loadExperiment dirName: " + dirName + " parentDir: " + parentDir);
         String configFilePath = parentDir + "/.experiment";
         String name = null, dateTimeCreated = null;
         Experiment experiment = null;
 
         try {
             BufferedReader in;
-            DbxFile file;
-
-            file = mDbxFs.open(new DbxPath(configFilePath));
+            InputStreamReader isr;
+            DbxFile file; 
+            
 
             if (mDbxFs.exists(new DbxPath(configFilePath))) {
                 String dateTimeDone;
-
-                in = new BufferedReader(new FileReader(configFilePath));
+                Log.v("DbxSimpleFileStore", "Exists.  Attempting to open: " + configFilePath);
+                file = mDbxFs.open(new DbxPath(configFilePath));
+                Log.v("DbxSimpleFileStore", "Opened: " + configFilePath);
+                isr = new InputStreamReader(file.getReadStream());
+                in = new BufferedReader(isr);
+                Log.v("DbxSimpleFileStore", "BufferedReader created: " + configFilePath);
 
                 name = in.readLine();
                 dateTimeCreated = in.readLine();
@@ -264,7 +266,7 @@ public class DbxSimpleFileStore extends AbstractStore {
                 }
                 experiment.setSensors(lstSensors);
                 
-                in.close();
+                file.close();
 
                 Log.i("SensorDataCollector",
                         "SimpleFileStore::loadExperiment(): load experiment("
@@ -279,10 +281,11 @@ public class DbxSimpleFileStore extends AbstractStore {
 
                 Log.w("SensorDataCollector",
                         "SimpleFileStore::loadExperiment(): no configuraiton file is found for " + name);
-
+                file.close();
                 return new Experiment(name, dateCreated);
             }
         } catch (NumberFormatException e) {
+        	Log.i("DbxSimpleFileStore", e.toString());
             if (name != null && dateTimeCreated != null) {
                 Log.w("SensorDataCollector",
                         "SimpleFileStore::loadExperiment(): Found an old configuration file for " + name);
@@ -296,7 +299,7 @@ public class DbxSimpleFileStore extends AbstractStore {
             return null;
 
         } catch (IOException e) {
-
+        	Log.i("DbxSimpleFileStore", e.toString());
             if (name != null && dateTimeCreated != null) {
                 Log.w("SensorDataCollector",
                         "SimpleFileStore::loadExperiment(): Found an old configuration file for " + name);
@@ -309,6 +312,7 @@ public class DbxSimpleFileStore extends AbstractStore {
 
             return null;
         } catch (RuntimeException e) {
+        	Log.i("DbxSimpleFileStore", e.toString());
             Log.w("SensorDataCollector",
                     "SimpleFileStore::loadExperiment(): Found an old configuration file "
                             + experiment.getName() + ", " + experiment.getDateTimeCreatedAsString());
@@ -320,6 +324,7 @@ public class DbxSimpleFileStore extends AbstractStore {
         private PrintStream mOut;
         private BufferedReader mIn;
         private String mPath;
+        private DbxFile mFile;
 
         protected SimpleFileChannel() {
             // prohibit from creating SimpleFileChannel object without an argument
@@ -334,13 +339,16 @@ public class DbxSimpleFileStore extends AbstractStore {
 	            if (flags == READ_ONLY) {
 	                mOut = null;
 					if (mDbxFs.exists(new DbxPath(path))) {
-					    mIn = new BufferedReader(new FileReader(path));
+						mFile = mDbxFs.open(new DbxPath(path));
+						InputStreamReader isr = new InputStreamReader(mFile.getReadStream());
+					    mIn = new BufferedReader(isr);
 					} else {
 					    throw new RuntimeException("SimpleFileChannel: cannot open file " + path);
 					}
 	            } else if (flags == WRITE_ONLY) {
+	            	mFile = mDbxFs.create(new DbxPath(path));
 	                mOut = new PrintStream(new BufferedOutputStream(
-	                        mDbxFs.create(new DbxPath(path)).getWriteStream()));
+	                        mFile.getWriteStream()));
 	                mIn = null;
 	                mPath = path;
 	            } else {
@@ -353,10 +361,14 @@ public class DbxSimpleFileStore extends AbstractStore {
         }
 
         public void close() {
-            if (mOut != null) mOut.close();
+            if (mOut != null) {
+            	mOut.close();
+            	mFile.close();
+            }
             if (mIn != null) {
                 try {
                     mIn.close();
+                    mFile.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                     Log.i("SensorDataCollector", "close error in SimpleFileStore::close().");
