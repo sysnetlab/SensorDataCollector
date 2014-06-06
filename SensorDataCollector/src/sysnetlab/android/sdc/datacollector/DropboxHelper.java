@@ -200,6 +200,9 @@ public class DropboxHelper {
             @Override
             protected String doInBackground(String... path) {
         		Log.i("DropboxHelper", "Sending path " + path[0] + " to Dropbox.");
+        		if (path[0] == null) {
+        			return "Unknown path for experiment.";
+        		}
         		File root = new File(path[0]);
         		if (!root.exists()) {
         			return "Unsupported Experiment Datastore";
