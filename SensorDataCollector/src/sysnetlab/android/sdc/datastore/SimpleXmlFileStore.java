@@ -128,6 +128,7 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             
             xpp.nextTag();
             experiment = readExperiment(xpp);
+            experiment.setPath(experimentPath);
         
             in.close();
         } catch (FileNotFoundException e) {

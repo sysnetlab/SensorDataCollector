@@ -1,8 +1,6 @@
 
 package sysnetlab.android.sdc.ui.fragments;
 
-import java.util.List;
-
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
@@ -38,7 +36,7 @@ public class ExperimentListFragment extends ListFragment {
         LayoutInflater inflator = getLayoutInflater(savedInstanceState);
         mFooterView = inflator.inflate(R.layout.experiment_list_footer, null);
         mHeaderView = inflator.inflate(R.layout.experiment_list_header, null);
-        List<Experiment> mExperimentList = ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate();
+        // List<Experiment> mExperimentList = ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate();
         mExperimentListAdapter = new ExperimentListAdapter(getActivity(),
                 ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate());
         Log.i("SensorDataCollector", "called ExperimentListFragment::onCreate().");

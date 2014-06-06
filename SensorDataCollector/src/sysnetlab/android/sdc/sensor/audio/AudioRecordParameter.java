@@ -16,6 +16,9 @@ public class AudioRecordParameter {
         mMinBufferSize = minBufferSize;
     }
 
+    public AudioRecordParameter() {
+    }
+
     public int getSamplingRate() {
         return mSamplingRate;
     }
@@ -54,8 +57,5 @@ public class AudioRecordParameter {
 
     public void setMinBufferSize(int minBufferSize) {
         mMinBufferSize = minBufferSize;
-    }
-    
-    
-    
+    }  
 }

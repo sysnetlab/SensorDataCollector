@@ -23,7 +23,7 @@
 	    
 	   	<Button
 	        android:id="@+id/button_sensor_selection_clear"
-	        android:layout_width="wrap_content"
+	        android:layout_width="0dip"
 	        android:layout_height="wrap_content"
 	        android:text="@string/text_clear_selection"
 	        android:layout_marginLeft="12dp"

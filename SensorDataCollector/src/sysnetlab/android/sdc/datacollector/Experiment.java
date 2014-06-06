@@ -31,6 +31,7 @@ public class Experiment implements Parcelable {
     private List<Tag> mTags;
     private List<Note> mNotes;
     private List<TaggingAction> mTaggingActions;
+    private String mPath;
 
     private List<AbstractSensor> mSensors;
     //private AbstractStore mStore;
@@ -44,6 +45,7 @@ public class Experiment implements Parcelable {
         mNotes = new ArrayList<Note>();
         mSensors = new ArrayList<AbstractSensor>();
         mTaggingActions = new ArrayList<TaggingAction>();
+        mPath = null;
     }
 
     public Experiment(String name) {
@@ -415,6 +417,14 @@ public class Experiment implements Parcelable {
     
     public Parcelable.Creator<Experiment> getCreator() {
         return CREATOR;
+    }
+    
+    public void setPath(String p) {
+    	mPath = p;
+    }
+    
+    public String getPath() {
+    	return mPath;
     }
 
 }

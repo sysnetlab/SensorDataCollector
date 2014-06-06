@@ -19,7 +19,6 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;

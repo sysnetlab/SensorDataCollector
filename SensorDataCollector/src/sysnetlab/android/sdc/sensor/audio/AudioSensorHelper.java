@@ -69,7 +69,7 @@ public class AudioSensorHelper {
     };
     
 
-    public static void getValidRecordingParameters() {
+    public static List<AudioRecordParameter> getValidRecordingParameters() {
         if (!mListAudioRecordParameters.isEmpty()) {
             mListAudioRecordParameters.clear();
         }
@@ -95,6 +95,8 @@ public class AudioSensorHelper {
                 }
             }
         }
+        
+        return mListAudioRecordParameters;
     }    
 
 }

@@ -1,16 +1,13 @@
 
 package sysnetlab.android.sdc.ui;
 
-import com.dropbox.sync.android.DbxAccountManager;
-
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
+import sysnetlab.android.sdc.datacollector.DropboxHelper;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -20,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class SensorDataCollectorActivity extends FragmentActivity implements
         ExperimentListFragment.OnFragmentClickListener {
@@ -29,11 +25,6 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
     public final static int APP_OPERATION_CREATE_NEW_EXPERIMENT = 1;
     public final static int APP_OPERATION_CLONE_EXPERIMENT = 2;
     
-    // For Dropbox Sync API 
-    private static final String DBX_APP_KEY = "t02om332sh6xycp";
-    private static final String DBX_APP_SECRET = "ynuhmqusy8b4gt8";
-    private static final int REQUEST_LINK_TO_DBX = 123;
-    private DbxAccountManager mDbxAcctMgr;
     
     private ExperimentListFragment mExperimentListFragment;
 
@@ -58,8 +49,10 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
         }
 
         SensorUtilsSingleton.getInstance().setContext(getBaseContext());
-        mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(), DBX_APP_KEY, DBX_APP_SECRET);
-        ExperimentManagerSingleton.getInstance().setDbxAccountManager(mDbxAcctMgr);
+        
+      // Dropbox
+      DropboxHelper.getInstance(getApplicationContext());
+     
     }
 
     public void onStart() {
@@ -68,23 +61,9 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
 
     public void onResume() {
     	super.onResume();
-    }
-    
-    @Override
-    @SuppressLint("NewApi")
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_LINK_TO_DBX) {
-            if (resultCode == Activity.RESULT_OK) {
-                showToast("Successfully linked to Dropbox.");
-            } else {
-                showToast("Link to Dropbox failed or was cancelled.");
-            }
-        	if (android.os.Build.VERSION.SDK_INT >= 11) {
-            	invalidateOptionsMenu();
-        	}
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
+    	
+        // Complete the Dropbox Authorization
+        DropboxHelper.getInstance().completeAuthentication();
     }
     
     @Override
@@ -97,30 +76,28 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
     
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem item = menu.findItem(R.id.action_dropbox);
-    	if (mDbxAcctMgr.hasLinkedAccount()) {
+    	if (DropboxHelper.getInstance().isLinked()) {
     		item.setTitle(getString(R.string.text_unlink_from_dropbox));
     	} else {
     		item.setTitle(getString(R.string.text_link_to_dropbox));
     	}
-    	return super.onPrepareOptionsMenu(menu);	
+    	return super.onPrepareOptionsMenu(menu);
+    	
     }
     
     @Override
-    @SuppressLint("NewApi")
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
+    	DropboxHelper dbHelper = DropboxHelper.getInstance();
         switch (item.getItemId()) {
             case R.id.action_dropbox:
-            	if (mDbxAcctMgr.hasLinkedAccount()) {
-            		mDbxAcctMgr.unlink();
-            		showToast("Successfully unlinked from Dropbox.");
-                	if (android.os.Build.VERSION.SDK_INT >= 11) {
-                    	invalidateOptionsMenu();
-                	}
-            	} else {
-            		mDbxAcctMgr.startLink((Activity)this, REQUEST_LINK_TO_DBX);
-            	}
-            	return true;
+	          // This logs you out if you're logged in, or vice versa
+	          if (dbHelper.isLinked()) {
+	        	  dbHelper.unlink();
+	          } else {
+	              dbHelper.link();
+	          }
+              return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -159,9 +136,5 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
 	public void onBackPressed(){
     	moveTaskToBack(true);
 	}
- 
-    private void showToast(String msg) {
-        Toast error = Toast.makeText(this, msg, Toast.LENGTH_LONG);
-        error.show();
-    }
+    
 }

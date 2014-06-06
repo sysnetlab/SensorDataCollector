@@ -46,15 +46,26 @@
         android:id="@+id/lv_operations"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/layout_buttons"
-        android:layout_below="@+id/et_experiment_setup_name"
+        android:layout_below="@id/et_experiment_setup_name"
         android:divider="@android:color/transparent"
         android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
         android:dividerHeight="10.0sp" >
     </ListView>
-
+    
     <LinearLayout
-        android:id="@+id/layout_buttons"
+        android:id="@+id/layout_experiment_setup_sensor_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignLeft="@id/tv_experiment_setup_name"
+        android:layout_below="@id/lv_operations"
+        android:layout_above="@+id/layout_buttons"
+        android:layout_marginRight="12dp"
+        android:orientation="vertical" 
+        android:visibility="visible"/>
+    
+    <LinearLayout
+        android:id="@id/layout_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
