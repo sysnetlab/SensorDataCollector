@@ -524,13 +524,11 @@ public class CreateExperimentActivity extends FragmentActivity
     }
     
     @Override
-    public void onBtnClearClicked_ExperimentSensorSelectionFragment() {
+    public void onBtnClearClicked_ExperimentSensorSelectionFragment(boolean checked) {
         Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
         while (iter.hasNext()) {
-            AndroidSensor sensor = (AndroidSensor) iter.next();
-            if (sensor.isSelected()) {
-                sensor.setSelected(false);
-            }
+            AndroidSensor sensor = (AndroidSensor) iter.next();            
+                sensor.setSelected(checked);            
         }
 
         mExperimentSensorSelectionFragment.getSensorListAdapter().notifyDataSetChanged();
