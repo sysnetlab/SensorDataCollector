@@ -239,6 +239,7 @@ public class SimpleFileStore extends AbstractStore {
                 }
                 experiment.setSensors(lstSensors);
                 
+                experiment.setPath(parentDir);
                 in.close();
 
                 Log.i("SensorDataCollector",

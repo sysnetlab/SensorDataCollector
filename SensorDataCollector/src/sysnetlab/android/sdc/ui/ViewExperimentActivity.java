@@ -5,6 +5,7 @@ import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
+import sysnetlab.android.sdc.datacollector.DropboxHelper;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewNotesFragment;
@@ -74,6 +75,11 @@ public class ViewExperimentActivity extends FragmentActivity implements
         startActivity(intent);
     }
     
+    @Override 
+    public void onBtnDropboxClicked_ExperimentViewFragment() {
+    	DropboxHelper dbHelper = DropboxHelper.getInstance();
+    	dbHelper.writeAllFilesInDirToDropbox(mExperiment.getPath());
+    }
 
     @Override
     public void onTagsClicked_ExperimentViewFragment() {
