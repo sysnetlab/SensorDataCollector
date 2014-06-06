@@ -25,6 +25,7 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentEditTagsFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentRunFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentRunTaggingFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
+import sysnetlab.android.sdc.ui.fragments.ExperimentSensorListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
@@ -57,6 +58,7 @@ public class CreateExperimentActivity extends FragmentActivity
         ExperimentSensorSetupFragment.OnFragmentClickListener,
         ExperimentSetupFragment.OnFragmentClickListener,
         ExperimentSensorSelectionFragment.OnFragmentClickListener,
+        ExperimentSensorListFragment.OnFragmentClickListener,
         ExperimentEditTagsFragment.OnFragmentClickListener,
         ExperimentRunFragment.OnFragmentClickListener,
         ExperimentRunFragment.ExperimentHandler,
@@ -109,6 +111,9 @@ public class CreateExperimentActivity extends FragmentActivity
              * that runs in the service. 
              */
             ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);
+            for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(this)) {
+                sensor.setSelected(false);
+            }           
         }
 
         if (findViewById(R.id.fragment_container) != null) {
@@ -555,6 +560,24 @@ public class CreateExperimentActivity extends FragmentActivity
         mSensorSetupFragment.setSensor(sensor);
         FragmentUtil.switchToFragment(this, mSensorSetupFragment, "sensorsetup");
     }
+    
+
+    @Override
+    public void onSensorClicked_ExperimentSensorListFragment(AbstractSensor sensor) {
+        Log.i("SensorDataCollector",
+                "CreateExperimentActivity::onSensorClicked_ExperimentSensorListFragment() called.");        
+        if (mSensorSetupFragment == null) {
+            mSensorSetupFragment = new ExperimentSensorSetupFragment();
+        }
+        mSensorSetupFragment.setSensor(sensor);
+        FragmentUtil.switchToFragment(this, mSensorSetupFragment, "sensorsetup");        
+    }
+    
+
+    @Override
+    public void onSensorClicked_ExperimentSensorListFragment(int sensorNo) {
+        // do nothing
+    }    
     
 	public ExperimentSensorSelectionFragment getExperimentSensorSelectionFragment() {
 		return mExperimentSensorSelectionFragment;

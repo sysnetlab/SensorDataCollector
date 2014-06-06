@@ -4,6 +4,7 @@ package sysnetlab.android.sdc.ui;
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
+import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewNotesFragment;
@@ -76,7 +77,6 @@ public class ViewExperimentActivity extends FragmentActivity implements
 
     @Override
     public void onTagsClicked_ExperimentViewFragment() {
-        // TODO Auto-generated method stub
         // choose to do nothing. 
     }
 
@@ -100,7 +100,7 @@ public class ViewExperimentActivity extends FragmentActivity implements
     }  
 
     @Override
-    public void onListItemClicked_ExperimentSensorListFragment(int sensorNo) {
+    public void onSensorClicked_ExperimentSensorListFragment(int sensorNo) {
         if (mExperimentViewSensorDataFragment == null) {
             mExperimentViewSensorDataFragment = new ExperimentViewSensorDataFragment();
         }
@@ -110,6 +110,11 @@ public class ViewExperimentActivity extends FragmentActivity implements
         FragmentUtil.switchToFragment(this, mExperimentViewSensorDataFragment,
                 "experimentviewsensordata");
     }
+
+    @Override
+    public void onSensorClicked_ExperimentSensorListFragment(AbstractSensor sensor) {
+        // do nothing
+    }
     
     public ExperimentViewFragment getExperimentViewFragment(){
     	return mExperimentViewFragment;
@@ -118,5 +123,4 @@ public class ViewExperimentActivity extends FragmentActivity implements
     public ExperimentViewNotesFragment getExperimentViewNotesFragment(){
     	return mExperimentViewNotesFragment;
     }
-
 }

@@ -103,16 +103,12 @@ public class OperationAdapter extends BaseAdapter {
         // selected sensors, or first words of notes??
         if (position == OP_TAGS) {
             icon.setImageResource(R.drawable.icon_tags);
-            operation.setText(OP_TAGS_NAME);
-            operationInfo.setText(view.getResources().getString(
-                    R.string.text_run_tag_operation_text));     
-            //listTagsInView(view);
+            operation.setText(OP_TAGS_NAME);   
+            listTagsInView(view, CREATE_EXPERIMENT);
         } else if (position == OP_NOTES) {
             icon.setImageResource(R.drawable.icon_notes);
-            operation.setText(OP_NOTES_NAME);
-            operationInfo.setText(view.getResources().getString(
-                    R.string.text_run_note_operation_text));    
-            //listNotesInView(view);
+            operation.setText(OP_NOTES_NAME);    
+            listNotesInView(view, CREATE_EXPERIMENT);
         } else if (position == OP_SENSORS) {
             icon.setImageResource(R.drawable.icon_sensors);
             operation.setText(OP_SENSORS_NAME);
@@ -137,11 +133,11 @@ public class OperationAdapter extends BaseAdapter {
         if (position == OP_TAGS) {
             icon.setImageResource(R.drawable.icon_tags);
             operation.setText(OP_TAGS_NAME);
-            listTagsInView(view);
+            listTagsInView(view, VIEW_EXPERIMENT);
         } else if (position == OP_NOTES) {
             icon.setImageResource(R.drawable.icon_notes);
             operation.setText(OP_NOTES_NAME);
-            listNotesInView(view);
+            listNotesInView(view, VIEW_EXPERIMENT);
         } else if (position == OP_SENSORS) {
             icon.setImageResource(R.drawable.icon_sensors);
             operation.setText(OP_SENSORS_NAME);
@@ -151,18 +147,31 @@ public class OperationAdapter extends BaseAdapter {
         return view;
 	}
 	
-	private void listTagsInView(View view) {
-        if (mExperiment == null || mExperiment.getTags() == null || mExperiment.getTags().isEmpty()) {
-            TextView textview = (TextView) view.findViewById(R.id.tv_subtext);
-            textview.setText(view.getResources().getString(
-                    R.string.text_no_tagging_action_performed));
-            textview.setVisibility(View.VISIBLE);
-            LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout_subtext);
-            layout.setVisibility(View.GONE);
+	private void listTagsInView(View view, int operation) {
+        TextView operationInfo = (TextView) view.findViewById(R.id.tv_subtext);
+        
+	    if (mExperiment == null || mExperiment.getTags() == null || mExperiment.getTags().isEmpty()) {
+            
+            if (operation == VIEW_EXPERIMENT) {
+                operationInfo.setText(view.getResources().getString(
+                        R.string.text_no_tagging_action_performed));
+                LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout_subtext);
+                layout.setVisibility(View.GONE);
+            } else {
+                operationInfo.setText(view.getResources().getString(
+                        R.string.text_run_tag_operation_text)); 
+            }
+            operationInfo.setVisibility(View.VISIBLE);
+            
             return;
         }
         
-        ((TextView) view.findViewById(R.id.tv_subtext)).setVisibility(View.GONE);
+        if (operation == VIEW_EXPERIMENT) {
+            operationInfo.setVisibility(View.GONE);
+        } else {
+            operationInfo.setText(view.getResources().getString(
+                    R.string.text_run_tag_operation_text));  
+        }
 	    
 	    LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout_subtext);
 	    layout.setOrientation(LinearLayout.HORIZONTAL);
@@ -183,20 +192,30 @@ public class OperationAdapter extends BaseAdapter {
 	    layout.setVisibility(View.VISIBLE);
 	}
 	
-    private void listNotesInView(View view) {
+    private void listNotesInView(View view, int operation) {
+        TextView operationInfo = (TextView) view.findViewById(R.id.tv_subtext);
+
         if (mExperiment == null || mExperiment.getNotes() == null
                 || mExperiment.getNotes().isEmpty()) {
-            TextView textview = (TextView) view.findViewById(R.id.tv_subtext);
-            textview.setText(view.getResources().getString(R.string.text_no_notes_were_taken));
-            textview.setVisibility(View.VISIBLE);
-            LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout_subtext);
-            layout.setVisibility(View.GONE);
+            if (operation == VIEW_EXPERIMENT) {
+                operationInfo.setText(view.getResources().getString(R.string.text_no_notes_were_taken));
+                LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout_subtext);
+                layout.setVisibility(View.GONE);
+            } else {
+                operationInfo.setText(view.getResources().getString(
+                        R.string.text_run_note_operation_text));
+            }
+            operationInfo.setVisibility(View.VISIBLE);
+            
             return;
         }
         
-        ((TextView) view.findViewById(R.id.tv_subtext)).setText(view.getResources().getString(
-                R.string.text_tap_to_see_more_notes)); 
-        ((TextView) view.findViewById(R.id.tv_subtext)).setVisibility(View.VISIBLE);
+        if (operation == VIEW_EXPERIMENT) {
+            operationInfo.setText(view.getResources().getString(R.string.text_tap_to_see_more_notes)); 
+        } else {
+            operationInfo.setText(view.getResources().getString(R.string.text_run_note_operation_text));            
+        }
+        operationInfo.setVisibility(View.VISIBLE);
 
         LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout_subtext);
         layout.setOrientation(LinearLayout.HORIZONTAL);

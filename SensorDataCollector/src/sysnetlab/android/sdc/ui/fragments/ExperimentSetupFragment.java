@@ -6,6 +6,7 @@ import sysnetlab.android.sdc.ui.adaptors.OperationAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;	
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 public class ExperimentSetupFragment extends Fragment {
+
     private View mView;
     private OnFragmentClickListener mCallback;
+    private ExperimentSensorListFragment mExperimentSensorListFragment;
 
     public interface OnFragmentClickListener {
         public void onTagsClicked_ExperimentSetupFragment();
@@ -63,25 +66,31 @@ public class ExperimentSetupFragment extends Fragment {
 			
 		});
 
-
+        
+        // use nested fragment
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        if (mExperimentSensorListFragment == null) {
+            mExperimentSensorListFragment = new ExperimentSensorListFragment();
+            transaction.add(R.id.layout_experiment_setup_sensor_list,  mExperimentSensorListFragment);
+        }
+        transaction.commit();    
+        
         ((Button) mView.findViewById(R.id.button_experiment_run))
                 .setOnClickListener(new Button.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mCallback.onBtnRunClicked_ExperimentSetupFragment(mView);
                     }
-                });
-
+                });    
+        
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
 
         mView = inflater.inflate(R.layout.fragment_experiment_setup, container, false);
-
-
+        
         return mView;
     }
 
