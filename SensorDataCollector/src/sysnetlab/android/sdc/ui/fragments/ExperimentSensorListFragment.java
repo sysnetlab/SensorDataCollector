@@ -24,7 +24,7 @@ import android.widget.TextView;
 public class ExperimentSensorListFragment extends Fragment {
     private OnFragmentClickListener mCallback;
     private ListView mListView;
-    public static ListView mListView2;
+    // public static ListView mListView2;
 
     public interface OnFragmentClickListener {
         public void onSensorClicked_ExperimentSensorListFragment(AbstractSensor sensor);
@@ -69,7 +69,7 @@ public class ExperimentSensorListFragment extends Fragment {
             listView.setAdapter(sensorListAdaptor);
 
             listView.setVisibility(View.VISIBLE);
-            mListView2=listView;
+            // mListView2=listView;
         }
         mListView = listView;
 
@@ -108,5 +108,9 @@ public class ExperimentSensorListFragment extends Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnSwipeListener");
         }
+    }
+    
+    public ListView getListView() {
+        return mListView;
     }
 }

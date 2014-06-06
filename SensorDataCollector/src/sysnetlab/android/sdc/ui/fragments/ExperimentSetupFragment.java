@@ -109,4 +109,8 @@ public class ExperimentSetupFragment extends Fragment {
     public View getView() {
         return mView;
     }
+    
+    public ExperimentSensorListFragment getExperimentSensorListFragment() {
+        return mExperimentSensorListFragment;
+    }
 }

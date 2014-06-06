@@ -4,17 +4,25 @@ import java.util.List;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
+import sysnetlab.android.sdc.datacollector.Note;
 import sysnetlab.android.sdc.datacollector.Tag;
+import sysnetlab.android.sdc.sensor.AbstractSensor;
+import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
+import sysnetlab.android.sdc.ui.adaptors.SensorListAdapter;
+import sysnetlab.android.sdc.ui.fragments.ExperimentEditNotesFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentEditTagsFragment;
+import sysnetlab.android.sdc.ui.fragments.ExperimentSensorListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.KeyEvent;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class CreateExperimentActivityFunctionTests extends
         ActivityInstrumentationTestCase2<CreateExperimentActivity> {
@@ -98,6 +106,89 @@ public class CreateExperimentActivityFunctionTests extends
                 experimentSensorSetupFragment);
 
         getInstrumentation().waitForIdleSync();
+        
+        
+        this.sendKeys(KeyEvent.KEYCODE_BACK);
+
+        final CheckBox checkBox = (CheckBox) listSensors.getAdapter().getView(0, null, null)
+                .findViewById(R.id.check);
+
+        getInstrumentation().runOnMainSync(new Runnable() {
+
+            @Override
+            public void run() {
+
+                checkBox.performClick();
+            }
+
+        });
+
+        int numSensorSelected = 0;
+        for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(getActivity())) {
+            if (sensor.isSelected()) {
+                numSensorSelected++;
+            }
+        }
+
+        assertTrue("1 sensor selected", numSensorSelected == 1);
+
+        final CheckBox checkBox2 = (CheckBox) listSensors.getAdapter()
+                .getView(listSensors.getCount() - 1, null, null).findViewById(R.id.check);
+
+        getInstrumentation().runOnMainSync(new Runnable() {
+
+            @Override
+            public void run() {
+
+                checkBox2.performClick();
+            }
+
+        });
+
+        numSensorSelected = 0;
+        for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(getActivity())) {
+            if (sensor.isSelected()) {
+                numSensorSelected++;
+            }
+        }
+
+        assertTrue("2 sensors selected", numSensorSelected == 2);
+
+        this.sendKeys(KeyEvent.KEYCODE_BACK);
+
+        getInstrumentation().waitForIdleSync();
+
+        ExperimentSensorListFragment mExperimentSensorListFragment = mCreateExperimentActivity
+                .getExperimentSetupFragment().getExperimentSensorListFragment();
+
+        assertNotNull("Sensor list fragment should not be null", mExperimentSensorListFragment);
+
+        // Thread.sleep(10000);
+
+        assertTrue("2 sensors are selected, so the list should be 2 rows",
+                mExperimentSensorListFragment.getListView().getCount() == numSensorSelected);
+
+        final ListView sensorsList = mExperimentSensorListFragment.getListView();
+        SensorListAdapter sensorListAdapter = (SensorListAdapter) sensorsList.getAdapter();
+        String sensorClicked = sensorListAdapter.getSensors().get(1).getName();
+
+        getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                sensorsList.performItemClick(
+                        sensorsList.getAdapter().getView(1, null, null),
+                        1,
+                        sensorsList.getAdapter().getItemId(1));
+            }
+        });
+        getInstrumentation().waitForIdleSync();
+
+        String sensorDisplayed = ((TextView) getActivity().findViewById(
+                R.id.textview_sensor_setup_sensor_name)).getText().toString();
+
+        assertEquals("The sensor selected in the list differs from the sensor being displayed",
+                sensorClicked,
+                sensorDisplayed);
     }
     
     public void testExperimentTagSetupFunction() throws Exception {
@@ -162,11 +253,75 @@ public class CreateExperimentActivityFunctionTests extends
           
         getInstrumentation().waitForIdleSync();
  
-        LinearLayout layout = (LinearLayout) listOperations.getChildAt(0).findViewById(R.id.layout_subtext);
+        LinearLayout layout = (LinearLayout) listOperations.getAdapter().getView(0,  null, null).findViewById(R.id.layout_subtext);
         assertNotNull("layout should not be null", layout);
         assertTrue("tag list contains at least one member", tagList.size() > 0);
-        // TODO figure out this
-        // assertTrue("layout has at least one child", layout.getChildCount() > 0);
-        // assertTrue("The number of tags displayed should be equal to the size of the tag list", layout.getChildCount() == tagList.size());
+        assertTrue("layout has at least one child", layout.getChildCount() > 0);
+        assertTrue("The number of tags displayed should be equal to the size of the tag list", layout.getChildCount() == tagList.size());
     }
+    
+    
+       
+    public void testExperimentNoteSetupFunction() throws Exception {
+
+        final ListView listOperations = (ListView) mCreateExperimentActivity
+                .findViewById(R.id.lv_operations);
+        assertNotNull("Menu with operations has not been loaded", listOperations);
+        assertTrue("listOperations.sgetCount() is not 3", listOperations.getCount() == 3);
+
+        getInstrumentation().runOnMainSync(new Runnable() {
+
+            @Override
+            public void run() {
+                listOperations.performItemClick(listOperations.getAdapter().getView(1, null, null),
+                        1, listOperations.getAdapter()
+                                .getItemId(1));
+            }
+
+        });
+
+        getInstrumentation().waitForIdleSync();
+
+        ExperimentEditNotesFragment notesFragment = mCreateExperimentActivity
+                .getExperimentEditNotesFragment();
+        assertNotNull("Note editing fragment failed to load", notesFragment);
+        final EditText editTextNote = (EditText) notesFragment.getView().findViewById(R.id.edittext_experiment_note_editing_note);
+        assertNotNull("Failed to get EditText from View", editTextNote); 
+        getInstrumentation().runOnMainSync(new Runnable() {
+
+            @Override
+            public void run() {
+                editTextNote.setText("Test note"); 
+            }
+
+        });
+
+        getInstrumentation().waitForIdleSync();
+        final Button addButton = (Button) notesFragment.getView().findViewById(R.id.button_experiment_note_editing_add_note);
+        assertNotNull("Button selection failed to load", addButton);
+        getInstrumentation().runOnMainSync(new Runnable() {
+
+            @Override
+            public void run() {
+                 addButton.performClick();
+            }
+
+        });
+
+        getInstrumentation().waitForIdleSync();
+        Experiment noteExperiment = mCreateExperimentActivity.getExperiment();
+        List<Note> noteList = noteExperiment.getNotes();
+        assertNotNull("TagList failed to load", noteList);
+        assertTrue("Tag is less than 1", noteList.size() > 0);
+
+        this.sendKeys(KeyEvent.KEYCODE_BACK);
+          
+        getInstrumentation().waitForIdleSync();
+ 
+        LinearLayout layout = (LinearLayout) listOperations.getAdapter().getView(1,  null, null).findViewById(R.id.layout_subtext);
+        assertNotNull("layout should not be null", layout);
+        assertTrue("tag list contains at least one member", noteList.size() > 0);
+        assertTrue("layout has at least one child", layout.getChildCount() > 0);
+        assertTrue("The number of tags displayed should be equal to the size of the tag list", layout.getChildCount() == noteList.size());
+    }    
 }
