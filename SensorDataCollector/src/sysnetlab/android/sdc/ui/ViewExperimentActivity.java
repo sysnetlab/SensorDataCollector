@@ -107,6 +107,8 @@ public class ViewExperimentActivity extends FragmentActivity implements
 
     @Override
     public void onSensorClicked_ExperimentSensorListFragment(int sensorNo) {
+        Log.i("SensorDataCollector", "ViewExperimentActivity::onSensorClicked_ExperimentSensorListFragment() called with sensorNo = " + sensorNo);
+        
         if (mExperimentViewSensorDataFragment == null) {
             mExperimentViewSensorDataFragment = new ExperimentViewSensorDataFragment();
         }
@@ -119,6 +121,7 @@ public class ViewExperimentActivity extends FragmentActivity implements
 
     @Override
     public void onSensorClicked_ExperimentSensorListFragment(AbstractSensor sensor) {
+        Log.i("SensorDataCollector", "ViewExperimentActivity::onSensorClicked_ExperimentSensorListFragment() called");
         // do nothing
     }
     

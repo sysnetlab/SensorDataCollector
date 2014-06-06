@@ -86,9 +86,13 @@ public class ExperimentSensorListFragment extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
                     Log.i("SensorDataCollector", "Sensor List item clicked at postion " + position);
-                    mCallback
-                            .onSensorClicked_ExperimentSensorListFragment((AbstractSensor) listView
-                                    .getItemAtPosition(position));
+                    if (getActivity() instanceof ViewExperimentActivity) {
+                        mCallback.onSensorClicked_ExperimentSensorListFragment(position);
+                    } else if (getActivity() instanceof CreateExperimentActivity) {
+                        mCallback
+                                .onSensorClicked_ExperimentSensorListFragment((AbstractSensor) listView
+                                        .getItemAtPosition(position));
+                    }
                 }
             });
         }

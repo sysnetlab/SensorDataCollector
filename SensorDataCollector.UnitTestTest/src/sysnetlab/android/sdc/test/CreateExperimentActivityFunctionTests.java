@@ -10,8 +10,10 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentEditTagsFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 public class CreateExperimentActivityFunctionTests extends
@@ -155,5 +157,16 @@ public class CreateExperimentActivityFunctionTests extends
         List<Tag> tagList = tagExperiment.getTags();
         assertNotNull("TagList failed to load", tagList);
         assertTrue("Tag is less than 1",tagList.size() > 0);
+
+        this.sendKeys(KeyEvent.KEYCODE_BACK);
+          
+        getInstrumentation().waitForIdleSync();
+ 
+        LinearLayout layout = (LinearLayout) listOperations.getChildAt(0).findViewById(R.id.layout_subtext);
+        assertNotNull("layout should not be null", layout);
+        assertTrue("tag list contains at least one member", tagList.size() > 0);
+        // TODO figure out this
+        // assertTrue("layout has at least one child", layout.getChildCount() > 0);
+        // assertTrue("The number of tags displayed should be equal to the size of the tag list", layout.getChildCount() == tagList.size());
     }
 }
