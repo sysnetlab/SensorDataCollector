@@ -34,7 +34,7 @@
     <string name="text_maximum_range">Maximum Range</string>
     <string name="text_minimum_sample_delay">Minimum Sample Delay</string>
     <string name="text_android_sensor_type">Android Sensor Type</string>
-    <string name="text_notes">Notes</string>
+    <string name="text_notes">Notes</string>    
     <string name="text_notes_description_text">Notes taken for the experiment.</string>
     <string name="text_expand">Expand</string>
     <string name="text_running_experiment">Running Experiment</string>
@@ -42,8 +42,12 @@
     <string name="text_experiment_properties">Experiment Properties</string>
     <string name="text_run">Run</string>
     <string name="text_description">Description</string>
-    <string name="text_confirm">Confirm</string>
-    <string name="text_select_sensors">Select Sensors</string>
+    <string name="text_confirm">Confirm</string>    
+    <string name="text_select_a_sensor_to_the_experiment">
+        Select sensors to the experiment
+    </string>
+    <string name="text_sensor_list_instruction">Tap a sensor to view more</string>
+    <string name="text_check_all">Check/Clear all</string>
     <string name="text_sensors_on_the_device">Sensors on the Devices</string>
     <string name="text_create_new_experiment">Create New Experiment</string>
     <string name="text_add_tag">Add Tag</string>

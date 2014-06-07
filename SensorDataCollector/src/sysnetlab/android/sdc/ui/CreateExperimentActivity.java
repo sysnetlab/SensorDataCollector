@@ -45,6 +45,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -429,11 +430,10 @@ public class CreateExperimentActivity extends FragmentActivity
 
     @Override
     public void onNotesClicked_ExperimentSetupFragment() {
-        if (mExperimentEditNotesFragment == null) {
+    	if (mExperimentEditNotesFragment == null) {
             mExperimentEditNotesFragment = new ExperimentEditNotesFragment();
         }
         FragmentUtil.switchToFragment(this, mExperimentEditNotesFragment, "editnotes");
-
     }
 
     @Override
@@ -524,13 +524,11 @@ public class CreateExperimentActivity extends FragmentActivity
     }
     
     @Override
-    public void onBtnClearClicked_ExperimentSensorSelectionFragment() {
+    public void onBtnClearClicked_ExperimentSensorSelectionFragment(boolean checked) {
         Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
         while (iter.hasNext()) {
-            AndroidSensor sensor = (AndroidSensor) iter.next();
-            if (sensor.isSelected()) {
-                sensor.setSelected(false);
-            }
+            AndroidSensor sensor = (AndroidSensor) iter.next();            
+                sensor.setSelected(checked);            
         }
 
         mExperimentSensorSelectionFragment.getSensorListAdapter().notifyDataSetChanged();

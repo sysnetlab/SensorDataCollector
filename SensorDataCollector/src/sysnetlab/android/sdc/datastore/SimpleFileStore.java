@@ -174,6 +174,7 @@ public class SimpleFileStore extends AbstractStore {
                 dateTimeDone = in.readLine();
                 
                 experiment = new Experiment();
+                experiment.setPath(parentDir);
                 experiment.setName(name);
                 experiment.setDateTimeCreatedFromString(dateTimeCreated);
                 experiment.setDateTimeDoneFromString(dateTimeDone);
@@ -239,7 +240,6 @@ public class SimpleFileStore extends AbstractStore {
                 }
                 experiment.setSensors(lstSensors);
                 
-                experiment.setPath(parentDir);
                 in.close();
 
                 Log.i("SensorDataCollector",
@@ -255,8 +255,9 @@ public class SimpleFileStore extends AbstractStore {
 
                 Log.w("SensorDataCollector",
                         "SimpleFileStore::loadExperiment(): no configuraiton file is found for " + name);
-
-                return new Experiment(name, dateCreated);
+                Experiment e = new Experiment(name, dateCreated);
+                e.setPath(parentDir);
+                return e;
             }
         } catch (NumberFormatException e) {
             if (name != null && dateTimeCreated != null) {

@@ -22,9 +22,9 @@ public class ExperimentEditNotesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
+        
         return inflater.inflate(R.layout.fragment_experiment_note_editing, container,
-                false);
+                false);	
     }
 
     @Override
@@ -41,16 +41,24 @@ public class ExperimentEditNotesFragment extends Fragment {
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        
         ((Button) getActivity().findViewById(R.id.button_experiment_note_editing_add_note))
                 .setOnClickListener(new Button.OnClickListener() {
                     public void onClick(View v) {
                         mCallback.onButtonAddNoteClicked_ExperimentEditNotesFragment(
                                 ((EditText) getActivity().findViewById(
-                                        R.id.edittext_experiment_note_editing_note)).getText()
+                        		R.id.edittext_experiment_note_editing_note)).getText()
                                         .toString()
                                 );
                     }
                 });
+    }
+    
+    @Override
+    public void onResume() {
+    	super.onResume();
+    	((EditText) getActivity().findViewById(
+				R.id.edittext_experiment_note_editing_note)).
+				getText().clear();
     }
 }
