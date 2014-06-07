@@ -41,7 +41,7 @@ public class AudioRecordSettingDataSource {
         dbHelper.close();
     }
 
-    private void insertAudioRecordParameter(AudioRecordParameter audioRecordParam) {
+    private boolean insertAudioRecordParameter(AudioRecordParameter audioRecordParam) {
         ContentValues values = new ContentValues();
 
         values.put(AudioRecordSettingDBHelper.COLUMN_NAME_SAMPLING_RATE,
@@ -61,13 +61,24 @@ public class AudioRecordSettingDataSource {
         values.put(AudioRecordSettingDBHelper.COLUMN_NAME_MIN_BUFFER_SIZE,
                 audioRecordParam.getMinBufferSize());
 
-        database.insert(AudioRecordSettingDBHelper.TABLE_AUDIORECORDSETTINGS, null, values);
+        if (database.insert(AudioRecordSettingDBHelper.TABLE_AUDIORECORDSETTINGS, null, values) == -1) {
+            return false;
+        } else {
+            return true;
+        }
     }
     
-    public void addAllAudioRecordParameters(List<AudioRecordParameter> params) {
+    public boolean addAllAudioRecordParameters(List<AudioRecordParameter> params) {
+        database.beginTransaction();
         for (AudioRecordParameter p : params) {
-            insertAudioRecordParameter(p);
+            if (!insertAudioRecordParameter(p)) {
+                database.endTransaction();
+                return false;
+            }
         }
+        database.setTransactionSuccessful();
+        database.endTransaction();
+        return true;
     }
 
     public List<AudioRecordParameter> getAllAudioRecordParameters() {
