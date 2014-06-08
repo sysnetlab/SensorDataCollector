@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -33,7 +34,7 @@ public class ExperimentSensorSelectionFragment extends Fragment {
     private OnFragmentClickListener mCallback;
 
     public interface OnFragmentClickListener {
-        public void onBtnClearClicked_ExperimentSensorSelectionFragment();
+        public void onBtnClearClicked_ExperimentSensorSelectionFragment(boolean checked);
 
         public void onSensorClicked_ExperimentSensorSelectionFragment(AndroidSensor sensor);
     }
@@ -63,7 +64,7 @@ public class ExperimentSensorSelectionFragment extends Fragment {
         mHavingFooter = getActivity().getIntent().getBooleanExtra("havingfooter", false);
 
         if (mHavingHeader) {
-            LinearLayout layout = (LinearLayout) mView
+            RelativeLayout layout = (RelativeLayout) mView
                     .findViewById(R.id.layout_sensor_selection_header);
             layout.setVisibility(View.VISIBLE);
         }
@@ -130,14 +131,15 @@ public class ExperimentSensorSelectionFragment extends Fragment {
                 e.printStackTrace();
                 throw new RuntimeException("Failed to cast Activity to OnFragmentClickListener");
             }
-
-            ((Button) mView.findViewById(R.id.button_sensor_selection_clear))
-                    .setOnClickListener(new Button.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mCallback.onBtnClearClicked_ExperimentSensorSelectionFragment();
-                        }
-                    });
+            
+            final CheckBox checkAll = ((CheckBox) mView.findViewById(R.id.checkbox_check_all));
+			checkAll.setOnClickListener(new CheckBox.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					final boolean checked = checkAll.isChecked();
+					mCallback.onBtnClearClicked_ExperimentSensorSelectionFragment(checked);
+				}
+			});
         }
 
         // ((ListView) mView.findViewById(R.id.layout_sensor_list))

@@ -223,7 +223,9 @@ public class CreateExperimentActivityFunctionTests extends
                 .getExperimentEditTagsFragment();
         assertNotNull("Tag selection fragment failed to load", tagFragment);
         final EditText editTextTag = (EditText) tagFragment.getView().findViewById(R.id.edittext_tag);
-        assertNotNull("Failed to get EditText from View", editTextTag); 
+        final EditText editTextDesc = (EditText) tagFragment.getView().findViewById(R.id.edittext_description);
+        assertNotNull("Failed to get EditText tag from View", editTextTag);
+        assertNotNull("Failed to get EditText description from View", editTextDesc);
         getInstrumentation().runOnMainSync(new Runnable() {
 
             @Override
@@ -249,10 +251,34 @@ public class CreateExperimentActivityFunctionTests extends
         Experiment tagExperiment = mCreateExperimentActivity.getExperiment();
         List<Tag> tagList = tagExperiment.getTags();
         assertNotNull("TagList failed to load", tagList);
-        assertTrue("Tag is less than 1",tagList.size() > 0);
+        int listSize = tagList.size();
+        assertTrue("Tag is less than 1", listSize > 0);
+        
+        getInstrumentation().runOnMainSync(new Runnable() {
 
-        this.sendKeys(KeyEvent.KEYCODE_BACK);
-          
+            @Override
+            public void run() {
+            	editTextDesc.setText("Test Description"); 
+            }
+
+        });
+        getInstrumentation().waitForIdleSync();
+        
+        getInstrumentation().runOnMainSync(new Runnable() {
+
+            @Override
+            public void run() {
+            	 addButton.performClick();
+            }
+
+        });
+        
+        getInstrumentation().waitForIdleSync();
+        tagList = tagExperiment.getTags();
+        assertTrue("The tag was created without a name",listSize==tagList.size());
+        assertTrue("The tag description was deleted", !editTextDesc.getText().equals(""));
+        
+        this.sendKeys(KeyEvent.KEYCODE_BACK);          
         getInstrumentation().waitForIdleSync();
  
         LinearLayout layout = (LinearLayout) listOperations.getAdapter().getView(0,  null, null).findViewById(R.id.layout_subtext);
