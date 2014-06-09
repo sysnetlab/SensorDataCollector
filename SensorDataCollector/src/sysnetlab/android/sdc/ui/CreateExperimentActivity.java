@@ -188,6 +188,9 @@ public class CreateExperimentActivity extends FragmentActivity
         Log.i("SensorDataCollector", "Filtered note: [" + note + "]");         
         if (note.trim().length() > 0)
             mExperiment.getNotes().add(new Note(note));
+        ((EditText)this.findViewById(
+				R.id.edittext_experiment_note_editing_note)).
+				getText().clear();
         getSupportFragmentManager().popBackStack();
     }   
 

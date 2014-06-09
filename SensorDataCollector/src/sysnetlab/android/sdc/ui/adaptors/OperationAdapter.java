@@ -1,5 +1,7 @@
 package sysnetlab.android.sdc.ui.adaptors;
 
+import java.util.List;
+
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.Note;
@@ -76,6 +78,10 @@ public class OperationAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.operation_listitem, viewGroup, false);
         }
         
+        LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout_subtext);
+        layout.removeAllViews();
+        layout.setVisibility(View.GONE);
+        
 	    switch (mMode) {
 	        case CREATE_EXPERIMENT:
 	            view = getViewForCreatingExperiment(position, view);
@@ -92,7 +98,7 @@ public class OperationAdapter extends BaseAdapter {
 	    
         ImageView icon = (ImageView) view.findViewById(R.id.iv_image);
         TextView operation = (TextView) view.findViewById(R.id.tv_maintext);
-        TextView operationInfo = (TextView) view.findViewById(R.id.tv_subtext);
+        TextView operationInfo = (TextView) view.findViewById(R.id.tv_subtext);              
         
         icon.setVisibility(View.VISIBLE);
         operation.setVisibility(View.VISIBLE);
@@ -115,8 +121,7 @@ public class OperationAdapter extends BaseAdapter {
             operationInfo.setText(view.getResources().getString(
                     R.string.text_run_sensor_operation_text));
             //listSensorsSummaryInView(view);
-        } 
-
+        }         
         return view;	    
 	}
 
@@ -154,15 +159,12 @@ public class OperationAdapter extends BaseAdapter {
             
             if (operation == VIEW_EXPERIMENT) {
                 operationInfo.setText(view.getResources().getString(
-                        R.string.text_no_tagging_action_performed));
-                LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout_subtext);
-                layout.setVisibility(View.GONE);
+                        R.string.text_no_tagging_action_performed));                
             } else {
                 operationInfo.setText(view.getResources().getString(
                         R.string.text_run_tag_operation_text)); 
-            }
-            operationInfo.setVisibility(View.VISIBLE);
-            
+            }            
+            operationInfo.setVisibility(View.VISIBLE);            
             return;
         }
         
@@ -173,7 +175,7 @@ public class OperationAdapter extends BaseAdapter {
                     R.string.text_run_tag_operation_text));  
         }
 	    
-	    LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout_subtext);
+        LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout_subtext);        
 	    layout.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -205,8 +207,7 @@ public class OperationAdapter extends BaseAdapter {
                 operationInfo.setText(view.getResources().getString(
                         R.string.text_run_note_operation_text));
             }
-            operationInfo.setVisibility(View.VISIBLE);
-            
+            operationInfo.setVisibility(View.VISIBLE);            
             return;
         }
         
@@ -223,8 +224,9 @@ public class OperationAdapter extends BaseAdapter {
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(0, 0, 24, 0);
 
-        layout.removeAllViews();        
-        Note note = mExperiment.getNotes().get(0);
+        layout.removeAllViews();
+        
+        Note note = mExperiment.getNotesSortedByDate().get(0);
         TextView tvNote = new TextView(mActivity);
         //tvNote.setBackgroundResource(R.drawable.rounded_corner);
         tvNote.setTextAppearance(mActivity, android.R.attr.textAppearanceSmall);

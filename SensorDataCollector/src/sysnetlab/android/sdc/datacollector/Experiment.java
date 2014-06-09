@@ -6,6 +6,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -93,6 +95,17 @@ public class Experiment implements Parcelable {
         return mNotes;
     }
 
+    public List<Note> getNotesSortedByDate() {
+        List<Note> allNotes = getNotes();
+        Collections.sort(allNotes, new Comparator<Note>() {
+            public int compare(Note n1, Note n2) {
+                return -(n1.getDateCreated().compareTo(n2.getDateCreated()));
+            }
+        });
+
+        return allNotes;
+    }
+    
     public void setNotes(List<Note> mNotes) {
         if (mNotes != null)
             this.mNotes = mNotes;
