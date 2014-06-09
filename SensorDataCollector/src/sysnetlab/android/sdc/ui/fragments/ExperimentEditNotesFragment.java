@@ -53,12 +53,4 @@ public class ExperimentEditNotesFragment extends Fragment {
                     }
                 });
     }
-    
-    @Override
-    public void onResume() {
-    	super.onResume();
-    	((EditText) getActivity().findViewById(
-				R.id.edittext_experiment_note_editing_note)).
-				getText().clear();
-    }
 }
