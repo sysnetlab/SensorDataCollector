@@ -60,7 +60,6 @@ public class AndroidSensor extends AbstractSensor {
         return mSensor.toString();
     }
  
-    @Override
     public void setSensor(Object sensor) {
         this.mSensor = (Sensor) sensor;
     }

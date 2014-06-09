@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import sysnetlab.android.sdc.sensor.audio.AudioSensor;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -19,6 +20,7 @@ public class SensorDiscoverer {
             mListAbstractSensors = new ArrayList<AbstractSensor>();
 
             addAndroidSensorsToList(context);
+            addAudioSensorToList();
         }
         return mListAbstractSensors;
     }
@@ -35,5 +37,11 @@ public class SensorDiscoverer {
             AndroidSensor androidSensor = new AndroidSensor(sensor);
             mListAbstractSensors.add(androidSensor);
         }
+    }
+    
+    
+    private static void addAudioSensorToList() {
+        AudioSensor audioSensor = AudioSensor.getInstance();
+        mListAbstractSensors.add(audioSensor);
     }
 }

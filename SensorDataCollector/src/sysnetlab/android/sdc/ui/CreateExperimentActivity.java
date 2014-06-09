@@ -45,7 +45,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
-import android.text.Editable;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -549,7 +548,7 @@ public class CreateExperimentActivity extends FragmentActivity
 	        }
     }
     
-    public void onSensorClicked_ExperimentSensorSelectionFragment(AndroidSensor sensor) {
+    public void onSensorClicked_ExperimentSensorSelectionFragment(AbstractSensor sensor) {
         Log.i("SensorDataCollector",
                 "CreateExperimentActivity::onSensorClicked_ExperimentSensorSelectionFragment() called.");
         if (mSensorSetupFragment == null) {

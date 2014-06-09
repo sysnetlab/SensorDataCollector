@@ -148,5 +148,8 @@
 	<string name="text_audio_source_mic">Microphone</string>
 	<string name="text_audio_source_camcorder">Camcorder</string>
 	<string name="text_audio_source_default">Default</string>
+	
+	<!-- Handling sensors -->
+	<string name="text_sensor_type_x_not_handled">Handling of sensor type %1$d is yet to be implemented.</string>
     
 </resources>

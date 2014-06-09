@@ -4,7 +4,6 @@ import java.util.List;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
-import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
 import sysnetlab.android.sdc.ui.adaptors.SensorListAdapter;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -36,7 +34,7 @@ public class ExperimentSensorSelectionFragment extends Fragment {
     public interface OnFragmentClickListener {
         public void onBtnClearClicked_ExperimentSensorSelectionFragment(boolean checked);
 
-        public void onSensorClicked_ExperimentSensorSelectionFragment(AndroidSensor sensor);
+        public void onSensorClicked_ExperimentSensorSelectionFragment(AbstractSensor sensor);
     }
 
     @Override
@@ -147,7 +145,7 @@ public class ExperimentSensorSelectionFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
                 mCallback.onSensorClicked_ExperimentSensorSelectionFragment(
-                        (AndroidSensor) listView.getItemAtPosition(position));
+                        (AbstractSensor) listView.getItemAtPosition(position));
             }
         });
     }

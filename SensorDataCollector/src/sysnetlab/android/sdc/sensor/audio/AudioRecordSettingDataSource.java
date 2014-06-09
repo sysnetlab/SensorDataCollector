@@ -25,6 +25,10 @@ public class AudioRecordSettingDataSource {
             AudioRecordSettingDBHelper.COLUMN_NAME_AUDIO_SOURCE_RES_ID,
             AudioRecordSettingDBHelper.COLUMN_NAME_MIN_BUFFER_SIZE
     };
+    private String[] audioChannelInColumns = {
+            AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_IN_ID,
+            AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_IN_RES_ID            
+    };
     private String[] statusColumns = {
             AudioRecordSettingDBHelper.COLUMN_NAME_STATUS      
     };

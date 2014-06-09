@@ -52,7 +52,7 @@ public class UserInterfaceUtil {
 
         switch (sensor.getMajorType()) {
             case AbstractSensor.ANDROID_SENSOR:
-                Sensor aSensor = (Sensor) (sensor.getSensor());
+                Sensor aSensor = (Sensor) (((AndroidSensor) sensor).getSensor());
 
                 property = new SensorProperty(activity.getResources().getString(
                         R.string.text_android_sensor_type),

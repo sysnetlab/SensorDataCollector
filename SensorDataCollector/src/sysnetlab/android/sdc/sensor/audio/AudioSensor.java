@@ -2,10 +2,17 @@
 package sysnetlab.android.sdc.sensor.audio;
 
 import android.media.AudioRecord;
+import sysnetlab.android.sdc.datacollector.DeviceInformation;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 
 public class AudioSensor extends AbstractSensor {
+    public final static int AUDIOSENSOR_MICROPHONE = 1;
+
+    private static AudioSensor instance = null;       
+    
+    private String mName = "Audio Sensor (Microphone)";
+    
     // formulate in a producer/consumer paradigm
     private AudioRecord mAudioRecord;
     private boolean mIsRecording;
@@ -14,11 +21,25 @@ public class AudioSensor extends AbstractSensor {
     private short[] mShortBuffer; 
     private int mBufferSize;
 
+    public static AudioSensor getInstance() {
+        if (instance == null) {
+            instance = new AudioSensor();
+        }
+
+        return instance;
+    }
+    
+    protected AudioSensor() {
+        super.setMajorType(AbstractSensor.AUDIO_SENSOR);   
+        super.setMinorType(AUDIOSENSOR_MICROPHONE);
+    }
+
     public AudioSensor(AudioRecordParameter params) {
         mAudioRecord = new AudioRecord(params.getSource().getSourceId(), params.getSamplingRate(),
                 params.getChannel().getChannelId(), params.getEncoding().getEncodingId(),
                 params.getMinBufferSize());
-
+        super.setMajorType(AbstractSensor.AUDIO_SENSOR);   
+        super.setMinorType(AUDIOSENSOR_MICROPHONE);
     } 
     
     public void startRecording() {
@@ -73,30 +94,31 @@ public class AudioSensor extends AbstractSensor {
         return bytes;
 
     }
+    
+    @Override
+    public int getMajorType() {
+        return super.getMajorType();
+    }
+    
+    @Override
+    public int getMinorType() {
+        return super.getMinorType();
+    }
 
 
     @Override
     public String getName() {
-        // TODO Auto-generated method stub
-        return null;
+        return mName;
     }
 
     @Override
     public String getVendor() {
-        // TODO Auto-generated method stub
-        return null;
+        return (new DeviceInformation()).getManufacturer();
     }
 
     @Override
     public int getVersion() {
-        // TODO Auto-generated method stub
         return 0;
-    }
-
-    @Override
-    public Object getSensor() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     @Override
@@ -106,15 +128,8 @@ public class AudioSensor extends AbstractSensor {
     }
 
     @Override
-    public void setSensor(Object sensor) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public String toString() {
-        // TODO Auto-generated method stub
-        return null;
+        return mName;
     }
 
     @Override
@@ -122,5 +137,4 @@ public class AudioSensor extends AbstractSensor {
         // TODO Auto-generated method stub
         return false;
     }
-
 }

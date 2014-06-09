@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 
+import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
@@ -18,6 +19,7 @@ import android.hardware.SensorManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 public class RunExperimentService extends Service {
 
@@ -62,19 +64,30 @@ public class RunExperimentService extends Service {
         ArrayList<AbstractSensor> lstSensors = new ArrayList<AbstractSensor>();
 
         while (iter.hasNext()) {
-            AndroidSensor sensor = (AndroidSensor) iter.next();
-            if (sensor.isSelected()) {
-                Log.i("SensorDataCollector",
-                        "RunExperimentService::onHandleIntent(): process sensor "
-                                + sensor.getName());
+            AbstractSensor abstractSensor = (AbstractSensor) iter.next();
+            switch (abstractSensor.getMajorType()) {
+                case AbstractSensor.ANDROID_SENSOR:
+                    AndroidSensor sensor = (AndroidSensor) abstractSensor;
+                    if (sensor.isSelected()) {
+                        Log.i("SensorDataCollector",
+                                "RunExperimentService::onHandleIntent(): process sensor "
+                                        + sensor.getName());
 
-                Channel channel = StoreSingleton.getInstance().createChannel(sensor.getName());
-                AndroidSensorEventListener listener =
-                        new AndroidSensorEventListener(channel);
-                sensor.setListener(listener);
-                sensorManager.registerListener(listener, (Sensor) sensor.getSensor(),
-                        sensor.getSamplingInterval());
-                lstSensors.add(sensor);
+                        Channel channel = StoreSingleton.getInstance().createChannel(
+                                sensor.getName());
+                        AndroidSensorEventListener listener =
+                                new AndroidSensorEventListener(channel);
+                        sensor.setListener(listener);
+                        sensorManager.registerListener(listener, (Sensor) sensor.getSensor(),
+                                sensor.getSamplingInterval());
+                        lstSensors.add(sensor);
+                    }
+                    break;
+                default:
+                    Log.e("SensorDataCollector",
+                            "RunExperimentService::onHandleIntent(): process sensor type "
+                                    + abstractSensor.getMajorType() + ", but not implemented");
+                    break;                    
             }
         }
         experiment.setSensors(lstSensors);
@@ -90,10 +103,21 @@ public class RunExperimentService extends Service {
         Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
 
         while (iter.hasNext()) {
-            AndroidSensor sensor = (AndroidSensor) iter.next();
-            if (sensor.isSelected()) {
-                AndroidSensorEventListener listener = sensor.getListener();
-                sensorManager.unregisterListener(listener);
+            AbstractSensor abstractSensor = (AbstractSensor) iter.next();
+            switch (abstractSensor.getMajorType()) {
+                case AbstractSensor.ANDROID_SENSOR:
+                    AndroidSensor sensor = (AndroidSensor) abstractSensor;
+
+                    if (sensor.isSelected()) {
+                        AndroidSensorEventListener listener = sensor.getListener();
+                        sensorManager.unregisterListener(listener);
+                    }
+                    break;
+                default:
+                    Log.e("SensorDataCollector",
+                            "RunExperimentService::onHandleIntent(): process sensor type "
+                                    + abstractSensor.getMajorType() + ", but not implemented");
+                    break;
             }
         }
 
