@@ -30,6 +30,7 @@ public class CreateExperimentActivityFunctionTests extends
     
     private CreateExperimentActivity mCreateExperimentActivity;
     private ListView mListOperations;
+    private EditText mEditText;
     
     public CreateExperimentActivityFunctionTests() {
         super(CreateExperimentActivity.class);
@@ -59,23 +60,12 @@ public class CreateExperimentActivityFunctionTests extends
          * getInstrumentation()
          * .addMonitor(CreateExperimentActivity.class.getName(), null, false);
          */
-        final ListView listOperations = (ListView) mCreateExperimentActivity
+        mListOperations = (ListView) mCreateExperimentActivity
                 .findViewById(R.id.lv_operations);
-        assertNotNull("Menu with operations has not been loaded", listOperations);
-        assertTrue("listOperations.getCount() is not 3", listOperations.getCount() == 3);
+        assertNotNull("Menu with operations has not been loaded", mListOperations);
+        assertTrue("listOperations.getCount() is not 3", mListOperations.getCount() == 3);
 
-        getInstrumentation().runOnMainSync(new Runnable() {
-
-            @Override
-            public void run() {
-
-                listOperations.performItemClick(listOperations.getAdapter().getView(2, null, null),
-                        2, listOperations.getAdapter()
-                                .getItemId(2));
-            }
-
-        });
-
+        clickOperation(2);
         getInstrumentation().waitForIdleSync();
 
         ExperimentSensorSelectionFragment sensorSelectionFragment = mCreateExperimentActivity
@@ -201,22 +191,12 @@ public class CreateExperimentActivityFunctionTests extends
          * getInstrumentation()
          * .addMonitor(CreateExperimentActivity.class.getName(), null, false);
          */
-        final ListView listOperations = (ListView) mCreateExperimentActivity
+        mListOperations = (ListView) mCreateExperimentActivity
                 .findViewById(R.id.lv_operations);
-        assertNotNull("Menu with operations has not been loaded", listOperations);
-        assertTrue("listOperations.sgetCount() is not 3", listOperations.getCount() == 3);
+        assertNotNull("Menu with operations has not been loaded", mListOperations);
+        assertTrue("listOperations.sgetCount() is not 3", mListOperations.getCount() == 3);
 
-        getInstrumentation().runOnMainSync(new Runnable() {
-
-            @Override
-            public void run() {
-            	listOperations.performItemClick(listOperations.getAdapter().getView(0, null, null),
-                        0, listOperations.getAdapter()
-                                .getItemId(0));
-            }
-
-        });
-
+        clickOperation(0);
         getInstrumentation().waitForIdleSync();
 
         ExperimentEditTagsFragment tagFragment = mCreateExperimentActivity
@@ -281,7 +261,7 @@ public class CreateExperimentActivityFunctionTests extends
         this.sendKeys(KeyEvent.KEYCODE_BACK);          
         getInstrumentation().waitForIdleSync();
  
-        LinearLayout layout = (LinearLayout) listOperations.getAdapter().getView(0,  null, null).findViewById(R.id.layout_subtext);
+        LinearLayout layout = (LinearLayout) mListOperations.getAdapter().getView(0,  null, null).findViewById(R.id.layout_subtext);
         assertNotNull("layout should not be null", layout);
         assertTrue("tag list contains at least one member", tagList.size() > 0);
         assertTrue("layout has at least one child", layout.getChildCount() > 0);
@@ -292,70 +272,83 @@ public class CreateExperimentActivityFunctionTests extends
        
     public void testExperimentNoteSetupFunction() throws Exception {
 
-        final ListView listOperations = (ListView) mCreateExperimentActivity
+        mListOperations = (ListView) mCreateExperimentActivity
                 .findViewById(R.id.lv_operations);
-        assertNotNull("Menu with operations has not been loaded", listOperations);
-        assertTrue("listOperations.sgetCount() is not 3", listOperations.getCount() == 3);
+        assertNotNull("Menu with operations has not been loaded", mListOperations);
+        assertTrue("listOperations.sgetCount() is not 3", mListOperations.getCount() == 3);
 
-        getInstrumentation().runOnMainSync(new Runnable() {
-
-            @Override
-            public void run() {
-                listOperations.performItemClick(listOperations.getAdapter().getView(1, null, null),
-                        1, listOperations.getAdapter()
-                                .getItemId(1));
-            }
-
-        });
-
+        clickOperation(1);
         getInstrumentation().waitForIdleSync();
 
         ExperimentEditNotesFragment notesFragment = mCreateExperimentActivity
                 .getExperimentEditNotesFragment();
         assertNotNull("Note editing fragment failed to load", notesFragment);
-        final EditText editTextNote = (EditText) notesFragment.getView().findViewById(R.id.edittext_experiment_note_editing_note);
-        assertNotNull("Failed to get EditText from View", editTextNote); 
+        mEditText = (EditText) mCreateExperimentActivity.findViewById(R.id.edittext_experiment_note_editing_note);
+        assertNotNull("Failed to get EditText from View", mEditText);
+        
         getInstrumentation().runOnMainSync(new Runnable() {
 
             @Override
             public void run() {
-                editTextNote.setText("Test note"); 
+            	mEditText.setText("Test note"); 
             }
 
         });
-
         getInstrumentation().waitForIdleSync();
-        final Button addButton = (Button) notesFragment.getView().findViewById(R.id.button_experiment_note_editing_add_note);
+        
+        Button addButton = (Button) mCreateExperimentActivity.findViewById(R.id.button_experiment_note_editing_add_note);
         assertNotNull("Button selection failed to load", addButton);
-        getInstrumentation().runOnMainSync(new Runnable() {
-
-            @Override
-            public void run() {
-                 addButton.performClick();
-            }
-
-        });
-
+        
+        TouchUtils.clickView(this, addButton);
         getInstrumentation().waitForIdleSync();
+        
         Experiment noteExperiment = mCreateExperimentActivity.getExperiment();
         List<Note> noteList = noteExperiment.getNotes();
         assertNotNull("TagList failed to load", noteList);
         assertTrue("Tag is less than 1", noteList.size() > 0);
+        
+        clickOperation(1);
+        getInstrumentation().waitForIdleSync();
+        
+        final EditText editTextNote = (EditText) mCreateExperimentActivity.findViewById(R.id.edittext_experiment_note_editing_note);
+        getInstrumentation().runOnMainSync(new Runnable() {
 
+            @Override
+            public void run() {
+                editTextNote.setText("Test note 2"); 
+            }
+
+        });
+        getInstrumentation().waitForIdleSync();
+        
+        addButton = (Button) mCreateExperimentActivity.findViewById(R.id.button_experiment_note_editing_add_note);
+        TouchUtils.clickView(this, addButton);
+        getInstrumentation().waitForIdleSync();
+        
+        noteList = noteExperiment.getNotes();
+        
         this.sendKeys(KeyEvent.KEYCODE_BACK);
           
         getInstrumentation().waitForIdleSync();
  
-        LinearLayout layout = (LinearLayout) listOperations.getAdapter().getView(1,  null, null).findViewById(R.id.layout_subtext);
-        assertNotNull("layout should not be null", layout);
-        assertTrue("tag list contains at least one member", noteList.size() > 0);
-        assertTrue("layout has at least one child", layout.getChildCount() > 0);
-        assertTrue("The number of tags displayed should be equal to the size of the tag list", layout.getChildCount() == noteList.size());
+        LinearLayout notesLayout = (LinearLayout) mListOperations.getAdapter().getView(1,  null, null).findViewById(R.id.layout_subtext);
+        LinearLayout tagsLayout = (LinearLayout) mListOperations.getAdapter().getView(0,  null, null).findViewById(R.id.layout_subtext);
+        assertNotNull("notesLayout should not be null", notesLayout);
+        assertNotNull("tagsLayout should not be null", tagsLayout);
+        assertTrue("Notes list must contains at least one member", noteList.size() > 0);
+        assertTrue("Layout must have at least one child", notesLayout.getChildCount() > 0);
+        TextView tvNote = (TextView) notesLayout.getChildAt(0);
+        assertTrue("The notes layout should display the last created note", tvNote.getText().toString().contains("Test note 2"));
+        
+        //Tests if the layout is being recycled by the ListView adapter
+        assertTrue("Notes and Tags layout should not be equal", notesLayout.getChildCount()!=tagsLayout.getChildCount());
+        
+        
+        
     }    
 
-    public void testNewNoteEmptyTextField(){
-    	final EditText mNoteEditText;
-    	Button mButtonAddTag;
+    public void testNewNoteEmptyTextField(){    	
+    	Button mButtonAddNote;
     	
     	mListOperations = (ListView) mCreateExperimentActivity
                 .findViewById(R.id.lv_operations);
@@ -366,39 +359,34 @@ public class CreateExperimentActivityFunctionTests extends
 
         getInstrumentation().waitForIdleSync();
         
-        mNoteEditText=(EditText) mCreateExperimentActivity.
+        mEditText = (EditText) mCreateExperimentActivity.
         		findViewById(R.id.edittext_experiment_note_editing_note);
         
-        assertNotNull("The edit note text field has not been loaded.",mNoteEditText);
+        assertNotNull("The edit note text field has not been loaded.", mEditText);
         
         getInstrumentation().runOnMainSync(new Runnable() {
 			@Override
 			public void run() {
-				mNoteEditText.getText().append("testing");
+				mEditText.setText("testing");
 			}
 		});
         
         getInstrumentation().waitForIdleSync();
         
-        mButtonAddTag=(Button) mCreateExperimentActivity.
+        mButtonAddNote=(Button) mCreateExperimentActivity.
         		findViewById(R.id.button_experiment_note_editing_add_note);
         
-        assertNotNull("The button add new tag failed to load",mButtonAddTag);
+        assertNotNull("The button add new tag failed to load",mButtonAddNote);
         
-        TouchUtils.clickView(this, mButtonAddTag);
-        
+        TouchUtils.clickView(this, mButtonAddNote);
         getInstrumentation().waitForIdleSync();
         
         clickOperation(1);
-        
-        getInstrumentation().waitForIdleSync();
-        
-        EditText mNoteEditText2=(EditText) mCreateExperimentActivity.
-        		findViewById(R.id.edittext_experiment_note_editing_note);
+        getInstrumentation().waitForIdleSync();               
         
         assertEquals("The edit text is not empty when a new note is being created",
         		"", 
-        		mNoteEditText2.getText().toString());
+        		mEditText.getText().toString());
     }
 
 	private void clickOperation(final int op) {
