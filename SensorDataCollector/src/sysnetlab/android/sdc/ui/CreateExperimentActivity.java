@@ -154,8 +154,6 @@ public class CreateExperimentActivity extends FragmentActivity
                 }
                 break;
             case AbstractSensor.AUDIO_SENSOR:
-                Log.i("SensorDataCollector", "Audio Sensor is a todo.");
-                // TODO: todo ...
                 break;
             case AbstractSensor.CAMERA_SENSOR:
                 // TODO: todo ...

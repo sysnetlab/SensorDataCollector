@@ -177,6 +177,10 @@ public class AudioRecordSettingDataSource {
         }
 
         cursor.close();
+        
+        Log.i("SensorDataCollector",
+                "AudioRecordSettingDataSource::getAllAudioSources() returns "
+                        + listAudioSources.size() + " sources");        
 
         return listAudioSources;
     }

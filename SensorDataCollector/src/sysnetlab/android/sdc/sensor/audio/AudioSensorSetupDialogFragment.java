@@ -12,6 +12,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.widget.ListView;
 
 public class AudioSensorSetupDialogFragment extends DialogFragment {
@@ -78,15 +79,20 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                Log.i("SensorDataCollector", "AudioSensorSetupDialog::SOURCE_SLECT: which = " + which);
                                 AudioSource source = listSources.get(which);
                                 List<AudioRecordParameter> params = lookupAudioRecordParameter(source);
                                 if (params == null || params.isEmpty()) {
+                                    Log.i("SensorDataCollector", "AudioSensorSetupDialog::SOURCE_SELECT:params is empty");                                
                                     return;
                                 }
 
                                 AudioRecordParameter p = params.get(0);
 
+                                Log.i("SensorDataCollector", "AudioSensorSetupDialog::SOURCE_SLECT:BEFORE:SourceId = " + mAudioRecordParameter.getSource().getSourceId());                                
                                 mAudioRecordParameter.setSource(source);
+                                Log.i("SensorDataCollector", "AudioSensorSetupDialog::SOURCE_SLECT:AFTER:SourceId = " + mAudioRecordParameter.getSource().getSourceId());                                
+                                
                                 mAudioRecordParameter.setChannel(p.getChannel());
                                 mAudioRecordParameter.setEncoding(p.getEncoding());
                                 mAudioRecordParameter.setSamplingRate(p.getSamplingRate());

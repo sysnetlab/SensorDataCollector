@@ -46,6 +46,13 @@ public class ExperimentSensorSetupFragment extends Fragment {
         // TODO: handle configuration changes
         mAudioRecordSettingDataSource = new AudioRecordSettingDataSource(getActivity());
         mAudioRecordSettingDataSource.open();
+        if (!mAudioRecordSettingDataSource.isDataSourceReady()) {
+            // add progress wheel
+            // if false, disable audio recording
+            mAudioRecordSettingDataSource.prepareDataSource();
+        }
+        mAudioRecordParameters = mAudioRecordSettingDataSource.getAllAudioRecordParameters();
+
         
         switch (mSensor.getMajorType()) {
             case AbstractSensor.ANDROID_SENSOR:
@@ -149,6 +156,7 @@ public class ExperimentSensorSetupFragment extends Fragment {
                 .findViewById(R.id.edittext_sensor_steup_sampling_rate);
         Button btnSetSamplingRate = (Button) mView
                 .findViewById(R.id.button_sensor_setup_set_parameter);
+        btnSetSamplingRate.setVisibility(View.VISIBLE);
         TextView tvSamplingRate = (TextView) mView
                 .findViewById(R.id.textview_sensor_setup_sampling_rate);
 
@@ -173,15 +181,12 @@ public class ExperimentSensorSetupFragment extends Fragment {
         }
     }
     
-    private void updateAudioSensorSetupView() {
-        if (!mAudioRecordSettingDataSource.isDataSourceReady()) {
-            // add progress wheel
-            // if false, disable audio recording
-            mAudioRecordSettingDataSource.prepareDataSource();
-        }
-        mAudioRecordParameters = mAudioRecordSettingDataSource.getAllAudioRecordParameters();
-        ((AudioSensor) mSensor).setAudioRecordParameter(mAudioRecordParameters.get(0));
-
+    private void updateAudioSensorSetupView() {    
+        Button btnSetSamplingRate = (Button) mView
+                .findViewById(R.id.button_sensor_setup_set_parameter);
+        btnSetSamplingRate.setVisibility(View.GONE);
+        
+        
         TextView tv = (TextView) mView.findViewById(R.id.textview_sensor_setup_sensor_name);
         tv.setText(mSensor.getName());
 
@@ -228,4 +233,5 @@ public class ExperimentSensorSetupFragment extends Fragment {
         final FragmentManager fm = getActivity().getSupportFragmentManager();
         newFragment.show(fm, "dialog");   
     }
+
 }

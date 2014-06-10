@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import sysnetlab.android.sdc.sensor.audio.AudioRecordParameter;
+import sysnetlab.android.sdc.sensor.audio.AudioRecordSettingDataSource;
 import sysnetlab.android.sdc.sensor.audio.AudioSensor;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -20,7 +22,7 @@ public class SensorDiscoverer {
             mListAbstractSensors = new ArrayList<AbstractSensor>();
 
             addAndroidSensorsToList(context);
-            addAudioSensorToList();
+            addAudioSensorToList(context);
         }
         return mListAbstractSensors;
     }
@@ -40,8 +42,19 @@ public class SensorDiscoverer {
     }
     
     
-    private static void addAudioSensorToList() {
+    private static void addAudioSensorToList(Context context) {
         AudioSensor audioSensor = AudioSensor.getInstance();
+        
+        AudioRecordSettingDataSource dbSource = new AudioRecordSettingDataSource(context);
+        dbSource.open();
+        if (!dbSource.isDataSourceReady()) {
+            dbSource.prepareDataSource();
+        }
+        List<AudioRecordParameter> listParams = dbSource.getAllAudioRecordParameters();
+        dbSource.close();
+        
+        audioSensor.setAudioRecordParameter(listParams.get(0));
+        
         mListAbstractSensors.add(audioSensor);
     }
 }
