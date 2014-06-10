@@ -18,12 +18,11 @@ public class AudioRecordSettingFragment extends Fragment {
         ds.open();
         
         if (!ds.isDataSourceReady()) {
-            mParams = AudioSensorHelper.getValidRecordingParameters();
-            ds.addAllAudioRecordParameters(mParams);
-        } else {
-            mParams = ds.getAllAudioRecordParameters();
-        }
+            ds.prepareDataSource();
+        } 
         
+        mParams = ds.getAllAudioRecordParameters();
+               
         ds.close();
     }
 

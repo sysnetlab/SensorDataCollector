@@ -529,7 +529,7 @@ public class CreateExperimentActivity extends FragmentActivity
     public void onBtnClearClicked_ExperimentSensorSelectionFragment(boolean checked) {
         Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
         while (iter.hasNext()) {
-            AndroidSensor sensor = (AndroidSensor) iter.next();            
+            AbstractSensor sensor = (AbstractSensor) iter.next();            
                 sensor.setSelected(checked);            
         }
 

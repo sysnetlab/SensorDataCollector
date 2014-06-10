@@ -7,6 +7,8 @@ import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorProperty;
+import sysnetlab.android.sdc.sensor.audio.AudioRecordParameter;
+import sysnetlab.android.sdc.sensor.audio.AudioSensor;
 import sysnetlab.android.sdc.ui.adaptors.SensorPropertyListAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -87,8 +89,34 @@ public class UserInterfaceUtil {
 
                 break;
             case AbstractSensor.AUDIO_SENSOR:
-                Log.i("SensorDataCollector", "Audio Sensor is a todo.");
-                // TODO: todo ...
+                AudioSensor audioSensor = (AudioSensor) sensor;
+
+                AudioRecordParameter param = audioSensor.getAudioRecordParameter();
+
+                property = new SensorProperty(activity.getResources().getString(
+                        R.string.text_audio_source), activity.getResources().getString(
+                        param.getSource().getSourceNameResId()));
+                lstSensorProperties.add(property);
+
+                property = new SensorProperty(activity.getResources().getString(
+                        R.string.text_audio_channel_in), activity.getResources().getString(
+                        param.getChannel().getChannelNameResId()));
+                lstSensorProperties.add(property);
+
+                property = new SensorProperty(activity.getResources().getString(
+                        R.string.text_audio_encoding), activity.getResources().getString(
+                        param.getEncoding().getEncodingNameResId()));
+                lstSensorProperties.add(property);
+
+                property = new SensorProperty(activity.getResources().getString(
+                        R.string.text_audio_sampling_rate), Integer.toString(param
+                        .getSamplingRate()));
+                lstSensorProperties.add(property);
+
+                property = new SensorProperty(activity.getResources().getString(
+                        R.string.text_audio_min_buffer_size), Integer.toString(param.getMinBufferSize()));
+                lstSensorProperties.add(property);
+
                 break;
             case AbstractSensor.CAMERA_SENSOR:
                 // TODO: todo ...

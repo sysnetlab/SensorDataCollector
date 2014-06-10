@@ -9,6 +9,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class AudioRecordSettingDataSource {
 
@@ -29,6 +30,10 @@ public class AudioRecordSettingDataSource {
             AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_IN_ID,
             AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_IN_RES_ID            
     };
+    private String[] audioSourceColumns = {
+            AudioRecordSettingDBHelper.COLUMN_NAME_AUDIO_SOURCE_ID,
+            AudioRecordSettingDBHelper.COLUMN_NAME_AUDIO_SOURCE_RES_ID            
+    };    
     private String[] statusColumns = {
             AudioRecordSettingDBHelper.COLUMN_NAME_STATUS      
     };
@@ -72,7 +77,19 @@ public class AudioRecordSettingDataSource {
         }
     }
     
-    public boolean addAllAudioRecordParameters(List<AudioRecordParameter> params) {
+    private boolean makeDataSourceReady() {
+        ContentValues values = new ContentValues();
+        
+        values.put(AudioRecordSettingDBHelper.COLUMN_NAME_STATUS, 1);
+
+        if (database.insert(AudioRecordSettingDBHelper.TABLE_AUDIORECORDDISCOVERSTATUS, null, values) == -1) {
+            return false;
+        } else {
+            return true;
+        }        
+    }
+    
+    private boolean addAllAudioRecordParameters(List<AudioRecordParameter> params) {
         database.beginTransaction();
         for (AudioRecordParameter p : params) {
             if (!insertAudioRecordParameter(p)) {
@@ -80,9 +97,20 @@ public class AudioRecordSettingDataSource {
                 return false;
             }
         }
+        
+        if (!makeDataSourceReady()) {
+            database.endTransaction();
+            return false;
+        }
+        
         database.setTransactionSuccessful();
         database.endTransaction();
         return true;
+    }
+    
+    public boolean prepareDataSource() {
+        List<AudioRecordParameter> params = AudioSensorHelper.getValidRecordingParameters();
+        return addAllAudioRecordParameters(params);
     }
 
     public List<AudioRecordParameter> getAllAudioRecordParameters() {
@@ -99,7 +127,47 @@ public class AudioRecordSettingDataSource {
         }
 
         cursor.close();
+        
+        Log.i("SensorDataCollector",
+                "AudioRecordSettingDataSource::getAllAudioRecodParameters() returns "
+                        + params.size() + " parameters");
         return params;
+    }
+    
+    public List<AudioChannelIn> getAllAudioChannelIns() {
+        List<AudioChannelIn> listAudioChannelIn = new ArrayList<AudioChannelIn>();
+
+        Cursor cursor = database.query(true, AudioRecordSettingDBHelper.TABLE_AUDIORECORDSETTINGS,
+                audioChannelInColumns, null, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            AudioChannelIn c = cursorToAudioChannelIn(cursor);
+            listAudioChannelIn.add(c);
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+
+        return listAudioChannelIn;
+    }
+    
+    public List<AudioSource> getAllAudioSources() {
+        List<AudioSource> listAudioSources = new ArrayList<AudioSource>();
+
+        Cursor cursor = database.query(true, AudioRecordSettingDBHelper.TABLE_AUDIORECORDSETTINGS,
+                audioSourceColumns, null, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            AudioSource s = cursorToAudioSource(cursor);
+            listAudioSources.add(s);
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+
+        return listAudioSources;        
     }
     
     public boolean isDataSourceReady() {
@@ -109,7 +177,10 @@ public class AudioRecordSettingDataSource {
 
         cursor.moveToFirst();
         
-        int status = cursor.getInt(0);
+        int status = 0;
+        if (!cursor.isAfterLast()) {
+            status = cursor.getInt(0);
+        }
 
         cursor.close();
         
@@ -130,5 +201,13 @@ public class AudioRecordSettingDataSource {
         param.setMinBufferSize(cursor.getInt(8));
 
         return param;
+    }
+    
+    private AudioChannelIn cursorToAudioChannelIn(Cursor cursor) {
+        return new AudioChannelIn(cursor.getInt(0), cursor.getInt(1));
+    }
+    
+    private AudioSource cursorToAudioSource(Cursor cursor) {
+        return new AudioSource(cursor.getInt(0), cursor.getInt(1));
     }
 }

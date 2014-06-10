@@ -15,6 +15,8 @@ public class AudioSensor extends AbstractSensor {
     
     // formulate in a producer/consumer paradigm
     private AudioRecord mAudioRecord;
+    AudioRecordParameter mAudioRecordParameter;
+    
     private boolean mIsRecording;
     private Thread mRecordingThread;
     private Channel mDataStoreChannel;
@@ -35,15 +37,16 @@ public class AudioSensor extends AbstractSensor {
     }
 
     public AudioSensor(AudioRecordParameter params) {
-        mAudioRecord = new AudioRecord(params.getSource().getSourceId(), params.getSamplingRate(),
-                params.getChannel().getChannelId(), params.getEncoding().getEncodingId(),
-                params.getMinBufferSize());
         super.setMajorType(AbstractSensor.AUDIO_SENSOR);   
         super.setMinorType(AUDIOSENSOR_MICROPHONE);
+        mAudioRecordParameter = params;
     } 
     
     public void startRecording() {
         if (mAudioRecord == null) {
+            mAudioRecord = new AudioRecord(mAudioRecordParameter.getSource().getSourceId(), mAudioRecordParameter.getSamplingRate(),
+                    mAudioRecordParameter.getChannel().getChannelId(), mAudioRecordParameter.getEncoding().getEncodingId(),
+                    mAudioRecordParameter.getMinBufferSize());            
         }
         
         mRecordingThread = new Thread(new Runnable() {
@@ -136,5 +139,13 @@ public class AudioSensor extends AbstractSensor {
     public boolean equals(Object rhs) {
         // TODO Auto-generated method stub
         return false;
+    }
+    
+    public AudioRecordParameter getAudioRecordParameter() {
+        return mAudioRecordParameter;
+    }
+    
+    public void setAudioRecordParameter(AudioRecordParameter param) {
+        mAudioRecordParameter = param;
     }
 }
