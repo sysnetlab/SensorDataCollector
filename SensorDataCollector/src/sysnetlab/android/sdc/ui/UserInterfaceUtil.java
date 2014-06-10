@@ -114,7 +114,7 @@ public class UserInterfaceUtil {
                 lstSensorProperties.add(property);
 
                 property = new SensorProperty(activity.getResources().getString(
-                        R.string.text_audio_min_buffer_size), Integer.toString(param.getMinBufferSize()));
+                        R.string.text_audio_min_buffer_size), Integer.toString(param.getBufferSize()));
                 lstSensorProperties.add(property);
 
                 break;
@@ -167,7 +167,7 @@ public class UserInterfaceUtil {
         listProperties.add(property);
 
         property = new SensorProperty(activity.getResources().getString(
-                R.string.text_audio_min_buffer_size), Integer.toString(param.getMinBufferSize()));
+                R.string.text_audio_min_buffer_size), Integer.toString(param.getBufferSize()));
         listProperties.add(property);    
         
         SensorPropertyListAdapter sensorPropertyListAdaptor = new SensorPropertyListAdapter(

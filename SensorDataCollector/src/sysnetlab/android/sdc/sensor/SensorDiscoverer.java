@@ -53,6 +53,10 @@ public class SensorDiscoverer {
         List<AudioRecordParameter> listParams = dbSource.getAllAudioRecordParameters();
         dbSource.close();
         
+        if (listParams == null || listParams.isEmpty()) {
+            return;
+        }
+        
         audioSensor.setAudioRecordParameter(listParams.get(0));
         
         mListAbstractSensors.add(audioSensor);

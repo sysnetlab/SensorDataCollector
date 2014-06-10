@@ -78,7 +78,7 @@ public class AudioRecordSettingDataSource {
         values.put(AudioRecordSettingDBHelper.COLUMN_NAME_AUDIO_SOURCE_RES_ID, audioRecordParam
                 .getSource().getSourceNameResId());
         values.put(AudioRecordSettingDBHelper.COLUMN_NAME_MIN_BUFFER_SIZE,
-                audioRecordParam.getMinBufferSize());
+                audioRecordParam.getBufferSize());
 
         if (database.insert(AudioRecordSettingDBHelper.TABLE_AUDIORECORDSETTINGS, null, values) == -1) {
             return false;

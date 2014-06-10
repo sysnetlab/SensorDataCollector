@@ -96,7 +96,7 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
                                 mAudioRecordParameter.setChannel(p.getChannel());
                                 mAudioRecordParameter.setEncoding(p.getEncoding());
                                 mAudioRecordParameter.setSamplingRate(p.getSamplingRate());
-                                mAudioRecordParameter.setMinBufferSize(p.getMinBufferSize());
+                                mAudioRecordParameter.setMinBufferSize(p.getBufferSize());
                             }
                         });
 
@@ -143,7 +143,7 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
                                 mAudioRecordParameter.setChannel(c);
                                 mAudioRecordParameter.setEncoding(p.getEncoding());
                                 mAudioRecordParameter.setSamplingRate(p.getSamplingRate());
-                                mAudioRecordParameter.setMinBufferSize(p.getMinBufferSize());
+                                mAudioRecordParameter.setMinBufferSize(p.getBufferSize());
                             }
                         });
 
@@ -193,7 +193,7 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
                                 mAudioRecordParameter.setChannel(c);
                                 mAudioRecordParameter.setEncoding(e);
                                 mAudioRecordParameter.setSamplingRate(p.getSamplingRate());
-                                mAudioRecordParameter.setMinBufferSize(p.getMinBufferSize());
+                                mAudioRecordParameter.setMinBufferSize(p.getBufferSize());
                             }
                         });
 
@@ -245,7 +245,7 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
                                 mAudioRecordParameter.setChannel(c);
                                 mAudioRecordParameter.setEncoding(e);
                                 mAudioRecordParameter.setSamplingRate(samplingRate);
-                                mAudioRecordParameter.setMinBufferSize(p.getMinBufferSize());
+                                mAudioRecordParameter.setMinBufferSize(p.getBufferSize());
                             }
                         });
 
@@ -275,7 +275,7 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
                 for (int i = 0; i < maxMultiplier; i++) {
                     int bufferSize = (i + 1) * minBufferSize;
                     cs[i] = Integer.toString(bufferSize);
-                    if (mAudioRecordParameter.getMinBufferSize() == bufferSize) {
+                    if (mAudioRecordParameter.getBufferSize() == bufferSize) {
                         checkedItem = i;
                     }
                 }

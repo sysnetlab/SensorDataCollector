@@ -1,6 +1,8 @@
 
 package sysnetlab.android.sdc.sensor.audio;
 
+import java.util.Date;
+
 import android.media.AudioRecord;
 import sysnetlab.android.sdc.datacollector.DeviceInformation;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
@@ -20,8 +22,10 @@ public class AudioSensor extends AbstractSensor {
     private boolean mIsRecording;
     private Thread mRecordingThread;
     private Channel mDataStoreChannel;
-    private short[] mShortBuffer; 
-    private int mBufferSize;
+    private short[] mShortBuffer;
+    
+    private Date mTimeStart;
+    private Date mTimeEnd;
 
     public static AudioSensor getInstance() {
         if (instance == null) {
@@ -46,13 +50,12 @@ public class AudioSensor extends AbstractSensor {
         if (mAudioRecord == null) {
             mAudioRecord = new AudioRecord(mAudioRecordParameter.getSource().getSourceId(), mAudioRecordParameter.getSamplingRate(),
                     mAudioRecordParameter.getChannel().getChannelId(), mAudioRecordParameter.getEncoding().getEncodingId(),
-                    mAudioRecordParameter.getMinBufferSize());            
+                    mAudioRecordParameter.getBufferSize());            
         }
         
         mRecordingThread = new Thread(new Runnable() {
             public void run() {
-                // TODO
-                // writeAudioData();
+                writeAudioData();
             }
         }, "SDCAudioRecord");
 
@@ -76,7 +79,7 @@ public class AudioSensor extends AbstractSensor {
     
     public void writeAudioData() {
         while (mIsRecording) {
-            mAudioRecord.read(mShortBuffer, 0, mBufferSize);
+            mAudioRecord.read(mShortBuffer, 0, mAudioRecordParameter.getBufferSize());
 
             System.out.println("Short writing to file" + mShortBuffer.toString());
             // ToDo
@@ -146,5 +149,21 @@ public class AudioSensor extends AbstractSensor {
     
     public void setAudioRecordParameter(AudioRecordParameter param) {
         mAudioRecordParameter = param;
+    }
+    
+    public Date getTimeStart() {
+        return mTimeStart;
+    }
+    
+    public void setTimeStart(Date d) {
+        mTimeStart = d;
+    }
+    
+    public Date getTimeEnd() {
+        return mTimeEnd;
+    }
+    
+    public void setTimeEnd(Date d) {
+        mTimeEnd = d;
     }
 }

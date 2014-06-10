@@ -11,6 +11,7 @@ import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
+import sysnetlab.android.sdc.sensor.audio.AudioSensor;
 import android.app.Service;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -81,6 +82,21 @@ public class RunExperimentService extends Service {
                         lstSensors.add(sensor);
                     }
                     break;
+                case AbstractSensor.AUDIO_SENSOR:
+                    AudioSensor audioSensor = (AudioSensor) abstractSensor;
+                    if (audioSensor.isSelected()) {
+                        Log.i("SensorDataCollector",
+                                "RunExperimentService::onHandleIntent(): process sensor "
+                                        + audioSensor.getName());
+
+                        Channel channel = StoreSingleton.getInstance().createChannel(
+                                audioSensor.getName());
+                        //
+                        
+                        //
+                        lstSensors.add(audioSensor);
+                    }
+                    break;
                 default:
                     Log.e("SensorDataCollector",
                             "RunExperimentService::onHandleIntent(): process sensor type "
@@ -110,6 +126,9 @@ public class RunExperimentService extends Service {
                         AndroidSensorEventListener listener = sensor.getListener();
                         sensorManager.unregisterListener(listener);
                     }
+                    break;
+                case AbstractSensor.AUDIO_SENSOR:
+                    // TODO
                     break;
                 default:
                     Log.e("SensorDataCollector",
