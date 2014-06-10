@@ -1,7 +1,5 @@
 package sysnetlab.android.sdc.ui.adaptors;
 
-import java.util.List;
-
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.Note;

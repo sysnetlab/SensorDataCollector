@@ -132,7 +132,7 @@ public class CreateExperimentActivity extends FragmentActivity
     }           
     
     @Override
-    public void onBtnSetSamplingRateClicked_SensorSetupFragment(View v, AbstractSensor sensor) {
+    public void onBtnSetParameterClicked_SensorSetupFragment(View v, AbstractSensor sensor) {
         Log.i("SensorDataCollector", "SensorSetupFragment: Button Confirm clicked.");
 
         EditText et = (EditText) findViewById(R.id.edittext_sensor_steup_sampling_rate);
@@ -174,10 +174,6 @@ public class CreateExperimentActivity extends FragmentActivity
                 Log.i("SensorDataCollector", "unknown sensor. unexpected.");
                 break;
         }
-
-        // getSupportFragmentManager().popBackStack();
-        // FragmentUtil.switchToFragment(this,
-        // mExperimentSensorSelectionFragment, "sensorselection");
     }
 
     @Override

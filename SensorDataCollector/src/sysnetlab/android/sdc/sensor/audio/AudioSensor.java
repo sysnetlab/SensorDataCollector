@@ -95,7 +95,6 @@ public class AudioSensor extends AbstractSensor {
             sData[i] = 0;
         }
         return bytes;
-
     }
     
     @Override

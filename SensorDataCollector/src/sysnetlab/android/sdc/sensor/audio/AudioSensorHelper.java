@@ -25,10 +25,10 @@ public class AudioSensorHelper {
     };
 
     final static AudioChannelIn[] CHANNEL_IN_ARRAY = {
+            new AudioChannelIn(AudioFormat.CHANNEL_IN_DEFAULT, R.string.text_channel_in_default),
             new AudioChannelIn(AudioFormat.CHANNEL_IN_BACK, R.string.text_channel_in_back),
             new AudioChannelIn(AudioFormat.CHANNEL_IN_BACK_PROCESSED,
                     R.string.text_channel_in_back_processed),
-            new AudioChannelIn(AudioFormat.CHANNEL_IN_DEFAULT, R.string.text_channel_in_default),
             new AudioChannelIn(AudioFormat.CHANNEL_IN_FRONT, R.string.text_channel_in_front),
             new AudioChannelIn(AudioFormat.CHANNEL_IN_FRONT_PROCESSED,
                     R.string.text_channel_in_front_processed),
@@ -60,12 +60,12 @@ public class AudioSensorHelper {
     };
 
     private static AudioSource[] AUDIO_SOURCE_ARRAY = {
+        new AudioSource(MediaRecorder.AudioSource.DEFAULT,
+                R.string.text_audio_source_default),
             new AudioSource(MediaRecorder.AudioSource.MIC,
                     R.string.text_audio_source_mic),
             new AudioSource(MediaRecorder.AudioSource.CAMCORDER,
-                    R.string.text_audio_source_camcorder),
-            new AudioSource(MediaRecorder.AudioSource.DEFAULT,
-                    R.string.text_audio_source_default)
+                    R.string.text_audio_source_camcorder)
     };
     
 

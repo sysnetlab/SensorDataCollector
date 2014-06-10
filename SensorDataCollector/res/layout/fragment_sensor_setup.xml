@@ -38,7 +38,7 @@
         android:weightSum="1" >
 
         <Button
-            android:id="@+id/button_sensor_setup_set_sampling_rate"
+            android:id="@+id/button_sensor_setup_set_parameter"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
@@ -46,7 +46,7 @@
             android:layout_marginBottom="12dp"
             android:layout_marginTop="12dp"
             android:layout_weight="1"
-            android:text="@string/text_set_sampling_rate" />
+            android:text="@string/text_set_parameter" />
 
     </LinearLayout>
 

@@ -1,39 +1,32 @@
 
 package sysnetlab.android.sdc.ui.fragments;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.SensorProperty;
-import sysnetlab.android.sdc.sensor.audio.AudioChannelIn;
 import sysnetlab.android.sdc.sensor.audio.AudioRecordParameter;
 import sysnetlab.android.sdc.sensor.audio.AudioRecordSettingDataSource;
 import sysnetlab.android.sdc.sensor.audio.AudioSensor;
-import sysnetlab.android.sdc.sensor.audio.AudioSensorSetupDiaglogFragment;
-import sysnetlab.android.sdc.sensor.audio.AudioSource;
+import sysnetlab.android.sdc.sensor.audio.AudioSensorSetupDialogFragment;
 import sysnetlab.android.sdc.ui.UserInterfaceUtil;
 import sysnetlab.android.sdc.R;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 
 public class ExperimentSensorSetupFragment extends Fragment {
     private OnFragmentClickListener mCallback;
@@ -41,13 +34,10 @@ public class ExperimentSensorSetupFragment extends Fragment {
     private AbstractSensor mSensor;
     private AudioRecordSettingDataSource mAudioRecordSettingDataSource;
     private List<AudioRecordParameter> mAudioRecordParameters;
+    private ListView mListView;
     
-    private ListView mAudioSensorListView;
-    private int mIndexAudioChannelIn  = 0;
-    private int mIndexAudioSource = 0;
-
     public interface OnFragmentClickListener {
-        public void onBtnSetSamplingRateClicked_SensorSetupFragment(View v, AbstractSensor sensor);
+        public void onBtnSetParameterClicked_SensorSetupFragment(View v, AbstractSensor sensor);
     }
 
     @Override
@@ -70,7 +60,7 @@ public class ExperimentSensorSetupFragment extends Fragment {
                 mView = inflater.inflate(R.layout.fragment_audio_sensor_setup, container, false);
 
                 if (mSensor != null) {
-                    updateAudioSensorSetupView(mSensor);
+                    updateAudioSensorSetupView();
                 }
 
                 break; 
@@ -133,10 +123,10 @@ public class ExperimentSensorSetupFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((Button) mView.findViewById(R.id.button_sensor_setup_set_sampling_rate))
+        ((Button) mView.findViewById(R.id.button_sensor_setup_set_parameter))
                 .setOnClickListener(new Button.OnClickListener() {
                     public void onClick(View v) {
-                        mCallback.onBtnSetSamplingRateClicked_SensorSetupFragment(v, mSensor);
+                        mCallback.onBtnSetParameterClicked_SensorSetupFragment(v, mSensor);
                     }
                 });
     }
@@ -158,7 +148,7 @@ public class ExperimentSensorSetupFragment extends Fragment {
         EditText etSamplingRate = (EditText) mView
                 .findViewById(R.id.edittext_sensor_steup_sampling_rate);
         Button btnSetSamplingRate = (Button) mView
-                .findViewById(R.id.button_sensor_setup_set_sampling_rate);
+                .findViewById(R.id.button_sensor_setup_set_parameter);
         TextView tvSamplingRate = (TextView) mView
                 .findViewById(R.id.textview_sensor_setup_sampling_rate);
 
@@ -183,7 +173,7 @@ public class ExperimentSensorSetupFragment extends Fragment {
         }
     }
     
-    private void updateAudioSensorSetupView(AbstractSensor sensor) {
+    private void updateAudioSensorSetupView() {
         if (!mAudioRecordSettingDataSource.isDataSourceReady()) {
             // add progress wheel
             // if false, disable audio recording
@@ -193,28 +183,38 @@ public class ExperimentSensorSetupFragment extends Fragment {
         ((AudioSensor) mSensor).setAudioRecordParameter(mAudioRecordParameters.get(0));
 
         TextView tv = (TextView) mView.findViewById(R.id.textview_sensor_setup_sensor_name);
-        tv.setText(sensor.getName());
+        tv.setText(mSensor.getName());
 
-        ListView listView = (ListView) mView.findViewById(R.id.listview_audio_sensor_setup);
+        mListView = (ListView) mView.findViewById(R.id.listview_audio_sensor_setup);
         
-        UserInterfaceUtil.fillSensorProperties(getActivity(), listView, sensor);
+        UserInterfaceUtil.fillSensorProperties(getActivity(), mListView, mSensor);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
                 SensorProperty property = (SensorProperty) listView.getItemAtPosition(position);
                 
                 if (property.getName().equals(getActivity().getResources().getString(R.string.text_audio_source))) {
-                    showAudioSensorDialog(mAudioRecordSettingDataSource, mAudioRecordParameters, mAudioRecordParameters.get(0), AudioSensorSetupDiaglogFragment.SELECT_SOURCE);
+                    showAudioSensorDialog(mAudioRecordSettingDataSource, mAudioRecordParameters,
+                            ((AudioSensor) mSensor).getAudioRecordParameter(),
+                            AudioSensorSetupDialogFragment.SELECT_SOURCE);
                 } else if (property.getName().equals(getActivity().getResources().getString(R.string.text_audio_channel_in))) {
-                    // TODO    
+                    showAudioSensorDialog(mAudioRecordSettingDataSource, mAudioRecordParameters,
+                            ((AudioSensor) mSensor).getAudioRecordParameter(),
+                            AudioSensorSetupDialogFragment.SELECT_CHANNEL_IN);  
                 } else if (property.getName().equals(getActivity().getResources().getString(R.string.text_audio_encoding))) {
-                    // TODO    
+                    showAudioSensorDialog(mAudioRecordSettingDataSource, mAudioRecordParameters,
+                            ((AudioSensor) mSensor).getAudioRecordParameter(),
+                            AudioSensorSetupDialogFragment.SELECT_ENCODING);    
                 } else if (property.getName().equals(getActivity().getResources().getString(R.string.text_audio_sampling_rate))) {
-                    // TODO    
+                    showAudioSensorDialog(mAudioRecordSettingDataSource, mAudioRecordParameters,
+                            ((AudioSensor) mSensor).getAudioRecordParameter(),
+                            AudioSensorSetupDialogFragment.SELECT_SAMPLING_RATE);   
                 } else if (property.getName().equals(getActivity().getResources().getString(R.string.text_audio_min_buffer_size))) {
-                    // TODO    
+                    showAudioSensorDialog(mAudioRecordSettingDataSource, mAudioRecordParameters,
+                            ((AudioSensor) mSensor).getAudioRecordParameter(),
+                            AudioSensorSetupDialogFragment.SELECT_MIN_BUFFER_SIZE); 
                 }
             }
         });
@@ -222,8 +222,8 @@ public class ExperimentSensorSetupFragment extends Fragment {
     
     private void showAudioSensorDialog(AudioRecordSettingDataSource dbSource,
             List<AudioRecordParameter> allParams, AudioRecordParameter param, int operation) {
-        DialogFragment newFragment = AudioSensorSetupDiaglogFragment.newInstance(dbSource,
-                allParams, param, operation);
+        DialogFragment newFragment = AudioSensorSetupDialogFragment.newInstance(getActivity(), dbSource,
+                allParams, param, mListView, operation);
         
         final FragmentManager fm = getActivity().getSupportFragmentManager();
         newFragment.show(fm, "dialog");   
