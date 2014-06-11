@@ -4,6 +4,7 @@ package sysnetlab.android.sdc.sensor.audio;
 import java.util.Date;
 
 import android.media.AudioRecord;
+import android.text.TextUtils;
 import sysnetlab.android.sdc.datacollector.DeviceInformation;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
@@ -17,7 +18,7 @@ public class AudioSensor extends AbstractSensor {
     
     // formulate in a producer/consumer paradigm
     private AudioRecord mAudioRecord;
-    AudioRecordParameter mAudioRecordParameter;
+    private AudioRecordParameter mAudioRecordParameter;
     
     private boolean mIsRecording;
     private Thread mRecordingThread;
@@ -128,8 +129,8 @@ public class AudioSensor extends AbstractSensor {
 
     @Override
     public boolean isSameSensor(AbstractSensor sensor) {
-        // TODO Auto-generated method stub
-        return false;
+        // same physical sensor, may have different settings
+        return TextUtils.equals(mName,  sensor.getName()); 
     }
 
     @Override
@@ -139,8 +140,25 @@ public class AudioSensor extends AbstractSensor {
 
     @Override
     public boolean equals(Object rhs) {
-        // TODO Auto-generated method stub
-        return false;
+        if (this == rhs) return true;
+        
+        if (!(rhs instanceof AudioSensor)) return false;
+        
+        AudioSensor sensor = (AudioSensor) rhs;
+        
+        if (mAudioRecordParameter == null) { 
+            if (sensor.mAudioRecordParameter != null) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if (!mAudioRecordParameter.equals(sensor.mAudioRecordParameter)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
     }
     
     public AudioRecordParameter getAudioRecordParameter() {

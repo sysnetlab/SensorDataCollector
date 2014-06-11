@@ -16,4 +16,16 @@ public class AudioSource {
     public int getSourceNameResId() {
         return mSourceNameResId;
     }
+    
+    public boolean equals(Object rhs) {
+        if (this == rhs) return true;
+        
+        if (!(rhs instanceof AudioSource)) return false;
+        
+        AudioSource s = (AudioSource) rhs;
+        
+        if (mSourceId != s.mSourceId) return false;
+        
+        return true;
+    }
 }

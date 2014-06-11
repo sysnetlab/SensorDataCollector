@@ -66,6 +66,9 @@ public class SensorUtils {
                     
                     audioSensor.setAudioRecordParameter(listParams.get(0));                    
                 }
+                
+                audioSensor.setId(id);
+                
                 return audioSensor;
             default:
                 throw new RuntimeException("SensorUtils: unexpected major sensor type = "

@@ -113,10 +113,10 @@ public class DataStoreTests extends AndroidTestCase {
 
         
         for (AbstractSensor sensor : listSensors) {
-            Log.d("SensorDataCollector.UnitTest", "Sensor Properties: " + ((AndroidSensor) sensor).getSamplingInterval());                    
-
             switch (sensor.getMajorType()) {
                 case AbstractSensor.ANDROID_SENSOR:
+                    Log.d("SensorDataCollector.UnitTest", "Sensor Properties: " + ((AndroidSensor) sensor).getSamplingInterval());                    
+
                     String channelPath = store.getNewExperimentPath() + "/" + sensor.getName().replace(' ', '_') + ".txt";
                     AbstractStore.Channel channel = null;
                     try {
