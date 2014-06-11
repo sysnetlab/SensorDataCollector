@@ -32,12 +32,10 @@ public class CameraSensor extends AbstractSensor {
         return mCameraId;
     }
 
-    @Override
     public void setSensor(Object camera) {
         mCamera = (Camera) camera;
     }
 
-    @Override
     public Object getSensor() {
         return mCamera;
     }

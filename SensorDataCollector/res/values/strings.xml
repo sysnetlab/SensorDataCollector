@@ -97,7 +97,7 @@
     <string name="text_no_notes">No notes</string>
     <string name="text_sensor_and_sensor_data">Sensor and Sensor Data</string>
     <string name="text_add_note">Add Note</string>
-    <string name="text_set_sampling_rate">Set Sampling Rate</string>
+    <string name="text_set_parameter">Set Parameter(s)</string>
     <string name="text_sampling_rate_is_now_x">The sampling rate is now set to $1%f samples/second.</string>
 	<string name="text_local_service_started">SDCRunExperimentService started.</string>
     <string name="text_local_service_stopped">SDCRunExperimentService stopped.</string>
@@ -123,6 +123,7 @@
     <string name="text_send_to_dropbox">Send to Dropbox</string>
      
     <!-- Audio Record -->
+	<string name="text_audio_channel_in">Audio Channel-In</string>    
     <string name="text_channel_in_back">Channel in back</string>
     <string name="text_channel_in_back_processed">Channel-in back processed</string>
     <string name="text_channel_in_default">Channel in default</string>
@@ -141,12 +142,26 @@
 	<string name="text_channel_in_y_axis">Channel in Y axis</string>
 	<string name="text_channel_in_z_axis">Channel in Z axis</string>
 	
+	<string name="text_audio_encoding">Audio Encoding</string>
 	<string name="text_audio_encoding_default">Encoding Default</string>
 	<string name="text_audio_encoding_pcm_16bit">Encoding PCM 16bit</string>
 	<string name="text_audio_encoding_pcm_8bit">Encoding PCM 8bit</string>
 	
+	<string name="text_audio_source">Audio Source</string>
 	<string name="text_audio_source_mic">Microphone</string>
 	<string name="text_audio_source_camcorder">Camcorder</string>
 	<string name="text_audio_source_default">Default</string>
+	
+	<string name="text_audio_sampling_rate">Sampling Rate</string>
+	
+	<string name="text_audio_min_buffer_size">Minimum Buffer Size</string>
+	
+	<!-- Handling sensors -->
+	<string name="text_sensor_type_x_not_handled">Handling of sensor type %1$d is yet to be implemented.</string>
+	
+	<string name="text_ok">OK</string>
+	
+	<string name="text_select_audio_channel_in">Select an audio channel</string>
+	<string name="text_tap_to_change_setting">Tap to change setting</string>
     
 </resources>

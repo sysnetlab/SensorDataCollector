@@ -16,4 +16,16 @@ public class AudioEncoding {
     public int getEncodingNameResId() {
         return mEncodingNameResId;
     }
+    
+    public boolean equals(Object rhs) {
+        if (this == rhs) return true;
+        
+        if (!(rhs instanceof AudioSource)) return false;
+        
+        AudioEncoding e = (AudioEncoding) rhs;
+        
+        if (mEncodingId != e.mEncodingId) return false;
+        
+        return true;
+    } 
 }

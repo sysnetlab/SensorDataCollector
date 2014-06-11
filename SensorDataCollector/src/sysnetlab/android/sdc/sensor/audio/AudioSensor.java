@@ -1,34 +1,62 @@
 
 package sysnetlab.android.sdc.sensor.audio;
 
+import java.util.Date;
+
 import android.media.AudioRecord;
+import android.text.TextUtils;
+import sysnetlab.android.sdc.datacollector.DeviceInformation;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 
 public class AudioSensor extends AbstractSensor {
+    public final static int AUDIOSENSOR_MICROPHONE = 1;
+
+    private static AudioSensor instance = null;       
+    
+    private String mName = "Audio Sensor (Microphone)";
+    
     // formulate in a producer/consumer paradigm
     private AudioRecord mAudioRecord;
+    private AudioRecordParameter mAudioRecordParameter;
+    
     private boolean mIsRecording;
     private Thread mRecordingThread;
     private Channel mDataStoreChannel;
-    private short[] mShortBuffer; 
-    private int mBufferSize;
+    private short[] mShortBuffer;
+    
+    private Date mTimeStart;
+    private Date mTimeEnd;
+
+    public static AudioSensor getInstance() {
+        if (instance == null) {
+            instance = new AudioSensor();
+        }
+
+        return instance;
+    }
+    
+    protected AudioSensor() {
+        super.setMajorType(AbstractSensor.AUDIO_SENSOR);   
+        super.setMinorType(AUDIOSENSOR_MICROPHONE);
+    }
 
     public AudioSensor(AudioRecordParameter params) {
-        mAudioRecord = new AudioRecord(params.getSource().getSourceId(), params.getSamplingRate(),
-                params.getChannel().getChannelId(), params.getEncoding().getEncodingId(),
-                params.getMinBufferSize());
-
+        super.setMajorType(AbstractSensor.AUDIO_SENSOR);   
+        super.setMinorType(AUDIOSENSOR_MICROPHONE);
+        mAudioRecordParameter = params;
     } 
     
     public void startRecording() {
         if (mAudioRecord == null) {
+            mAudioRecord = new AudioRecord(mAudioRecordParameter.getSource().getSourceId(), mAudioRecordParameter.getSamplingRate(),
+                    mAudioRecordParameter.getChannel().getChannelId(), mAudioRecordParameter.getEncoding().getEncodingId(),
+                    mAudioRecordParameter.getBufferSize());            
         }
         
         mRecordingThread = new Thread(new Runnable() {
             public void run() {
-                // TODO
-                // writeAudioData();
+                writeAudioData();
             }
         }, "SDCAudioRecord");
 
@@ -52,7 +80,7 @@ public class AudioSensor extends AbstractSensor {
     
     public void writeAudioData() {
         while (mIsRecording) {
-            mAudioRecord.read(mShortBuffer, 0, mBufferSize);
+            mAudioRecord.read(mShortBuffer, 0, mAudioRecordParameter.getBufferSize());
 
             System.out.println("Short writing to file" + mShortBuffer.toString());
             // ToDo
@@ -71,56 +99,89 @@ public class AudioSensor extends AbstractSensor {
             sData[i] = 0;
         }
         return bytes;
-
+    }
+    
+    @Override
+    public int getMajorType() {
+        return super.getMajorType();
+    }
+    
+    @Override
+    public int getMinorType() {
+        return super.getMinorType();
     }
 
 
     @Override
     public String getName() {
-        // TODO Auto-generated method stub
-        return null;
+        return mName;
     }
 
     @Override
     public String getVendor() {
-        // TODO Auto-generated method stub
-        return null;
+        return (new DeviceInformation()).getManufacturer();
     }
 
     @Override
     public int getVersion() {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
-    public Object getSensor() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public boolean isSameSensor(AbstractSensor sensor) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public void setSensor(Object sensor) {
-        // TODO Auto-generated method stub
-
+        // same physical sensor, may have different settings
+        return TextUtils.equals(mName,  sensor.getName()); 
     }
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
-        return null;
+        return mName;
     }
 
     @Override
     public boolean equals(Object rhs) {
-        // TODO Auto-generated method stub
-        return false;
+        if (this == rhs) return true;
+        
+        if (!(rhs instanceof AudioSensor)) return false;
+        
+        AudioSensor sensor = (AudioSensor) rhs;
+        
+        if (mAudioRecordParameter == null) { 
+            if (sensor.mAudioRecordParameter != null) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if (!mAudioRecordParameter.equals(sensor.mAudioRecordParameter)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
     }
-
+    
+    public AudioRecordParameter getAudioRecordParameter() {
+        return mAudioRecordParameter;
+    }
+    
+    public void setAudioRecordParameter(AudioRecordParameter param) {
+        mAudioRecordParameter = param;
+    }
+    
+    public Date getTimeStart() {
+        return mTimeStart;
+    }
+    
+    public void setTimeStart(Date d) {
+        mTimeStart = d;
+    }
+    
+    public Date getTimeEnd() {
+        return mTimeEnd;
+    }
+    
+    public void setTimeEnd(Date d) {
+        mTimeEnd = d;
+    }
 }

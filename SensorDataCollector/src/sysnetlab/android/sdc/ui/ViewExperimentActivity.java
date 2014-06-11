@@ -27,10 +27,6 @@ public class ViewExperimentActivity extends FragmentActivity implements
     private ExperimentViewSensorDataFragment mExperimentViewSensorDataFragment;
     private Experiment mExperiment;
 
-    public Experiment getExperiment() {
-        return mExperiment;
-    }   
-    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO handle configuration change
@@ -66,7 +62,7 @@ public class ViewExperimentActivity extends FragmentActivity implements
 
         Log.i("SensorDataCollector", "ViewExperimentActivity.onCreate called.");
     }
-
+    
     @Override
     public void onBtnCloneClicked_ExperimentViewFragment() {
         Intent intent = new Intent(this, CreateExperimentActivity.class);
@@ -124,6 +120,10 @@ public class ViewExperimentActivity extends FragmentActivity implements
         Log.i("SensorDataCollector", "ViewExperimentActivity::onSensorClicked_ExperimentSensorListFragment() called");
         // do nothing
     }
+    
+    public Experiment getExperiment() {
+        return mExperiment;
+    }   
     
     public ExperimentViewFragment getExperimentViewFragment(){
     	return mExperimentViewFragment;

@@ -4,7 +4,6 @@ package sysnetlab.android.sdc.ui.adaptors;
 import java.util.List;
 
 import sysnetlab.android.sdc.sensor.AbstractSensor;
-import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.R;
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -50,7 +49,7 @@ public class SensorListAdapter extends ArrayAdapter<AbstractSensor> {
                     .setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            AndroidSensor sensor = (AndroidSensor) viewHolder.checkbox.getTag();
+                            AbstractSensor sensor = (AbstractSensor) viewHolder.checkbox.getTag();
                             sensor.setSelected(buttonView.isChecked());
                         }
                     });

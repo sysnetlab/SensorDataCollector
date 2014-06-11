@@ -45,11 +45,7 @@ public abstract class AbstractSensor {
     
     public abstract int getVersion();
 
-    public abstract Object getSensor();
-    
     public abstract boolean isSameSensor(AbstractSensor sensor);
-
-    public abstract void setSensor(Object sensor);
 
     public boolean isSelected() {
         return mSelected;

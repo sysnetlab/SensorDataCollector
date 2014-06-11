@@ -5,15 +5,15 @@ public class AudioRecordParameter {
     private AudioChannelIn mChannel;
     private AudioEncoding mEncoding;
     private AudioSource mSource;
-    private int mMinBufferSize;
+    private int mBufferSize;
 
-    AudioRecordParameter(int rate, AudioChannelIn channel, AudioEncoding encoding,
-            AudioSource source, int minBufferSize) {
+    public AudioRecordParameter(int rate, AudioChannelIn channel, AudioEncoding encoding,
+            AudioSource source, int bufferSize) {
         mSamplingRate = rate;
         mChannel = channel;
         mEncoding = encoding;
         mSource = source;
-        mMinBufferSize = minBufferSize;
+        mBufferSize = bufferSize;
     }
 
     public AudioRecordParameter() {
@@ -51,11 +51,43 @@ public class AudioRecordParameter {
         mSource = source;
     }
 
-    public int getMinBufferSize() {
-        return mMinBufferSize;
+    public int getBufferSize() {
+        return mBufferSize;
     }
 
     public void setMinBufferSize(int minBufferSize) {
-        mMinBufferSize = minBufferSize;
+        mBufferSize = minBufferSize;
     }  
+    
+    public boolean equals(Object rhs) {
+        if (this == rhs) return true;
+        
+        if (!(rhs instanceof AudioRecordParameter)) return false;
+        
+        AudioRecordParameter p = (AudioRecordParameter) rhs;
+        
+        if (mSamplingRate != p.mSamplingRate) return false;
+        
+        if (mBufferSize != p.mBufferSize) return false;
+        
+        if (mChannel == null) {
+            if (p.mChannel != null) return false;
+        } else {
+            if (!mChannel.equals(p.mChannel)) return false;
+        }
+        
+        if (mEncoding == null) {
+            if (p.mEncoding != null) return false;
+        } else {
+            if (!mEncoding.equals(p.mEncoding)) return false;            
+        }
+        
+        if (mSource == null) {
+            if (p.mSource != null) return false;
+        } else {
+            if (!mSource.equals(p.mSource)) return false;
+        }
+        
+        return true;
+    }
 }

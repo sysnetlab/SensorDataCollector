@@ -5,6 +5,9 @@ import java.util.List;
 
 import sysnetlab.android.sdc.datacollector.AndroidSensorEventListener;
 import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
+import sysnetlab.android.sdc.sensor.audio.AudioRecordParameter;
+import sysnetlab.android.sdc.sensor.audio.AudioRecordSettingDataSource;
+import sysnetlab.android.sdc.sensor.audio.AudioSensor;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -49,6 +52,24 @@ public class SensorUtils {
                 androidSensor.setId(id);
 
                 return androidSensor;
+            case AbstractSensor.AUDIO_SENSOR:
+                AudioSensor audioSensor = AudioSensor.getInstance();
+                
+                if (audioSensor.getAudioRecordParameter() == null) {
+                    AudioRecordSettingDataSource dbSource = new AudioRecordSettingDataSource(mContext);
+                    dbSource.open();
+                    if (!dbSource.isDataSourceReady()) {
+                        dbSource.prepareDataSource();
+                    }
+                    List<AudioRecordParameter> listParams = dbSource.getAllAudioRecordParameters();
+                    dbSource.close();
+                    
+                    audioSensor.setAudioRecordParameter(listParams.get(0));                    
+                }
+                
+                audioSensor.setId(id);
+                
+                return audioSensor;
             default:
                 throw new RuntimeException("SensorUtils: unexpected major sensor type = "
                         + majorType);

@@ -45,7 +45,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
-import android.text.Editable;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -134,7 +133,7 @@ public class CreateExperimentActivity extends FragmentActivity
     }           
     
     @Override
-    public void onBtnSetSamplingRateClicked_SensorSetupFragment(View v, AbstractSensor sensor) {
+    public void onBtnSetParameterClicked_SensorSetupFragment(View v, AbstractSensor sensor) {
         Log.i("SensorDataCollector", "SensorSetupFragment: Button Confirm clicked.");
 
         EditText et = (EditText) findViewById(R.id.edittext_sensor_steup_sampling_rate);
@@ -156,8 +155,6 @@ public class CreateExperimentActivity extends FragmentActivity
                 }
                 break;
             case AbstractSensor.AUDIO_SENSOR:
-                Log.i("SensorDataCollector", "Audio Sensor is a todo.");
-                // TODO: todo ...
                 break;
             case AbstractSensor.CAMERA_SENSOR:
                 // TODO: todo ...
@@ -176,10 +173,6 @@ public class CreateExperimentActivity extends FragmentActivity
                 Log.i("SensorDataCollector", "unknown sensor. unexpected.");
                 break;
         }
-
-        // getSupportFragmentManager().popBackStack();
-        // FragmentUtil.switchToFragment(this,
-        // mExperimentSensorSelectionFragment, "sensorselection");
     }
 
     @Override
@@ -535,7 +528,7 @@ public class CreateExperimentActivity extends FragmentActivity
     public void onBtnClearClicked_ExperimentSensorSelectionFragment(boolean checked) {
         Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
         while (iter.hasNext()) {
-            AndroidSensor sensor = (AndroidSensor) iter.next();            
+            AbstractSensor sensor = (AbstractSensor) iter.next();            
                 sensor.setSelected(checked);            
         }
 
@@ -557,7 +550,7 @@ public class CreateExperimentActivity extends FragmentActivity
 	        }
     }
     
-    public void onSensorClicked_ExperimentSensorSelectionFragment(AndroidSensor sensor) {
+    public void onSensorClicked_ExperimentSensorSelectionFragment(AbstractSensor sensor) {
         Log.i("SensorDataCollector",
                 "CreateExperimentActivity::onSensorClicked_ExperimentSensorSelectionFragment() called.");
         if (mSensorSetupFragment == null) {

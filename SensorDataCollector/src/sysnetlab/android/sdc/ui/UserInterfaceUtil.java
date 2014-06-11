@@ -7,6 +7,8 @@ import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorProperty;
+import sysnetlab.android.sdc.sensor.audio.AudioRecordParameter;
+import sysnetlab.android.sdc.sensor.audio.AudioSensor;
 import sysnetlab.android.sdc.ui.adaptors.SensorPropertyListAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -42,17 +44,17 @@ public class UserInterfaceUtil {
             lstSensorProperties.add(property);
         }
 
-        property = new SensorProperty(activity.getResources().getString(R.string.text_vendor),
-                sensor.getVendor());
-        lstSensorProperties.add(property);
-
-        property = new SensorProperty(activity.getResources().getString(R.string.text_version),
-                Integer.toString(sensor.getVersion()));
-        lstSensorProperties.add(property);
-
         switch (sensor.getMajorType()) {
             case AbstractSensor.ANDROID_SENSOR:
-                Sensor aSensor = (Sensor) (sensor.getSensor());
+                property = new SensorProperty(activity.getResources().getString(R.string.text_vendor),
+                        sensor.getVendor());
+                lstSensorProperties.add(property);
+
+                property = new SensorProperty(activity.getResources().getString(R.string.text_version),
+                        Integer.toString(sensor.getVersion()));
+                lstSensorProperties.add(property);                
+                
+                Sensor aSensor = (Sensor) (((AndroidSensor) sensor).getSensor());
 
                 property = new SensorProperty(activity.getResources().getString(
                         R.string.text_android_sensor_type),
@@ -87,8 +89,34 @@ public class UserInterfaceUtil {
 
                 break;
             case AbstractSensor.AUDIO_SENSOR:
-                Log.i("SensorDataCollector", "Audio Sensor is a todo.");
-                // TODO: todo ...
+                AudioSensor audioSensor = (AudioSensor) sensor;
+
+                AudioRecordParameter param = audioSensor.getAudioRecordParameter();
+
+                property = new SensorProperty(activity.getResources().getString(
+                        R.string.text_audio_source), activity.getResources().getString(
+                        param.getSource().getSourceNameResId()));
+                lstSensorProperties.add(property);
+
+                property = new SensorProperty(activity.getResources().getString(
+                        R.string.text_audio_channel_in), activity.getResources().getString(
+                        param.getChannel().getChannelNameResId()));
+                lstSensorProperties.add(property);
+
+                property = new SensorProperty(activity.getResources().getString(
+                        R.string.text_audio_encoding), activity.getResources().getString(
+                        param.getEncoding().getEncodingNameResId()));
+                lstSensorProperties.add(property);
+
+                property = new SensorProperty(activity.getResources().getString(
+                        R.string.text_audio_sampling_rate), Integer.toString(param
+                        .getSamplingRate()));
+                lstSensorProperties.add(property);
+
+                property = new SensorProperty(activity.getResources().getString(
+                        R.string.text_audio_min_buffer_size), Integer.toString(param.getBufferSize()));
+                lstSensorProperties.add(property);
+
                 break;
             case AbstractSensor.CAMERA_SENSOR:
                 // TODO: todo ...
@@ -111,6 +139,42 @@ public class UserInterfaceUtil {
                 activity, lstSensorProperties);
 
         listView.setAdapter(sensorPropertyListAdaptor);
+    }
+    
+    public static void updateAudioSensorPropertyListView(Activity activity, ListView listView, AudioRecordParameter param) {
+        ArrayList<SensorProperty> listProperties = new ArrayList<SensorProperty>();  
+        
+        SensorProperty property;
+        
+        property = new SensorProperty(activity.getResources().getString(
+                R.string.text_audio_source), activity.getResources().getString(
+                param.getSource().getSourceNameResId()));
+        listProperties.add(property);
+
+        property = new SensorProperty(activity.getResources().getString(
+                R.string.text_audio_channel_in), activity.getResources().getString(
+                param.getChannel().getChannelNameResId()));
+        listProperties.add(property);
+
+        property = new SensorProperty(activity.getResources().getString(
+                R.string.text_audio_encoding), activity.getResources().getString(
+                param.getEncoding().getEncodingNameResId()));
+        listProperties.add(property);
+
+        property = new SensorProperty(activity.getResources().getString(
+                R.string.text_audio_sampling_rate), Integer.toString(param
+                .getSamplingRate()));
+        listProperties.add(property);
+
+        property = new SensorProperty(activity.getResources().getString(
+                R.string.text_audio_min_buffer_size), Integer.toString(param.getBufferSize()));
+        listProperties.add(property);    
+        
+        SensorPropertyListAdapter sensorPropertyListAdaptor = new SensorPropertyListAdapter(
+                activity, listProperties);
+
+        listView.setAdapter(sensorPropertyListAdaptor);
+      
     }
     
     
