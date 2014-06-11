@@ -390,29 +390,7 @@ public class CreateExperimentActivityFunctionTests extends
         assertEquals("The edit text is not empty when a new note is being created",
         		"", 
         		mEditText.getText().toString());
-    }
-
-    public void testExperimentRun() throws Exception{
-    	Button runButton = (Button) mCreateExperimentActivity.findViewById(R.id.button_experiment_run);
-    	assertNotNull("The button experiment run failed to load", runButton);
-    	TouchUtils.clickView(this, runButton);
-    	getInstrumentation().waitForIdleSync();
-    	ExperimentRunFragment runFragment = mCreateExperimentActivity.getExperimentRunFragment();
-    	assertNotNull("The run fragment cannot be null", runFragment);
-    	Button doneButton = (Button) mCreateExperimentActivity.findViewById(R.id.button_experiment_done);
-    	
-    	TouchUtils.clickView(this, doneButton);
-    	getInstrumentation().waitForIdleSync();
-    	
-    	AlertDialog dialog = mCreateExperimentActivity.getAlertDialog();
-    	assertNotNull("The Alert Dialog was not loaded", dialog);
-    	assertTrue("Not showing the Alert Dialog", dialog.isShowing());
-    	Button negativeButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-    	assertNotNull("The positive button was not loaded", negativeButton);
-    	
-    	TouchUtils.clickView(this, doneButton);
-    	getInstrumentation().waitForIdleSync();
-    }
+    }    
     
 	private void clickOperation(final int op) {
 		getInstrumentation().runOnMainSync(new Runnable() {
