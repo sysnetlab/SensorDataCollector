@@ -84,6 +84,7 @@ public class CreateExperimentActivity extends FragmentActivity
     private StateTag mStateTagPrevious;
     private Drawable mDrawableBackground;
     private TextView mTextView;
+    private AlertDialog mAlertDialog;
     
 
     @Override
@@ -227,6 +228,10 @@ public class CreateExperimentActivity extends FragmentActivity
         return mExperiment;
     }
 
+    public AlertDialog getAlertDialog(){
+    	return mAlertDialog;
+    }
+    
     public void selectSensors(List<AbstractSensor> lstSensorsTo) {
         for (AbstractSensor sensorTo : lstSensorsTo) {
             for (AbstractSensor sensorFrom : mExperiment.getSensors()) {
@@ -641,9 +646,9 @@ public class CreateExperimentActivity extends FragmentActivity
                     }
                 });
 
-        AlertDialog dialog = builder.create();
+        mAlertDialog = builder.create();
 
-        dialog.show();
+        mAlertDialog.show();
     }
     
     public void runTimer_ExperimentRunFragment(){

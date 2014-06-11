@@ -12,6 +12,7 @@ import sysnetlab.android.sdc.ui.CreateExperimentActivity;
 import sysnetlab.android.sdc.ui.adaptors.SensorListAdapter;
 import sysnetlab.android.sdc.ui.fragments.ExperimentEditNotesFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentEditTagsFragment;
+import sysnetlab.android.sdc.ui.fragments.ExperimentRunFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
@@ -24,6 +25,8 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 
 public class CreateExperimentActivityFunctionTests extends
         ActivityInstrumentationTestCase2<CreateExperimentActivity> {
@@ -347,7 +350,7 @@ public class CreateExperimentActivityFunctionTests extends
         
     }    
 
-    public void testNewNoteEmptyTextField(){    	
+    public void testNewNoteEmptyTextField() throws Exception{    	
     	Button mButtonAddNote;
     	
     	mListOperations = (ListView) mCreateExperimentActivity
@@ -389,6 +392,28 @@ public class CreateExperimentActivityFunctionTests extends
         		mEditText.getText().toString());
     }
 
+    public void testExperimentRun() throws Exception{
+    	Button runButton = (Button) mCreateExperimentActivity.findViewById(R.id.button_experiment_run);
+    	assertNotNull("The button experiment run failed to load", runButton);
+    	TouchUtils.clickView(this, runButton);
+    	getInstrumentation().waitForIdleSync();
+    	ExperimentRunFragment runFragment = mCreateExperimentActivity.getExperimentRunFragment();
+    	assertNotNull("The run fragment cannot be null", runFragment);
+    	Button doneButton = (Button) mCreateExperimentActivity.findViewById(R.id.button_experiment_done);
+    	
+    	TouchUtils.clickView(this, doneButton);
+    	getInstrumentation().waitForIdleSync();
+    	
+    	AlertDialog dialog = mCreateExperimentActivity.getAlertDialog();
+    	assertNotNull("The Alert Dialog was not loaded", dialog);
+    	assertTrue("Not showing the Alert Dialog", dialog.isShowing());
+    	Button negativeButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+    	assertNotNull("The positive button was not loaded", negativeButton);
+    	
+    	TouchUtils.clickView(this, doneButton);
+    	getInstrumentation().waitForIdleSync();
+    }
+    
 	private void clickOperation(final int op) {
 		getInstrumentation().runOnMainSync(new Runnable() {
             @Override
