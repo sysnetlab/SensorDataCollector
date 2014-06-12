@@ -84,11 +84,16 @@ public class AudioSensorHelper {
 
                     for (AudioSource source : AUDIO_SOURCE_ARRAY) {
                         try {
-                            new AudioRecord(source.getSourceId(), rate, channel.getChannelId(),
-                                    format.getEncodingId(), bufferSize);
+                            final AudioRecord r = new AudioRecord(source.getSourceId(), rate,
+                                    channel.getChannelId(), format.getEncodingId(), bufferSize);
+                            r.startRecording();
+                            r.stop();
+                            r.release();
                             mListAudioRecordParameters.add(new AudioRecordParameter(rate, channel,
-                                    format, source, bufferSize));
+                                    format, source, bufferSize, bufferSize));
                         } catch (IllegalArgumentException e) {
+                            continue;
+                        } catch (IllegalStateException e) {
                             continue;
                         }
                     }

@@ -15,6 +15,7 @@ public abstract class AbstractStore {
         
         public abstract void open();
         public abstract void write(String s);
+        public abstract void write(byte[] buffer, int offset, int length);
         public abstract String read();
         public abstract void reset();
         public abstract void close();

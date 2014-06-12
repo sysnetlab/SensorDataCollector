@@ -345,6 +345,11 @@ public class SimpleFileStore extends AbstractStore {
         }
         
         @Override
+        public void write(byte[] buffer, int offset, int length) {
+            mOut.write(buffer, offset, length);
+        }
+        
+        @Override
         public String read() {
             if (mIn != null) {
                 try {

@@ -6,14 +6,16 @@ public class AudioRecordParameter {
     private AudioEncoding mEncoding;
     private AudioSource mSource;
     private int mBufferSize;
+    private int mMinBufferSize;
 
     public AudioRecordParameter(int rate, AudioChannelIn channel, AudioEncoding encoding,
-            AudioSource source, int bufferSize) {
+            AudioSource source, int bufferSize, int minBufferSize) {
         mSamplingRate = rate;
         mChannel = channel;
         mEncoding = encoding;
         mSource = source;
         mBufferSize = bufferSize;
+        mMinBufferSize = minBufferSize;
     }
 
     public AudioRecordParameter() {
@@ -55,6 +57,14 @@ public class AudioRecordParameter {
         return mBufferSize;
     }
 
+    public void setBufferSize(int bufferSize) {
+        mBufferSize = bufferSize;
+    }  
+    
+    public int getMinBufferSize() {
+        return mBufferSize;
+    }
+
     public void setMinBufferSize(int minBufferSize) {
         mBufferSize = minBufferSize;
     }  
@@ -69,6 +79,8 @@ public class AudioRecordParameter {
         if (mSamplingRate != p.mSamplingRate) return false;
         
         if (mBufferSize != p.mBufferSize) return false;
+        
+        if (mMinBufferSize != p.mMinBufferSize) return false;
         
         if (mChannel == null) {
             if (p.mChannel != null) return false;

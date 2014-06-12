@@ -1,3 +1,4 @@
+
 package sysnetlab.android.sdc.services;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class RunExperimentService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
-    }   
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -47,9 +48,10 @@ public class RunExperimentService extends Service {
     public void onDestroy() {
 
         // Tell the user we stopped.
-        // Toast.makeText(this, R.string.text_local_service_stopped, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, R.string.text_local_service_stopped,
+        // Toast.LENGTH_SHORT).show();
     }
-    
+
     private boolean mIsExperimentRunning = false;
 
     public void runExperimentInService(SensorManager sensorManager, Experiment experiment) {
@@ -64,44 +66,45 @@ public class RunExperimentService extends Service {
 
         while (iter.hasNext()) {
             AbstractSensor abstractSensor = (AbstractSensor) iter.next();
+            if (!abstractSensor.isSelected()) {
+                continue;
+            }
+
+            Channel channel;
             switch (abstractSensor.getMajorType()) {
                 case AbstractSensor.ANDROID_SENSOR:
                     AndroidSensor sensor = (AndroidSensor) abstractSensor;
-                    if (sensor.isSelected()) {
-                        Log.i("SensorDataCollector",
-                                "RunExperimentService::onHandleIntent(): process sensor "
-                                        + sensor.getName());
+                    Log.i("SensorDataCollector",
+                            "RunExperimentService::onHandleIntent(): process sensor "
+                                    + sensor.getName());
 
-                        Channel channel = StoreSingleton.getInstance().createChannel(
-                                sensor.getName());
-                        AndroidSensorEventListener listener =
-                                new AndroidSensorEventListener(channel);
-                        sensor.setListener(listener);
-                        sensorManager.registerListener(listener, (Sensor) sensor.getSensor(),
-                                sensor.getSamplingInterval());
-                        lstSensors.add(sensor);
-                    }
+                    channel = StoreSingleton.getInstance().createChannel(sensor.getName());
+                    AndroidSensorEventListener listener =
+                            new AndroidSensorEventListener(channel);
+                    sensor.setListener(listener);
+                    sensorManager.registerListener(listener, (Sensor) sensor.getSensor(),
+                            sensor.getSamplingInterval());
+                    lstSensors.add(sensor);
                     break;
                 case AbstractSensor.AUDIO_SENSOR:
                     AudioSensor audioSensor = (AudioSensor) abstractSensor;
-                    if (audioSensor.isSelected()) {
-                        Log.i("SensorDataCollector",
-                                "RunExperimentService::onHandleIntent(): process sensor "
-                                        + audioSensor.getName());
 
-                        Channel channel = StoreSingleton.getInstance().createChannel(
-                                audioSensor.getName());
-                        //
-                        
-                        //
-                        lstSensors.add(audioSensor);
-                    }
+                    Log.i("SensorDataCollector",
+                            "RunExperimentService::onHandleIntent(): process sensor "
+                                    + audioSensor.getName());
+
+                    channel = StoreSingleton.getInstance().createChannel(audioSensor.getName());
+
+                    audioSensor.start(channel);
+
+                    lstSensors.add(audioSensor);
+
                     break;
                 default:
                     Log.e("SensorDataCollector",
                             "RunExperimentService::onHandleIntent(): process sensor type "
                                     + abstractSensor.getMajorType() + ", but not implemented");
-                    break;                    
+                    break;
             }
         }
         experiment.setSensors(lstSensors);
@@ -118,17 +121,20 @@ public class RunExperimentService extends Service {
 
         while (iter.hasNext()) {
             AbstractSensor abstractSensor = (AbstractSensor) iter.next();
+            if (!abstractSensor.isSelected()) {
+                continue;
+            }
+
             switch (abstractSensor.getMajorType()) {
                 case AbstractSensor.ANDROID_SENSOR:
                     AndroidSensor sensor = (AndroidSensor) abstractSensor;
 
-                    if (sensor.isSelected()) {
-                        AndroidSensorEventListener listener = sensor.getListener();
-                        sensorManager.unregisterListener(listener);
-                    }
+                    AndroidSensorEventListener listener = sensor.getListener();
+                    sensorManager.unregisterListener(listener);
                     break;
                 case AbstractSensor.AUDIO_SENSOR:
-                    // TODO
+                    AudioSensor audioSensor = (AudioSensor) abstractSensor;
+                    audioSensor.stop();
                     break;
                 default:
                     Log.e("SensorDataCollector",
