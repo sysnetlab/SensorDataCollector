@@ -47,7 +47,11 @@ public class RunExperimentFunctionTests extends
     }
 
     public void testExperimentRun() throws Exception{
-    	
+        // this is needed because in in two test cases, instances of 
+        // SimpleFileStore and SimpleXMLFileStore have been created using
+        // their constructors, which are not expected behavior since in
+        // one app, only one instance is allowed. 
+        StoreSingleton.resetInstance();
     	Instrumentation instrumentation = getInstrumentation();
     	//Create the experiment to be run
     	Experiment activeExperiment = new Experiment();

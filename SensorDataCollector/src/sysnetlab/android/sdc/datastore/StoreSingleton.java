@@ -15,4 +15,8 @@ public class StoreSingleton {
         }
         return instance;
     }
+    
+    public static void resetInstance() {
+        instance = new SimpleXmlFileStore();
+    }
 }

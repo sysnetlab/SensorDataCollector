@@ -72,6 +72,8 @@ public class SimpleFileStore extends AbstractStore {
         mNewExperimentPath = mParentPath + "/" + DIR_PREFIX
                 + f.format(mNextExperimentNumber);
 
+        Log.d("SensorDataCollector", "SimpleFileStore::setupNewExperimentStorage(): " + mNewExperimentPath);
+        
         File dir = new File(mNewExperimentPath);
         if (!dir.mkdir()) {
             throw new RuntimeException(
