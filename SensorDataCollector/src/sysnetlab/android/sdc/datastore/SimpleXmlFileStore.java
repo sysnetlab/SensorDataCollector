@@ -248,13 +248,13 @@ public class SimpleXmlFileStore extends SimpleFileStore {
                 xs.text(tag.getName());
                 xs.endTag("", "name");
 
-                if (tag.getShortDescription().trim().length() > 0) {
+                if (tag.getShortDescription() != null && tag.getShortDescription().trim().length() > 0) {
                     xs.startTag("", "shortdescription");
                     xs.text(tag.getShortDescription());
                     xs.endTag("", "shortdescription");
                 }
 
-                if (tag.getLongDescription().trim().length() > 0) {
+                if (tag.getLongDescription() != null && tag.getLongDescription().trim().length() > 0) {
                     xs.startTag("", "longdescription");
                     xs.text(tag.getLongDescription());
                     xs.endTag("", "longdescription");

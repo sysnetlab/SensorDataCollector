@@ -12,7 +12,6 @@ import sysnetlab.android.sdc.ui.CreateExperimentActivity;
 import sysnetlab.android.sdc.ui.adaptors.SensorListAdapter;
 import sysnetlab.android.sdc.ui.fragments.ExperimentEditNotesFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentEditTagsFragment;
-import sysnetlab.android.sdc.ui.fragments.ExperimentRunFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
@@ -25,8 +24,6 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 
 public class CreateExperimentActivityFunctionTests extends
         ActivityInstrumentationTestCase2<CreateExperimentActivity> {
@@ -117,7 +114,9 @@ public class CreateExperimentActivityFunctionTests extends
             }
 
         });
-
+        
+        getInstrumentation().waitForIdleSync();
+        
         int numSensorSelected = 0;
         for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(getActivity())) {
             if (sensor.isSelected()) {

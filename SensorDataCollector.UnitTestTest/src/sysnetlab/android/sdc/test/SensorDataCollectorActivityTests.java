@@ -43,7 +43,7 @@ public class SensorDataCollectorActivityTests
 	
 	public void testCreateExperimentButtonClicked()
 	{
-	    Button view = (Button) sdcActivity.findViewById(R.id.buttonCreateExperiment);
+	    Button view = (Button) sdcActivity.findViewById(R.id.button_create_experiment);
 	    assertNotNull("Button not allowed to be null", view);
 	    view.performClick();
 	    Intent triggeredIntent = getStartedActivityIntent();

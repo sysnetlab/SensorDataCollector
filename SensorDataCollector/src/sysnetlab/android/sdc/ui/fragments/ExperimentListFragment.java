@@ -69,7 +69,7 @@ public class ExperimentListFragment extends ListFragment {
         
         setListAdapter(mExperimentListAdapter);
 
-        ((Button) mHeaderView.findViewById(R.id.buttonCreateExperiment))
+        ((Button) mHeaderView.findViewById(R.id.button_create_experiment))
                 .setOnClickListener(new Button.OnClickListener() {
                     public void onClick(View v) {
                         mCallback
