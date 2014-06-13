@@ -163,5 +163,8 @@
 	
 	<string name="text_select_audio_channel_in">Select an audio channel</string>
 	<string name="text_tap_to_change_setting">Tap to change setting</string>
+	
+	<string name="text_sensor_has_more_data">&#8230; more data available, but not displayed &#8230;</string>
+	<string name="text_does_support_viewing_audio_sensor_data">This app does not support viewing audio sensor data.</string>
     
 </resources>

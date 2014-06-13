@@ -423,7 +423,7 @@ public class Experiment implements Parcelable {
             }
             AbstractSensor sensor = SensorUtilsSingleton.getInstance().getSensor(sensorName,
                     sensorMajorType,
-                    sensorMinorType, channel);
+                    sensorMinorType, channel, null);
             mSensors.add(sensor);
         }
     }

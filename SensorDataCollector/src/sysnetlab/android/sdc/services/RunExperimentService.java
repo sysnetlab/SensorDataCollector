@@ -78,7 +78,7 @@ public class RunExperimentService extends Service {
                             "RunExperimentService::onHandleIntent(): process sensor "
                                     + sensor.getName());
 
-                    channel = StoreSingleton.getInstance().createChannel(sensor.getName());
+                    channel = StoreSingleton.getInstance().createChannel(sensor.getName(), Channel.WRITE_ONLY, Channel.CHANNEL_TYPE_CSV);
                     AndroidSensorEventListener listener =
                             new AndroidSensorEventListener(channel);
                     sensor.setListener(listener);
@@ -93,9 +93,10 @@ public class RunExperimentService extends Service {
                             "RunExperimentService::onHandleIntent(): process sensor "
                                     + audioSensor.getName());
 
-                    channel = StoreSingleton.getInstance().createChannel(audioSensor.getName());
+                    channel = StoreSingleton.getInstance().createChannel(audioSensor.getName(), Channel.WRITE_ONLY, Channel.CHANNEL_TYPE_PCM);
+                    audioSensor.setChannel(channel);
 
-                    audioSensor.start(channel);
+                    audioSensor.start();
 
                     lstSensors.add(audioSensor);
 

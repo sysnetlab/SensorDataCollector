@@ -13,6 +13,7 @@ import android.util.Log;
 import sysnetlab.android.sdc.datacollector.DeviceInformation;
 import sysnetlab.android.sdc.datacollector.ExperimentTime;
 import sysnetlab.android.sdc.datastore.AbstractStore;
+import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 
 public class AudioSensor extends AbstractSensor {
@@ -21,6 +22,8 @@ public class AudioSensor extends AbstractSensor {
     private static AudioSensor instance = null;       
     
     private String mName = "Audio Sensor (Microphone)";
+    
+    private AbstractStore.Channel mChannel;
     
     private AudioRecord mAudioRecord;
     private AudioRecordParameter mAudioRecordParameter;
@@ -49,13 +52,14 @@ public class AudioSensor extends AbstractSensor {
         super.setMinorType(AUDIOSENSOR_MICROPHONE);
     }
 
-    public AudioSensor(AudioRecordParameter params) {
+    public AudioSensor(AudioRecordParameter params, AbstractStore.Channel channel) {
         super.setMajorType(AbstractSensor.AUDIO_SENSOR);   
         super.setMinorType(AUDIOSENSOR_MICROPHONE);
         mAudioRecordParameter = params;
+        mChannel = channel;
     } 
     
-    public void start(AbstractStore.Channel channel) {
+    public void start() {
         if (mIsRecording) {
             return;
         }
@@ -80,7 +84,7 @@ public class AudioSensor extends AbstractSensor {
 
         BlockingQueue<ByteBuffer> audioDataQueue = new LinkedBlockingQueue<ByteBuffer>();
         Producer p = new Producer(audioDataQueue);
-        Consumer c = new Consumer(channel, audioDataQueue);
+        Consumer c = new Consumer(audioDataQueue);
         mDataCollectionThread = new Thread(p);
         mDataProcessingThread = new Thread(c);
 
@@ -132,43 +136,18 @@ public class AudioSensor extends AbstractSensor {
     public int getVersion() {
         return 0;
     }
-
-    @Override
-    public boolean isSameSensor(AbstractSensor sensor) {
-        // same physical sensor, may have different settings
-        return TextUtils.equals(mName,  sensor.getName()); 
-    }
-
-    @Override
-    public String toString() {
-        return mName;
-    }
-
-    @Override
-    public boolean equals(Object rhs) {
-        if (this == rhs) return true;
-        
-        if (!(rhs instanceof AudioSensor)) return false;
-        
-        AudioSensor sensor = (AudioSensor) rhs;
-        
-        if (mAudioRecordParameter == null) { 
-            if (sensor.mAudioRecordParameter != null) {
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            if (!mAudioRecordParameter.equals(sensor.mAudioRecordParameter)) {
-                return false;
-            } else {
-                return true;
-            }
-        }
+    
+    public AbstractStore.Channel getChannel() {
+        return mChannel;
     }
     
     public AudioRecordParameter getAudioRecordParameter() {
         return mAudioRecordParameter;
+    }
+    
+
+    public void setChannel(Channel channel) {
+        mChannel = channel;
     }
     
     public void setAudioRecordParameter(AudioRecordParameter param) {
@@ -209,6 +188,41 @@ public class AudioSensor extends AbstractSensor {
     
     public boolean havingDataLoss() {
         return mHavingDataLoss;
+    }
+    
+
+    @Override
+    public boolean isSameSensor(AbstractSensor sensor) {
+        // same physical sensor, may have different settings
+        return TextUtils.equals(mName,  sensor.getName()); 
+    }
+
+    @Override
+    public boolean equals(Object rhs) {
+        if (this == rhs) return true;
+        
+        if (!(rhs instanceof AudioSensor)) return false;
+        
+        AudioSensor sensor = (AudioSensor) rhs;
+        
+        if (mAudioRecordParameter == null) { 
+            if (sensor.mAudioRecordParameter != null) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if (!mAudioRecordParameter.equals(sensor.mAudioRecordParameter)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    @Override
+    public String toString() {
+        return mName;
     }
     
     private class Producer implements Runnable {
@@ -253,11 +267,9 @@ public class AudioSensor extends AbstractSensor {
     
     private class Consumer implements Runnable {
         private final BlockingQueue<ByteBuffer> mQueue;
-        private final AbstractStore.Channel mChannel;
         
-        Consumer(AbstractStore.Channel c, BlockingQueue<ByteBuffer> q) { 
+        Consumer(BlockingQueue<ByteBuffer> q) { 
             mQueue = q; 
-            mChannel = c;
         }
         
         public void run() {

@@ -237,7 +237,7 @@ public class SimpleFileStore extends AbstractStore {
                     Channel channel = new SimpleFileChannel(channelDescriptor, Channel.READ_ONLY);
                     AbstractSensor sensor = SensorUtilsSingleton.getInstance().getSensor(sensorName,
                             sensorMajorType,
-                            sensorMinorType, channel);
+                            sensorMinorType, channel, null);
                     lstSensors.add(sensor);
                 }
                 experiment.setSensors(lstSensors);
@@ -299,16 +299,23 @@ public class SimpleFileStore extends AbstractStore {
         private PrintStream mOut;
         private BufferedReader mIn;
         private String mPath;
+        private int mType;
 
         protected SimpleFileChannel() {
             // prohibit from creating SimpleFileChannel object without an argument
         }
 
         public SimpleFileChannel(String path) throws FileNotFoundException {
-            this(path, WRITE_ONLY);
+            this(path, WRITE_ONLY, CHANNEL_TYPE_CSV);
         }
         
         public SimpleFileChannel(String path, int flags) throws FileNotFoundException {
+            this(path, flags, CHANNEL_TYPE_CSV);
+        }        
+        
+        public SimpleFileChannel(String path, int flags, int type) throws FileNotFoundException {
+            mType = type;
+            
             if (flags == READ_ONLY) {
                 mOut = null;
                 File file = new File(path);
@@ -327,7 +334,7 @@ public class SimpleFileStore extends AbstractStore {
                 throw new RuntimeException(
                         "SimpleFileChannel: encountered unsupported creation flag " + flags);
             }
-        }
+        }        
 
         public void close() {
             if (mOut != null) mOut.close();
@@ -383,6 +390,11 @@ public class SimpleFileStore extends AbstractStore {
         @Override
         public void open() {
         }
+        
+        @Override
+        public int getType() {
+            return mType;
+        }
 
         public String describe() {
             // return the value passed to the constructor
@@ -391,22 +403,34 @@ public class SimpleFileStore extends AbstractStore {
     }
 
     @Override
-    public Channel createChannel(String tag) {
+    public Channel createChannel(String tag, int flags, int type) {
 
-        String path;
+        String path, extension;
+        
+        if (type == Channel.CHANNEL_TYPE_CSV) {
+            extension = ".csv";
+        } else if (type == Channel.CHANNEL_TYPE_BIN) {
+            extension = ".bin";
+        } else if (type == Channel.CHANNEL_TYPE_PCM) {
+            extension = ".pcm";
+        } else if (type == Channel.CHANNEL_TYPE_WAV) {
+            extension = ".wav";
+        } else {
+            extension = ".txt";
+        }
 
         if (tag == null || tag.trim().length() == 0) {
             DecimalFormat f = new DecimalFormat("00000");
             path = mNewExperimentPath + "/" + DEFAULT_DATAFILE_PREFIX
-                    + f.format(mNextChannelNumber) + ".txt";
+                    + f.format(mNextChannelNumber) + extension;
             mNextChannelNumber++;
         } else {
-            path = mNewExperimentPath + "/" + tag.replace(' ', '_') + ".txt";
+            path = mNewExperimentPath + "/" + tag.replace(' ', '_') + extension;
         }
 
         try {
             Channel channel;
-            channel = new SimpleFileChannel(path);
+            channel = new SimpleFileChannel(path, flags, type);
             mChannels.add(channel);
 
             return channel;

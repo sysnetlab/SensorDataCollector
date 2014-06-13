@@ -4,7 +4,7 @@ public class AudioEncoding {
     private int mEncodingId;
     private int mEncodingNameResId;
 
-    AudioEncoding(int id, int resId) {
+    public AudioEncoding(int id, int resId) {
         mEncodingId = id;
         mEncodingNameResId = resId;
     }
