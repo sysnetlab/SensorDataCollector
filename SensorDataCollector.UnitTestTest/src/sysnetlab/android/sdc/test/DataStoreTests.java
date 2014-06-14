@@ -21,7 +21,6 @@ import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import sysnetlab.android.sdc.sensor.audio.AudioSensor;
 import android.test.AndroidTestCase;
-import android.util.Log;
 
 public class DataStoreTests extends AndroidTestCase {
 	

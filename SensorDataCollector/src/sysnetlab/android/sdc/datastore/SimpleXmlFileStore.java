@@ -221,6 +221,10 @@ public class SimpleXmlFileStore extends SimpleFileStore {
         xs.text(deviceInfo.getSdkCodeName());
         xs.endTag("",  "sdk-codename");
 
+        xs.startTag("", "sdk-release");
+        xs.text(deviceInfo.getSdkRelease());
+        xs.endTag("",  "sdk-release");
+        
         xs.endTag("", "android");
         xs.endTag("", "device");
     }
@@ -600,6 +604,7 @@ public class SimpleXmlFileStore extends SimpleFileStore {
         
         String make = null;
         String model = null;
+        String sdkRelease = null;
         int sdkInt = -1;
         String sdkCodeName = null;
         
@@ -616,12 +621,14 @@ public class SimpleXmlFileStore extends SimpleFileStore {
                 sdkInt = readAndroidDeviceSdkInt(xpp);
             } else if (name.equals("sdk-codename")) {
                 sdkCodeName = readAndroidDeviceSdkCodeName(xpp);
+            } else if (name.equals("sdk-release")) {
+                sdkRelease = readAndroidDeviceSdkRelease(xpp);
             } else {
                 skip(xpp);
             }
         }
         
-        return new DeviceInformation(make, model, sdkInt, sdkCodeName);          
+        return new DeviceInformation(make, model, sdkInt, sdkCodeName, sdkRelease); 
     }
     
     private String readAndroidDeviceMake(XmlPullParser xpp) throws XmlPullParserException, IOException {
@@ -638,6 +645,10 @@ public class SimpleXmlFileStore extends SimpleFileStore {
     
     private String readAndroidDeviceSdkCodeName(XmlPullParser xpp) throws XmlPullParserException, IOException {
         return readXmlElementText(xpp, "sdk-codename");
+    }
+    
+    private String readAndroidDeviceSdkRelease(XmlPullParser xpp) throws XmlPullParserException, IOException {
+        return readXmlElementText(xpp, "sdk-release");
     }
    
     private List<Tag> readTags(XmlPullParser xpp) throws XmlPullParserException, IOException {
