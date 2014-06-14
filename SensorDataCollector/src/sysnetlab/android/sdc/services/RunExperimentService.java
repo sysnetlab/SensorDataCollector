@@ -93,7 +93,8 @@ public class RunExperimentService extends Service {
                             "RunExperimentService::onHandleIntent(): process sensor "
                                     + audioSensor.getName());
 
-                    channel = StoreSingleton.getInstance().createChannel(audioSensor.getName(), Channel.WRITE_ONLY, Channel.CHANNEL_TYPE_PCM);
+                    channel = StoreSingleton.getInstance().createChannel(audioSensor.getName(),
+                            Channel.WRITE_ONLY, Channel.CHANNEL_TYPE_WAV);
                     audioSensor.setChannel(channel);
 
                     audioSensor.start();

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,7 +19,7 @@ import sysnetlab.android.sdc.sensor.AbstractSensor;
 
 public class AudioSensor extends AbstractSensor {
     public final static int AUDIOSENSOR_MICROPHONE = 1;
-
+    
     private static AudioSensor instance = null;       
     
     private String mName = "Audio Sensor (Microphone)";
@@ -82,7 +83,7 @@ public class AudioSensor extends AbstractSensor {
         Log.d("SensorDataCollector", "AudioSensor::start(): start audio record");        
         mAudioRecord.startRecording();
 
-        BlockingQueue<ByteBuffer> audioDataQueue = new LinkedBlockingQueue<ByteBuffer>();
+        BlockingQueue<DataBuffer> audioDataQueue = new LinkedBlockingQueue<DataBuffer>();
         Producer p = new Producer(audioDataQueue);
         Consumer c = new Consumer(audioDataQueue);
         mDataCollectionThread = new Thread(p);
@@ -225,39 +226,62 @@ public class AudioSensor extends AbstractSensor {
         return mName;
     }
     
-    private class Producer implements Runnable {
-        private final BlockingQueue<ByteBuffer> mQueue;
+    private class DataBuffer {
+        private boolean mPoisonPill;
+        private ByteBuffer mByteBuffer;   
         
-        Producer(BlockingQueue<ByteBuffer> q) {
+        DataBuffer(boolean pill, ByteBuffer buf) {
+            mPoisonPill = pill;
+            mByteBuffer = buf;
+        }
+        
+        boolean isPoisonPill() {
+            return mPoisonPill;
+        }
+        
+        ByteBuffer getBuffer() {
+            return mByteBuffer;
+        }
+    }
+    
+    private class Producer implements Runnable {
+        private final BlockingQueue<DataBuffer> mQueue;
+        
+        Producer(BlockingQueue<DataBuffer> q) {
             mQueue = q; 
         }
         
         public void run() {
-          try {
-            while (mIsRecording) {
-                /* produce() may return null, I think it might be the
-                 * result of a race condition.
-                 *  
-                 * when the AudioRecord is stopped, produce() may still
-                 * be running and the thread may attempt to
-                 * read a buffer, which is an exception and produce()
-                 * returns null.
-                 * 
-                 * alternatively, we can AudioRecord::stop() after this
-                 * while loop. however, it makes the code less readable.
-                 * 
-                 * a 3rd option, is to deliver an event when it is an
-                 * opportune time to AudioRecord::stop(). The event 
-                 * handler invokes AudioRecord:;stop()
-                 */
-                ByteBuffer b = produce();
-                if (b != null) {
-                    mQueue.put(b); 
+            initializeAudioData(mChannel, mAudioRecord);
+
+            try {
+                while (mIsRecording) {
+                    /* produce() may return null, I think it might be the
+                     * result of a race condition.
+                     *  
+                     * when the AudioRecord is stopped, produce() may still
+                     * be running and the thread may attempt to
+                     * read a buffer, which is an exception and produce()
+                     * returns null.
+                     * 
+                     * alternatively, we can AudioRecord::stop() after this
+                     * while loop. however, it makes the code less readable.
+                     * 
+                     * a 3rd option, is to deliver an event when it is an
+                     * opportune time to AudioRecord::stop(). The event 
+                     * handler invokes AudioRecord:;stop()
+                     */
+                    ByteBuffer b = produce();
+                    if (b != null) {
+                        mQueue.put(new DataBuffer(false, b));
+                    }
                 }
+                
+                mQueue.put(new DataBuffer(true, null));
+            } catch (InterruptedException e) {
+                Log.d("SensorDataCollector",
+                        "AudioSensor::Producer::run(): interrupted: " + e.toString());
             }
-          } catch (InterruptedException e) {
-              Log.d("SensorDataCollector", "AudioSensor::Producer::run(): interrupted: " + e.toString());
-          }
         }
         
         ByteBuffer produce() {
@@ -266,25 +290,35 @@ public class AudioSensor extends AbstractSensor {
     }
     
     private class Consumer implements Runnable {
-        private final BlockingQueue<ByteBuffer> mQueue;
-        
-        Consumer(BlockingQueue<ByteBuffer> q) { 
-            mQueue = q; 
+        private final BlockingQueue<DataBuffer> mQueue;
+        private int mNumberOfBytes;
+
+        Consumer(BlockingQueue<DataBuffer> q) {
+            mQueue = q;
+            mNumberOfBytes = 0;
         }
-        
+
         public void run() {
-          try {
-            while (mIsRecording) { 
-                consume(mChannel, mQueue.take()); 
+            try {
+                while (mIsRecording) {
+                    DataBuffer buf = mQueue.take();
+                    if (!buf.isPoisonPill()) {
+                        consume(mChannel, buf.getBuffer());
+                    } else {
+                        break;
+                    }
+                }
+            } catch (InterruptedException e) {
+                Log.i("SensorDataCollector", "AudioSensor::Consumer::run(): " + e.toString());
             }
-          } catch (InterruptedException e) {
-              Log.i("SensorDataCollector", "AudioSensor::Consumer::run(): " + e.toString());
-          }
+            finalizeAudioData(mChannel, mAudioRecord, mNumberOfBytes);
         }
+
         void consume(AbstractStore.Channel c, ByteBuffer b) {
-            processBufferedAudioData(c, b);
+            int n = processBufferedAudioData(c, b);
+            mNumberOfBytes += n;
         }
-      }
+    }
     
     private ByteBuffer recordToByteBuffer(int capacity) {
 //        Log.d("SensorDataCollector",
@@ -323,15 +357,46 @@ public class AudioSensor extends AbstractSensor {
         return buf;
     }
     
-    private void processBufferedAudioData(AbstractStore.Channel c, ByteBuffer bb) {
+    private int processBufferedAudioData(AbstractStore.Channel c, ByteBuffer bb) {
         int sizeInBytes = bb.capacity();
+        /*
         Log.d("SensorDataCollector",
                 "AudioSensor::processBufferedAudioData():sizeInBytes = " + sizeInBytes);
+                */
         
         byte[] b = new byte[sizeInBytes];
         bb.clear();
         bb.get(b);
         
         c.write(b, 0, sizeInBytes);
+        
+        return sizeInBytes;
+    }
+    
+    private void initializeAudioData(AbstractStore.Channel c, AudioRecord r) {
+        if (c.getType() == Channel.CHANNEL_TYPE_WAV) {
+            WaveHeader header = new WaveHeader((short)0, 0, (short)0, 0L);
+            c.write(header.getHeader(), 0, header.getLength());
+            c.setDeferredClosing(true);
+        }
+    }
+    
+    private void finalizeAudioData(AbstractStore.Channel c, AudioRecord r, int numberOfBytes) {
+        Log.d("SensorDataCollector", "entering finalizeAudioData() ...");
+        if (c.getType() == Channel.CHANNEL_TYPE_WAV) {
+            short bitsPerSample;
+            if (r.getAudioFormat() == AudioFormat.ENCODING_PCM_16BIT) {
+                bitsPerSample = 16;
+            } else if (r.getAudioFormat() == AudioFormat.ENCODING_PCM_8BIT) {
+                bitsPerSample = 8;
+            } else {
+                bitsPerSample = 16;
+            }
+            long numberOfSamples;
+            numberOfSamples = numberOfBytes / (bitsPerSample / 8); 
+            WaveHeader header = new WaveHeader((short)r.getChannelCount(), r.getSampleRate(), bitsPerSample, numberOfSamples);
+            c.write(header.getHeader(), 0, header.getLength(), 0);
+            c.setReadyToClose();
+        }
     }
 }

@@ -2,6 +2,7 @@
 package sysnetlab.android.sdc.datastore;
 
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
 import sysnetlab.android.sdc.datacollector.Experiment;
 
@@ -18,9 +19,13 @@ public abstract class AbstractStore {
         public static final int CHANNEL_TYPE_PCM = 0x0004;
         public static final int CHANNEL_TYPE_WAV = 0x0008;
         
+        protected boolean mDeferredClosing;
+        protected BlockingQueue<Integer> mBlockingQueue;
+        
         public abstract void open();
         public abstract void write(String s);
         public abstract void write(byte[] buffer, int offset, int length);
+        public abstract void write(byte[] buffer, int bufferOffset, int bufferLength, int fileOffset);
         public abstract String read();
         public abstract void reset();
         public abstract void close();
@@ -32,6 +37,8 @@ public abstract class AbstractStore {
          *         to read the data
          */
         public abstract String describe();
+        public abstract void setDeferredClosing(boolean defferedClosing);
+        public abstract void setReadyToClose();
     };
 
     public abstract void setupNewExperimentStorage(Experiment experiment);
