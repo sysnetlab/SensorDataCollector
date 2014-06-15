@@ -1,6 +1,7 @@
 
 package sysnetlab.android.sdc.sensor.audio;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import sysnetlab.android.sdc.R;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.util.Log;
 
 public class AudioSensorHelper {
 
@@ -70,9 +72,20 @@ public class AudioSensorHelper {
     
 
     public static List<AudioRecordParameter> getValidRecordingParameters() {
-        if (!mListAudioRecordParameters.isEmpty()) {
-            mListAudioRecordParameters.clear();
+        List<AudioRecordParameter> listParams = new ArrayList<AudioRecordParameter>();
+        scanValidRecordingParametersFirstPass(listParams);
+        scanValidRecordingParametersSecondPass(listParams, mListAudioRecordParameters);
+        
+        return mListAudioRecordParameters;
+    }    
+    
+    private static void scanValidRecordingParametersFirstPass(List<AudioRecordParameter> listParams) {
+        if (listParams == null) {
+            return;
         }
+        
+        listParams.clear();
+        
         for (int rate : SAMPLING_RATES) {
             for (AudioChannelIn channel : CHANNEL_IN_ARRAY) {
                 for (AudioEncoding format : AUDIO_ENCODING_ARRAY) {
@@ -82,26 +95,97 @@ public class AudioSensorHelper {
                     if (bufferSize <= 0)
                         continue;
 
+                    AudioRecord r = null;
                     for (AudioSource source : AUDIO_SOURCE_ARRAY) {
                         try {
-                            final AudioRecord r = new AudioRecord(source.getSourceId(), rate,
+                            Log.d("SensorDataCollector", "getValidRecordingParametersFirstPass(): " +
+                                    "(source, rate, channl, encoding, buffersize) = " +
+                                    "(" + source.getSourceId() + ", " +
+                                    rate + ", " + channel.getChannelId() + ", " +
+                                    format.getEncodingId() + ", " + bufferSize + ")");
+                            r = new AudioRecord(source.getSourceId(), rate,
                                     channel.getChannelId(), format.getEncodingId(), bufferSize);
                             r.startRecording();
+                            ByteBuffer buf = ByteBuffer.allocateDirect(bufferSize);
+                            r.read(buf, bufferSize);
                             r.stop();
                             r.release();
-                            mListAudioRecordParameters.add(new AudioRecordParameter(rate, channel,
+                            r = null;
+                            listParams.add(new AudioRecordParameter(rate, channel,
                                     format, source, bufferSize, bufferSize));
+                            Log.d("SensorDataCollector",
+                                    "getValidRecordingParametersFirstPass(): Success & added");
                         } catch (IllegalArgumentException e) {
+                            Log.d("SensorDataCollector", "getValidRecordingParametersFirstPass(): " +
+                                    "rate = " + rate + "; bufferSize = " + bufferSize +
+                                    "<- " + e.toString());
+                            if (r != null) {
+                                r.release();
+                                r = null;
+                            }
                             continue;
                         } catch (IllegalStateException e) {
+                            Log.d("SensorDataCollector", "getValidRecordingParametersFirstPass(): " +
+                                    "rate = " + rate + "; bufferSize = " + bufferSize +
+                                    "<- " + e.toString());
+                            if (r != null) {
+                                r.release();
+                                r = null;
+                            }
                             continue;
                         }
                     }
                 }
             }
         }
-        
-        return mListAudioRecordParameters;
-    }    
+    }
+    
+    private static void scanValidRecordingParametersSecondPass(
+            List<AudioRecordParameter> listParamsIn, List<AudioRecordParameter> listParamsOut) {
+        if (listParamsOut == null) {
+            return;
+        }
+        listParamsOut.clear();
+            
+        for (AudioRecordParameter param : listParamsIn) {
+
+            AudioRecord r = null;
+            try {
+                r = new AudioRecord(param.getSource().getSourceId(),
+                        param.getSamplingRate(),
+                        param.getChannel().getChannelId(), param
+                                .getEncoding().getEncodingId(),
+                        param.getBufferSize());
+
+                Log.d("SensorDataCollector", "getValidRecordingParametersSecondPass(): " +
+                        "(source, rate, channl, encoding, buffersize) = " +
+                        "(" + param.getSource().getSourceId() + ", " +
+                        param.getSamplingRate() + ", " +
+                        param.getChannel().getChannelId() + ", " +
+                        param.getEncoding().getEncodingId() + ", " +
+                        param.getBufferSize() + ")");
+                r.startRecording();
+                ByteBuffer buf = ByteBuffer.allocateDirect(param.getBufferSize());
+                r.read(buf, param.getBufferSize());
+                r.stop();
+                r.release();
+                r = null;
+                listParamsOut.add(param);
+            } catch (Exception e) {
+                Log.d("SensorDataCollector", "getValidRecordingParametersSecondPass(): " +
+                        "(source, rate, channl, encoding, buffersize) = " +
+                        "(" + param.getSource().getSourceId() + ", " +
+                        param.getSamplingRate() + ", " +
+                        param.getChannel().getChannelId() + ", " +
+                        param.getEncoding().getEncodingId() + ", " +
+                        param.getBufferSize() + ") will be removed.");
+                if (r != null) {
+                    r.release();
+                    r = null;
+                }
+            }
+        }
+        Log.d("SensorDataCollector", "getValidRecordingParametersSecondPass(): number of parameters = " + listParamsOut.size());
+    }
 
 }

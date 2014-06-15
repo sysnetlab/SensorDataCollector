@@ -50,6 +50,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -96,7 +97,7 @@ public class CreateExperimentActivity extends FragmentActivity
         
         ViewPager vp=new ViewPager(this);
 		vp.setOffscreenPageLimit(5);
-
+		
         int operation = getIntent().getIntExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
                 SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT);
         if (operation == SensorDataCollectorActivity.APP_OPERATION_CLONE_EXPERIMENT) {
@@ -112,9 +113,17 @@ public class CreateExperimentActivity extends FragmentActivity
              * that runs in the service. 
              */
             ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);
+            
+            LinearLayout layoutProgress = (LinearLayout) findViewById(R.id.progressbar_loading);
+            if (layoutProgress != null)
+                layoutProgress.setVisibility(View.VISIBLE);
+            
             for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(this)) {
                 sensor.setSelected(false);
-            }           
+            }  
+            
+            if (layoutProgress != null)
+                layoutProgress.setVisibility(View.GONE);
         }
 
         if (findViewById(R.id.fragment_container) != null) {

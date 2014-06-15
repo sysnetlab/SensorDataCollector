@@ -71,17 +71,21 @@ public class AudioSensor extends AbstractSensor {
                         .getEncoding().getEncodingId(),
                 mAudioRecordParameter.getBufferSize());
         
-//        if (mAudioRecord.getState() == AudioRecord.STATE_INITIALIZED) {
-//            Log.e("SensorDataCollector", "AudioSensor::start(): wrong state");
-//            return;
-//        }
-//        Log.d("SensorDataCollector", "AudioSensor::start(): audio record initialized");
-
+        Log.d("SensorDataCollector", "getValidRecordingParameters(): " +
+                "new AudioRecord(source, rate, channl, encoding, buffersize) = " +
+                "new AudioRecord(" + mAudioRecordParameter.getSource().getSourceId() + ", " +
+                mAudioRecordParameter.getSamplingRate() + ", " + 
+                mAudioRecordParameter.getChannel().getChannelId() + ", " + 
+                mAudioRecordParameter.getEncoding().getEncodingId() + ", " + 
+                mAudioRecordParameter.getBufferSize() + ")");
+        
+        if (!passedSanitationCheck()) {
+            throw new RuntimeException(
+                    "AudioRecord in SensorDataCollector is not properly released or initialized.");
+        }
+        
         mDateStart = Calendar.getInstance().getTime();
         mExperimentTimeStart = new ExperimentTime();
-
-        Log.d("SensorDataCollector", "AudioSensor::start(): start audio record");        
-        mAudioRecord.startRecording();
 
         BlockingQueue<DataBuffer> audioDataQueue = new LinkedBlockingQueue<DataBuffer>();
         Producer p = new Producer(audioDataQueue);
@@ -106,10 +110,6 @@ public class AudioSensor extends AbstractSensor {
         mIsRecording = false;  
         mExperimentTimeEnd = new ExperimentTime();
         mDateEnd = Calendar.getInstance().getTime(); 
-        
-        mAudioRecord.stop();
-        mAudioRecord.release();
-        mAudioRecord = null;
     }
     
     @Override
@@ -226,6 +226,28 @@ public class AudioSensor extends AbstractSensor {
         return mName;
     }
     
+    private boolean passedSanitationCheck() {
+        if (mAudioRecord == null)
+            return false;
+        if (mAudioRecordParameter == null)
+            return false;
+
+        if (mAudioRecord.getState() != AudioRecord.STATE_INITIALIZED)
+            return false;
+
+        if (mAudioRecord.getAudioFormat() != mAudioRecordParameter.getEncoding().getEncodingId())
+            return false;
+
+        if (mAudioRecord.getAudioSource() != mAudioRecordParameter.getSource().getSourceId())
+            return false;
+
+        if (mAudioRecord.getSampleRate() != mAudioRecordParameter.getSamplingRate())
+            return false;
+
+        // how about source?
+        return true;
+    }
+    
     private class DataBuffer {
         private boolean mPoisonPill;
         private ByteBuffer mByteBuffer;   
@@ -321,9 +343,9 @@ public class AudioSensor extends AbstractSensor {
     }
     
     private ByteBuffer recordToByteBuffer(int capacity) {
-//        Log.d("SensorDataCollector",
-//                "AudioSensor::recordToByteBuffer(): entered with capacity = " + capacity); 
-        
+        // Log.d("SensorDataCollector",
+        //        "AudioSensor::recordToByteBuffer(): entered with capacity = " + capacity);
+
         ByteBuffer buf = ByteBuffer.allocateDirect(capacity);
         
         int totalBytesRead = 0;
@@ -336,24 +358,24 @@ public class AudioSensor extends AbstractSensor {
                 numBytesToRead = capacity - totalBytesRead;
                 buf.position(totalBytesRead);
             } else if (numBytesRead == AudioRecord.ERROR_INVALID_OPERATION) {
-                Log.e("SensorDataCollector",
+                Log.d("SensorDataCollector",
                         "AudioSensor::recordToByteBuffer(): AudioRecord.ERROR_INVALID_OPERATION");
                 buf = null;
                 break;
             } else if (numBytesRead == AudioRecord.ERROR_BAD_VALUE) {
-                Log.e("SensorDataCollector",
+                Log.d("SensorDataCollector",
                         "AudioSensor::recordToByteBuffer(): AudioRecord.ERROR_BAD_VALUE");
                 buf = null;
                 break;
             } else if (numBytesRead == AudioRecord.ERROR) {
-                Log.e("SensorDataCollector", "AudioSensor::recordToByteBuffer(): AudioRecord.ERROR");
+                Log.d("SensorDataCollector", "AudioSensor::recordToByteBuffer(): AudioRecord.ERROR");
                 buf = null;
                 break;
             }
         }
         
-//        Log.d("SensorDataCollector",
-//                "AudioSensor::recordToByteBuffer():buf = " + buf);        
+        //Log.d("SensorDataCollector",
+        //  "AudioSensor::recordToByteBuffer():buf = " + buf);        
         return buf;
     }
     
@@ -374,6 +396,19 @@ public class AudioSensor extends AbstractSensor {
     }
     
     private void initializeAudioData(AbstractStore.Channel c, AudioRecord r) {
+        Log.d("SensorDataCollector", "AudioSensor::initializeAudioData(): start audio record");
+        
+        Log.d("SensorDataCollector", "initializeAudioData(): " +
+                "new AudioRecord(source, rate, channl, encoding, buffersize) = " +
+                "new AudioRecord(" + mAudioRecordParameter.getSource().getSourceId() + ", " +
+                r.getSampleRate() + ", " + 
+                "[ count = " + r.getChannelCount() + " config = " + r.getChannelConfiguration() + "], " + 
+                "[ format = " + r.getAudioFormat() + " format = " +
+                (r.getAudioFormat() == AudioFormat.ENCODING_PCM_16BIT ? "ENCODING_PCM_16BIT" : "ENCODING_PCM_8BIT") + "], " + 
+                mAudioRecordParameter.getBufferSize() + ")");
+        
+        r.startRecording();
+        
         if (c.getType() == Channel.CHANNEL_TYPE_WAV) {
             WaveHeader header = new WaveHeader((short)0, 0, (short)0, 0L);
             c.write(header.getHeader(), 0, header.getLength());
@@ -398,5 +433,12 @@ public class AudioSensor extends AbstractSensor {
             c.write(header.getHeader(), 0, header.getLength(), 0);
             c.setReadyToClose();
         }
+        r.stop();
+        r.release();
+        r = null; /*
+                   * set null according to documentation at
+                   * http://developer.android
+                   * .com/reference/android/media/AudioRecord.html#release%28%29
+                   */
     }
 }
