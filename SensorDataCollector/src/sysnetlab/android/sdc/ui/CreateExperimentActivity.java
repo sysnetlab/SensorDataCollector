@@ -39,6 +39,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
@@ -98,34 +99,27 @@ public class CreateExperimentActivity extends FragmentActivity
         ViewPager vp=new ViewPager(this);
 		vp.setOffscreenPageLimit(5);
 		
+		/*
         int operation = getIntent().getIntExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
                 SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT);
         if (operation == SensorDataCollectorActivity.APP_OPERATION_CLONE_EXPERIMENT) {
-            mExperiment = ExperimentManagerSingleton.getInstance().getActiveExperiment().clone();
+            initializeCloneExperimentUI(savedInstanceState);
         } else {
-            /**
-             * create an experiment using SimpleFileStore. It can be set using
-             * UI in the future when different types of Store are corrected.
-             */
-            mExperiment = new Experiment();
-            /*
-             * Note that this experiment object should be passed in/out to the service
-             * that runs in the service. 
-             */
-            ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);
-            
-            LinearLayout layoutProgress = (LinearLayout) findViewById(R.id.progressbar_loading);
+            initializeCreateExperimentUI(savedInstanceState);
+        }
+        */
+        int operation = getIntent().getIntExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
+                SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT);
+        if (operation == SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT) {
+            LinearLayout layoutProgress = (LinearLayout) findViewById(R.id.layout_progressbar_loading);
             if (layoutProgress != null)
                 layoutProgress.setVisibility(View.VISIBLE);
-            
-            for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(this)) {
-                sensor.setSelected(false);
-            }  
-            
-            if (layoutProgress != null)
-                layoutProgress.setVisibility(View.GONE);
         }
-
+    }       
+    
+    private void initializeCloneExperimentUI(Bundle savedInstanceState) {
+        mExperiment = ExperimentManagerSingleton.getInstance().getActiveExperiment().clone();
+        
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {
                 return;
@@ -138,8 +132,107 @@ public class CreateExperimentActivity extends FragmentActivity
         }
         //mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
-        Log.i("SensorDataCollector", "Leaving CreateExperimentActivit::onCreate.");
-    }           
+        Log.i("SensorDataCollector", "Leaving CreateExperimentActivit::onCreate.");        
+    }
+    
+    private class CreatingExperimentLoadingTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... v) {
+            /**
+             * create an experiment using SimpleFileStore. It can be set using
+             * UI in the future when different types of Store are corrected.
+             */
+            mExperiment = new Experiment();
+            /*
+             * Note that this experiment object should be passed in/out to the service
+             * that runs in the service. 
+             */
+            ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);
+
+            for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(CreateExperimentActivity.this)) {
+                sensor.setSelected(false);
+            }
+            return null;  
+        }
+
+        @Override
+        protected void onPreExecute() {
+            /**
+             * create an experiment using SimpleFileStore. It can be set using
+             * UI in the future when different types of Store are corrected.
+             */
+            mExperiment = new Experiment();
+            /*
+             * Note that this experiment object should be passed in/out to the
+             * service that runs in the service.
+             */
+            ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+          LinearLayout layoutProgress = (LinearLayout) findViewById(R.id.layout_progressbar_loading);
+          if (layoutProgress != null)
+              layoutProgress.setVisibility(View.GONE);
+          
+            if (findViewById(R.id.fragment_container) != null) {
+                mExperimentSetupFragment = new ExperimentSetupFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout);
+                transaction.add(R.id.fragment_container, mExperimentSetupFragment);
+                transaction.commit();
+            }
+            mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
+            Log.i("SensorDataCollector", "Leaving CreateExperimentActivit::onCreate."); 
+        }
+    }
+    
+    private void initializeCreateExperimentUI(Bundle savedInstanceState) {
+        CreatingExperimentLoadingTask task = new CreatingExperimentLoadingTask();
+        task.execute();       
+    }
+    
+//    private void initializeCreateExperimentUI(Bundle savedInstanceState) {
+//
+//        LinearLayout layoutProgress = (LinearLayout) findViewById(R.id.layout_progressbar_loading);
+//        if (layoutProgress != null)
+//            layoutProgress.setVisibility(View.VISIBLE);
+//        
+//        /**
+//         * create an experiment using SimpleFileStore. It can be set using
+//         * UI in the future when different types of Store are corrected.
+//         */
+//        mExperiment = new Experiment();
+//        /*
+//         * Note that this experiment object should be passed in/out to the service
+//         * that runs in the service. 
+//         */
+//        ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);
+//
+//        
+//        for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(this)) {
+//            sensor.setSelected(false);
+//        }  
+//
+//        if (layoutProgress != null)
+//            layoutProgress.setVisibility(View.GONE);  
+//        
+//
+//        if (findViewById(R.id.fragment_container) != null) {
+//            if (savedInstanceState != null) {
+//                return;
+//            }
+//            
+//            mExperimentSetupFragment = new ExperimentSetupFragment();
+//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//            transaction.add(R.id.fragment_container, mExperimentSetupFragment);
+//            transaction.commit();
+//        }
+//        //mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+//        mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
+//        Log.i("SensorDataCollector", "Leaving CreateExperimentActivit::onCreate.");      
+//    }
     
     @Override
     public void onBtnSetParameterClicked_SensorSetupFragment(View v, AbstractSensor sensor) {
@@ -306,7 +399,7 @@ public class CreateExperimentActivity extends FragmentActivity
             mRunExperimentServiceBound = false;      
         }        
     }
-
+    
     @Override
     protected void onResume() {
         super.onResume();
@@ -318,6 +411,20 @@ public class CreateExperimentActivity extends FragmentActivity
                 + status);
     }
 
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        
+        int operation = getIntent().getIntExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
+                SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT);
+        if (operation == SensorDataCollectorActivity.APP_OPERATION_CLONE_EXPERIMENT) {
+            initializeCloneExperimentUI(null);
+        } else {
+            initializeCreateExperimentUI(null);
+        }        
+    }
+    
     private void stopExperiment() {
 
         if (mRunExperimentServiceBound) {
