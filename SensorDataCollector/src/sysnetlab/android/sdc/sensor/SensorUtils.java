@@ -66,7 +66,8 @@ public class SensorUtils {
                     List<AudioRecordParameter> listParams = dbSource.getAllAudioRecordParameters();
                     dbSource.close();
                     
-                    audioSensor.setAudioRecordParameter(listParams.get(0));                    
+                    if (listParams != null && !listParams.isEmpty())
+                        audioSensor.setAudioRecordParameter(listParams.get(0));                    
                 }
                 
                 audioSensor.setId(id);

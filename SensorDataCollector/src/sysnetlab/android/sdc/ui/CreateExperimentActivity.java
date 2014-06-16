@@ -99,21 +99,12 @@ public class CreateExperimentActivity extends FragmentActivity
         ViewPager vp=new ViewPager(this);
 		vp.setOffscreenPageLimit(5);
 		
-		/*
         int operation = getIntent().getIntExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
                 SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT);
         if (operation == SensorDataCollectorActivity.APP_OPERATION_CLONE_EXPERIMENT) {
             initializeCloneExperimentUI(savedInstanceState);
         } else {
             initializeCreateExperimentUI(savedInstanceState);
-        }
-        */
-        int operation = getIntent().getIntExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
-                SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT);
-        if (operation == SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT) {
-            LinearLayout layoutProgress = (LinearLayout) findViewById(R.id.layout_progressbar_loading);
-            if (layoutProgress != null)
-                layoutProgress.setVisibility(View.VISIBLE);
         }
     }       
     
@@ -158,6 +149,9 @@ public class CreateExperimentActivity extends FragmentActivity
 
         @Override
         protected void onPreExecute() {
+            LinearLayout layoutProgress = (LinearLayout) findViewById(R.id.layout_progressbar_loading);
+            if (layoutProgress != null)
+                layoutProgress.setVisibility(View.VISIBLE);            
             /**
              * create an experiment using SimpleFileStore. It can be set using
              * UI in the future when different types of Store are corrected.
@@ -193,46 +187,6 @@ public class CreateExperimentActivity extends FragmentActivity
         task.execute();       
     }
     
-//    private void initializeCreateExperimentUI(Bundle savedInstanceState) {
-//
-//        LinearLayout layoutProgress = (LinearLayout) findViewById(R.id.layout_progressbar_loading);
-//        if (layoutProgress != null)
-//            layoutProgress.setVisibility(View.VISIBLE);
-//        
-//        /**
-//         * create an experiment using SimpleFileStore. It can be set using
-//         * UI in the future when different types of Store are corrected.
-//         */
-//        mExperiment = new Experiment();
-//        /*
-//         * Note that this experiment object should be passed in/out to the service
-//         * that runs in the service. 
-//         */
-//        ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);
-//
-//        
-//        for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(this)) {
-//            sensor.setSelected(false);
-//        }  
-//
-//        if (layoutProgress != null)
-//            layoutProgress.setVisibility(View.GONE);  
-//        
-//
-//        if (findViewById(R.id.fragment_container) != null) {
-//            if (savedInstanceState != null) {
-//                return;
-//            }
-//            
-//            mExperimentSetupFragment = new ExperimentSetupFragment();
-//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//            transaction.add(R.id.fragment_container, mExperimentSetupFragment);
-//            transaction.commit();
-//        }
-//        //mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-//        mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
-//        Log.i("SensorDataCollector", "Leaving CreateExperimentActivit::onCreate.");      
-//    }
     
     @Override
     public void onBtnSetParameterClicked_SensorSetupFragment(View v, AbstractSensor sensor) {
@@ -416,13 +370,13 @@ public class CreateExperimentActivity extends FragmentActivity
     protected void onResumeFragments() {
         super.onResumeFragments();
         
-        int operation = getIntent().getIntExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
-                SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT);
-        if (operation == SensorDataCollectorActivity.APP_OPERATION_CLONE_EXPERIMENT) {
-            initializeCloneExperimentUI(null);
-        } else {
-            initializeCreateExperimentUI(null);
-        }        
+//        int operation = getIntent().getIntExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
+//                SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT);
+//        if (operation == SensorDataCollectorActivity.APP_OPERATION_CLONE_EXPERIMENT) {
+//            initializeCloneExperimentUI(null);
+//        } else {
+//            initializeCreateExperimentUI(null);
+//        }        
     }
     
     private void stopExperiment() {
