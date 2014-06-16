@@ -141,7 +141,7 @@ public class ExperimentViewSensorDataFragment extends Fragment {
     }
 
     private String getSensorData(AbstractSensor sensor, int maximumLines) {
-        Log.i("SensorDataCollector", "called ExperimentViewSensorDataFragment::getSensorData().");
+        Log.d("SensorDataCollector", "called ExperimentViewSensorDataFragment::getSensorData().");
         String data = "";
 
         switch (sensor.getMajorType()) {
@@ -155,7 +155,7 @@ public class ExperimentViewSensorDataFragment extends Fragment {
                         break;
                     data = data + line + "\n";
                 }
-                if (i < maximumLines - 1) {
+                if (i >= maximumLines - 1) {
                     data = data
                             + mView.getResources().getString(R.string.text_sensor_has_more_data)
                             + "\n";
