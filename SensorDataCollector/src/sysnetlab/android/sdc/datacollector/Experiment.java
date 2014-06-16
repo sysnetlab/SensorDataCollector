@@ -77,18 +77,31 @@ public class Experiment implements Parcelable {
         this.mTags = tags;
     }
 
-    public void addTag(String strTag, String strDescription) {
+    public boolean addTag(String strTag, String strDescription) {
         if (strTag != null)
             strTag = strTag.trim();
         else
-            return;
+            return false;
+        
         if (strTag.equals("")) {
-            return;
+            return false;
         }
+        
         Tag t = new Tag(strTag, strDescription);
-        if (!mTags.contains(t)) {
-            mTags.add(t);
+        
+        boolean tagExists = false;
+        for (Tag tagInList : mTags) {
+            if (TextUtils.equals(t.getName(), tagInList.getName())) {
+                tagExists = true;
+                break;
+            }
         }
+        
+        if (!tagExists) {
+            return mTags.add(t);
+        } else {
+            return false;
+        } 
     }
 
     public List<Note> getNotes() {
