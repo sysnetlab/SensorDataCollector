@@ -4,7 +4,7 @@ public class AudioSource {
     private int mSourceId;
     private int mSourceNameResId;
 
-    AudioSource(int id, int resId) {
+    public AudioSource(int id, int resId) {
         mSourceId = id;
         mSourceNameResId = resId;
     }

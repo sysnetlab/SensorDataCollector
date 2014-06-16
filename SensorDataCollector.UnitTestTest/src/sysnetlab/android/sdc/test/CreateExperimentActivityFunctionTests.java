@@ -12,7 +12,6 @@ import sysnetlab.android.sdc.ui.CreateExperimentActivity;
 import sysnetlab.android.sdc.ui.adaptors.SensorListAdapter;
 import sysnetlab.android.sdc.ui.fragments.ExperimentEditNotesFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentEditTagsFragment;
-import sysnetlab.android.sdc.ui.fragments.ExperimentRunFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
@@ -25,8 +24,6 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 
 public class CreateExperimentActivityFunctionTests extends
         ActivityInstrumentationTestCase2<CreateExperimentActivity> {
@@ -117,7 +114,9 @@ public class CreateExperimentActivityFunctionTests extends
             }
 
         });
-
+        
+        getInstrumentation().waitForIdleSync();
+        
         int numSensorSelected = 0;
         for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(getActivity())) {
             if (sensor.isSelected()) {
@@ -269,6 +268,94 @@ public class CreateExperimentActivityFunctionTests extends
         assertTrue("tag list contains at least one member", tagList.size() > 0);
         assertTrue("layout has at least one child", layout.getChildCount() > 0);
         assertTrue("The number of tags displayed should be equal to the size of the tag list", layout.getChildCount() == tagList.size());
+    }
+    
+    public void testExperimentTagSetupDuplicateTagFunction() throws Exception {
+
+        // click on the Tag operation
+        mListOperations = (ListView) mCreateExperimentActivity.findViewById(R.id.lv_operations);
+        assertNotNull("Menu with operations has not been loaded", mListOperations);
+        assertTrue("listOperations.sgetCount() is not 3", mListOperations.getCount() == 3);
+
+        clickOperation(0);
+        getInstrumentation().waitForIdleSync();
+
+        // check and see if the ExperimentEditTagFragment is loaded. 
+        ExperimentEditTagsFragment tagFragment = mCreateExperimentActivity.getExperimentEditTagsFragment();
+        assertNotNull("Tag selection fragment failed to load", tagFragment);
+        final EditText editTextTag = (EditText) tagFragment.getView().findViewById(R.id.edittext_tag);
+        final EditText editTextDesc = (EditText) tagFragment.getView().findViewById(R.id.edittext_description);
+        final Button addButton = (Button) tagFragment.getView().findViewById(R.id.btn_add_tag);
+        assertNotNull("Failed to get EditText tag from View", editTextTag);
+        assertNotNull("Failed to get EditText description from View", editTextDesc);
+        assertNotNull("Button selection failed to load", addButton);
+        
+        // enter two tags with the same name, but different description
+        int numberOfDuplicatedTags = 2;
+        for (int i = 0; i < numberOfDuplicatedTags; i++) {
+            final String strTagDesc = "This is tag " + i;
+            getInstrumentation().runOnMainSync(new Runnable() {
+
+                @Override
+                public void run() {
+                    editTextTag.setText("Test tag");
+                    editTextDesc.setText(strTagDesc);
+                }
+
+            });
+
+            getInstrumentation().waitForIdleSync();
+
+            getInstrumentation().runOnMainSync(new Runnable() {
+
+                @Override
+                public void run() {
+                    addButton.performClick();
+                }
+
+            });
+
+            getInstrumentation().waitForIdleSync();
+        }
+        
+        // tag inserted should be just 1 as a result of duplicate names
+        Experiment tagExperiment = mCreateExperimentActivity.getExperiment();
+        List<Tag> tagList = tagExperiment.getTags();
+        assertNotNull("TagList failed to load", tagList);
+        assertEquals("Tag should be 1", 1, tagList.size());
+        
+        // enter two tags with the different names
+        numberOfDuplicatedTags = 2;
+        for (int i = 0; i < numberOfDuplicatedTags; i++) {
+            final String strTag = "Test Tag " + i;
+            final String strTagDesc = "This is tag " + i;
+            getInstrumentation().runOnMainSync(new Runnable() {
+
+                @Override
+                public void run() {
+                    editTextTag.setText(strTag);
+                    editTextDesc.setText(strTagDesc);
+                }
+
+            });
+
+            getInstrumentation().waitForIdleSync();
+
+            getInstrumentation().runOnMainSync(new Runnable() {
+
+                @Override
+                public void run() {
+                    addButton.performClick();
+                }
+
+            });
+
+            getInstrumentation().waitForIdleSync();
+        }   
+        
+        tagList = tagExperiment.getTags();
+        assertNotNull("TagList failed to load", tagList);
+        assertEquals("Tag should be 1", 3, tagList.size());
     }
     
     

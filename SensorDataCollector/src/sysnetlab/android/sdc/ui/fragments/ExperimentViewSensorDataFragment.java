@@ -141,21 +141,32 @@ public class ExperimentViewSensorDataFragment extends Fragment {
     }
 
     private String getSensorData(AbstractSensor sensor, int maximumLines) {
-        Log.i("SensorDataCollector", "called ExperimentViewSensorDataFragment::getSensorData().");
+        Log.d("SensorDataCollector", "called ExperimentViewSensorDataFragment::getSensorData().");
         String data = "";
 
         switch (sensor.getMajorType()) {
             case AbstractSensor.ANDROID_SENSOR:
                 Channel channel = ((AndroidSensor) sensor).getListener().getChannel();
 
-                for (int i = 0; i < maximumLines; i++) {
+                int i;
+                for (i = 0; i < maximumLines; i++) {
                     String line = channel.read();
                     if (line == null)
                         break;
                     data = data + line + "\n";
                 }
+                if (i >= maximumLines - 1) {
+                    data = data
+                            + mView.getResources().getString(R.string.text_sensor_has_more_data)
+                            + "\n";
+                }
 
                 channel.reset();
+                break;
+            case AbstractSensor.AUDIO_SENSOR:
+                data = mView.getResources().getString(
+                        R.string.text_does_support_viewing_audio_sensor_data)
+                        + "\n";
                 break;
         }
 

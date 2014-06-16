@@ -19,8 +19,8 @@ import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
+import sysnetlab.android.sdc.sensor.audio.AudioSensor;
 import android.test.AndroidTestCase;
-import android.util.Log;
 
 public class DataStoreTests extends AndroidTestCase {
 	
@@ -50,7 +50,7 @@ public class DataStoreTests extends AndroidTestCase {
     {
     	AbstractStore store = StoreSingleton.getInstance();
     	store.setupNewExperimentStorage(null);
-    	Channel channel = store.createChannel("testTag");
+    	Channel channel = store.createChannel("testTag", Channel.WRITE_ONLY, Channel.CHANNEL_TYPE_CSV);
     	assertNotNull("Created null channel", channel);
     	channel.open();
     	channel.write("aaa");
@@ -68,8 +68,8 @@ public class DataStoreTests extends AndroidTestCase {
     	assertNotNull(store.getNewExperimentPath());	
     	
     	int channelNumber = store.getNextChannelNumber();
-    	store.createChannel("");
-    	store.createChannel("");
+    	store.createChannel("", Channel.WRITE_ONLY, Channel.CHANNEL_TYPE_CSV);
+    	store.createChannel("", Channel.WRITE_ONLY, Channel.CHANNEL_TYPE_CSV);
     	assertTrue(channelNumber == (store.getNextChannelNumber() - 2));
     }
     
@@ -82,8 +82,8 @@ public class DataStoreTests extends AndroidTestCase {
         assertNotNull(store.getNewExperimentPath());
         
         int channelNumber = store.getNextChannelNumber();
-        store.createChannel("");
-        store.createChannel("");
+        store.createChannel("", Channel.WRITE_ONLY, Channel.CHANNEL_TYPE_CSV);
+        store.createChannel("", Channel.WRITE_ONLY, Channel.CHANNEL_TYPE_CSV);
         assertTrue(channelNumber == (store.getNextChannelNumber() - 2));
 
         Experiment exp1 = new Experiment();
@@ -111,14 +111,13 @@ public class DataStoreTests extends AndroidTestCase {
         
         List<AbstractSensor> listSensors = SensorDiscoverer.discoverSensorList(getContext());
 
-        
+        String channelPath = "";
+        AbstractStore.Channel channel = null;
         for (AbstractSensor sensor : listSensors) {
             switch (sensor.getMajorType()) {
                 case AbstractSensor.ANDROID_SENSOR:
-                    Log.d("SensorDataCollector.UnitTest", "Sensor Properties: " + ((AndroidSensor) sensor).getSamplingInterval());                    
-
-                    String channelPath = store.getNewExperimentPath() + "/" + sensor.getName().replace(' ', '_') + ".txt";
-                    AbstractStore.Channel channel = null;
+                    channelPath = store.getNewExperimentPath() + "/" + sensor.getName().replace(' ', '_') + ".txt";
+                    channel = null;
                     try {
                         channel = store.new SimpleFileChannel(channelPath, AbstractStore.Channel.WRITE_ONLY);
                     } catch (FileNotFoundException e) {
@@ -127,6 +126,17 @@ public class DataStoreTests extends AndroidTestCase {
                     AndroidSensorEventListener listener =
                             new AndroidSensorEventListener(channel);
                     ((AndroidSensor) sensor).setListener(listener);  
+                    break;
+                case AbstractSensor.AUDIO_SENSOR:
+                    channelPath = store.getNewExperimentPath() + "/" + sensor.getName().replace(' ', '_') + ".txt";
+                    channel = null;
+                    try {
+                        channel = store.new SimpleFileChannel(channelPath, AbstractStore.Channel.WRITE_ONLY);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    ((AudioSensor) sensor).setChannel(channel);
                     break;
             }
         }

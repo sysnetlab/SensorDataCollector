@@ -1,6 +1,8 @@
 
 package sysnetlab.android.sdc.datacollector;
 
+import java.lang.reflect.Field;
+
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -11,23 +13,27 @@ public class DeviceInformation implements Parcelable {
     private String mModel;
     private int mSdkInt;
     private String mSdkCodeName; 
+    private String mSdkRelease;
     
-    public DeviceInformation(String manufacturer, String model, int sdkInt, String sdkCodeName) {
+    public DeviceInformation(String manufacturer, String model, int sdkInt, String sdkCodeName, String sdkRelease) {
         setDeviceInformation(manufacturer, model);
         mSdkInt = sdkInt;
         mSdkCodeName = sdkCodeName;
+        mSdkRelease = sdkRelease;
     }
 
     public DeviceInformation() {
         setDeviceInformation(Build.MANUFACTURER, Build.MODEL);
         mSdkInt = Build.VERSION.SDK_INT;
-        mSdkCodeName = Build.VERSION.CODENAME;
+        mSdkCodeName = getCodeName();
+        mSdkRelease = Build.VERSION.RELEASE;
     }
     
     public DeviceInformation(String manufacturer, String model) {
         setDeviceInformation(manufacturer, model);
         mSdkInt = Build.VERSION.SDK_INT;
-        mSdkCodeName = Build.VERSION.CODENAME;
+        mSdkCodeName = getCodeName();
+        mSdkRelease = Build.VERSION.RELEASE;
     }
     
 
@@ -36,6 +42,7 @@ public class DeviceInformation implements Parcelable {
         mModel = deviceInfo.mModel;
         mSdkInt = deviceInfo.mSdkInt;
         mSdkCodeName = deviceInfo.mSdkCodeName;
+        mSdkRelease = deviceInfo.mSdkRelease;
     }
 
 
@@ -54,6 +61,7 @@ public class DeviceInformation implements Parcelable {
         
         mSdkInt = -1;
         mSdkCodeName = "unknown";
+        mSdkRelease = "unknown";
     }
 
     public String getModel() {
@@ -88,6 +96,14 @@ public class DeviceInformation implements Parcelable {
         mSdkCodeName = codeName;
     }
     
+    public String getSdkRelease() {
+        return mSdkRelease;
+    }
+    
+    public void setSdkRelease(String sdkRelease) {
+        mSdkRelease = sdkRelease;
+    }
+    
     public String toString() {
         return mManufacturer + " " + mModel;
     }
@@ -110,6 +126,10 @@ public class DeviceInformation implements Parcelable {
         if (!TextUtils.equals(mModel, deviceInfo.mModel)) {
             return false;
         }
+        
+        if (!TextUtils.equals(mSdkRelease,  deviceInfo.mSdkRelease)) {
+            return false;
+        }
 
         if (mSdkInt != deviceInfo.mSdkInt) {
             return false;
@@ -120,6 +140,28 @@ public class DeviceInformation implements Parcelable {
         }        
 
         return true;
+    }
+    
+    private String getCodeName() {
+        if (!Build.VERSION.CODENAME.equals("REL")) return Build.VERSION.CODENAME;
+        
+        String codeName = Build.VERSION.CODENAME;
+        
+        Field[] fields = Build.VERSION_CODES.class.getFields();
+        for (Field f : fields) {
+            try {
+                if (f.getInt(new Object()) == Build.VERSION.SDK_INT) {
+                    codeName = f.getName();
+                    break;
+                }
+            } catch (IllegalAccessException e) {
+                // use whatever in code name
+            } catch (IllegalArgumentException e) {
+                // use whatever in code name
+            }
+        }
+        
+        return codeName;
     }
     
     public static final Parcelable.Creator<DeviceInformation> CREATOR = new Parcelable.Creator<DeviceInformation>() {
@@ -139,6 +181,7 @@ public class DeviceInformation implements Parcelable {
         mModel = inParcel.readString();
         mSdkInt = inParcel.readInt();
         mSdkCodeName = inParcel.readString();
+        mSdkRelease = inParcel.readString();
     }
 
     @Override
@@ -152,5 +195,6 @@ public class DeviceInformation implements Parcelable {
         outParcel.writeString(mModel);
         outParcel.writeInt(mSdkInt);
         outParcel.writeString(mSdkCodeName);
+        outParcel.writeString(mSdkRelease);
     }
 }

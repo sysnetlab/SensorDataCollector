@@ -35,6 +35,11 @@ import sysnetlab.android.sdc.datacollector.TaggingState;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
+import sysnetlab.android.sdc.sensor.audio.AudioChannelIn;
+import sysnetlab.android.sdc.sensor.audio.AudioEncoding;
+import sysnetlab.android.sdc.sensor.audio.AudioRecordParameter;
+import sysnetlab.android.sdc.sensor.audio.AudioSensor;
+import sysnetlab.android.sdc.sensor.audio.AudioSource;
 
 public class SimpleXmlFileStore extends SimpleFileStore {
 
@@ -111,6 +116,7 @@ public class SimpleXmlFileStore extends SimpleFileStore {
     }
     
     public Experiment loadExperiment(String experimentPath) {
+        Log.d("SensorDataCollector.UnitTest", "entered loadExperiment() ...");        
         Experiment experiment = null;
         
         String configFilePath = experimentPath + "/" + XML_EXPERIMENT_META_DATA_FILE;
@@ -215,6 +221,10 @@ public class SimpleXmlFileStore extends SimpleFileStore {
         xs.text(deviceInfo.getSdkCodeName());
         xs.endTag("",  "sdk-codename");
 
+        xs.startTag("", "sdk-release");
+        xs.text(deviceInfo.getSdkRelease());
+        xs.endTag("",  "sdk-release");
+        
         xs.endTag("", "android");
         xs.endTag("", "device");
     }
@@ -242,13 +252,13 @@ public class SimpleXmlFileStore extends SimpleFileStore {
                 xs.text(tag.getName());
                 xs.endTag("", "name");
 
-                if (tag.getShortDescription().trim().length() > 0) {
+                if (tag.getShortDescription() != null && tag.getShortDescription().trim().length() > 0) {
                     xs.startTag("", "shortdescription");
                     xs.text(tag.getShortDescription());
                     xs.endTag("", "shortdescription");
                 }
 
-                if (tag.getLongDescription().trim().length() > 0) {
+                if (tag.getLongDescription() != null && tag.getLongDescription().trim().length() > 0) {
                     xs.startTag("", "longdescription");
                     xs.text(tag.getLongDescription());
                     xs.endTag("", "longdescription");
@@ -354,6 +364,9 @@ public class SimpleXmlFileStore extends SimpleFileStore {
                     case AbstractSensor.ANDROID_SENSOR:
                         serializeAndroidSensor(xs, (AndroidSensor) sensor);
                         break;
+                    case AbstractSensor.AUDIO_SENSOR:
+                        serializeAudioSensor(xs, (AudioSensor) sensor);
+                        break;
                 }
 
                 xs.endTag("", "sensor");
@@ -366,7 +379,7 @@ public class SimpleXmlFileStore extends SimpleFileStore {
     @SuppressWarnings("deprecation")
     private void serializeAndroidSensor(XmlSerializer xs, AndroidSensor sensor) throws IllegalArgumentException, IllegalStateException, IOException {
         xs.startTag("",  "datadescription");
-        xs.attribute("",  "type",  "csv");
+        xs.attribute("",  "type",  getChannelTypeString(sensor.getChannel().getType()));
 
         xs.startTag("",  "location");
         xs.text(sensor.getChannel().describe());
@@ -436,6 +449,74 @@ public class SimpleXmlFileStore extends SimpleFileStore {
         }  
         
         xs.endTag("",  "datadescription");        
+    }
+    
+    private void serializeAudioSensor(XmlSerializer xs, AudioSensor sensor) throws IllegalArgumentException, IllegalStateException, IOException {
+        xs.startTag("",  "datadescription");
+        xs.attribute("",  "type",  getChannelTypeString(sensor.getChannel().getType()));
+
+        xs.startTag("",  "location");
+        xs.text(sensor.getChannel().describe());
+        xs.endTag("",  "location");
+        
+        xs.startTag("", "source");
+        xs.startTag("", "id");
+        xs.text(Integer.toString(sensor.getAudioRecordParameter().getSource().getSourceId()));
+        xs.endTag("", "id");
+        xs.startTag("", "nameresid");
+        xs.text(Integer.toString(sensor.getAudioRecordParameter().getSource().getSourceNameResId()));
+        xs.endTag("", "nameresid");
+        xs.endTag("",  "source");
+        
+        xs.startTag("", "channelin");
+        xs.startTag("", "id");
+        xs.text(Integer.toString(sensor.getAudioRecordParameter().getChannel().getChannelId()));
+        xs.endTag("", "id");
+        xs.startTag("", "nameresid");
+        xs.text(Integer.toString(sensor.getAudioRecordParameter().getChannel().getChannelNameResId()));
+        xs.endTag("", "nameresid");
+        xs.endTag("",  "channelin");
+        
+        xs.startTag("", "encoding");
+        xs.startTag("", "id");
+        xs.text(Integer.toString(sensor.getAudioRecordParameter().getEncoding().getEncodingId()));
+        xs.endTag("", "id");
+        xs.startTag("", "nameresid");
+        xs.text(Integer.toString(sensor.getAudioRecordParameter().getEncoding().getEncodingNameResId()));
+        xs.endTag("", "nameresid");
+        xs.endTag("",  "encoding");
+        
+        xs.startTag("", "samplingrate");
+        xs.text(Integer.toString(sensor.getAudioRecordParameter().getSamplingRate()));
+        xs.endTag("",  "samplingrate");    
+        
+        xs.startTag("", "buffersize");
+        xs.text(Integer.toString(sensor.getAudioRecordParameter().getBufferSize()));
+        xs.endTag("",  "buffersize");  
+        
+        xs.startTag("", "minbuffersize");
+        xs.text(Integer.toString(sensor.getAudioRecordParameter().getMinBufferSize()));
+        xs.endTag("",  "minbuffersize");  
+        
+        xs.endTag("",  "datadescription");
+    }
+    
+    private String getChannelTypeString(int type) {
+        String strType;
+        
+        if (type == AbstractStore.Channel.CHANNEL_TYPE_CSV) {
+            strType = "csv";
+        } else if (type == AbstractStore.Channel.CHANNEL_TYPE_BIN) {
+            strType = "bin";
+        } else if (type == AbstractStore.Channel.CHANNEL_TYPE_PCM) {
+            strType = "pcm";
+        } else if (type == AbstractStore.Channel.CHANNEL_TYPE_WAV) {
+            strType = "wav";
+        } else {
+            strType = "txt";
+        }
+        
+        return strType;
     }
     
     private Experiment readExperiment(XmlPullParser xpp) throws IllegalStateException,
@@ -523,6 +604,7 @@ public class SimpleXmlFileStore extends SimpleFileStore {
         
         String make = null;
         String model = null;
+        String sdkRelease = null;
         int sdkInt = -1;
         String sdkCodeName = null;
         
@@ -539,12 +621,14 @@ public class SimpleXmlFileStore extends SimpleFileStore {
                 sdkInt = readAndroidDeviceSdkInt(xpp);
             } else if (name.equals("sdk-codename")) {
                 sdkCodeName = readAndroidDeviceSdkCodeName(xpp);
+            } else if (name.equals("sdk-release")) {
+                sdkRelease = readAndroidDeviceSdkRelease(xpp);
             } else {
                 skip(xpp);
             }
         }
         
-        return new DeviceInformation(make, model, sdkInt, sdkCodeName);          
+        return new DeviceInformation(make, model, sdkInt, sdkCodeName, sdkRelease); 
     }
     
     private String readAndroidDeviceMake(XmlPullParser xpp) throws XmlPullParserException, IOException {
@@ -561,6 +645,10 @@ public class SimpleXmlFileStore extends SimpleFileStore {
     
     private String readAndroidDeviceSdkCodeName(XmlPullParser xpp) throws XmlPullParserException, IOException {
         return readXmlElementText(xpp, "sdk-codename");
+    }
+    
+    private String readAndroidDeviceSdkRelease(XmlPullParser xpp) throws XmlPullParserException, IOException {
+        return readXmlElementText(xpp, "sdk-release");
     }
    
     private List<Tag> readTags(XmlPullParser xpp) throws XmlPullParserException, IOException {
@@ -819,6 +907,11 @@ public class SimpleXmlFileStore extends SimpleFileStore {
         return listSensors;
     }
     
+    private class AudioDataDefinition {
+        AudioRecordParameter mAudioDataParameter;
+        AbstractStore.Channel mChannel;
+    }
+    
     private AbstractSensor readSensor(XmlPullParser xpp) throws XmlPullParserException, IOException {
         xpp.require(XmlPullParser.START_TAG, XMLNS, "sensor");
         
@@ -834,6 +927,11 @@ public class SimpleXmlFileStore extends SimpleFileStore {
         int majorType = -1;
         int minorType = -1;
         AbstractStore.Channel channel = null;
+        int channelType = -1;
+        
+        AudioDataDefinition audioDataDefinition = new AudioDataDefinition();
+        
+        AbstractSensor sensor = null;
 
         while (xpp.next() != XmlPullParser.END_TAG) {
             if (xpp.getEventType() != XmlPullParser.START_TAG) {
@@ -848,17 +946,51 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             } else if (name.equals("minortype")) {
                 minorType = readSensorMinorType(xpp);
             } else if (name.equals("datadescription")) {
-                channel = readSensorDataDefinition(xpp);
+                channelType = readChannelType(xpp);
+                switch (majorType) {
+                    case AbstractSensor.ANDROID_SENSOR:
+                        channel = readAndroidSensorDataDefinition(xpp, channelType);
+                        break;
+                    case AbstractSensor.AUDIO_SENSOR:
+                        audioDataDefinition = readAudiodSensorDataDefinition(xpp, channelType);
+                        break;
+                }
             } else {
                 skip(xpp);
             }
         } 
         
-        AbstractSensor sensor = SensorUtilsSingleton.getInstance().getSensor(sensorName, majorType, minorType, id, channel);
+        switch (majorType) {
+            case AbstractSensor.ANDROID_SENSOR:
+                sensor = SensorUtilsSingleton.getInstance().getSensor(sensorName, majorType, minorType, id, channel, null);
+                break;
+            case AbstractSensor.AUDIO_SENSOR:
+                sensor = SensorUtilsSingleton.getInstance().getSensor(sensorName, majorType, minorType, id, audioDataDefinition.mChannel, audioDataDefinition.mAudioDataParameter);
+                break;
+        }
         return sensor;
     }
     
-    private AbstractStore.Channel readSensorDataDefinition(XmlPullParser xpp) throws XmlPullParserException, IOException {
+    private int readChannelType(XmlPullParser xpp) throws XmlPullParserException, IOException {
+        int type = -1;
+        
+        xpp.require(XmlPullParser.START_TAG, XMLNS, "datadescription");
+        
+        String strType = xpp.getAttributeValue("", "type"); 
+        if ("csv".equals(strType)) {
+            type = AbstractStore.Channel.CHANNEL_TYPE_CSV;
+        } else if ("bin".equals(strType)) {
+            type = AbstractStore.Channel.CHANNEL_TYPE_BIN;
+        } else if ("pcm".equals(strType)) {
+            type = AbstractStore.Channel.CHANNEL_TYPE_PCM;
+        } else if ("wav".equals(strType)) {
+            type = AbstractStore.Channel.CHANNEL_TYPE_WAV;
+        }
+        
+        return type;
+    }
+    
+    private AbstractStore.Channel readAndroidSensorDataDefinition(XmlPullParser xpp, int channelType) throws XmlPullParserException, IOException {
         xpp.require(XmlPullParser.START_TAG, XMLNS, "datadescription");
         
         String location = "";
@@ -877,7 +1009,121 @@ public class SimpleXmlFileStore extends SimpleFileStore {
         
         String channelFilePath = location; 
         
-        return new SimpleFileStore.SimpleFileChannel(channelFilePath, AbstractStore.Channel.READ_ONLY);   
+        return new SimpleFileStore.SimpleFileChannel(channelFilePath, AbstractStore.Channel.READ_ONLY, channelType);   
+    }
+    
+    private AudioDataDefinition readAudiodSensorDataDefinition(XmlPullParser xpp, int channelType) throws XmlPullParserException, IOException {
+        AudioDataDefinition audioDataDefinition = new AudioDataDefinition();
+        
+        xpp.require(XmlPullParser.START_TAG, XMLNS, "datadescription");
+        
+        String location = "";
+        
+        AudioSource s = null;
+        AudioChannelIn c = null;
+        AudioEncoding e = null;
+        int r = -1;
+        int bs = -1;
+        int mbs = -1;
+        
+        while (xpp.next() != XmlPullParser.END_TAG) {
+            if (xpp.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = xpp.getName();
+
+            if (name.equals("location")) {
+                location = readChannelLocation(xpp);
+            } else if (name.equals("source")) {
+                s = readAudioSource(xpp);
+            } else if (name.equals("channelin")) {
+                c = readAudioChannelIn(xpp);
+            } else if (name.equals("encoding")) {
+                e = readAudioEncoding(xpp);
+            } else if (name.equals("samplingrate")) {
+                r = Integer.parseInt(readXmlElementText(xpp, "samplingrate"));
+            } else if (name.equals("buffersize")) {
+                bs = Integer.parseInt(readXmlElementText(xpp, "buffersize"));
+            } else if (name.equals("minbuffersize")) {
+                mbs = Integer.parseInt(readXmlElementText(xpp, "minbuffersize"));
+            } else {
+                skip(xpp);
+            }
+        } 
+        
+        audioDataDefinition.mChannel = new SimpleFileStore.SimpleFileChannel(location, AbstractStore.Channel.READ_ONLY, channelType);
+        audioDataDefinition.mAudioDataParameter = new AudioRecordParameter(r, c, e, s, bs, mbs);
+        
+        return audioDataDefinition;
+    }    
+    
+    private AudioSource readAudioSource(XmlPullParser xpp) throws XmlPullParserException, IOException {
+        xpp.require(XmlPullParser.START_TAG, XMLNS, "source");
+        
+        int id = -1;
+        int nameresid = -1;
+        while (xpp.next() != XmlPullParser.END_TAG) {
+            if (xpp.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = xpp.getName();
+
+            if (name.equals("id")) {
+                id = Integer.parseInt(readXmlElementText(xpp, "id"));
+            } else if (name.equals("nameresid")) {
+                nameresid = Integer.parseInt(readXmlElementText(xpp, "nameresid"));
+            } else {
+                skip(xpp);
+            }
+        } 
+        
+        return new AudioSource(id, nameresid);       
+    }
+    
+    private AudioChannelIn readAudioChannelIn(XmlPullParser xpp) throws XmlPullParserException, IOException {
+        xpp.require(XmlPullParser.START_TAG, XMLNS, "channelin");
+        
+        int id = -1;
+        int nameresid = -1;
+        while (xpp.next() != XmlPullParser.END_TAG) {
+            if (xpp.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = xpp.getName();
+
+            if (name.equals("id")) {
+                id = Integer.parseInt(readXmlElementText(xpp, "id"));
+            } else if (name.equals("nameresid")) {
+                nameresid = Integer.parseInt(readXmlElementText(xpp, "nameresid"));
+            } else {
+                skip(xpp);
+            }
+        } 
+        
+        return new AudioChannelIn(id, nameresid);       
+    }
+    
+    private AudioEncoding readAudioEncoding(XmlPullParser xpp) throws XmlPullParserException, IOException {
+        xpp.require(XmlPullParser.START_TAG, XMLNS, "encoding");
+        
+        int id = -1;
+        int nameresid = -1;
+        while (xpp.next() != XmlPullParser.END_TAG) {
+            if (xpp.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = xpp.getName();
+
+            if (name.equals("id")) {
+                id = Integer.parseInt(readXmlElementText(xpp, "id"));
+            } else if (name.equals("nameresid")) {
+                nameresid = Integer.parseInt(readXmlElementText(xpp, "nameresid"));
+            } else {
+                skip(xpp);
+            }
+        } 
+        
+        return new AudioEncoding(id, nameresid);       
     }
     
     private String readChannelLocation(XmlPullParser xpp) throws XmlPullParserException, IOException {

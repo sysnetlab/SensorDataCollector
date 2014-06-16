@@ -43,7 +43,7 @@ public class SensorDataCollectorActivityTests
 	
 	public void testCreateExperimentButtonClicked()
 	{
-	    Button view = (Button) sdcActivity.findViewById(R.id.buttonCreateExperiment);
+	    Button view = (Button) sdcActivity.findViewById(R.id.button_create_experiment);
 	    assertNotNull("Button not allowed to be null", view);
 	    view.performClick();
 	    Intent triggeredIntent = getStartedActivityIntent();
@@ -55,6 +55,12 @@ public class SensorDataCollectorActivityTests
 	}
 	
 	public void testExperimentListClicked() {
+	    try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 		assertNotNull("Experiment list is null", mExperimentList);
 		assertNotSame("Experiment list is empty, create an experiment to run next tests", 0, mExperimentList.getCount());
 			

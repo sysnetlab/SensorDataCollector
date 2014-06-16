@@ -12,7 +12,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 public class AudioRecordSettingDataSource {
-
     private SQLiteDatabase database;
     private AudioRecordSettingDBHelper dbHelper;
     private String[] allColumns = {
@@ -47,20 +46,21 @@ public class AudioRecordSettingDataSource {
     private String[] statusColumns = {
             AudioRecordSettingDBHelper.COLUMN_NAME_STATUS
     };
-
+    
     public AudioRecordSettingDataSource(Context context) {
         dbHelper = new AudioRecordSettingDBHelper(context);
     }
 
-    public void open() throws SQLException {
+    private void open() throws SQLException {
         database = dbHelper.getWritableDatabase();
     }
 
-    public void close() {
+    private void close() {
         dbHelper.close();
     }
 
-    private boolean insertAudioRecordParameter(AudioRecordParameter audioRecordParam) {
+
+    private synchronized boolean insertAudioRecordParameter(AudioRecordParameter audioRecordParam) {
         ContentValues values = new ContentValues();
 
         values.put(AudioRecordSettingDBHelper.COLUMN_NAME_SAMPLING_RATE,
@@ -80,42 +80,52 @@ public class AudioRecordSettingDataSource {
         values.put(AudioRecordSettingDBHelper.COLUMN_NAME_MIN_BUFFER_SIZE,
                 audioRecordParam.getBufferSize());
 
+        open();
         if (database.insert(AudioRecordSettingDBHelper.TABLE_AUDIORECORDSETTINGS, null, values) == -1) {
+            close();
             return false;
         } else {
+            close();
             return true;
         }
     }
 
-    private boolean makeDataSourceReady() {
+    private synchronized boolean makeDataSourceReady() {
         ContentValues values = new ContentValues();
 
         values.put(AudioRecordSettingDBHelper.COLUMN_NAME_STATUS, 1);
 
+        open();
         if (database.insert(AudioRecordSettingDBHelper.TABLE_AUDIORECORDDISCOVERSTATUS, null,
                 values) == -1) {
+            close();
             return false;
         } else {
+            close();
             return true;
         }
     }
 
-    private boolean addAllAudioRecordParameters(List<AudioRecordParameter> params) {
+    private synchronized boolean addAllAudioRecordParameters(List<AudioRecordParameter> params) {
+        open();
         database.beginTransaction();
         for (AudioRecordParameter p : params) {
             if (!insertAudioRecordParameter(p)) {
                 database.endTransaction();
+                close();
                 return false;
             }
         }
 
         if (!makeDataSourceReady()) {
             database.endTransaction();
+            close();
             return false;
         }
 
         database.setTransactionSuccessful();
         database.endTransaction();
+        close();
         return true;
     }
 
@@ -124,9 +134,10 @@ public class AudioRecordSettingDataSource {
         return addAllAudioRecordParameters(params);
     }
 
-    public List<AudioRecordParameter> getAllAudioRecordParameters() {
+    public synchronized List<AudioRecordParameter> getAllAudioRecordParameters() {
         List<AudioRecordParameter> params = new ArrayList<AudioRecordParameter>();
 
+        open();
         Cursor cursor = database.query(AudioRecordSettingDBHelper.TABLE_AUDIORECORDSETTINGS,
                 allColumns, null, null, null, null, null);
 
@@ -138,16 +149,18 @@ public class AudioRecordSettingDataSource {
         }
 
         cursor.close();
-
+        close();
+        
         Log.i("SensorDataCollector",
                 "AudioRecordSettingDataSource::getAllAudioRecodParameters() returns "
                         + params.size() + " parameters");
         return params;
     }
 
-    public List<AudioChannelIn> getAllAudioChannelIns() {
+    public synchronized List<AudioChannelIn> getAllAudioChannelIns() {
         List<AudioChannelIn> listAudioChannelIn = new ArrayList<AudioChannelIn>();
 
+        open();
         Cursor cursor = database.query(true, AudioRecordSettingDBHelper.TABLE_AUDIORECORDSETTINGS,
                 audioChannelInColumns, null, null, null, null, null, null);
 
@@ -159,13 +172,15 @@ public class AudioRecordSettingDataSource {
         }
 
         cursor.close();
-
+        close();
+        
         return listAudioChannelIn;
     }
 
-    public List<AudioSource> getAllAudioSources() {
+    public synchronized List<AudioSource> getAllAudioSources() {
         List<AudioSource> listAudioSources = new ArrayList<AudioSource>();
 
+        open();
         Cursor cursor = database.query(true, AudioRecordSettingDBHelper.TABLE_AUDIORECORDSETTINGS,
                 audioSourceColumns, null, null, null, null, null, null);
 
@@ -177,6 +192,7 @@ public class AudioRecordSettingDataSource {
         }
 
         cursor.close();
+        close();
         
         Log.i("SensorDataCollector",
                 "AudioRecordSettingDataSource::getAllAudioSources() returns "
@@ -185,11 +201,13 @@ public class AudioRecordSettingDataSource {
         return listAudioSources;
     }
 
-    public List<AudioChannelIn> getAllAudioChannelIns(AudioSource source) {
+    public synchronized List<AudioChannelIn> getAllAudioChannelIns(AudioSource source) {
         List<AudioChannelIn> listChannels = new ArrayList<AudioChannelIn>();
 
         String selection = AudioRecordSettingDBHelper.COLUMN_NAME_AUDIO_SOURCE_ID + "="
                 + source.getSourceId();
+        
+        open();
         Cursor cursor = database.query(true, AudioRecordSettingDBHelper.TABLE_AUDIORECORDSETTINGS,
                 audioChannelInColumns, selection, null, null, null, null, null);
 
@@ -201,11 +219,12 @@ public class AudioRecordSettingDataSource {
         }
 
         cursor.close();
-
+        close();
+        
         return listChannels;
     }
 
-    public List<AudioEncoding> getAllAudioEncodings(AudioSource source, AudioChannelIn channel) {
+    public synchronized List<AudioEncoding> getAllAudioEncodings(AudioSource source, AudioChannelIn channel) {
         List<AudioEncoding> listEncodings = new ArrayList<AudioEncoding>();
 
         String selection = AudioRecordSettingDBHelper.COLUMN_NAME_AUDIO_SOURCE_ID + "="
@@ -213,6 +232,7 @@ public class AudioRecordSettingDataSource {
                 + AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_IN_ID + "="
                 + channel.getChannelId();
 
+        open();
         Cursor cursor = database.query(true, AudioRecordSettingDBHelper.TABLE_AUDIORECORDSETTINGS,
                 audioEncodingColumns, selection, null, null, null, null, null);
 
@@ -224,11 +244,12 @@ public class AudioRecordSettingDataSource {
         }
 
         cursor.close();
-
+        close();
+        
         return listEncodings;
     }
 
-    public List<Integer> getAllSamplingRates(AudioSource source, AudioChannelIn channel,
+    public synchronized List<Integer> getAllSamplingRates(AudioSource source, AudioChannelIn channel,
             AudioEncoding encoding) {
         List<Integer> listSamplingRates = new ArrayList<Integer>();
 
@@ -239,6 +260,7 @@ public class AudioRecordSettingDataSource {
                 + AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_ENCODING_ID + "="
                 + encoding.getEncodingId();
 
+        open();
         Cursor cursor = database.query(true, AudioRecordSettingDBHelper.TABLE_AUDIORECORDSETTINGS,
                 audioSamplingRateColumn, selection, null, null, null, null, null);
 
@@ -250,11 +272,12 @@ public class AudioRecordSettingDataSource {
         }
 
         cursor.close();
-
+        close();
+        
         return listSamplingRates;
     }
 
-    public int getMinBufferSize(AudioSource source, AudioChannelIn channel, AudioEncoding encoding,
+    public synchronized int getMinBufferSize(AudioSource source, AudioChannelIn channel, AudioEncoding encoding,
             int samplingRate) {
         String selection = AudioRecordSettingDBHelper.COLUMN_NAME_AUDIO_SOURCE_ID + "="
                 + source.getSourceId() + " and "
@@ -264,6 +287,7 @@ public class AudioRecordSettingDataSource {
                 + encoding.getEncodingId() + " and "
                 + AudioRecordSettingDBHelper.COLUMN_NAME_SAMPLING_RATE + "=" + samplingRate;
 
+        open();
         Cursor cursor = database.query(true, AudioRecordSettingDBHelper.TABLE_AUDIORECORDSETTINGS,
                 audioMinBufferSizeColumn, selection, null, null, null, null, null);
 
@@ -275,12 +299,14 @@ public class AudioRecordSettingDataSource {
         }
 
         cursor.close();
-
+        close();
+        
         return minBufferSize;
     }
 
-    public boolean isDataSourceReady() {
+    public synchronized boolean isDataSourceReady() {
 
+        open();
         Cursor cursor = database.query(AudioRecordSettingDBHelper.TABLE_AUDIORECORDDISCOVERSTATUS,
                 statusColumns, null, null, null, null, null);
 
@@ -292,7 +318,8 @@ public class AudioRecordSettingDataSource {
         }
 
         cursor.close();
-
+        close();
+        
         if (status > 0) {
             return true;
         } else {

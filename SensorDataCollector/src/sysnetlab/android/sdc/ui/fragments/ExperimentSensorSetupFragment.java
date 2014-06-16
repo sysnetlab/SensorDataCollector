@@ -45,14 +45,13 @@ public class ExperimentSensorSetupFragment extends Fragment {
             Bundle savedInstanceState) {
         // TODO: handle configuration changes
         mAudioRecordSettingDataSource = new AudioRecordSettingDataSource(getActivity());
-        mAudioRecordSettingDataSource.open();
+        //mAudioRecordSettingDataSource.open();
         if (!mAudioRecordSettingDataSource.isDataSourceReady()) {
             // add progress wheel
             // if false, disable audio recording
             mAudioRecordSettingDataSource.prepareDataSource();
         }
         mAudioRecordParameters = mAudioRecordSettingDataSource.getAllAudioRecordParameters();
-
         
         switch (mSensor.getMajorType()) {
             case AbstractSensor.ANDROID_SENSOR:
@@ -106,8 +105,7 @@ public class ExperimentSensorSetupFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        
-        mAudioRecordSettingDataSource.close();        
+        //mAudioRecordSettingDataSource.close();
     }
 
     @Override

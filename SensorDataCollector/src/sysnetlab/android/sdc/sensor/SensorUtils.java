@@ -16,12 +16,12 @@ public class SensorUtils {
 
     private Context mContext;
 
-    public AbstractSensor getSensor(String sensorName, int majorType, int minorType, Channel channel) {
-        return getSensor(sensorName, majorType, minorType, -1, channel);
+    public AbstractSensor getSensor(String sensorName, int majorType, int minorType, Channel channel, Object object) {
+        return getSensor(sensorName, majorType, minorType, -1, channel, object);
     }
 
     public AbstractSensor getSensor(String sensorName, int majorType, int minorType, int id,
-            Channel channel) {
+            Channel channel, Object object) {
         switch (majorType) {
             case AbstractSensor.ANDROID_SENSOR:
                 AndroidSensor androidSensor = new AndroidSensor();
@@ -53,18 +53,21 @@ public class SensorUtils {
 
                 return androidSensor;
             case AbstractSensor.AUDIO_SENSOR:
+                AudioRecordParameter param = (AudioRecordParameter) object;
                 AudioSensor audioSensor = AudioSensor.getInstance();
+                audioSensor.setAudioRecordParameter(param);
                 
                 if (audioSensor.getAudioRecordParameter() == null) {
                     AudioRecordSettingDataSource dbSource = new AudioRecordSettingDataSource(mContext);
-                    dbSource.open();
+                    //dbSource.open();
                     if (!dbSource.isDataSourceReady()) {
                         dbSource.prepareDataSource();
                     }
                     List<AudioRecordParameter> listParams = dbSource.getAllAudioRecordParameters();
-                    dbSource.close();
+                    //dbSource.close();
                     
-                    audioSensor.setAudioRecordParameter(listParams.get(0));                    
+                    if (listParams != null && !listParams.isEmpty())
+                        audioSensor.setAudioRecordParameter(listParams.get(0));                    
                 }
                 
                 audioSensor.setId(id);
