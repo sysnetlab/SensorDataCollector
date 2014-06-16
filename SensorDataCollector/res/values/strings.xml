@@ -51,6 +51,9 @@
     <string name="text_sensors_on_the_device">Sensors on the Devices</string>
     <string name="text_create_new_experiment">Create New Experiment</string>
     <string name="text_add_tag">Add Tag</string>
+    <string name="text_creating_notes">Creating Notes</string>
+    <string name="text_selecting_sensors">Selecting Sensors</string>
+    <string name="text_creating_tags">Creating Tags</string>
     <string name="text_write_a_note_for_the_experiment">
         Write a note for the experiment
     </string>
@@ -106,6 +109,10 @@
     <string name="text_do_you_want_to_stop_experiment">
         Do you want to stop the experiment?
     </string>
+    <string name="text_do_you_want_to_leave_experiment">
+        Do you want to leave the experiment? All changes will be lost.
+    </string>
+    <string name="text_leave_experiment">Leave Experiment</string>
     <string name="text_stop_experiment">Stop Experiment</string>
     <string name="text_continue_experiment">Continue Experiment</string>
     <string name="text_stopping_experiment">Stopping the experiment &#8230;</string>

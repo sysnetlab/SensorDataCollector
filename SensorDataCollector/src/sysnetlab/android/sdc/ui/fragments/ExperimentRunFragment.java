@@ -31,7 +31,7 @@ public class ExperimentRunFragment extends Fragment{
         public void stopExperiment_ExperimentRunFragment();
         public void notifyInBackground_ExperimentRunFragment();
         public void removeInBackgroundNotification_ExperimentRunFragment();
-        public void runTimer_ExperimentRunFragment();
+        public void runTimer_ExperimentRunFragment();        
     }       
 
     @Override

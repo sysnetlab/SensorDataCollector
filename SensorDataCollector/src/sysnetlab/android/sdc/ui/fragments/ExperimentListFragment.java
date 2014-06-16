@@ -30,8 +30,7 @@ public class ExperimentListFragment extends ListFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+        super.onCreate(savedInstanceState);        
         // TODO: handle configuration changes
         LayoutInflater inflator = getLayoutInflater(savedInstanceState);
         mFooterView = inflator.inflate(R.layout.experiment_list_footer, null);

@@ -106,6 +106,10 @@ public class ExperimentSetupFragment extends Fragment {
         }
     }
 
+    public boolean isFragmentUIActive() {
+        return isAdded() && !isDetached() && !isRemoving();
+    }
+    
     public View getView() {
         return mView;
     }

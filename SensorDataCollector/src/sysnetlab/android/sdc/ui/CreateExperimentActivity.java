@@ -29,6 +29,7 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentSensorListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -46,6 +47,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -186,7 +188,7 @@ public class CreateExperimentActivity extends FragmentActivity
         ((EditText)this.findViewById(
 				R.id.edittext_experiment_note_editing_note)).
 				getText().clear();
-        getSupportFragmentManager().popBackStack();
+        this.onBackPressed();
     }   
 
     public ExperimentSensorSelectionFragment getExperimentSensorSensorSelectionFragment()
@@ -285,8 +287,8 @@ public class CreateExperimentActivity extends FragmentActivity
         super.onStop();
         // Stop the local service
         //stopService(new Intent(this, RunExperimentService.class));
-    }
-
+    }    
+    
     @Override
     protected void onPause() {
         super.onPause();      
@@ -307,8 +309,8 @@ public class CreateExperimentActivity extends FragmentActivity
                 this, RunExperimentService.class), mRunExperimentServiceConnection);
         Log.i("SensorDataCollector", "CreateExperimentActivity::onStart() called. status = "
                 + status);
-    }
-
+    }    
+    
     private void stopExperiment() {
 
         if (mRunExperimentServiceBound) {
@@ -407,13 +409,14 @@ public class CreateExperimentActivity extends FragmentActivity
     
     @Override
     public void onBackPressed() {
-        if (mExperimentRunFragment != null) {
-            if (mExperimentRunFragment.isFragmentUIActive()) {
-                confirmToStopExperiment();
-            }
-        } else {
+        if (mExperimentRunFragment != null && mExperimentRunFragment.isFragmentUIActive()) {            
+            confirmToStopExperiment();            
+        } else if(mExperimentSetupFragment != null && mExperimentSetupFragment.isFragmentUIActive()){
+    		confirmToLeaveActivity();
+        }else {
             super.onBackPressed();
         }
+        changeActionBarTitle(R.string.text_creating_experiment, R.drawable.ic_launcher);
     }
     
     @Override
@@ -427,6 +430,7 @@ public class CreateExperimentActivity extends FragmentActivity
             mExperimentEditTagsFragment = new ExperimentEditTagsFragment();
         }
         FragmentUtil.switchToFragment(this, mExperimentEditTagsFragment, "edittags");
+        changeActionBarTitle(R.string.text_creating_tags, R.drawable.icon_tags_inverse);
     }
 
     @Override
@@ -434,7 +438,8 @@ public class CreateExperimentActivity extends FragmentActivity
     	if (mExperimentEditNotesFragment == null) {
             mExperimentEditNotesFragment = new ExperimentEditNotesFragment();
         }
-        FragmentUtil.switchToFragment(this, mExperimentEditNotesFragment, "editnotes");
+        FragmentUtil.switchToFragment(this, mExperimentEditNotesFragment, "editnotes");        
+        changeActionBarTitle(R.string.text_creating_notes, R.drawable.icon_notes_inverse);
     }
 
     @Override
@@ -447,6 +452,7 @@ public class CreateExperimentActivity extends FragmentActivity
         getIntent().putExtra("havingheader", true);
         getIntent().putExtra("havingfooter", true);
         FragmentUtil.switchToFragment(this, mExperimentSensorSelectionFragment, "sensorselection");
+        changeActionBarTitle(R.string.text_selecting_sensors, R.drawable.icon_sensors_inverse);
     }
     
     @Override
@@ -537,18 +543,19 @@ public class CreateExperimentActivity extends FragmentActivity
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+    	MenuItem item2 = item;
+        switch(item2.getItemId()) {
 	        case android.R.id.home:
-	        	if(mExperimentRunFragment!=null){
-	            	if(mExperimentRunFragment.isFragmentUIActive()){
-	            		mExperimentRunFragment.setIsUserTrigger(true);	    	        	
-	            	}
-	            }
-	            return super.onOptionsItemSelected(item);
-	        default:
-	            return super.onOptionsItemSelected(item);
-	        }
-    }
+	        	if(mExperimentRunFragment!=null && mExperimentRunFragment.isFragmentUIActive()){	            	
+	        		confirmToStopExperiment();
+	            	return true;	    	        		            	
+	            }else{
+	            	confirmToLeaveActivity();
+	            	return true;
+	            }	        
+        }		
+        return super.onOptionsItemSelected(item);
+    }       
     
     public void onSensorClicked_ExperimentSensorSelectionFragment(AbstractSensor sensor) {
         Log.i("SensorDataCollector",
@@ -606,6 +613,32 @@ public class CreateExperimentActivity extends FragmentActivity
 
 	public void setRunExperimentService(RunExperimentService runExperimentService) {
 		this.mRunExperimentService = runExperimentService;
+	}
+	
+	private void confirmToLeaveActivity(){		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		
+        builder.setMessage(R.string.text_do_you_want_to_leave_experiment)
+                .setTitle(R.string.text_experiment);
+        builder.setPositiveButton(R.string.text_leave_experiment,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(CreateExperimentActivity.this,
+                                R.string.text_stopping_experiment, Toast.LENGTH_SHORT).show();
+                        finish();
+                        dialog.dismiss();                        
+                    }
+                });
+        builder.setNegativeButton(R.string.text_continue_experiment,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(CreateExperimentActivity.this,
+                                R.string.text_continuing_experiment, Toast.LENGTH_SHORT).show();
+                    }
+                });
+        mAlertDialog = builder.create();
+
+        mAlertDialog.show();
 	}
 	
     private void confirmToStopExperiment() {
@@ -669,5 +702,11 @@ public class CreateExperimentActivity extends FragmentActivity
     			});
     		}
     	}, 1000, 1000);
+    }
+    
+    @SuppressLint("NewApi")
+	public void changeActionBarTitle(int titleResId, int iconResId){    	
+    	getActionBar().setTitle(titleResId);
+    	getActionBar().setIcon(iconResId);    	
     }
 }
