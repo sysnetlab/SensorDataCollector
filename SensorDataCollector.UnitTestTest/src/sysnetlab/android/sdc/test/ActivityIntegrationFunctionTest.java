@@ -8,6 +8,9 @@ import android.test.ActivityInstrumentationTestCase2;
 public class ActivityIntegrationFunctionTest extends
         ActivityInstrumentationTestCase2<SensorDataCollectorActivity> {
     private int mMaximumNumberOfTags;
+    private Activity mCeActivity;
+    private Activity mVeActivity;
+    private Activity mSdcActivity;
 
     public ActivityIntegrationFunctionTest() {
         super(SensorDataCollectorActivity.class);
@@ -26,39 +29,41 @@ public class ActivityIntegrationFunctionTest extends
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
+
+        if (mCeActivity != null) mCeActivity.finish();
+        if (mVeActivity != null) mVeActivity.finish();
+        if (mSdcActivity != null) mSdcActivity.finish();
     }
 
     public void testCloneExperimentWithTags() {
-        Activity activity;
-
         // start SensorDataCollector activity
-        activity = TestHelper.launchSensorDataCollectorActivity(this);
+        mSdcActivity = TestHelper.launchSensorDataCollectorActivity(this);
 
         // launch CreateExperimentActivity by clicking the Create-New-Experiment button
-        activity = TestHelper.launchCreateExperimentActivity(this, activity);
+        mCeActivity = TestHelper.launchCreateExperimentActivity(this, mSdcActivity);
 
         // add a few tags
-        TestHelper.enterTags(this, activity, mMaximumNumberOfTags);
+        TestHelper.enterTags(this, mCeActivity, mMaximumNumberOfTags);
         
         // go back to experiment setup screen
         TestHelper.goBack(this);
         
         // run the experiment
-        TestHelper.startExperiment(this, activity);
+        TestHelper.startExperiment(this, mCeActivity);
         
         // stop the experiment
-        activity = TestHelper.stopExperiment(this, activity);
+        mSdcActivity = TestHelper.stopExperiment(this, mCeActivity);
         
         // view the most recent experiment
-        activity = TestHelper.viewMostRecentExperiment(this, activity);
+        mVeActivity = TestHelper.viewMostRecentExperiment(this, mSdcActivity);
       
         // clone the experiment
-        activity = TestHelper.cloneExperiment(this, activity);
+        mCeActivity = TestHelper.cloneExperiment(this, mVeActivity);
 
         // run the experiment
-        TestHelper.startExperiment(this, activity);
+        TestHelper.startExperiment(this, mCeActivity);
         
         // stop the experiment
-        TestHelper.stopExperiment(this, activity);
+        TestHelper.stopExperiment(this, mCeActivity);
     }
 }

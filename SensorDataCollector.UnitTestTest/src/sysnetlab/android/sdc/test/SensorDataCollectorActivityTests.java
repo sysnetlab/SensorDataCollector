@@ -55,6 +55,12 @@ public class SensorDataCollectorActivityTests
 	}
 	
 	public void testExperimentListClicked() {
+	    try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 		assertNotNull("Experiment list is null", mExperimentList);
 		assertNotSame("Experiment list is empty, create an experiment to run next tests", 0, mExperimentList.getCount());
 			

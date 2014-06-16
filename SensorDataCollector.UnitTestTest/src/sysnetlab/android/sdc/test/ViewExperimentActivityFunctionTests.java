@@ -14,6 +14,7 @@ import sysnetlab.android.sdc.ui.adaptors.SensorListAdapter;
 import sysnetlab.android.sdc.ui.adaptors.SensorPropertyListAdapter;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewNotesFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
@@ -68,6 +69,10 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
         if(mExperiment.getSensors().size()>0){
 	        ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);	        
 	        mViewExperimentActivity=getActivity();
+	        if (mViewExperimentActivity == null) {
+	            Log.e("Test Setup Error", "Activity is null!");
+  
+	        }
 	        getInstrumentation().waitForIdleSync();
         }
         else {
@@ -86,6 +91,7 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
 	}
     
     public void testButtonsPosition(){
+        assertNotNull("Activity should not be null.", mViewExperimentActivity);
 		RelativeLayout buttons = (RelativeLayout) mViewExperimentActivity.findViewById(R.id.layout_experiment_view_buttons);
 		assertNotNull("View buttons not allowed to be null", buttons);
 		LinearLayout sensorList = (LinearLayout) mViewExperimentActivity.findViewById(R.id.layout_experiment_view_sensor_list);
