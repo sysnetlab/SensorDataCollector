@@ -162,7 +162,7 @@ public class AudioRecordSettingDataSource {
 
         cursor.close();
         
-        Log.i("SensorDataCollector",
+        Log.d("SensorDataCollector",
                 "AudioRecordSettingDataSource::getAllAudioRecodParameters() returns "
                         + params.size() + " parameters");
         return params;
@@ -201,7 +201,7 @@ public class AudioRecordSettingDataSource {
 
         cursor.close();
         
-        Log.i("SensorDataCollector",
+        Log.d("SensorDataCollector",
                 "AudioRecordSettingDataSource::getAllAudioSources() returns "
                         + listAudioSources.size() + " sources");        
 

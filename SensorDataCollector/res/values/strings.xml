@@ -8,6 +8,9 @@
 	<string name="text_sensors_description_text">Sensors from which data were collected.</string>
     <string name="text_creating_experiment">Creating Experiment</string>
     <string name="text_viewing_experiment">Viewing Experiment</string>
+    <string name="text_viewing_notes">Viewing notes</string>
+    <string name="text_viewing_tags">Viewing tags</string>
+    <string name="text_viewing_sensors">Viewing sensors</string>
     <string name="text_experiment_tags">Experiment Tags</string>
     <string name="text_tag">Tag</string>
     <string name="text_tags">Tags</string>
@@ -110,7 +113,7 @@
         Do you want to stop the experiment?
     </string>
     <string name="text_do_you_want_to_leave_experiment">
-        Do you want to leave the experiment? All changes will be lost.
+        Do you want to leave the experiment setup? All data will be lost.
     </string>
     <string name="text_leave_experiment">Leave Experiment</string>
     <string name="text_stop_experiment">Stop Experiment</string>
