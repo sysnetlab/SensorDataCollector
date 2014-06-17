@@ -116,4 +116,8 @@ public class ExperimentViewFragment extends Fragment {
     	return mExperimentSensorListFragment;
     }
     
+    public boolean isFragmentUIActive() {
+        return isAdded() && !isDetached() && !isRemoving();
+    }
+    
 }

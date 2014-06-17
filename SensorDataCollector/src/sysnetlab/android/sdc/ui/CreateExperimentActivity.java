@@ -584,9 +584,7 @@ public class CreateExperimentActivity extends FragmentActivity
                 .setTitle(R.string.text_experiment);
         builder.setPositiveButton(R.string.text_leave_experiment,
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(CreateExperimentActivity.this,
-                                R.string.text_stopping_experiment, Toast.LENGTH_SHORT).show();
+                    public void onClick(DialogInterface dialog, int id) {                        
                         finish();
                         dialog.dismiss();                        
                     }
