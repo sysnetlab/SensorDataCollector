@@ -1,10 +1,15 @@
 
-package sysnetlab.android.sdc.sensor.audio;
+package sysnetlab.android.sdc.ui.fragments;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import sysnetlab.android.sdc.R;
+import sysnetlab.android.sdc.sensor.audio.AudioChannelIn;
+import sysnetlab.android.sdc.sensor.audio.AudioEncoding;
+import sysnetlab.android.sdc.sensor.audio.AudioRecordParameter;
+import sysnetlab.android.sdc.sensor.audio.AudioRecordSettingDataSource;
+import sysnetlab.android.sdc.sensor.audio.AudioSource;
 import sysnetlab.android.sdc.ui.UserInterfaceUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,18 +30,16 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
     // assume that list is short. use sequential search
     private List<AudioRecordParameter> mListAudioRecordParameters;
     private AudioRecordParameter mAudioRecordParameter;
-    private AudioRecordSettingDataSource mAudioRecordSettingDataSource;
     private Activity mActivity;
     private ListView mListView;
 
     public static AudioSensorSetupDialogFragment newInstance(Activity activity,
-            AudioRecordSettingDataSource dbSource, List<AudioRecordParameter> allParams,
+            List<AudioRecordParameter> allParams,
             AudioRecordParameter param, ListView listView, int operation) {
         AudioSensorSetupDialogFragment d = new AudioSensorSetupDialogFragment();
 
         d.mActivity = activity;
         d.mAudioRecordParameter = param;
-        d.mAudioRecordSettingDataSource = dbSource;
         d.mListAudioRecordParameters = allParams;
         d.mListView = listView;
 
@@ -59,11 +62,14 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         CharSequence[] cs;
         int checkedItem;
+        
+        AudioRecordSettingDataSource.initializeInstance(getActivity());
+        AudioRecordSettingDataSource dbSource = AudioRecordSettingDataSource.getInstance();
 
         switch (operation) {
             case SELECT_SOURCE:
-                final List<AudioSource> listSources = mAudioRecordSettingDataSource
-                        .getAllAudioSources();
+
+                final List<AudioSource> listSources = dbSource.getAllAudioSources();
 
                 cs = new CharSequence[listSources.size()];
                 checkedItem = 0;
@@ -112,8 +118,7 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
 
                 break;
             case SELECT_CHANNEL_IN:
-                final List<AudioChannelIn> listChannels = mAudioRecordSettingDataSource
-                        .getAllAudioChannelIns(mAudioRecordParameter.getSource());
+                final List<AudioChannelIn> listChannels = dbSource.getAllAudioChannelIns(mAudioRecordParameter.getSource());
 
                 cs = new CharSequence[listChannels.size()];
                 checkedItem = 0;
@@ -159,8 +164,7 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
 
                 break;
             case SELECT_ENCODING:
-                final List<AudioEncoding> listEncodings = mAudioRecordSettingDataSource
-                        .getAllAudioEncodings(mAudioRecordParameter.getSource(),
+                final List<AudioEncoding> listEncodings = dbSource.getAllAudioEncodings(mAudioRecordParameter.getSource(),
                                 mAudioRecordParameter.getChannel());
 
                 cs = new CharSequence[listEncodings.size()];
@@ -209,8 +213,7 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
 
                 break;
             case SELECT_SAMPLING_RATE:
-                final List<Integer> listSamplingRates = mAudioRecordSettingDataSource
-                        .getAllSamplingRates(mAudioRecordParameter.getSource(),
+                final List<Integer> listSamplingRates = dbSource.getAllSamplingRates(mAudioRecordParameter.getSource(),
                                 mAudioRecordParameter.getChannel(),
                                 mAudioRecordParameter.getEncoding());
 
@@ -264,7 +267,7 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
             case SELECT_MIN_BUFFER_SIZE:
                 
                 // TODO change it to slider/seek bar instead of list
-                final int minBufferSize = mAudioRecordSettingDataSource.getMinBufferSize(
+                final int minBufferSize = dbSource.getMinBufferSize(
                         mAudioRecordParameter.getSource(), mAudioRecordParameter.getChannel(),
                         mAudioRecordParameter.getEncoding(),
                         mAudioRecordParameter.getSamplingRate());
@@ -311,7 +314,7 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
 
                 break;
         }
-
+        dbSource.close();
         Dialog dialog = builder.create();
 
         return dialog;

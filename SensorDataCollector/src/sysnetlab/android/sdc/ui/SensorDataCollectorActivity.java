@@ -11,7 +11,6 @@ import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -19,9 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 
 public class SensorDataCollectorActivity extends FragmentActivity implements
         ExperimentListFragment.OnFragmentClickListener {
@@ -46,8 +43,16 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
         // Dropbox
         DropboxHelper.getInstance(getApplicationContext());        
 
-        SensorDataCollectorActivityLoadingTask task = new SensorDataCollectorActivityLoadingTask();
-        task.execute();
+        for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(SensorDataCollectorActivity.this)) {
+            sensor.setSelected(false);
+        }
+        if (findViewById(R.id.fragment_container) != null) {
+            mExperimentListFragment = new ExperimentListFragment();
+            FragmentTransaction transaction = getSupportFragmentManager()
+                    .beginTransaction();
+            transaction.add(R.id.fragment_container, mExperimentListFragment);
+            transaction.commit();
+        }  
       
     }
 
@@ -128,38 +133,4 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
 	public void onBackPressed(){
     	moveTaskToBack(true);
 	}
-    
-    private class SensorDataCollectorActivityLoadingTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... v) {
-            for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(SensorDataCollectorActivity.this)) {
-                sensor.setSelected(false);
-            }
-            return null;  
-        }
-
-        @Override
-        protected void onPreExecute() {
-            LinearLayout layoutProgress = (LinearLayout) findViewById(R.id.layout_progressbar_loading);
-            if (layoutProgress != null)
-                layoutProgress.setVisibility(View.VISIBLE);            
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-          LinearLayout layoutProgress = (LinearLayout) findViewById(R.id.layout_progressbar_loading);
-          if (layoutProgress != null)
-              layoutProgress.setVisibility(View.GONE);
-          
-          if (findViewById(R.id.fragment_container) != null) {
-              mExperimentListFragment = new ExperimentListFragment();
-              FragmentTransaction transaction = getSupportFragmentManager()
-                      .beginTransaction();
-              transaction.add(R.id.fragment_container, mExperimentListFragment);
-              transaction.commit();
-          } 
-        }
-    }    
-    
 }
