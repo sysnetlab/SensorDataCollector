@@ -6,6 +6,8 @@ import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datacollector.DropboxHelper;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
+import sysnetlab.android.sdc.sensor.AbstractSensor;
+import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
 import android.content.Intent;
@@ -32,31 +34,26 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
-
+        
         ExperimentManagerSingleton.getInstance().addExperimentStore(
                 StoreSingleton.getInstance());
+        
+        SensorUtilsSingleton.getInstance().setContext(getApplicationContext());
+        
+        // Dropbox
+        DropboxHelper.getInstance(getApplicationContext());        
 
+        for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(SensorDataCollectorActivity.this)) {
+            sensor.setSelected(false);
+        }
         if (findViewById(R.id.fragment_container) != null) {
-            if (savedInstanceState != null) {
-                return;
-            }
-
             mExperimentListFragment = new ExperimentListFragment();
             FragmentTransaction transaction = getSupportFragmentManager()
                     .beginTransaction();
             transaction.add(R.id.fragment_container, mExperimentListFragment);
             transaction.commit();
-        }
-
-        SensorUtilsSingleton.getInstance().setContext(getBaseContext());
-        
-      // Dropbox
-      DropboxHelper.getInstance(getApplicationContext());
-     
-    }
-
-    public void onStart() {
-        super.onStart();
+        }  
+      
     }
 
     public void onResume() {
@@ -136,5 +133,4 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
 	public void onBackPressed(){
     	moveTaskToBack(true);
 	}
-    
 }
