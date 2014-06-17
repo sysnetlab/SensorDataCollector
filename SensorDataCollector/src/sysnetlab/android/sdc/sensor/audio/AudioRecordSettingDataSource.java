@@ -22,24 +22,24 @@ public class AudioRecordSettingDataSource {
             AudioRecordSettingDBHelper.COLUMN_NAME_ID,
             AudioRecordSettingDBHelper.COLUMN_NAME_SAMPLING_RATE,
             AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_IN_ID,
-            AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_IN_RES_ID,
+            //AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_IN_RES_ID,
             AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_ENCODING_ID,
-            AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_ENCODING_RES_ID,
+            //AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_ENCODING_RES_ID,
             AudioRecordSettingDBHelper.COLUMN_NAME_AUDIO_SOURCE_ID,
-            AudioRecordSettingDBHelper.COLUMN_NAME_AUDIO_SOURCE_RES_ID,
+            //AudioRecordSettingDBHelper.COLUMN_NAME_AUDIO_SOURCE_RES_ID,
             AudioRecordSettingDBHelper.COLUMN_NAME_MIN_BUFFER_SIZE
     };
     private String[] audioSourceColumns = {
-            AudioRecordSettingDBHelper.COLUMN_NAME_AUDIO_SOURCE_ID,
-            AudioRecordSettingDBHelper.COLUMN_NAME_AUDIO_SOURCE_RES_ID
+            AudioRecordSettingDBHelper.COLUMN_NAME_AUDIO_SOURCE_ID//,
+            //AudioRecordSettingDBHelper.COLUMN_NAME_AUDIO_SOURCE_RES_ID
     };
     private String[] audioChannelInColumns = {
-            AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_IN_ID,
-            AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_IN_RES_ID
+            AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_IN_ID//,
+            //AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_IN_RES_ID
     };
     private String[] audioEncodingColumns = {
-            AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_ENCODING_ID,
-            AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_ENCODING_RES_ID
+            AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_ENCODING_ID//,
+            //AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_ENCODING_RES_ID
     };
     private String[] audioSamplingRateColumn = {
             AudioRecordSettingDBHelper.COLUMN_NAME_SAMPLING_RATE
@@ -90,16 +90,16 @@ public class AudioRecordSettingDataSource {
                 audioRecordParam.getSamplingRate());
         values.put(AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_IN_ID, audioRecordParam
                 .getChannel().getChannelId());
-        values.put(AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_IN_RES_ID, audioRecordParam
-                .getChannel().getChannelNameResId());
+        //values.put(AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_IN_RES_ID, audioRecordParam
+        //        .getChannel().getChannelNameResId());
         values.put(AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_ENCODING_ID, audioRecordParam
                 .getEncoding().getEncodingId());
-        values.put(AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_ENCODING_RES_ID, audioRecordParam
-                .getEncoding().getEncodingNameResId());
+        //values.put(AudioRecordSettingDBHelper.COLUMN_NAME_CHANNEL_ENCODING_RES_ID, audioRecordParam
+        //        .getEncoding().getEncodingNameResId());
         values.put(AudioRecordSettingDBHelper.COLUMN_NAME_AUDIO_SOURCE_ID, audioRecordParam
                 .getSource().getSourceId());
-        values.put(AudioRecordSettingDBHelper.COLUMN_NAME_AUDIO_SOURCE_RES_ID, audioRecordParam
-                .getSource().getSourceNameResId());
+        //values.put(AudioRecordSettingDBHelper.COLUMN_NAME_AUDIO_SOURCE_RES_ID, audioRecordParam
+        //        .getSource().getSourceNameResId());
         values.put(AudioRecordSettingDBHelper.COLUMN_NAME_MIN_BUFFER_SIZE,
                 audioRecordParam.getBufferSize());
 
@@ -109,8 +109,16 @@ public class AudioRecordSettingDataSource {
             return true;
         }
     }
-
+    
     private boolean makeDataSourceReady() {
+        if (updateDataSourceReady() == 0) {
+            return insertDataSourceReady();
+        } else {
+            return true;
+        }
+    }
+
+    private boolean insertDataSourceReady() {
         ContentValues values = new ContentValues();
 
         values.put(AudioRecordSettingDBHelper.COLUMN_NAME_STATUS, 1);
@@ -121,6 +129,14 @@ public class AudioRecordSettingDataSource {
         } else {
             return true;
         }
+    }
+    
+    private int updateDataSourceReady() {
+        ContentValues values = new ContentValues();
+        
+        values.put(AudioRecordSettingDBHelper.COLUMN_NAME_STATUS, 1);
+        return database.update(AudioRecordSettingDBHelper.TABLE_AUDIORECORDDISCOVERSTATUS, values,
+                null, null);
     }
 
     private boolean addAllAudioRecordParameters(List<AudioRecordParameter> params) {
@@ -328,24 +344,34 @@ public class AudioRecordSettingDataSource {
         AudioRecordParameter param = new AudioRecordParameter();
 
         param.setSamplingRate(cursor.getInt(1));
-        param.setChannel(new AudioChannelIn(cursor.getInt(2), cursor.getInt(3)));
-        param.setEncoding(new AudioEncoding(cursor.getInt(4), cursor.getInt(5)));
-        param.setSource(new AudioSource(cursor.getInt(6), cursor.getInt(7)));
-        param.setMinBufferSize(cursor.getInt(8));
+        //param.setChannel(new AudioChannelIn(cursor.getInt(2), cursor.getInt(3)));
+        //param.setEncoding(new AudioEncoding(cursor.getInt(4), cursor.getInt(5)));
+        //param.setSource(new AudioSource(cursor.getInt(6), cursor.getInt(7)));
+        //param.setMinBufferSize(cursor.getInt(8));
+        int channelInId = cursor.getInt(2);
+        param.setChannel(new AudioChannelIn(channelInId, AudioSensorHelper.getChannelInNameResId(channelInId)));
+        int encodingId = cursor.getInt(3);
+        param.setEncoding(new AudioEncoding(encodingId, AudioSensorHelper.getEncodingNameResId(encodingId)));
+        int sourceId = cursor.getInt(4);
+        param.setSource(new AudioSource(sourceId, AudioSensorHelper.getSourceNameResId(sourceId)));
+        param.setMinBufferSize(cursor.getInt(5));
 
         return param;
     }
 
     private AudioChannelIn cursorToAudioChannelIn(Cursor cursor) {
-        return new AudioChannelIn(cursor.getInt(0), cursor.getInt(1));
+        int channelInId = cursor.getInt(0);
+        return new AudioChannelIn(channelInId, AudioSensorHelper.getChannelInNameResId(channelInId));
     }
 
     private AudioSource cursorToAudioSource(Cursor cursor) {
-        return new AudioSource(cursor.getInt(0), cursor.getInt(1));
+        int sourceId = cursor.getInt(0);
+        return new AudioSource(sourceId, AudioSensorHelper.getSourceNameResId(sourceId));
     }
 
     private AudioEncoding cursorToAudioEncoding(Cursor cursor) {
-        return new AudioEncoding(cursor.getInt(0), cursor.getInt(1));
+        int encodingId = cursor.getInt(0);
+        return new AudioEncoding(encodingId, AudioSensorHelper.getEncodingNameResId(encodingId));
     }
 
     private int cursorToSamplingRate(Cursor cursor) {

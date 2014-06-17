@@ -1,6 +1,7 @@
 
 package sysnetlab.android.sdc.test;
 
+import sysnetlab.android.sdc.sensor.audio.AudioRecordSettingDataSource;
 import sysnetlab.android.sdc.ui.SensorDataCollectorActivity;
 import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
@@ -24,6 +25,14 @@ public class ActivityIntegrationFunctionTest extends
     protected void setUp() throws Exception {
         super.setUp();
         mMaximumNumberOfTags = 5;
+        
+        AudioRecordSettingDataSource.initializeInstance(getInstrumentation().getTargetContext());
+        AudioRecordSettingDataSource dbSource = AudioRecordSettingDataSource.getInstance();
+        dbSource.open();
+        if (!dbSource.isDataSourceReady()) {
+            dbSource.prepareDataSource();
+        }
+        dbSource.close();
     }
 
     @Override

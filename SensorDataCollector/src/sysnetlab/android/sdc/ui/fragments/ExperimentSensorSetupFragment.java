@@ -67,6 +67,10 @@ public class ExperimentSensorSetupFragment extends Fragment {
                 mView = inflater.inflate(R.layout.fragment_audio_sensor_setup, container, false);
 
                 if (mSensor != null) {
+                    AudioRecordParameter param = ((AudioSensor) mSensor).getAudioRecordParameter();
+                    Log.d("SensorDataCollector", "AUDIO_SENSOR: (id, resid) = " + 
+                            param.getSource().getSourceId() + "," + 
+                            param.getSource().getSourceNameResId());                    
                     updateAudioSensorSetupView();
                 }
 
@@ -139,7 +143,7 @@ public class ExperimentSensorSetupFragment extends Fragment {
         TextView tv = (TextView) mView.findViewById(R.id.textview_sensor_setup_sensor_name);
         tv.setText(sensor.getName());
         
-        Log.i("SensorDataCollector", "Android sensor.");
+        Log.d("SensorDataCollector", "Android sensor.");
 
         UserInterfaceUtil
                 .fillSensorProperties(getActivity(), (ListView) mView
@@ -161,7 +165,7 @@ public class ExperimentSensorSetupFragment extends Fragment {
             etSamplingRate.setVisibility(View.VISIBLE);
             tvSamplingRate.setVisibility(View.VISIBLE);
             btnSetSamplingRate.setVisibility(View.VISIBLE);
-            Log.i("SensorDataCollector", "Streaming sensor.");
+            Log.d("SensorDataCollector", "Streaming sensor.");
         } else {
             etSamplingRate.setText(getActivity().getResources().getString(
                     R.string.text_not_applicable));
@@ -170,7 +174,7 @@ public class ExperimentSensorSetupFragment extends Fragment {
             etSamplingRate.setVisibility(View.GONE);
             tvSamplingRate.setVisibility(View.GONE);
             btnSetSamplingRate.setVisibility(View.GONE);
-            Log.i("SensorDataCollector", "Non-streaming (onchange) sensor.");
+            Log.d("SensorDataCollector", "Non-streaming (onchange) sensor.");
         }
     }
     
