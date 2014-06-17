@@ -65,7 +65,8 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
         
         AudioRecordSettingDataSource.initializeInstance(getActivity());
         AudioRecordSettingDataSource dbSource = AudioRecordSettingDataSource.getInstance();
-
+        dbSource.open();
+        
         switch (operation) {
             case SELECT_SOURCE:
 
