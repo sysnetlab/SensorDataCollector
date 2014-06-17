@@ -1,4 +1,3 @@
-
 package sysnetlab.android.sdc.ui;
 
 import sysnetlab.android.sdc.R;
@@ -11,6 +10,7 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentViewFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewNotesFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewSensorDataFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -89,7 +89,7 @@ public class ViewExperimentActivity extends FragmentActivity implements
         }
         FragmentUtil.switchToFragment(this, mExperimentViewNotesFragment,
                 "experimentviewmorenotes");
-
+        changeActionBarTitle(R.string.text_viewing_notes, R.drawable.icon_notes_inverse);
     }
 
     @Override
@@ -99,6 +99,7 @@ public class ViewExperimentActivity extends FragmentActivity implements
         }
         FragmentUtil.switchToFragment(this, mExperimentViewSensorDataFragment,
                 "experimentviewsensordata");
+        changeActionBarTitle(R.string.text_viewing_sensors, R.drawable.icon_sensors_inverse);
     }  
 
     @Override
@@ -132,4 +133,22 @@ public class ViewExperimentActivity extends FragmentActivity implements
     public ExperimentViewNotesFragment getExperimentViewNotesFragment(){
     	return mExperimentViewNotesFragment;
     }
+    
+    
+    
+    @Override
+    public void onBackPressed(){
+    	if(!mExperimentViewFragment.isFragmentUIActive()){
+    		changeActionBarTitle(R.string.text_viewing_experiment, R.drawable.ic_launcher);
+        }
+    	super.onBackPressed();
+    }
+    
+    @SuppressLint("NewApi")
+	public void changeActionBarTitle(int titleResId, int iconResId){    	
+    	getActionBar().setTitle(titleResId);
+    	getActionBar().setIcon(iconResId);    	
+    }
+    
+    
 }
