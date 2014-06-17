@@ -44,8 +44,10 @@ public class ExperimentSensorSetupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         // TODO: handle configuration changes
-        mAudioRecordSettingDataSource = new AudioRecordSettingDataSource(getActivity());
-        //mAudioRecordSettingDataSource.open();
+        AudioRecordSettingDataSource.initializeInstance(getActivity());
+        mAudioRecordSettingDataSource = AudioRecordSettingDataSource.getInstance();
+        
+        mAudioRecordSettingDataSource.open();
         if (!mAudioRecordSettingDataSource.isDataSourceReady()) {
             // add progress wheel
             // if false, disable audio recording
@@ -105,7 +107,7 @@ public class ExperimentSensorSetupFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        //mAudioRecordSettingDataSource.close();
+        mAudioRecordSettingDataSource.close();
     }
 
     @Override

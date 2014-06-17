@@ -45,13 +45,14 @@ public class SensorDiscoverer {
     private static void addAudioSensorToList(Context context) {
         AudioSensor audioSensor = AudioSensor.getInstance();
         
-        AudioRecordSettingDataSource dbSource = new AudioRecordSettingDataSource(context);
-        //dbSource.open();
+        AudioRecordSettingDataSource.initializeInstance(context);
+        AudioRecordSettingDataSource dbSource = AudioRecordSettingDataSource.getInstance();
+        dbSource.open();
         if (!dbSource.isDataSourceReady()) {
             dbSource.prepareDataSource();
         }
         List<AudioRecordParameter> listParams = dbSource.getAllAudioRecordParameters();
-        //dbSource.close();
+        dbSource.close();
         
         if (listParams == null || listParams.isEmpty()) {
             return;

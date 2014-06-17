@@ -6,9 +6,12 @@ import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datacollector.DropboxHelper;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
+import sysnetlab.android.sdc.sensor.AbstractSensor;
+import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -16,7 +19,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 public class SensorDataCollectorActivity extends FragmentActivity implements
         ExperimentListFragment.OnFragmentClickListener {
@@ -32,31 +37,18 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
-
+        
         ExperimentManagerSingleton.getInstance().addExperimentStore(
                 StoreSingleton.getInstance());
-
-        if (findViewById(R.id.fragment_container) != null) {
-            if (savedInstanceState != null) {
-                return;
-            }
-
-            mExperimentListFragment = new ExperimentListFragment();
-            FragmentTransaction transaction = getSupportFragmentManager()
-                    .beginTransaction();
-            transaction.add(R.id.fragment_container, mExperimentListFragment);
-            transaction.commit();
-        }
-
-        SensorUtilsSingleton.getInstance().setContext(getBaseContext());
         
-      // Dropbox
-      DropboxHelper.getInstance(getApplicationContext());
-     
-    }
+        SensorUtilsSingleton.getInstance().setContext(getApplicationContext());
+        
+        // Dropbox
+        DropboxHelper.getInstance(getApplicationContext());        
 
-    public void onStart() {
-        super.onStart();
+        SensorDataCollectorActivityLoadingTask task = new SensorDataCollectorActivityLoadingTask();
+        task.execute();
+      
     }
 
     public void onResume() {
@@ -136,5 +128,38 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
 	public void onBackPressed(){
     	moveTaskToBack(true);
 	}
+    
+    private class SensorDataCollectorActivityLoadingTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... v) {
+            for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(SensorDataCollectorActivity.this)) {
+                sensor.setSelected(false);
+            }
+            return null;  
+        }
+
+        @Override
+        protected void onPreExecute() {
+            LinearLayout layoutProgress = (LinearLayout) findViewById(R.id.layout_progressbar_loading);
+            if (layoutProgress != null)
+                layoutProgress.setVisibility(View.VISIBLE);            
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+          LinearLayout layoutProgress = (LinearLayout) findViewById(R.id.layout_progressbar_loading);
+          if (layoutProgress != null)
+              layoutProgress.setVisibility(View.GONE);
+          
+          if (findViewById(R.id.fragment_container) != null) {
+              mExperimentListFragment = new ExperimentListFragment();
+              FragmentTransaction transaction = getSupportFragmentManager()
+                      .beginTransaction();
+              transaction.add(R.id.fragment_container, mExperimentListFragment);
+              transaction.commit();
+          } 
+        }
+    }    
     
 }
