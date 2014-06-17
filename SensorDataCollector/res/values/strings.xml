@@ -131,7 +131,20 @@
     <string name="text_link_to_dropbox">Link to Dropbox</string>
     <string name="text_unlink_from_dropbox">Unlink from Dropbox</string>
     <string name="text_send_to_dropbox">Send to Dropbox</string>
-     
+	<string name="text_do_not_link_to_dropbox">Do not link to Dropbox</string>
+	<string name="text_dropbox_not_yet_linked_explanation">A Dropbox account is not yet linked with this app. A
+	    fter linking a Dropbox account, you can upload your experiment data to Dropbox. Would you like to do this now?</string>
+    <string name="text_sending_experiment_to_dropbox">Sending Experiment to Dropbox</string>
+    <string name="text_not_linked_to_dropbox_account">Not linked to a Dropbox account</string>
+    <string name="text_experiment_successfully_sent_to_dropbox">Experiment successfully sent to Dropbox.</string>
+    <string name="text_failed_to_send_experiment_to_dropbox">Failed to send experiment to Dropbox.</string>
+    <string name="text_unknown_path_for_experiment">Unknown path for experiment.</string>
+    <string name="text_unsupported_experiment_datastore">Unsupported Experiment Datastore</string>
+    <string name="text_successfully_unlinked_from_dropbox">Successfully unlinked from Dropbox.</string>
+    <string name="text_successfully_linked_to_dropbox">Successfully linked to Dropbox.</string>
+    <string name="text_could_not_authenticate_with_dropbox">Could not authenticate with Dropbox:</string>
+    
+    
     <!-- Audio Record -->
 	<string name="text_audio_channel_in">Audio Channel-In</string>    
     <string name="text_channel_in_back">Channel in back</string>
@@ -151,6 +164,7 @@
 	<string name="text_channel_in_x_axis">Channel in X axis</string>
 	<string name="text_channel_in_y_axis">Channel in Y axis</string>
 	<string name="text_channel_in_z_axis">Channel in Z axis</string>
+
 	
 	<string name="text_audio_encoding">Audio Encoding</string>
 	<string name="text_audio_encoding_default">Encoding Default</string>
