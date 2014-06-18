@@ -1,9 +1,12 @@
 package sysnetlab.android.sdc.ui;
 
+import java.util.List;
+
 import sysnetlab.android.sdc.R;
-import sysnetlab.android.sdc.sensor.AbstractSensor;
-import sysnetlab.android.sdc.sensor.SensorDiscoverer;
+import sysnetlab.android.sdc.sensor.audio.AudioRecordParameter;
+import sysnetlab.android.sdc.sensor.audio.AudioRecordSettingDataSource;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,24 +25,39 @@ public class AudioSensorProbingActivity extends Activity {
     protected void onResume() {
         super.onResume();
         
-        AudioSensorProbingTask task = new AudioSensorProbingTask();
+        AudioSensorProbingTask task = new AudioSensorProbingTask(this);
         task.execute();        
     }
 
     private class AudioSensorProbingTask extends AsyncTask<Void, Void, Void> {
-
+        private Context mContext;
+        
+        AudioSensorProbingTask(Context context) {
+            mContext = context;
+        }
+        
         @Override
         protected Void doInBackground(Void... v) {
-            for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(AudioSensorProbingActivity.this)) {
-                sensor.setSelected(false);
+            AudioRecordSettingDataSource.initializeInstance(mContext);
+            AudioRecordSettingDataSource dbSource = AudioRecordSettingDataSource.getInstance();
+            dbSource.open();
+            if (!dbSource.isDataSourceReady()) {
+                dbSource.prepareDataSource();
+            } else {
+                List<AudioRecordParameter> listParams = dbSource.getAllAudioRecordParameters();
+                if (listParams == null || listParams.isEmpty()) {
+                    dbSource.prepareDataSource();
+                }
             }
+            
+            dbSource.close();
             return null;  
         }
 
         @Override
         protected void onPreExecute() {
             LinearLayout layoutProgress = (LinearLayout) findViewById(R.id.layout_progressbar_loading);
-            // if (layoutProgress != null)
+            if (layoutProgress != null)
                 layoutProgress.setVisibility(View.VISIBLE);            
         }
 

@@ -61,14 +61,14 @@ public class SensorUtils {
                     AudioRecordSettingDataSource.initializeInstance(mContext);
                     AudioRecordSettingDataSource dbSource = AudioRecordSettingDataSource.getInstance();
                     dbSource.open();
-                    if (!dbSource.isDataSourceReady()) {
-                        dbSource.prepareDataSource();
+                    if (dbSource.isDataSourceReady()) {
+                        List<AudioRecordParameter> listParams = dbSource
+                                .getAllAudioRecordParameters();
+
+                        if (listParams != null && !listParams.isEmpty())
+                            audioSensor.setAudioRecordParameter(listParams.get(0));
                     }
-                    List<AudioRecordParameter> listParams = dbSource.getAllAudioRecordParameters();
                     dbSource.close();
-                    
-                    if (listParams != null && !listParams.isEmpty())
-                        audioSensor.setAudioRecordParameter(listParams.get(0));                    
                 }
                 
                 audioSensor.setId(id);

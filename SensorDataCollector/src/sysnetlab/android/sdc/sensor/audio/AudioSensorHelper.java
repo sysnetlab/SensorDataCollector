@@ -10,12 +10,13 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.util.Log;
+import android.util.SparseIntArray;
 
 public class AudioSensorHelper {
 
     private static List<AudioRecordParameter> mListAudioRecordParameters = new ArrayList<AudioRecordParameter>();
 
-    private static final int[] SAMPLING_RATES = {
+    private static final int[] SAMPLE_RATES = {
             192000,
             96000,
             48000,
@@ -25,8 +26,10 @@ public class AudioSensorHelper {
             11025,
             8000
     };
-
-    final static AudioChannelIn[] CHANNEL_IN_ARRAY = {
+    
+    // TODO: these arrays should be completely replaced by the SpartIntArrays
+    
+    private final static AudioChannelIn[] CHANNEL_IN_ARRAY = {
             new AudioChannelIn(AudioFormat.CHANNEL_IN_DEFAULT, R.string.text_channel_in_default),
             new AudioChannelIn(AudioFormat.CHANNEL_IN_BACK, R.string.text_channel_in_back),
             new AudioChannelIn(AudioFormat.CHANNEL_IN_BACK_PROCESSED,
@@ -51,6 +54,16 @@ public class AudioSensorHelper {
             new AudioChannelIn(AudioFormat.CHANNEL_IN_Y_AXIS, R.string.text_channel_in_y_axis),
             new AudioChannelIn(AudioFormat.CHANNEL_IN_Z_AXIS, R.string.text_channel_in_z_axis)
     };
+    
+    private static final SparseIntArray AUDIO_CHANNEL_IN_MAP;
+    static
+    {
+        AUDIO_CHANNEL_IN_MAP = new SparseIntArray();
+        for (int i = 0; i < CHANNEL_IN_ARRAY.length; i++) {
+            AUDIO_CHANNEL_IN_MAP.put(CHANNEL_IN_ARRAY[i].getChannelId(),
+                    CHANNEL_IN_ARRAY[i].getChannelNameResId());
+        }
+    }
 
     private static AudioEncoding[] AUDIO_ENCODING_ARRAY = {
             new AudioEncoding(AudioFormat.ENCODING_DEFAULT,
@@ -60,16 +73,47 @@ public class AudioSensorHelper {
             new AudioEncoding(AudioFormat.ENCODING_PCM_8BIT,
                     R.string.text_audio_encoding_pcm_8bit)
     };
+    
+    private static final SparseIntArray AUDIO_ENCODING_MAP;
+    static
+    {
+        AUDIO_ENCODING_MAP = new SparseIntArray();
+        for (int i = 0; i < AUDIO_ENCODING_ARRAY.length; i++) {
+            AUDIO_ENCODING_MAP.put(AUDIO_ENCODING_ARRAY[i].getEncodingId(),
+                    AUDIO_ENCODING_ARRAY[i].getEncodingNameResId());
+        }
+    }
 
     private static AudioSource[] AUDIO_SOURCE_ARRAY = {
-        new AudioSource(MediaRecorder.AudioSource.DEFAULT,
-                R.string.text_audio_source_default),
+            new AudioSource(MediaRecorder.AudioSource.DEFAULT,
+                    R.string.text_audio_source_default),
             new AudioSource(MediaRecorder.AudioSource.MIC,
                     R.string.text_audio_source_mic),
             new AudioSource(MediaRecorder.AudioSource.CAMCORDER,
                     R.string.text_audio_source_camcorder)
     };
     
+    private static final SparseIntArray AUDIO_SOURCE_MAP;
+    static
+    {
+        AUDIO_SOURCE_MAP = new SparseIntArray();
+        for (int i = 0; i < AUDIO_SOURCE_ARRAY.length; i++) {
+            AUDIO_SOURCE_MAP.put(AUDIO_SOURCE_ARRAY[i].getSourceId(),
+                    AUDIO_SOURCE_ARRAY[i].getSourceNameResId());
+        }
+    }
+    
+    public static int getChannelInNameResId(int channelInId) {
+        return AUDIO_CHANNEL_IN_MAP.get(channelInId);
+    }
+    
+    public static int getEncodingNameResId(int encodingId) {
+        return AUDIO_ENCODING_MAP.get(encodingId);
+    }
+    
+    public static int getSourceNameResId(int sourceId) {
+        return AUDIO_SOURCE_MAP.get(sourceId);
+    }
 
     public static List<AudioRecordParameter> getValidRecordingParameters() {
         List<AudioRecordParameter> listParams = new ArrayList<AudioRecordParameter>();
@@ -86,7 +130,7 @@ public class AudioSensorHelper {
         
         listParams.clear();
         
-        for (int rate : SAMPLING_RATES) {
+        for (int rate : SAMPLE_RATES) {
             for (AudioChannelIn channel : CHANNEL_IN_ARRAY) {
                 for (AudioEncoding format : AUDIO_ENCODING_ARRAY) {
                     int bufferSize = AudioRecord.getMinBufferSize(rate, channel.getChannelId(),
@@ -153,8 +197,8 @@ public class AudioSensorHelper {
             try {
                 r = new AudioRecord(param.getSource().getSourceId(),
                         param.getSamplingRate(),
-                        param.getChannel().getChannelId(), param
-                                .getEncoding().getEncodingId(),
+                        param.getChannel().getChannelId(), 
+                        param.getEncoding().getEncodingId(),
                         param.getBufferSize());
 
                 Log.d("SensorDataCollector", "getValidRecordingParametersSecondPass(): " +

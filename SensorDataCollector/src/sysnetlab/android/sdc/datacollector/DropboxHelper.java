@@ -3,6 +3,9 @@ package sysnetlab.android.sdc.datacollector;
 import java.io.File;
 import java.io.FileInputStream;
 
+import sysnetlab.android.sdc.R;
+
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,24 +36,25 @@ public class DropboxHelper {
 	final static private String ACCESS_SECRET_NAME = "DROPBOX_ACCESS_SECRET";
 	private DropboxAPI<AndroidAuthSession> mDropboxApi;
 	private Context mContext;
+	private Context mWindowContext;
 
-	public static DropboxHelper getInstance(Context context) {
+	public static DropboxHelper getInstance(Context applicationContext) {
 		if (mHelper == null) {
-			mHelper = new DropboxHelper(context);
+			mHelper = new DropboxHelper(applicationContext);
 		}
 		return mHelper;
 	}
 
 	public static DropboxHelper getInstance() throws RuntimeException {
 		if (mHelper == null)
-			throw new RuntimeException("DropboxHelper not yet instantiated");
+			throw new RuntimeException("DropboxHelper not yet instantiated with a context.");
 
 		return mHelper;
 	}
 
-	protected DropboxHelper(Context context) {
+	protected DropboxHelper(Context applicationContext) {
 		super();
-		mContext = context;
+		mContext = applicationContext;
 
 		checkAppKeySetup();
 
@@ -157,9 +161,9 @@ public class DropboxHelper {
 
 				// Store it locally in our app for later use
 				storeKeys(session);
-				showToast("Successfully linked to Dropbox.");
+				showToast(mContext.getString(R.string.text_successfully_linked_to_dropbox));
 			} catch (IllegalStateException e) {
-				showToast("Couldn't authenticate with Dropbox:"
+				showToast(mContext.getString(R.string.text_could_not_authenticate_with_dropbox)
 						+ e.getLocalizedMessage());
 				Log.i("DropboxHelper", "Error authenticating", e);
 			}
@@ -179,7 +183,7 @@ public class DropboxHelper {
 		mDropboxApi.getSession().unlink();
 		// Clear our stored keys
 		clearKeys();
-		showToast("Successfully unlinked from Dropbox.");
+		showToast(mContext.getString(R.string.text_successfully_unlinked_from_dropbox));
 	}
 
 	private void showToast(String msg) {
@@ -188,23 +192,35 @@ public class DropboxHelper {
 	}
 
 	
-	public void writeAllFilesInDirToDropbox(String path) {
+	public void writeAllFilesInDirToDropbox(String path, Context windowContext) {
+		mWindowContext = windowContext;
 		if (!isLinked()) {
-			showToast("Dropbox has not been linked.");
+			showToast(mContext.getString(R.string.text_not_linked_to_dropbox_account));
 			return;
 		}
+
 		
 		AsyncTask<String, Void, String> asyncTask = new AsyncTask<String, Void, String>() {
-            
+			ProgressDialog mProgressDialog;
+			
+			@Override
+			protected void onPreExecute() {
+            	mProgressDialog = new ProgressDialog(mWindowContext);
+            	mProgressDialog.setMessage(mContext.getString(R.string.text_sending_experiment_to_dropbox));
+            	mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            	mProgressDialog.setIndeterminate(true);
+            	mProgressDialog.show();
+			}
+			
             @Override
             protected String doInBackground(String... path) {
         		Log.i("DropboxHelper", "Sending path " + path[0] + " to Dropbox.");
         		if (path[0] == null) {
-        			return "Unknown path for experiment.";
+        			return mContext.getString(R.string.text_unknown_path_for_experiment);
         		}
         		File root = new File(path[0]);
         		if (!root.exists()) {
-        			return "Unsupported Experiment Datastore";
+        			return mContext.getString(R.string.text_unsupported_experiment_datastore);
         		}
             	File[] allFiles = root.listFiles();
         		for (File f : allFiles) {
@@ -223,14 +239,17 @@ public class DropboxHelper {
         			             file.length(), null, null);
         			 } catch (Exception e) {
         			     Log.e("DropboxHelper", "Something went wrong: " + e);
-           				 return "Failed to send experiment to Dropbox.";
+           				 return mContext.getString(R.string.text_failed_to_send_experiment_to_dropbox);
         			 } 
         		}
-            	return "Experiment successfully sent to Dropbox.";
+            	return mContext.getString(R.string.text_experiment_successfully_sent_to_dropbox);
             }
             
             @Override 
             protected void onPostExecute (String result) {
+                if (mProgressDialog.isShowing()) {
+                    mProgressDialog.dismiss();
+                }
             	showToast(result);
             }
 
