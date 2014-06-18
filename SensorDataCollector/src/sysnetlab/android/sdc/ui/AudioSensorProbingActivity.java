@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 public class AudioSensorProbingActivity extends Activity {
 
@@ -38,14 +39,14 @@ public class AudioSensorProbingActivity extends Activity {
 
         @Override
         protected void onPreExecute() {
-            LinearLayout layoutProgress = (LinearLayout) findViewById(R.id.layout_progressbar_loading);
+        	RelativeLayout layoutProgress = (RelativeLayout) findViewById(R.id.layout_progressbar_loading);
             // if (layoutProgress != null)
                 layoutProgress.setVisibility(View.VISIBLE);            
         }
 
         @Override
         protected void onPostExecute(Void result) {
-          LinearLayout layoutProgress = (LinearLayout) findViewById(R.id.layout_progressbar_loading);
+        	RelativeLayout layoutProgress = (RelativeLayout) findViewById(R.id.layout_progressbar_loading);
           if (layoutProgress != null)
               layoutProgress.setVisibility(View.GONE);
           
