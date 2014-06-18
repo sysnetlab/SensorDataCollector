@@ -10,35 +10,15 @@
         android:layout_alignParentTop="true"
         android:layout_gravity="left|center_vertical"
         android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp">
-
-        <ImageView
-            android:id="@+id/imageview_expriment_note_viewing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:contentDescription="@string/text_notes"
-            android:src="@drawable/icon_notes"/>
-
-        <TextView
-            android:id="@+id/textview_experiment_note_viewing_main_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@id/imageview_expriment_note_viewing"
-            android:textSize="20sp" 
-            android:text="@string/text_notes"/>
+        android:layout_marginRight="12dp">                
 
         <TextView
             android:id="@+id/textview_experiment_note_viewing_subtext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/textview_experiment_note_viewing_main_text"
-            android:layout_below="@id/textview_experiment_note_viewing_main_text"
-            android:textSize="12sp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:textSize="14sp"
             android:text="@string/text_for_experiment_name_x"/>
     </RelativeLayout>
     

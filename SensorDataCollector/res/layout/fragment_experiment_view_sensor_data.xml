@@ -12,34 +12,14 @@
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp" >
 
-        <ImageView
-            android:id="@+id/imageview_expriment_sensor_viewing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:contentDescription="@string/text_sensors"
-            android:src="@drawable/icon_sensors" />
-
-        <TextView
-            android:id="@+id/textview_experiment_sensor_viewing_main_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@id/imageview_expriment_sensor_viewing"
-            android:text="@string/text_sensor_and_sensor_data"
-            android:textSize="20sp" />
-
         <TextView
             android:id="@+id/textview_experiment_sensor_viewing_subtext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/textview_experiment_sensor_viewing_main_text"
-            android:layout_below="@id/textview_experiment_sensor_viewing_main_text"
-            android:text="@string/text_for_experiment_name_x"
-            android:textSize="12sp" />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:textSize="14sp"
+            android:text="@string/text_for_experiment_name_x"/>            
     </RelativeLayout>
 
     <TableLayout
@@ -90,7 +70,7 @@
     <View
         android:id="@+id/view_experiment_view_divider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="1dp"        
         android:layout_alignLeft="@id/layout_experiment_sensor_viewing_heading"
         android:layout_alignRight="@id/layout_experiment_sensor_viewing_heading"
         android:layout_below="@id/layout_experiment_sensor_viewing_experiment_times"
