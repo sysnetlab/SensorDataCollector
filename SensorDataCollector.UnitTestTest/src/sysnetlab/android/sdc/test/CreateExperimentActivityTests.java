@@ -4,14 +4,7 @@ package sysnetlab.android.sdc.test;
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
-import sysnetlab.android.sdc.ui.fragments.ExperimentEditNotesFragment;
-import sysnetlab.android.sdc.ui.fragments.ExperimentEditTagsFragment;
-import sysnetlab.android.sdc.ui.fragments.ExperimentRunFragment;
-import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
-import sysnetlab.android.sdc.ui.fragments.ExperimentSetupFragment;
 import android.content.Intent;
-import android.widget.Button;
-import android.widget.ListView;
 
 public class CreateExperimentActivityTests
         extends android.test.ActivityUnitTestCase<CreateExperimentActivity> {

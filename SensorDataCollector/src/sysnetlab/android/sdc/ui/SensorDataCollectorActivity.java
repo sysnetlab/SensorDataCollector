@@ -11,11 +11,8 @@ import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,7 +62,7 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
     	super.onResume();
     	
         // Complete the Dropbox Authorization
-        DropboxHelper.getInstance().completeAuthentication();
+        DropboxHelper.getInstance(SensorDataCollectorActivity.this).completeAuthentication();
     }
     
     @Override

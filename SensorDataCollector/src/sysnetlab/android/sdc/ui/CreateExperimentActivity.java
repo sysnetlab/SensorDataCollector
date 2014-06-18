@@ -29,7 +29,6 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentSensorListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -42,8 +41,6 @@ import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -664,10 +661,9 @@ public class CreateExperimentActivity extends FragmentActivityBase
         mAlertDialog.show();
     }        
     
-    @SuppressLint("NewApi")
 	public void changeActionBarTitle(int titleResId, int iconResId){    	
-    	getActionBar().setTitle(titleResId);
-    	getActionBar().setIcon(iconResId);    	
+    	getSupportActionBar().setTitle(titleResId);
+    	getSupportActionBar().setIcon(iconResId);    	
     }
     
     private RunExperimentService mRunExperimentService;

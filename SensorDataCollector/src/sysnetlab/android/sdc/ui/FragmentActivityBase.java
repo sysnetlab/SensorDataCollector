@@ -1,16 +1,12 @@
 package sysnetlab.android.sdc.ui;
 
 import sysnetlab.android.sdc.R;
-import sysnetlab.android.sdc.datacollector.Experiment;
-import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
-import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-public abstract class FragmentActivityBase extends FragmentActivity {
+public abstract class FragmentActivityBase extends ActionBarActivity {
 	
 	protected TaskLoadingSpinner mLoadingTask;
 	

@@ -12,15 +12,14 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentViewSensorDataFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-public class ViewExperimentActivity extends FragmentActivity implements
+public class ViewExperimentActivity extends ActionBarActivity implements
         ExperimentViewFragment.OnFragmentClickListener,
         ExperimentSensorListFragment.OnFragmentClickListener {
 
@@ -176,10 +175,9 @@ public class ViewExperimentActivity extends FragmentActivity implements
     	super.onBackPressed();
     }
     
-    @SuppressLint("NewApi")
 	public void changeActionBarTitle(int titleResId, int iconResId){    	
-    	getActionBar().setTitle(titleResId);
-    	getActionBar().setIcon(iconResId);    	
+    	getSupportActionBar().setTitle(titleResId);
+    	getSupportActionBar().setIcon(iconResId);    	
     }
     
     
