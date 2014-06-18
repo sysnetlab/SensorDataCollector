@@ -1,4 +1,3 @@
-
 package sysnetlab.android.sdc.ui;
 
 import sysnetlab.android.sdc.R;
@@ -11,6 +10,9 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentViewFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewNotesFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewSensorDataFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -63,6 +65,13 @@ public class ViewExperimentActivity extends FragmentActivity implements
         Log.i("SensorDataCollector", "ViewExperimentActivity.onCreate called.");
     }
     
+    public void onResume() {
+    	super.onResume();
+    	
+        // Complete the Dropbox Authorization
+        DropboxHelper.getInstance().completeAuthentication();
+    }
+    
     @Override
     public void onBtnCloneClicked_ExperimentViewFragment() {
         Intent intent = new Intent(this, CreateExperimentActivity.class);
@@ -74,7 +83,30 @@ public class ViewExperimentActivity extends FragmentActivity implements
     @Override 
     public void onBtnDropboxClicked_ExperimentViewFragment() {
     	DropboxHelper dbHelper = DropboxHelper.getInstance();
-    	dbHelper.writeAllFilesInDirToDropbox(mExperiment.getPath());
+    	if (!dbHelper.isLinked()) {
+    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    		
+            builder.setMessage(R.string.text_dropbox_not_yet_linked_explanation);
+            builder.setTitle(R.string.text_link_to_dropbox);
+            builder.setPositiveButton(R.string.text_link_to_dropbox,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        	dialog.dismiss();
+                            DropboxHelper.getInstance().link();                      
+                        }
+                    });
+            builder.setNegativeButton(R.string.text_do_not_link_to_dropbox,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+    	}
+    	else {
+    		dbHelper.writeAllFilesInDirToDropbox(mExperiment.getPath(), ViewExperimentActivity.this);
+    	}
     }
 
     @Override
@@ -89,7 +121,7 @@ public class ViewExperimentActivity extends FragmentActivity implements
         }
         FragmentUtil.switchToFragment(this, mExperimentViewNotesFragment,
                 "experimentviewmorenotes");
-
+        changeActionBarTitle(R.string.text_viewing_notes, R.drawable.icon_notes_inverse);
     }
 
     @Override
@@ -99,6 +131,7 @@ public class ViewExperimentActivity extends FragmentActivity implements
         }
         FragmentUtil.switchToFragment(this, mExperimentViewSensorDataFragment,
                 "experimentviewsensordata");
+        changeActionBarTitle(R.string.text_viewing_sensors, R.drawable.icon_sensors_inverse);
     }  
 
     @Override
@@ -132,4 +165,22 @@ public class ViewExperimentActivity extends FragmentActivity implements
     public ExperimentViewNotesFragment getExperimentViewNotesFragment(){
     	return mExperimentViewNotesFragment;
     }
+    
+    
+    
+    @Override
+    public void onBackPressed(){
+    	if(!mExperimentViewFragment.isFragmentUIActive()){
+    		changeActionBarTitle(R.string.text_viewing_experiment, R.drawable.ic_launcher);
+        }
+    	super.onBackPressed();
+    }
+    
+    @SuppressLint("NewApi")
+	public void changeActionBarTitle(int titleResId, int iconResId){    	
+    	getActionBar().setTitle(titleResId);
+    	getActionBar().setIcon(iconResId);    	
+    }
+    
+    
 }

@@ -96,6 +96,11 @@ public class UserInterfaceUtil {
                 property = new SensorProperty(activity.getResources().getString(
                         R.string.text_audio_source), activity.getResources().getString(
                         param.getSource().getSourceNameResId()));
+                Log.d("SensorDataCollector", "AUDIO_SENSOR Property: (name, id, resid, string) = " + 
+                        property.getName() + "," + 
+                        param.getSource().getSourceId() + "," + 
+                        param.getSource().getSourceNameResId() + "," +
+                        property.getValue());
                 lstSensorProperties.add(property);
 
                 property = new SensorProperty(activity.getResources().getString(

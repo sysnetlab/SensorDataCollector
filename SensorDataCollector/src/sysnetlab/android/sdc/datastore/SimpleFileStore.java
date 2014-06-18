@@ -232,14 +232,20 @@ public class SimpleFileStore extends AbstractStore {
                     switch (sensorMajorType) {
                         case AbstractSensor.ANDROID_SENSOR:
                             channelDescriptor = in.readLine();
-                            break;
-                    }
 
-                    Channel channel = new SimpleFileChannel(channelDescriptor, Channel.READ_ONLY);
-                    AbstractSensor sensor = SensorUtilsSingleton.getInstance().getSensor(sensorName,
-                            sensorMajorType,
-                            sensorMinorType, channel, null);
-                    lstSensors.add(sensor);
+                            Channel channel = new SimpleFileChannel(channelDescriptor,
+                                    Channel.READ_ONLY);
+                            AbstractSensor sensor = SensorUtilsSingleton.getInstance().getSensor(
+                                    sensorName,
+                                    sensorMajorType,
+                                    sensorMinorType, channel, null);
+                            lstSensors.add(sensor);
+                            break;
+                        default:
+                            Log.w("SensorDataCollector",
+                                    "SimpleFileStore::loadExperiment(): do not handle sensor major type "
+                                            + sensorMajorType);
+                    }
                 }
                 experiment.setSensors(lstSensors);
                 

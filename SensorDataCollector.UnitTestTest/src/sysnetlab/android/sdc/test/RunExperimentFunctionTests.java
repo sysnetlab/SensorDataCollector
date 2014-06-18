@@ -16,15 +16,13 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.widget.Button;
 import android.app.AlertDialog;
-import android.app.Instrumentation;
+import android.app.Instrumentation.ActivityMonitor;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
 public class RunExperimentFunctionTests extends
         ActivityInstrumentationTestCase2<CreateExperimentActivity> {
-    
-    private CreateExperimentActivity mCreateExperimentActivity;        
     
     public RunExperimentFunctionTests() {
         super(CreateExperimentActivity.class);
@@ -42,7 +40,7 @@ public class RunExperimentFunctionTests extends
     @Override
     protected void setUp() throws Exception {
         super.setUp();        
-        setActivityInitialTouchMode(true);
+        setActivityInitialTouchMode(false);
         
     }
 
@@ -52,7 +50,7 @@ public class RunExperimentFunctionTests extends
         // their constructors, which are not expected behavior since in
         // one app, only one instance is allowed. 
         StoreSingleton.resetInstance();
-    	Instrumentation instrumentation = getInstrumentation();
+
     	//Create the experiment to be run
     	Experiment activeExperiment = new Experiment();
     	activeExperiment.setName("Unit Test Experiment");
@@ -70,55 +68,56 @@ public class RunExperimentFunctionTests extends
     	intent.putExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
                 SensorDataCollectorActivity.APP_OPERATION_CLONE_EXPERIMENT);
     	this.setActivityIntent(intent);
-    	mCreateExperimentActivity = (CreateExperimentActivity) this.getActivity();
-        Instrumentation.ActivityMonitor monitor = instrumentation.addMonitor(CreateExperimentActivity.class.getName(), null, false);        
+    	CreateExperimentActivity createExperimentActivity = (CreateExperimentActivity) this.getActivity();
+    	getInstrumentation().waitForIdleSync();
+    	assertNotNull("The CreateExperimentActivity should not be null.", createExperimentActivity);
     	//Get the cloned experiment with new date
-        activeExperiment = mCreateExperimentActivity.getExperiment();
+        activeExperiment = createExperimentActivity.getExperiment();
         
-    	Button runButton = (Button) mCreateExperimentActivity.findViewById(R.id.button_experiment_run);
-    	
+    	Button runButton = (Button) createExperimentActivity.findViewById(R.id.button_experiment_run);
     	assertNotNull("The button experiment run failed to load", runButton);
+    	
     	TouchUtils.clickView(this, runButton);
     	getInstrumentation().waitForIdleSync();
-    	ExperimentRunFragment runFragment = mCreateExperimentActivity.getExperimentRunFragment();
+    	ExperimentRunFragment runFragment = createExperimentActivity.getExperimentRunFragment();
     	assertNotNull("The run fragment cannot be null", runFragment);
-    	Button doneButton = (Button) mCreateExperimentActivity.findViewById(R.id.button_experiment_done);
+    	
+    	Button doneButton = (Button) createExperimentActivity.findViewById(R.id.button_experiment_done);
+    	assertNotNull("The done button cannot be null.", doneButton);
     	
     	TouchUtils.clickView(this, doneButton);
-    	instrumentation.waitForIdleSync();
-    	
-    	AlertDialog dialog = mCreateExperimentActivity.getAlertDialog();
+    	getInstrumentation().waitForIdleSync();
+     	AlertDialog dialog = createExperimentActivity.getAlertDialog();
     	assertNotNull("The Alert Dialog was not loaded", dialog);
     	assertTrue("Not showing the Alert Dialog", dialog.isShowing());
     	Button negativeButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-    	assertNotNull("The positive button was not loaded", negativeButton);
+    	assertNotNull("The negative button was not loaded", negativeButton);
     	
     	TouchUtils.clickView(this, negativeButton);
-    	instrumentation.waitForIdleSync();
+    	getInstrumentation().waitForIdleSync();
     	
     	assertTrue("The run is not UI Active", runFragment.isFragmentUIActive());    	
     	
     	TouchUtils.clickView(this, doneButton);
-    	instrumentation.waitForIdleSync();
-    	dialog = mCreateExperimentActivity.getAlertDialog();
-    	Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-    	
-    	instrumentation.removeMonitor(monitor);
-    	monitor = instrumentation.addMonitor(SensorDataCollectorActivity.class.getName(), null, false);
-    	TouchUtils.clickView(this, positiveButton);
     	getInstrumentation().waitForIdleSync();
+    	dialog = createExperimentActivity.getAlertDialog();
+    	Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        assertNotNull("The positive button was not loaded", positiveButton);
+    	
+    	ActivityMonitor monitor = getInstrumentation().addMonitor(SensorDataCollectorActivity.class.getName(), null, false);
+    	TouchUtils.clickView(this, positiveButton);
+        getInstrumentation().waitForIdleSync();  
     	
     	SensorDataCollectorActivity sensorDataCollectorActivity = 
-    			(SensorDataCollectorActivity)instrumentation.waitForMonitor(monitor);
+    			(SensorDataCollectorActivity)getInstrumentation().waitForMonitor(monitor);
     	assertNotNull("SensorDataCollector Activity was not loaded", sensorDataCollectorActivity);
-    	
+    	getInstrumentation().removeMonitor(monitor);
+
+        
     	ExperimentListFragment experimentListFragment = sensorDataCollectorActivity.getExperimentListFragment();
     	assertNotNull("The fragment was not loaded", experimentListFragment);
     	    	      
         List<Experiment> listExperiments = experimentManager.getExperimentsSortedByDate();
-    	assertEquals("The experiment created is not on the top of the list", listExperiments.get(0), activeExperiment);    	    
-    	
-    	
-    	sensorDataCollectorActivity.finish();
+    	assertEquals("The experiment created is not on the top of the list", listExperiments.get(0), activeExperiment);
     }       
 }

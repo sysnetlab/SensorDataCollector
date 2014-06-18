@@ -8,6 +8,9 @@
 	<string name="text_sensors_description_text">Sensors from which data were collected.</string>
     <string name="text_creating_experiment">Creating Experiment</string>
     <string name="text_viewing_experiment">Viewing Experiment</string>
+    <string name="text_viewing_notes">Viewing notes</string>
+    <string name="text_viewing_tags">Viewing tags</string>
+    <string name="text_viewing_sensors">Viewing sensors</string>
     <string name="text_experiment_tags">Experiment Tags</string>
     <string name="text_tag">Tag</string>
     <string name="text_tags">Tags</string>
@@ -96,7 +99,7 @@
     <string name="text_from">From</string>
     <string name="text_to">To</string>
     <string name="text_note_x_of_y_taken_at_time_z">Note %1$d of %2$d taken at %3$s</string>
-    <string name="text_for_experiment_name_x">For experiment %1$s</string>
+    <string name="text_for_experiment_name_x">Experiment: %1$s</string>
     <string name="text_no_notes">No notes</string>
     <string name="text_sensor_and_sensor_data">Sensor and Sensor Data</string>
     <string name="text_add_note">Add Note</string>
@@ -110,7 +113,7 @@
         Do you want to stop the experiment?
     </string>
     <string name="text_do_you_want_to_leave_experiment">
-        Do you want to leave the experiment? All changes will be lost.
+        Do you want to leave the experiment setup? All data will be lost.
     </string>
     <string name="text_leave_experiment">Leave Experiment</string>
     <string name="text_stop_experiment">Stop Experiment</string>
@@ -128,7 +131,20 @@
     <string name="text_link_to_dropbox">Link to Dropbox</string>
     <string name="text_unlink_from_dropbox">Unlink from Dropbox</string>
     <string name="text_send_to_dropbox">Send to Dropbox</string>
-     
+	<string name="text_do_not_link_to_dropbox">Do not link to Dropbox</string>
+	<string name="text_dropbox_not_yet_linked_explanation">A Dropbox account is not yet linked with this app. A
+	    fter linking a Dropbox account, you can upload your experiment data to Dropbox. Would you like to do this now?</string>
+    <string name="text_sending_experiment_to_dropbox">Sending Experiment to Dropbox</string>
+    <string name="text_not_linked_to_dropbox_account">Not linked to a Dropbox account</string>
+    <string name="text_experiment_successfully_sent_to_dropbox">Experiment successfully sent to Dropbox.</string>
+    <string name="text_failed_to_send_experiment_to_dropbox">Failed to send experiment to Dropbox.</string>
+    <string name="text_unknown_path_for_experiment">Unknown path for experiment.</string>
+    <string name="text_unsupported_experiment_datastore">Unsupported Experiment Datastore</string>
+    <string name="text_successfully_unlinked_from_dropbox">Successfully unlinked from Dropbox.</string>
+    <string name="text_successfully_linked_to_dropbox">Successfully linked to Dropbox.</string>
+    <string name="text_could_not_authenticate_with_dropbox">Could not authenticate with Dropbox:</string>
+    
+    
     <!-- Audio Record -->
 	<string name="text_audio_channel_in">Audio Channel-In</string>    
     <string name="text_channel_in_back">Channel in back</string>
@@ -148,6 +164,7 @@
 	<string name="text_channel_in_x_axis">Channel in X axis</string>
 	<string name="text_channel_in_y_axis">Channel in Y axis</string>
 	<string name="text_channel_in_z_axis">Channel in Z axis</string>
+
 	
 	<string name="text_audio_encoding">Audio Encoding</string>
 	<string name="text_audio_encoding_default">Encoding Default</string>

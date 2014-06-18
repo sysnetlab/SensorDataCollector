@@ -39,6 +39,7 @@ import sysnetlab.android.sdc.sensor.audio.AudioChannelIn;
 import sysnetlab.android.sdc.sensor.audio.AudioEncoding;
 import sysnetlab.android.sdc.sensor.audio.AudioRecordParameter;
 import sysnetlab.android.sdc.sensor.audio.AudioSensor;
+import sysnetlab.android.sdc.sensor.audio.AudioSensorHelper;
 import sysnetlab.android.sdc.sensor.audio.AudioSource;
 
 public class SimpleXmlFileStore extends SimpleFileStore {
@@ -463,27 +464,35 @@ public class SimpleXmlFileStore extends SimpleFileStore {
         xs.startTag("", "id");
         xs.text(Integer.toString(sensor.getAudioRecordParameter().getSource().getSourceId()));
         xs.endTag("", "id");
+        // Resource Id changes when the string.xml is updated. It is not good to use them in 
+        // persistent manner. 
+        /*
         xs.startTag("", "nameresid");
         xs.text(Integer.toString(sensor.getAudioRecordParameter().getSource().getSourceNameResId()));
         xs.endTag("", "nameresid");
+        */
         xs.endTag("",  "source");
         
         xs.startTag("", "channelin");
         xs.startTag("", "id");
         xs.text(Integer.toString(sensor.getAudioRecordParameter().getChannel().getChannelId()));
         xs.endTag("", "id");
+        /*
         xs.startTag("", "nameresid");
         xs.text(Integer.toString(sensor.getAudioRecordParameter().getChannel().getChannelNameResId()));
         xs.endTag("", "nameresid");
+        */
         xs.endTag("",  "channelin");
         
         xs.startTag("", "encoding");
         xs.startTag("", "id");
         xs.text(Integer.toString(sensor.getAudioRecordParameter().getEncoding().getEncodingId()));
         xs.endTag("", "id");
+        /*
         xs.startTag("", "nameresid");
         xs.text(Integer.toString(sensor.getAudioRecordParameter().getEncoding().getEncodingNameResId()));
         xs.endTag("", "nameresid");
+        */
         xs.endTag("",  "encoding");
         
         xs.startTag("", "samplingrate");
@@ -1070,9 +1079,10 @@ public class SimpleXmlFileStore extends SimpleFileStore {
 
             if (name.equals("id")) {
                 id = Integer.parseInt(readXmlElementText(xpp, "id"));
-            } else if (name.equals("nameresid")) {
+                nameresid = AudioSensorHelper.getSourceNameResId(id);
+            } /*else if (name.equals("nameresid")) {
                 nameresid = Integer.parseInt(readXmlElementText(xpp, "nameresid"));
-            } else {
+            } */ else {
                 skip(xpp);
             }
         } 
@@ -1093,9 +1103,10 @@ public class SimpleXmlFileStore extends SimpleFileStore {
 
             if (name.equals("id")) {
                 id = Integer.parseInt(readXmlElementText(xpp, "id"));
-            } else if (name.equals("nameresid")) {
+                nameresid = AudioSensorHelper.getChannelInNameResId(id);
+            } /* else if (name.equals("nameresid")) {
                 nameresid = Integer.parseInt(readXmlElementText(xpp, "nameresid"));
-            } else {
+            } */ else {
                 skip(xpp);
             }
         } 
@@ -1116,9 +1127,10 @@ public class SimpleXmlFileStore extends SimpleFileStore {
 
             if (name.equals("id")) {
                 id = Integer.parseInt(readXmlElementText(xpp, "id"));
-            } else if (name.equals("nameresid")) {
+                nameresid = AudioSensorHelper.getEncodingNameResId(id);
+            } /* else if (name.equals("nameresid")) {
                 nameresid = Integer.parseInt(readXmlElementText(xpp, "nameresid"));
-            } else {
+            } */ else {
                 skip(xpp);
             }
         } 

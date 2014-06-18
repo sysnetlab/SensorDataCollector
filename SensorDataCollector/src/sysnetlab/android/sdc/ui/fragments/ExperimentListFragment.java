@@ -38,7 +38,7 @@ public class ExperimentListFragment extends ListFragment {
         // List<Experiment> mExperimentList = ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate();
         mExperimentListAdapter = new ExperimentListAdapter(getActivity(),
                 ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate());
-        Log.i("SensorDataCollector", "called ExperimentListFragment::onCreate().");
+        Log.d("SensorDataCollector", "called ExperimentListFragment::onCreate().");
     }
 
     @Override
