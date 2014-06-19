@@ -5,6 +5,7 @@ import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.ui.SensorDataCollectorActivity;
 import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,7 +24,11 @@ public class SensorDataCollectorActivityTests
 
 	protected void setUp() throws Exception {
 		super.setUp();
-	    Intent intent = new Intent(getInstrumentation().getTargetContext(), SensorDataCollectorActivity.class);
+		
+        Context context = getInstrumentation().getTargetContext();
+        context.setTheme(R.style.Theme_AppCompat);
+        Intent intent = new Intent(context, SensorDataCollectorActivity.class);		
+
         startActivity(intent, null, null);
         sdcActivity = getActivity();
         getInstrumentation().callActivityOnStart(sdcActivity);

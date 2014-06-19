@@ -4,6 +4,7 @@ import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.ui.ViewExperimentActivity;
+import android.content.Context;
 import android.content.Intent;
 
 
@@ -19,11 +20,17 @@ public class ViewExperimentActivityTests extends android.test.ActivityUnitTestCa
 	
 	protected void setUp() throws Exception {
 		super.setUp();		
-	    Intent intent = new Intent(getInstrumentation().getTargetContext(), ViewExperimentActivity.class);
+		
+		Context context = getInstrumentation().getTargetContext();
+		context.setTheme(R.style.Theme_AppCompat);
+	    Intent intent = new Intent(context, ViewExperimentActivity.class);
+	    
 	    mExperiment= new Experiment();
-	    ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);	    
+	    ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);
+	    
         startActivity(intent, null, null);
         veActivity = getActivity();
+        
         getInstrumentation().callActivityOnStart(veActivity);
 	}
 	

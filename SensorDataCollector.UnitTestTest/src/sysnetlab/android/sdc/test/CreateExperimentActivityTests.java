@@ -4,6 +4,7 @@ package sysnetlab.android.sdc.test;
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
+import android.content.Context;
 import android.content.Intent;
 
 public class CreateExperimentActivityTests
@@ -17,11 +18,12 @@ public class CreateExperimentActivityTests
 
     protected void setUp() throws Exception {
         super.setUp();
-        Intent intent = new Intent(getInstrumentation().getTargetContext(),
-                CreateExperimentActivity.class);
-        startActivity(intent, null, null);
+        
+        Context context = getInstrumentation().getTargetContext();
+        context.setTheme(R.style.Theme_AppCompat);
+        Intent intent = new Intent(context, CreateExperimentActivity.class);
+        startActivity(intent, null, null);                
         createExperimentActivity = getActivity();
-        getInstrumentation().callActivityOnStart(createExperimentActivity);
     }
 
     protected void tearDown() throws Exception {
@@ -29,12 +31,14 @@ public class CreateExperimentActivityTests
     }
     
     public void testLayout() {
+        assertNotNull("The activity cannot be null.", createExperimentActivity);
         assertNotNull("Fragment container must exist.", createExperimentActivity.findViewById(R.id.fragment_container));
         assertNotNull("ProgressBar Layout must exist.", createExperimentActivity.findViewById(R.id.progressbar_task_in_progress));
     }
 
     public void testSensorDataCollectionState() {
-         assert(createExperimentActivity.getCurrentCollectionState() == DataCollectionState.DATA_COLLECTION_STOPPED);
+        assertNotNull("The activity cannot be null.", createExperimentActivity);
+        assert(createExperimentActivity.getCurrentCollectionState() == DataCollectionState.DATA_COLLECTION_STOPPED);
         // createExperimentActivity.onBtnRunClicked_SensorListFragment(new  Button(createExperimentActivity));
         // assert(createExperimentActivity.getCurrentCollectionState() ==
         // DataCollectionState.DATA_COLLECTION_IN_PROGRESS);

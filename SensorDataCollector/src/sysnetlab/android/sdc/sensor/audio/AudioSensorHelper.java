@@ -6,14 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sysnetlab.android.sdc.R;
+import sysnetlab.android.sdc.ui.AudioSensorProbingActivity;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.util.SparseIntArray;
 
 public class AudioSensorHelper {
-
+    
     private static List<AudioRecordParameter> mListAudioRecordParameters = new ArrayList<AudioRecordParameter>();
 
     private static final int[] SAMPLE_RATES = {
@@ -114,33 +116,58 @@ public class AudioSensorHelper {
     public static int getSourceNameResId(int sourceId) {
         return AUDIO_SOURCE_MAP.get(sourceId);
     }
+    
+    public static int estimateWorkLoadOnSensorProbing() {
+        return SAMPLE_RATES.length * CHANNEL_IN_ARRAY.length * AUDIO_ENCODING_ARRAY.length
+                * AUDIO_SOURCE_ARRAY.length * 2;
+    }
 
     public static List<AudioRecordParameter> getValidRecordingParameters() {
+        return getValidRecordingParameters(null);
+    } 
+    
+    public static List<AudioRecordParameter> getValidRecordingParameters(AsyncTask<Void, Integer, Void> asyncTask) {
         List<AudioRecordParameter> listParams = new ArrayList<AudioRecordParameter>();
-        scanValidRecordingParametersFirstPass(listParams);
-        scanValidRecordingParametersSecondPass(listParams, mListAudioRecordParameters);
+        scanValidRecordingParametersFirstPass(listParams, asyncTask);
+        scanValidRecordingParametersSecondPass(listParams, mListAudioRecordParameters, asyncTask);
         
         return mListAudioRecordParameters;
-    }    
+    }   
     
-    private static void scanValidRecordingParametersFirstPass(List<AudioRecordParameter> listParams) {
+    private static void scanValidRecordingParametersFirstPass(
+            List<AudioRecordParameter> listParams, AsyncTask<Void, Integer, Void> asyncTask) {
+        
+        Log.d("SensorDataCollector", "asyncTask = " + asyncTask == null? "null" : "not null");
         if (listParams == null) {
             return;
         }
         
         listParams.clear();
         
+        int progressValue = 0;
         for (int rate : SAMPLE_RATES) {
             for (AudioChannelIn channel : CHANNEL_IN_ARRAY) {
                 for (AudioEncoding format : AUDIO_ENCODING_ARRAY) {
                     int bufferSize = AudioRecord.getMinBufferSize(rate, channel.getChannelId(),
                             format.getEncodingId());
 
-                    if (bufferSize <= 0)
+                    if (bufferSize <= 0) {
+                        if (asyncTask != null
+                                && asyncTask instanceof AudioSensorProbingActivity.AudioSensorProbingTask) {
+                            progressValue += AUDIO_SOURCE_ARRAY.length;
+                            Log.d("SensorDataCollector", "to call doPublishProgress...");
+                            ((AudioSensorProbingActivity.AudioSensorProbingTask) asyncTask).doPublishProgress(progressValue);
+                        }
                         continue;
+                    }
 
                     AudioRecord r = null;
                     for (AudioSource source : AUDIO_SOURCE_ARRAY) {
+                        if (asyncTask != null
+                                && asyncTask instanceof AudioSensorProbingActivity.AudioSensorProbingTask) {
+                            progressValue ++;
+                            ((AudioSensorProbingActivity.AudioSensorProbingTask) asyncTask).doPublishProgress(progressValue);
+                        }
                         try {
                             Log.d("SensorDataCollector", "getValidRecordingParametersFirstPass(): " +
                                     "(source, rate, channl, encoding, buffersize) = " +
@@ -185,11 +212,20 @@ public class AudioSensorHelper {
     }
     
     private static void scanValidRecordingParametersSecondPass(
-            List<AudioRecordParameter> listParamsIn, List<AudioRecordParameter> listParamsOut) {
+            List<AudioRecordParameter> listParamsIn, List<AudioRecordParameter> listParamsOut,
+            AsyncTask<Void, Integer, Void> asyncTask) {
         if (listParamsOut == null) {
             return;
         }
         listParamsOut.clear();
+        
+        int progressStep = 0;
+        int progressValue = 0;
+        if (asyncTask != null
+                && asyncTask instanceof AudioSensorProbingActivity.AudioSensorProbingTask) {
+            progressValue = estimateWorkLoadOnSensorProbing() / 2;
+            progressStep =  progressValue / listParamsIn.size();
+        }
             
         for (AudioRecordParameter param : listParamsIn) {
 
@@ -227,6 +263,13 @@ public class AudioSensorHelper {
                     r.release();
                     r = null;
                 }
+            }
+            
+            if (asyncTask != null
+                    && asyncTask instanceof AudioSensorProbingActivity.AudioSensorProbingTask) {
+                progressValue += progressStep;
+                ((AudioSensorProbingActivity.AudioSensorProbingTask) asyncTask).doPublishProgress(progressValue);
+
             }
         }
         Log.d("SensorDataCollector", "getValidRecordingParametersSecondPass(): number of parameters = " + listParamsOut.size());
