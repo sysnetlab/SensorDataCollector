@@ -5,13 +5,16 @@ import java.util.List;
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.sensor.audio.AudioRecordParameter;
 import sysnetlab.android.sdc.sensor.audio.AudioRecordSettingDataSource;
+import sysnetlab.android.sdc.sensor.audio.AudioSensorHelper;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 public class AudioSensorProbingActivity extends Activity {
 
@@ -29,11 +32,18 @@ public class AudioSensorProbingActivity extends Activity {
         task.execute();        
     }
 
-    private class AudioSensorProbingTask extends AsyncTask<Void, Void, Void> {
+    public class AudioSensorProbingTask extends AsyncTask<Void, Integer, Void> {
         private Context mContext;
+
+        private ProgressBar mProgressWheel;
         
         AudioSensorProbingTask(Context context) {
             mContext = context;
+        }
+        
+        public void doPublishProgress(int progress) {
+            Log.d("SensorDataCollector", "called publishProgress.");
+            publishProgress(progress);
         }
         
         @Override
@@ -42,11 +52,11 @@ public class AudioSensorProbingActivity extends Activity {
             AudioRecordSettingDataSource dbSource = AudioRecordSettingDataSource.getInstance();
             dbSource.open();
             if (!dbSource.isDataSourceReady()) {
-                dbSource.prepareDataSource();
+                dbSource.prepareDataSource(this);
             } else {
                 List<AudioRecordParameter> listParams = dbSource.getAllAudioRecordParameters();
                 if (listParams == null || listParams.isEmpty()) {
-                    dbSource.prepareDataSource();
+                    dbSource.prepareDataSource(this);
                 }
             }
             
@@ -56,16 +66,28 @@ public class AudioSensorProbingActivity extends Activity {
 
         @Override
         protected void onPreExecute() {
-            LinearLayout layoutProgress = (LinearLayout) findViewById(R.id.layout_progressbar_loading);
-            if (layoutProgress != null)
-                layoutProgress.setVisibility(View.VISIBLE);            
+        	RelativeLayout layoutProgress = (RelativeLayout) findViewById(R.id.layout_progressbar_loading);
+            if (layoutProgress != null) {
+                mProgressWheel = (ProgressBar) layoutProgress.findViewById(R.id.progressbar_task_in_progress);
+                mProgressWheel.setMax(AudioSensorHelper.estimateWorkLoadOnSensorProbing());
+                mProgressWheel.setVisibility(View.VISIBLE);
+                layoutProgress.setVisibility(View.VISIBLE);     
+            }
         }
 
         @Override
+        protected void onProgressUpdate(Integer... values) {
+            Log.d("SensorDataCollector", "called setProgress(" + values[0] + ").");
+            mProgressWheel.setProgress(values[0]);
+        }        
+        
+        @Override
         protected void onPostExecute(Void result) {
-          LinearLayout layoutProgress = (LinearLayout) findViewById(R.id.layout_progressbar_loading);
-          if (layoutProgress != null)
+        	RelativeLayout layoutProgress = (RelativeLayout) findViewById(R.id.layout_progressbar_loading);
+          if (layoutProgress != null) {
+              mProgressWheel.setVisibility(View.GONE);
               layoutProgress.setVisibility(View.GONE);
+          }
           
           Intent intent = new Intent(AudioSensorProbingActivity.this, SensorDataCollectorActivity.class);
           startActivity(intent);          

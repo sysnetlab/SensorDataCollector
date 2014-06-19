@@ -10,17 +10,17 @@ import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
+import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 
-public class SensorDataCollectorActivity extends FragmentActivity implements
+public class SensorDataCollectorActivity extends FragmentActivityBase 
+	implements
         ExperimentListFragment.OnFragmentClickListener {
     
     public final static String APP_OPERATION_KEY = "operation";
@@ -34,33 +34,35 @@ public class SensorDataCollectorActivity extends FragmentActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
+        mLoadingTask=new TaskLoadingSpinner();
         
         ExperimentManagerSingleton.getInstance().addExperimentStore(
                 StoreSingleton.getInstance());
         
         SensorUtilsSingleton.getInstance().setContext(getApplicationContext());
         
-        // Dropbox
-        DropboxHelper.getInstance(getApplicationContext());        
-
-        for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(SensorDataCollectorActivity.this)) {
+        mLoadingTask.execute();
+        
+        mExperimentListFragment = new ExperimentListFragment();
+        FragmentUtil.addFragment(this, mExperimentListFragment);
+    }
+    
+    @Override
+    protected void loadTask() {
+    	// Dropbox
+        DropboxHelper.getInstance(getApplicationContext());
+    	
+    	for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(SensorDataCollectorActivity.this)) {
             sensor.setSelected(false);
         }
-        if (findViewById(R.id.fragment_container) != null) {
-            mExperimentListFragment = new ExperimentListFragment();
-            FragmentTransaction transaction = getSupportFragmentManager()
-                    .beginTransaction();
-            transaction.add(R.id.fragment_container, mExperimentListFragment);
-            transaction.commit();
-        }  
-      
+    	
     }
-
+    
     public void onResume() {
     	super.onResume();
     	
         // Complete the Dropbox Authorization
-        DropboxHelper.getInstance().completeAuthentication();
+        DropboxHelper.getInstance(SensorDataCollectorActivity.this).completeAuthentication();
     }
     
     @Override

@@ -22,5 +22,12 @@ public class FragmentUtil {
         transaction.addToBackStack(name);
         transaction.commit();
     }
+    
+    public static void addFragment(FragmentActivity activity, Fragment fragment) {
+        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout);
+        transaction.add(R.id.fragment_container, fragment);
+        transaction.commit();
+    }
 
 }

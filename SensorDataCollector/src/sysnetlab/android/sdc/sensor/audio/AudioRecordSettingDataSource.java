@@ -9,6 +9,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.util.Log;
 
 public class AudioRecordSettingDataSource {
@@ -159,7 +160,12 @@ public class AudioRecordSettingDataSource {
     }
 
     public boolean prepareDataSource() {
-        List<AudioRecordParameter> params = AudioSensorHelper.getValidRecordingParameters();
+        return prepareDataSource(null);
+    }
+    
+    public boolean prepareDataSource(AsyncTask<Void, Integer, Void> asyncTask) {
+        Log.d("SensorDataCollector", "prepareDataSource: asyncTask = " + asyncTask);
+        List<AudioRecordParameter> params = AudioSensorHelper.getValidRecordingParameters(asyncTask);
         return addAllAudioRecordParameters(params);
     }
 
