@@ -79,7 +79,7 @@ public class CreateExperimentActivity extends FragmentActivity
     private DataCollectionState mCollectionState;
 
     private Experiment mExperiment;
-
+    
     private int mPreviousTagPosition;
     private StateTag mStateTagPrevious;
     private Drawable mDrawableBackground;
@@ -212,16 +212,17 @@ public class CreateExperimentActivity extends FragmentActivity
     }           
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	MenuItem item2 = item;
-        switch(item2.getItemId()) {
+    public boolean onOptionsItemSelected(MenuItem item) {    	
+        switch(item.getItemId()) {
 	        case android.R.id.home:
 	        	if(mExperimentRunFragment!=null && mExperimentRunFragment.isFragmentUIActive()){	            	
 	        		confirmToStopExperiment();
 	            	return true;	    	        		            	
 	            }else{
-	            	confirmToLeaveActivity();
-	            	return true;
+	            	if(confirmToLeaveActivity())
+	            		return true;
+	            	else
+	            		return super.onOptionsItemSelected(item);
 	            }	        
         }		
         return super.onOptionsItemSelected(item);
@@ -232,7 +233,8 @@ public class CreateExperimentActivity extends FragmentActivity
         if (mExperimentRunFragment != null && mExperimentRunFragment.isFragmentUIActive()) {            
             confirmToStopExperiment();            
         } else if(mExperimentSetupFragment != null && mExperimentSetupFragment.isFragmentUIActive()){
-    		confirmToLeaveActivity();
+    		if(!confirmToLeaveActivity())
+    			super.onBackPressed();
         }else {
             super.onBackPressed();
         }
@@ -324,7 +326,7 @@ public class CreateExperimentActivity extends FragmentActivity
         Log.d("SensorDataCollector", "Filtered note: [" + note + "]");      
         
         if (note.trim().length() > 0)
-            mExperiment.getNotes().add(new Note(note));
+        	mExperiment.addNote(new Note(note));
         
         ((EditText)this.findViewById(
     			R.id.edittext_experiment_note_editing_note)).
@@ -575,28 +577,29 @@ public class CreateExperimentActivity extends FragmentActivity
         }
     }	
 	
-	private void confirmToLeaveActivity(){		
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		
-        builder.setMessage(R.string.text_do_you_want_to_leave_experiment)
-                .setTitle(R.string.text_experiment);
-        builder.setPositiveButton(R.string.text_leave_experiment,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {                        
-                        finish();
-                        dialog.dismiss();                        
-                    }
-                });
-        builder.setNegativeButton(R.string.text_continue_experiment,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(CreateExperimentActivity.this,
-                                R.string.text_continuing_experiment, Toast.LENGTH_SHORT).show();
-                    }
-                });
-        mAlertDialog = builder.create();
-
-        mAlertDialog.show();
+	private boolean confirmToLeaveActivity(){
+		if(hasChanges()){
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	        builder.setMessage(R.string.text_do_you_want_to_leave_experiment)
+	                .setTitle(R.string.text_experiment);
+	        builder.setPositiveButton(R.string.text_leave_experiment,
+	                new DialogInterface.OnClickListener() {
+	                    public void onClick(DialogInterface dialog, int id) {                        
+	                        finish();
+	                        dialog.dismiss();                        
+	                    }
+	                });	        
+	        builder.setNegativeButton(R.string.text_continue_experiment,
+	                new DialogInterface.OnClickListener() {
+	                    public void onClick(DialogInterface dialog, int id) {
+	                        
+	                    }
+	                });
+	        mAlertDialog = builder.create();
+	        mAlertDialog.show();
+	        return true;
+		}
+        return false;
 	}
 
     private void confirmToStopExperiment() {
@@ -737,4 +740,20 @@ public class CreateExperimentActivity extends FragmentActivity
             Toast.makeText(this, text, Toast.LENGTH_LONG).show();
         }
     }
+    
+    private boolean hasChanges(){
+    	if(mExperiment.hasChanges())
+    		return true;    	
+    	if(mExperimentEditNotesFragment!=null)    		
+    		return mExperimentEditNotesFragment.hasChanges();
+    	if(mExperimentEditTagsFragment!=null)
+    		return mExperimentEditTagsFragment.hasChanges();
+    	if(mExperimentSensorSelectionFragment!=null)
+    		return mExperimentSensorSelectionFragment.hasChanges();
+    	if(mExperimentSetupFragment!=null)
+    		return mExperimentSetupFragment.hasChanges();
+    		
+    	return false;
+    }
+    
 }

@@ -7,6 +7,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;	
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,9 +41,29 @@ public class ExperimentSetupFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((EditText) mView.findViewById(R.id.et_experiment_setup_name))
-        .setText(((CreateExperimentActivity) getActivity()).getExperiment().getName());
-
+        EditText etName = (EditText) mView.findViewById(R.id.et_experiment_setup_name);
+        etName.setText(((CreateExperimentActivity) getActivity()).getExperiment().getName());
+        etName.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		CreateExperimentActivity a = (CreateExperimentActivity) getActivity();
 		ListView operationMenu = (ListView) mView.findViewById(R.id.lv_operations);
         OperationAdapter operationAdapter = new OperationAdapter(a, a.getExperiment(),
@@ -116,5 +138,13 @@ public class ExperimentSetupFragment extends Fragment {
     
     public ExperimentSensorListFragment getExperimentSensorListFragment() {
         return mExperimentSensorListFragment;
+    }
+    
+    public boolean hasChanges(){
+    	String experimentName = ((EditText) mView.findViewById(R.id.et_experiment_setup_name))
+    			.getText().toString();
+    	if(!experimentName.trim().equals(((CreateExperimentActivity) getActivity()).getExperiment().getDefaultName()))
+    		return true;
+    	return false;
     }
 }

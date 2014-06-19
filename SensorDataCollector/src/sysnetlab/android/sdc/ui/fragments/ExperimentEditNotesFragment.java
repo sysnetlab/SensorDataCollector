@@ -13,6 +13,7 @@ import android.widget.EditText;
 
 public class ExperimentEditNotesFragment extends Fragment {
 
+	private View mView;
     private OnFragmentClickListener mCallback;
 
     public interface OnFragmentClickListener {
@@ -23,8 +24,9 @@ public class ExperimentEditNotesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         
-        return inflater.inflate(R.layout.fragment_experiment_note_editing, container,
-                false);	
+        mView = inflater.inflate(R.layout.fragment_experiment_note_editing, container,
+                false);
+        return 	mView;
     }
 
     @Override
@@ -52,5 +54,17 @@ public class ExperimentEditNotesFragment extends Fragment {
                                 );
                     }
                 });
+    }
+    public boolean hasChanges(){
+    	String noteDescription = ((EditText) mView.findViewById(R.id.edittext_experiment_note_editing_note))
+    			.getText().toString();
+    	if(!noteDescription.trim().equals(""))
+    		return true;
+    	return false;
+    }
+    
+    
+    public View getView(){
+    	return mView;
     }
 }

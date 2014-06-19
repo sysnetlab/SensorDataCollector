@@ -116,5 +116,17 @@ public class ExperimentEditTagsFragment extends Fragment {
     
     public ArrayAdapter<Tag> getTagListAdapter(){
     	return mTagListAdapter;
-    }    
+    }
+    
+    public boolean hasChanges(){
+    	String tagName = ((EditText) mView.findViewById(R.id.edittext_tag))
+    			.getText().toString();
+    	if(!tagName.trim().equals(""))
+    		return true;    	
+    	String tagDescription = ((EditText) mView.findViewById(R.id.edittext_description))
+    			.getText().toString();
+    	if(!tagDescription.trim().equals(""))
+    		return true;    	
+    	return false;
+    }
 }

@@ -1,5 +1,6 @@
 package sysnetlab.android.sdc.ui.fragments;
 
+import java.util.Iterator;
 import java.util.List;
 
 import sysnetlab.android.sdc.R;
@@ -156,5 +157,15 @@ public class ExperimentSensorSelectionFragment extends Fragment {
 
     public ListView getSensorListView(){
     	return mListView;
+    }
+    
+    public boolean hasChanges(){
+    	Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(getActivity()).iterator();
+        while (iter.hasNext()) {
+            AbstractSensor sensor = (AbstractSensor) iter.next(); 
+            if(sensor.isSelected())
+            	return true;
+        }
+    	return false;
     }
 }

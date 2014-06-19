@@ -34,6 +34,8 @@ public class Experiment implements Parcelable {
     private List<Note> mNotes;
     private List<TaggingAction> mTaggingActions;
     private String mPath;
+    private boolean mHasChanges = false;
+    private static String mDefaultName = "Unnamed Experiment";
 
     private List<AbstractSensor> mSensors;
     //private AbstractStore mStore;
@@ -55,7 +57,7 @@ public class Experiment implements Parcelable {
     }
     
     public Experiment() {
-        this("Unnamed Experiment", Calendar.getInstance().getTime());
+        this(mDefaultName, Calendar.getInstance().getTime());
     }
 
     public Experiment clone() {
@@ -64,8 +66,7 @@ public class Experiment implements Parcelable {
         experiment.setName(new String(mName));
         experiment.setTags(new ArrayList<Tag>(mTags));
         experiment.setNotes(new ArrayList<Note>(mNotes));
-        experiment.setSensors(new ArrayList<AbstractSensor>(mSensors));
-
+        experiment.setSensors(new ArrayList<AbstractSensor>(mSensors));        
         return experiment;
     }
 
@@ -74,7 +75,10 @@ public class Experiment implements Parcelable {
     }
 
     public void setTags(List<Tag> tags) {
-        this.mTags = tags;
+    	if(tags!=null){
+    		this.mTags = tags;
+    		this.mHasChanges = true;
+    	}
     }
 
     public boolean addTag(String strTag, String strDescription) {
@@ -98,6 +102,7 @@ public class Experiment implements Parcelable {
         }
         
         if (!tagExists) {
+        	this.mHasChanges = true;
             return mTags.add(t);
         } else {
             return false;
@@ -108,6 +113,11 @@ public class Experiment implements Parcelable {
         return mNotes;
     }
 
+    public void addNote(Note note){
+    	mNotes.add(note);
+    	this.mHasChanges = true;
+    }
+    
     public List<Note> getNotesSortedByDate() {
         List<Note> allNotes = getNotes();
         Collections.sort(allNotes, new Comparator<Note>() {
@@ -120,8 +130,10 @@ public class Experiment implements Parcelable {
     }
     
     public void setNotes(List<Note> mNotes) {
-        if (mNotes != null)
+        if (mNotes != null){
             this.mNotes = mNotes;
+            this.mHasChanges = true;
+        }
     }
 
     public String getName() {
@@ -130,6 +142,22 @@ public class Experiment implements Parcelable {
 
     public void setName(String name) {
         mName = name != null ? name : "";
+        this.mHasChanges = true;
+    }
+    
+    public void setHasChanges(boolean hasChanges){
+    	this.mHasChanges = hasChanges;
+    }
+    
+    public void setHasChangesFromInt(int hasChanges){
+    	if(hasChanges==0)
+    		this.mHasChanges = false;
+    	else 
+    		this.mHasChanges = true;
+    }
+    
+    public boolean hasChanges(){
+    	return mHasChanges;
     }
     
     public String getDateTimeCreatedAsStringUTC() {
@@ -143,7 +171,10 @@ public class Experiment implements Parcelable {
         return mDateTimeCreated;
     }
     
-
+    public String getDefaultName(){
+    	return mDefaultName;
+    }
+    
     public void setDateTimeCreatedFromStringUTC(String dateCreated) {
         try {
             // use XML dateTimeType format
@@ -192,7 +223,10 @@ public class Experiment implements Parcelable {
     }
 
     public void setSensors(List<AbstractSensor> sensors) {
-        this.mSensors = sensors;
+    	if(sensors!=null){
+    		this.mSensors = sensors;
+    		this.mHasChanges = true;
+    	}
     }
 
     public DeviceInformation getDeviceInformation() {
@@ -380,8 +414,11 @@ public class Experiment implements Parcelable {
                     outParcel.writeString(((AndroidSensor)sensor).getListener().getChannel().describe());
                     break;
             }
-        }
-        
+        }        
+        if(mHasChanges)        	
+        	outParcel.writeInt(1);
+        else
+        	outParcel.writeInt(0);
         // TODO write the tagging action properly to parcel.
     }
 
@@ -439,6 +476,7 @@ public class Experiment implements Parcelable {
                     sensorMinorType, channel, null);
             mSensors.add(sensor);
         }
+        setHasChangesFromInt(inParcel.readInt());
     }
     
     public Parcelable.Creator<Experiment> getCreator() {
