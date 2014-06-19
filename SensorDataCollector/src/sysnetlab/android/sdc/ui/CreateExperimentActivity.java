@@ -723,14 +723,14 @@ public class CreateExperimentActivity extends FragmentActivityBase
     private boolean hasChanges(){
     	if(mExperiment.hasChanges())
     		return true;    	
-    	if(mExperimentEditNotesFragment!=null)    		
-    		return mExperimentEditNotesFragment.hasChanges();
-    	if(mExperimentEditTagsFragment!=null)
-    		return mExperimentEditTagsFragment.hasChanges();
-    	if(mExperimentSensorSelectionFragment!=null)
-    		return mExperimentSensorSelectionFragment.hasChanges();
-    	if(mExperimentSetupFragment!=null)
-    		return mExperimentSetupFragment.hasChanges();
+    	if(mExperimentEditNotesFragment!=null && mExperimentEditNotesFragment.hasChanges())    		
+    		return true;
+    	if(mExperimentEditTagsFragment!=null && mExperimentEditTagsFragment.hasChanges())
+    		return true;
+    	if(mExperimentSensorSelectionFragment!=null && mExperimentSensorSelectionFragment.hasChanges())
+    		return true;
+    	if(mExperimentSetupFragment!=null && mExperimentSetupFragment.hasChanges())
+    		return true;
     		
     	return false;
     }
