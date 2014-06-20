@@ -74,7 +74,8 @@ public class AudioSensorProbingActivity extends Activity {
                         .findViewById(R.id.progressbar_task_in_progress);
                 mProgressWheel.setMax(AudioSensorHelper.estimateWorkLoadOnSensorProbing());
                 mProgressWheel.setVisibility(View.VISIBLE);
-                layoutProgress.setVisibility(View.VISIBLE);
+                layoutProgress.findViewById(R.id.textview_progressbar).setVisibility(View.VISIBLE);
+                layoutProgress.setVisibility(View.VISIBLE);     
             }
         }
 
@@ -85,9 +86,11 @@ public class AudioSensorProbingActivity extends Activity {
 
         @Override
         protected void onPostExecute(Void result) {
+
             RelativeLayout layoutProgress = (RelativeLayout) findViewById(R.id.layout_progressbar_loading);
             if (layoutProgress != null) {
                 mProgressWheel.setVisibility(View.GONE);
+                layoutProgress.findViewById(R.id.textview_progressbar).setVisibility(View.GONE);
                 layoutProgress.setVisibility(View.GONE);
             }
 

@@ -15,11 +15,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-public class ViewExperimentActivity extends ActionBarActivity implements
+public class ViewExperimentActivity extends FragmentActivityBase implements
         ExperimentViewFragment.OnFragmentClickListener,
         ExperimentSensorListFragment.OnFragmentClickListener {
 
@@ -33,11 +32,17 @@ public class ViewExperimentActivity extends ActionBarActivity implements
         // TODO handle configuration change
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
-
+        mLoadingTask=new TaskLoadingSpinner();
+        mLoadingTask.execute();
         // mExperiment = (Experiment)
         // getIntent().getParcelableExtra("experiment");
 
-        mExperiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();
+        
+    }
+    
+    @Override
+    protected void loadTask() {
+    	mExperiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();
 
         if (mExperiment == null) {
             Log.i("SensorDataColelctor",
@@ -50,9 +55,6 @@ public class ViewExperimentActivity extends ActionBarActivity implements
                 "ViewExperimentActivity: experiment is " + mExperiment.toString());
 
         if (findViewById(R.id.fragment_container) != null) {
-            if (savedInstanceState != null) {
-                return;
-            }
 
             mExperimentViewFragment = new ExperimentViewFragment();
             FragmentTransaction transaction = getSupportFragmentManager()
