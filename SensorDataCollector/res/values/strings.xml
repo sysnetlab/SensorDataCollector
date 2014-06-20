@@ -194,7 +194,7 @@
 	<string name="text_discover_sensors_text">Probing sensors &#8230; It may take two minutes.</string>
 	
 	<string name="text_enter_a_tag">Please enter a tag.</string>
-	<string name="text_tag_must_be_unique">Tag must be unique.</string>
+	<string name="text_tag_must_be_unique">Tags must be unique.</string>
 	
 	<string name="text_audio_sensor_probing_activity">Probing Sensors</string>
     

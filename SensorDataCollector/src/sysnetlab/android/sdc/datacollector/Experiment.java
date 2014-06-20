@@ -462,11 +462,11 @@ public class Experiment implements Parcelable {
                     try {
                         channel = ((SimpleFileStore) store).new SimpleFileChannel(channelDescriptor);
                     } catch (FileNotFoundException e) {
-                        Log.i("SensordataCollector",
+                        Log.d("SensordataCollector",
                                 "Experiment::Expriment(Parcel): calling new SimpleFileChannel");
                     }
                 } else {
-                    Log.i("SensorDataCollector",
+                    Log.w("SensorDataCollector",
                             "Experiment::Expriment(Parcel): need to deal with " +
                                     store.getClass().getName());
                 }

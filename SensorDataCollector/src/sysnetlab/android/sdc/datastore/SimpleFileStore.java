@@ -286,6 +286,7 @@ public class SimpleFileStore extends AbstractStore {
         private RandomAccessFile mRandomAccessFile;
         private String mPath;
         private int mType;
+        private int mFlags;
 
         protected SimpleFileChannel() {
             // prohibit from creating SimpleFileChannel object without an argument
@@ -299,44 +300,58 @@ public class SimpleFileStore extends AbstractStore {
             this(path, flags, CHANNEL_TYPE_CSV);
         }        
         
-        public SimpleFileChannel(String path, int flags, int type) throws FileNotFoundException {
+        public SimpleFileChannel(String path, int flags, int type) {
+            mFlags = flags;
             mType = type;
+            mPath = path;
             mBlockingQueue = null;
             mDeferredClosing = false;
+        } 
 
-            if (flags == READ_ONLY) {
-                mRandomAccessFile = null;
-                mOut = null;
-                File file = new File(path);
-                if (file.exists()) {
-                    mIn = new BufferedReader(new FileReader(path));
-                } else {
-                    throw new RuntimeException("SimpleFileChannel: cannot open file " + path);
-                }
-                mPath = path;
-            } else if (flags == WRITE_ONLY) {
-                mIn = null;
-                mPath = path;
+        @Override
+        public boolean open() {
+            try {
+                if (mFlags == READ_ONLY) {
+                    mRandomAccessFile = null;
+                    mOut = null;
+                    File file = new File(mPath);
+                    if (file.exists()) {
+                        mIn = new BufferedReader(new FileReader(mPath));
+                    } else {
+                        throw new RuntimeException("SimpleFileChannel: cannot open file " + mPath);
+                    }
+                } else if (mFlags == WRITE_ONLY) {
+                    mIn = null;
 
-                if (type == AbstractStore.Channel.CHANNEL_TYPE_WAV) {
-                    mRandomAccessFile = new RandomAccessFile(path, "rw");
-                    try {
-                        mOut = new PrintStream(new BufferedOutputStream(new FileOutputStream(
-                                mRandomAccessFile.getFD())));
-                    } catch (IOException e) {
-                        mOut = null;
+                    if (mType == AbstractStore.Channel.CHANNEL_TYPE_WAV) {
+                        mRandomAccessFile = new RandomAccessFile(mPath, "rw");
+                        try {
+                            mOut = new PrintStream(new BufferedOutputStream(new FileOutputStream(
+                                    mRandomAccessFile.getFD())));
+                        } catch (IOException e) {
+                            mOut = null;
+                            mRandomAccessFile = null;
+                            throw new RuntimeException("SimpleFileChannel: " + e.toString());
+                        }
+                    } else {
+                        mOut = new PrintStream(
+                                new BufferedOutputStream(new FileOutputStream(mPath)));
                         mRandomAccessFile = null;
-                        throw new RuntimeException("SimpleFileChannel: " + e.toString());
                     }
                 } else {
-                    mOut = new PrintStream(new BufferedOutputStream(new FileOutputStream(path)));
-                    mRandomAccessFile = null;
+                    Log.e("SensorDataCollector", "SimpleFileChannel::open(): "
+                            + "encountered unsupported creation flag " + mFlags);
+                    return false;
                 }
-            } else {
-                throw new RuntimeException(
-                        "SimpleFileChannel: encountered unsupported creation flag " + flags);
+            } catch (FileNotFoundException e) {
+                Log.e("SensorDataCollector", "SimpleFileChannel::open(): "
+                        + " error on opening the channel: "
+                        + e.toString());
+                return false;
             }
-        } 
+            
+            return true;
+        }
 
         public void close() {
             if (!mDeferredClosing) {
@@ -449,10 +464,6 @@ public class SimpleFileStore extends AbstractStore {
         }        
 
         @Override
-        public void open() {
-        }
-        
-        @Override
         public int getType() {
             return mType;
         }
@@ -489,20 +500,11 @@ public class SimpleFileStore extends AbstractStore {
             path = mNewExperimentPath + "/" + tag.replace(' ', '_') + extension;
         }
 
-        try {
-            Channel channel;
-            channel = new SimpleFileChannel(path, flags, type);
-            mChannels.add(channel);
+        Channel channel;
+        channel = new SimpleFileChannel(path, flags, type);
+        mChannels.add(channel);
 
-            return channel;
-        } catch (FileNotFoundException e) {
-            Log.e("SensorDataCollector",
-                    "SimpleFileStore::getChannel: cannot open the channel file: "
-                            + path);
-            e.printStackTrace();
-
-            return null;
-        }
+        return channel;
     }
 
     @Override

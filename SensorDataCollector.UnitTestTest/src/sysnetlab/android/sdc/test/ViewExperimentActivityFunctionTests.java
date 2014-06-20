@@ -29,7 +29,6 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
 	
 	private ViewExperimentActivity mViewExperimentActivity;
 	private Experiment mExperiment;
-	private Context mContext;
 	private AbstractStore mStore;
 
 	public ViewExperimentActivityFunctionTests() {
@@ -82,7 +81,6 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
     public void testViewExperimentActivityLoaded()
 	{
     	assertNotNull("Failed to get ViewExperimentActivity", mViewExperimentActivity);
-    	assertNotNull("Failed to get the context", mContext);
     	assertNotNull("Failed to get the store", mStore);
 		assertNotNull("The ExperimentViewFragment was not loaded", mViewExperimentActivity.getExperimentViewFragment());
 		assertNotNull("The activity was not loaded", mViewExperimentActivity.findViewById(R.id.fragment_container));

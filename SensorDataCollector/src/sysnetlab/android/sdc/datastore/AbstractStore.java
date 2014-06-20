@@ -22,7 +22,7 @@ public abstract class AbstractStore {
         protected boolean mDeferredClosing;
         protected BlockingQueue<Integer> mBlockingQueue;
         
-        public abstract void open();
+        public abstract boolean open();
         public abstract void write(String s);
         public abstract void write(byte[] buffer, int offset, int length);
         public abstract void write(byte[] buffer, int bufferOffset, int bufferLength, int fileOffset);
