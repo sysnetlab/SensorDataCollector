@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import sysnetlab.android.sdc.R;
+import sysnetlab.android.sdc.datacollector.DropboxHelper;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datastore.AbstractStore;
@@ -13,7 +14,6 @@ import sysnetlab.android.sdc.ui.ViewExperimentActivity;
 import sysnetlab.android.sdc.ui.adaptors.SensorListAdapter;
 import sysnetlab.android.sdc.ui.adaptors.SensorPropertyListAdapter;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewNotesFragment;
-import android.content.Context;
 import android.graphics.Rect;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
@@ -52,6 +52,9 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
         //setup the store and the sensorUtilSingleton
         if (!SensorDiscoverer.isInitialized())
             SensorDiscoverer.initialize(getInstrumentation().getTargetContext());
+        
+        DropboxHelper.getInstance(getInstrumentation().getTargetContext());
+        
         mStore = StoreSingleton.getInstance();
         ExperimentManagerSingleton.getInstance().addExperimentStore(
                 mStore);

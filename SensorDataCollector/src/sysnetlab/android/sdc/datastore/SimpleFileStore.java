@@ -318,7 +318,9 @@ public class SimpleFileStore extends AbstractStore {
                     if (file.exists()) {
                         mIn = new BufferedReader(new FileReader(mPath));
                     } else {
-                        throw new RuntimeException("SimpleFileChannel: cannot open file " + mPath);
+                        Log.e("SensorDataCollector", "SimpleFileChannel::open(): "
+                                + "error on open openning the channel: cannot find the file: " + mPath);
+                        return false;
                     }
                 } else if (mFlags == WRITE_ONLY) {
                     mIn = null;
@@ -331,7 +333,9 @@ public class SimpleFileStore extends AbstractStore {
                         } catch (IOException e) {
                             mOut = null;
                             mRandomAccessFile = null;
-                            throw new RuntimeException("SimpleFileChannel: " + e.toString());
+                            Log.e("SensorDataCollector", "SimpleFileChannel::open(): "
+                                    + "error on open openning the channel: " + e.toString());
+                            return false;
                         }
                     } else {
                         mOut = new PrintStream(
