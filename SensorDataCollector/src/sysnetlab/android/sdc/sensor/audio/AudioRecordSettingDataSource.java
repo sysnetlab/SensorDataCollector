@@ -60,8 +60,7 @@ public class AudioRecordSettingDataSource {
     
     public static synchronized AudioRecordSettingDataSource getInstance() {
         if (instance == null) {
-            throw new IllegalStateException("SensorDataCollector: "
-                    + AudioRecordSettingDataSource.class.getName()
+            throw new IllegalStateException("SensorDataCollector::AudioRecordSettingDataSource:"
                     + " is not initialized, call initializeInstance(..) method first.");
         }
 
@@ -164,7 +163,7 @@ public class AudioRecordSettingDataSource {
     }
     
     public boolean prepareDataSource(AsyncTask<Void, Integer, Void> asyncTask) {
-        Log.d("SensorDataCollector", "prepareDataSource: asyncTask = " + asyncTask);
+        // Log.d("SensorDataCollector", "prepareDataSource: asyncTask = " + asyncTask);
         List<AudioRecordParameter> params = AudioSensorHelper.getValidRecordingParameters(asyncTask);
         return addAllAudioRecordParameters(params);
     }

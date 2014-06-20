@@ -23,7 +23,7 @@ import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
-import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
+import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import android.os.Environment;
 import android.util.Log;
 
@@ -42,8 +42,7 @@ public class SimpleFileStore extends AbstractStore {
 
     public SimpleFileStore() throws RuntimeException {
 
-        Log.i("SensorDataCollector",
-                "entering SimpleFileStore.constructor() ...");
+        Log.d("SensorDataCollector", "Entered SimpleFileStore.constructor().");
 
         String parentPath = Environment.getExternalStorageDirectory().getPath();
         parentPath = parentPath + "/SensorData";
@@ -235,7 +234,7 @@ public class SimpleFileStore extends AbstractStore {
 
                             Channel channel = new SimpleFileChannel(channelDescriptor,
                                     Channel.READ_ONLY);
-                            AbstractSensor sensor = SensorUtilsSingleton.getInstance().getSensor(
+                            AbstractSensor sensor = SensorDiscoverer.constructSensorObject(
                                     sensorName,
                                     sensorMajorType,
                                     sensorMinorType, channel, null);
@@ -250,12 +249,6 @@ public class SimpleFileStore extends AbstractStore {
                 experiment.setSensors(lstSensors);
                 
                 in.close();
-
-                Log.i("SensorDataCollector",
-                        "SimpleFileStore::loadExperiment(): load experiment("
-                                + experiment.getName() + ", " + experiment.getDateTimeCreatedAsString()
-                                + ") successfully.");
-                return experiment;
             } else {
                 file = new File(parentDir);
 
@@ -264,42 +257,27 @@ public class SimpleFileStore extends AbstractStore {
 
                 Log.w("SensorDataCollector",
                         "SimpleFileStore::loadExperiment(): no configuraiton file is found for " + name);
-                Experiment e = new Experiment(name, dateCreated);
-                e.setPath(parentDir);
-                return e;
+                experiment = new Experiment(name, dateCreated);
+                experiment.setPath(parentDir);
             }
         } catch (NumberFormatException e) {
-            if (name != null && dateTimeCreated != null) {
-                Log.w("SensorDataCollector",
-                        "SimpleFileStore::loadExperiment(): Found an old configuration file for " + name);
-                return null;
-            }
-
-            Log.e("SensorDataCollector", "SimpleFileStore::loadExperiment(): " +
-                    "Failed to load the configuration file.");
-            e.printStackTrace();
-
-            return null;
-
+            Log.w("SensorDataCollector",
+                    "SimpleFileStore::loadExperiment(): failed to parse an old configuration file for "
+                            + name + " with error " + e.toString());
+            experiment = null;
         } catch (IOException e) {
-
-            if (name != null && dateTimeCreated != null) {
-                Log.w("SensorDataCollector",
-                        "SimpleFileStore::loadExperiment(): Found an old configuration file for " + name);
-                return null;
-            }
-
-            Log.e("SensorDataCollector", "SimpleFileStore::loadExperiment(): " +
-                    "Failed to load the configuration file.");
-            e.printStackTrace();
-
-            return null;
+            Log.w("SensorDataCollector", "SimpleFileStore::loadExperiment(): " +
+                    "failed to read an old configuration file with error message " + e.toString());
+            experiment = null;
         } catch (RuntimeException e) {
             Log.w("SensorDataCollector",
-                    "SimpleFileStore::loadExperiment(): Found an old configuration file "
+                    "SimpleFileStore::loadExperiment(): found an old configuration file "
                             + experiment.getName() + ", " + experiment.getDateTimeCreatedAsString());
-            return experiment;
         }
+
+        Log.d("SensorDataCollector", "SimpleFileStore::loadExperiment(): loaded experiment ["
+                + (experiment != null ? experiment.toString() : "null") + "]");
+        return experiment;
     }
 
     public class SimpleFileChannel extends AbstractStore.Channel {
@@ -398,7 +376,7 @@ public class SimpleFileStore extends AbstractStore {
                     mIn.close();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.i("SensorDataCollector", "close error in SimpleFileStore::close().");
+                    Log.e("SensorDataCollector", "SimpleFileStore::close(): mIn.close() failed.");
                 }
             }
         }
@@ -448,7 +426,7 @@ public class SimpleFileStore extends AbstractStore {
                     return mIn.readLine();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.i("SensorDataCollector", "read error in SimpleFileStore::read().");
+                    Log.i("SensorDataCollector", "SimpleFileStore::read(): mIn.readLine() failed.");
                     return null;
                 }
             } else {
@@ -465,7 +443,7 @@ public class SimpleFileStore extends AbstractStore {
                     mIn = new BufferedReader(new FileReader(mPath));
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.i("SensorDataCollector", "reset error in SimpleFileStore::mark().");              
+                    Log.i("SensorDataCollector", "SimpleFileStore::reset(): mIn.close() failed.");              
                 }
             }
         }        

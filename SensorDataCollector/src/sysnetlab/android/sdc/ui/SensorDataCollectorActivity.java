@@ -8,7 +8,6 @@ import sysnetlab.android.sdc.datacollector.DropboxHelper;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
-import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
 import android.content.Intent;
@@ -34,17 +33,18 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
-        mLoadingTask=new TaskLoadingSpinner();
-        
+        mLoadingTask = new TaskLoadingSpinner();
+
         ExperimentManagerSingleton.getInstance().addExperimentStore(
                 StoreSingleton.getInstance());
-        
-        SensorUtilsSingleton.getInstance().setContext(getApplicationContext());
-        
+
+        if (!SensorDiscoverer.isInitialized())
+            SensorDiscoverer.initialize(getApplicationContext());
+
         mLoadingTask.execute();
-        
+
         mExperimentListFragment = new ExperimentListFragment();
-        FragmentUtil.addFragment(this, mExperimentListFragment);
+        FragmentUtil.addFragment(this, mExperimentListFragment);    
     }
     
     @Override
@@ -52,10 +52,9 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
     	// Dropbox
         DropboxHelper.getInstance(getApplicationContext());
     	
-    	for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(SensorDataCollectorActivity.this)) {
+    	for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList()) {
             sensor.setSelected(false);
         }
-    	
     }
     
     public void onResume() {

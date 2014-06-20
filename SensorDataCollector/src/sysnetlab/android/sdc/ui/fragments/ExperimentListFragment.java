@@ -35,9 +35,6 @@ public class ExperimentListFragment extends ListFragment {
         LayoutInflater inflator = getLayoutInflater(savedInstanceState);
         mFooterView = inflator.inflate(R.layout.experiment_list_footer, null);
         mHeaderView = inflator.inflate(R.layout.experiment_list_header, null);
-        // List<Experiment> mExperimentList = ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate();
-        mExperimentListAdapter = new ExperimentListAdapter(getActivity(),
-                ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate());
         Log.d("SensorDataCollector", "called ExperimentListFragment::onCreate().");
     }
 
@@ -60,11 +57,16 @@ public class ExperimentListFragment extends ListFragment {
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
+        Log.d("SensorDataCollector", "ExperimentListFragment::onActivityCreated() entered ...");
         super.onActivityCreated(savedInstanceState);
 
         // TODO: handle configuration changes
         getListView().addHeaderView(mHeaderView);
         getListView().addFooterView(mFooterView);
+        
+        // List<Experiment> mExperimentList = ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate();
+        mExperimentListAdapter = new ExperimentListAdapter(getActivity(),
+                ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate());
         
         setListAdapter(mExperimentListAdapter);
 

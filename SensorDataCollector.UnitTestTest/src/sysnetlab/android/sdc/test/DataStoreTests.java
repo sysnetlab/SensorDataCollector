@@ -18,7 +18,6 @@ import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
-import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import sysnetlab.android.sdc.sensor.audio.AudioSensor;
 import android.test.AndroidTestCase;
 
@@ -31,7 +30,8 @@ public class DataStoreTests extends AndroidTestCase {
     	store.setupNewExperimentStorage(exp);
     	store.writeExperimentMetaData(exp);
     	
-    	SensorUtilsSingleton.getInstance().setContext(getContext());
+    	if (!SensorDiscoverer.isInitialized())
+    	    SensorDiscoverer.initialize(getContext());
     	
     	List<Experiment> storedExps = store.listStoredExperiments();
     	
@@ -109,7 +109,9 @@ public class DataStoreTests extends AndroidTestCase {
         }
         exp1.setNotes(listNotes);
         
-        List<AbstractSensor> listSensors = SensorDiscoverer.discoverSensorList(getContext());
+        if (!SensorDiscoverer.isInitialized())
+            SensorDiscoverer.initialize(getContext());
+        List<AbstractSensor> listSensors = SensorDiscoverer.discoverSensorList();
 
         String channelPath = "";
         AbstractStore.Channel channel = null;
@@ -144,7 +146,9 @@ public class DataStoreTests extends AndroidTestCase {
         exp1.setSensors(listSensors);
         
         store.writeExperimentMetaData(exp1);
-        SensorUtilsSingleton.getInstance().setContext(getContext());
+        
+        if (!SensorDiscoverer.isInitialized())
+            SensorDiscoverer.initialize(getContext());
         Experiment exp2 = store.loadExperiment(store.getNewExperimentPath());
         assertEquals("experiment written and experiment read should be the same", exp1, exp2);
     }

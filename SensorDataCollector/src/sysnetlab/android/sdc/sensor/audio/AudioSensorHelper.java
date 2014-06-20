@@ -15,7 +15,7 @@ import android.util.Log;
 import android.util.SparseIntArray;
 
 public class AudioSensorHelper {
-    
+
     private static List<AudioRecordParameter> mListAudioRecordParameters = new ArrayList<AudioRecordParameter>();
 
     private static final int[] SAMPLE_RATES = {
@@ -28,9 +28,9 @@ public class AudioSensorHelper {
             11025,
             8000
     };
-    
+
     // TODO: these arrays should be completely replaced by the SpartIntArrays
-    
+
     private final static AudioChannelIn[] CHANNEL_IN_ARRAY = {
             new AudioChannelIn(AudioFormat.CHANNEL_IN_DEFAULT, R.string.text_channel_in_default),
             new AudioChannelIn(AudioFormat.CHANNEL_IN_BACK, R.string.text_channel_in_back),
@@ -56,7 +56,7 @@ public class AudioSensorHelper {
             new AudioChannelIn(AudioFormat.CHANNEL_IN_Y_AXIS, R.string.text_channel_in_y_axis),
             new AudioChannelIn(AudioFormat.CHANNEL_IN_Z_AXIS, R.string.text_channel_in_z_axis)
     };
-    
+
     private static final SparseIntArray AUDIO_CHANNEL_IN_MAP;
     static
     {
@@ -75,7 +75,7 @@ public class AudioSensorHelper {
             new AudioEncoding(AudioFormat.ENCODING_PCM_8BIT,
                     R.string.text_audio_encoding_pcm_8bit)
     };
-    
+
     private static final SparseIntArray AUDIO_ENCODING_MAP;
     static
     {
@@ -94,7 +94,7 @@ public class AudioSensorHelper {
             new AudioSource(MediaRecorder.AudioSource.CAMCORDER,
                     R.string.text_audio_source_camcorder)
     };
-    
+
     private static final SparseIntArray AUDIO_SOURCE_MAP;
     static
     {
@@ -104,19 +104,19 @@ public class AudioSensorHelper {
                     AUDIO_SOURCE_ARRAY[i].getSourceNameResId());
         }
     }
-    
+
     public static int getChannelInNameResId(int channelInId) {
         return AUDIO_CHANNEL_IN_MAP.get(channelInId);
     }
-    
+
     public static int getEncodingNameResId(int encodingId) {
         return AUDIO_ENCODING_MAP.get(encodingId);
     }
-    
+
     public static int getSourceNameResId(int sourceId) {
         return AUDIO_SOURCE_MAP.get(sourceId);
     }
-    
+
     public static int estimateWorkLoadOnSensorProbing() {
         return SAMPLE_RATES.length * CHANNEL_IN_ARRAY.length * AUDIO_ENCODING_ARRAY.length
                 * AUDIO_SOURCE_ARRAY.length * 2;
@@ -124,26 +124,28 @@ public class AudioSensorHelper {
 
     public static List<AudioRecordParameter> getValidRecordingParameters() {
         return getValidRecordingParameters(null);
-    } 
-    
-    public static List<AudioRecordParameter> getValidRecordingParameters(AsyncTask<Void, Integer, Void> asyncTask) {
+    }
+
+    public static List<AudioRecordParameter> getValidRecordingParameters(
+            AsyncTask<Void, Integer, Void> asyncTask) {
         List<AudioRecordParameter> listParams = new ArrayList<AudioRecordParameter>();
         scanValidRecordingParametersFirstPass(listParams, asyncTask);
         scanValidRecordingParametersSecondPass(listParams, mListAudioRecordParameters, asyncTask);
-        
+
         return mListAudioRecordParameters;
-    }   
-    
+    }
+
     private static void scanValidRecordingParametersFirstPass(
             List<AudioRecordParameter> listParams, AsyncTask<Void, Integer, Void> asyncTask) {
-        
-        Log.d("SensorDataCollector", "asyncTask = " + asyncTask == null? "null" : "not null");
+
+        // Log.d("SensorDataCollector", "asyncTask = " + asyncTask == null?
+        // "null" : "not null");
         if (listParams == null) {
             return;
         }
-        
+
         listParams.clear();
-        
+
         int progressValue = 0;
         for (int rate : SAMPLE_RATES) {
             for (AudioChannelIn channel : CHANNEL_IN_ARRAY) {
@@ -155,9 +157,18 @@ public class AudioSensorHelper {
                         if (asyncTask != null
                                 && asyncTask instanceof AudioSensorProbingActivity.AudioSensorProbingTask) {
                             progressValue += AUDIO_SOURCE_ARRAY.length;
-                            Log.d("SensorDataCollector", "to call doPublishProgress...");
-                            ((AudioSensorProbingActivity.AudioSensorProbingTask) asyncTask).doPublishProgress(progressValue);
+                            // Log.d("SensorDataCollector",
+                            // "to call doPublishProgress...");
+                            ((AudioSensorProbingActivity.AudioSensorProbingTask) asyncTask)
+                                    .doPublishProgress(progressValue);
                         }
+
+                        Log.d("SensorDataCollector",
+                                "getValidRecordingParametersFirstPass(): proving audio sensor: " +
+                                        "(rate, channl, encoding, buffersize) = " +
+                                        "(" + rate + ", " + channel.getChannelId() + ", " +
+                                        format.getEncodingId() + ", " + bufferSize + "): failure.");
+
                         continue;
                     }
 
@@ -165,15 +176,11 @@ public class AudioSensorHelper {
                     for (AudioSource source : AUDIO_SOURCE_ARRAY) {
                         if (asyncTask != null
                                 && asyncTask instanceof AudioSensorProbingActivity.AudioSensorProbingTask) {
-                            progressValue ++;
-                            ((AudioSensorProbingActivity.AudioSensorProbingTask) asyncTask).doPublishProgress(progressValue);
+                            progressValue++;
+                            ((AudioSensorProbingActivity.AudioSensorProbingTask) asyncTask)
+                                    .doPublishProgress(progressValue);
                         }
                         try {
-                            Log.d("SensorDataCollector", "getValidRecordingParametersFirstPass(): " +
-                                    "(source, rate, channl, encoding, buffersize) = " +
-                                    "(" + source.getSourceId() + ", " +
-                                    rate + ", " + channel.getChannelId() + ", " +
-                                    format.getEncodingId() + ", " + bufferSize + ")");
                             r = new AudioRecord(source.getSourceId(), rate,
                                     channel.getChannelId(), format.getEncodingId(), bufferSize);
                             r.startRecording();
@@ -185,20 +192,36 @@ public class AudioSensorHelper {
                             listParams.add(new AudioRecordParameter(rate, channel,
                                     format, source, bufferSize, bufferSize));
                             Log.d("SensorDataCollector",
-                                    "getValidRecordingParametersFirstPass(): Success & added");
+                                    "getValidRecordingParametersFirstPass(): probing audio sensor "
+                                            +
+                                            "(source, rate, channl, encoding, buffersize) = " +
+                                            "(" + source.getSourceId() + ", " +
+                                            rate + ", " + channel.getChannelId() + ", " +
+                                            format.getEncodingId() + ", " + bufferSize
+                                            + "): success.");
                         } catch (IllegalArgumentException e) {
-                            Log.d("SensorDataCollector", "getValidRecordingParametersFirstPass(): " +
-                                    "rate = " + rate + "; bufferSize = " + bufferSize +
-                                    "<- " + e.toString());
+                            Log.d("SensorDataCollector",
+                                    "getValidRecordingParametersFirstPass(): probing audio sensor "
+                                            +
+                                            "(source, rate, channl, encoding, buffersize) = " +
+                                            "(" + source.getSourceId() + ", " +
+                                            rate + ", " + channel.getChannelId() + ", " +
+                                            format.getEncodingId() + ", " + bufferSize
+                                            + "): failure with reason: " + e.toString());
                             if (r != null) {
                                 r.release();
                                 r = null;
                             }
                             continue;
                         } catch (IllegalStateException e) {
-                            Log.d("SensorDataCollector", "getValidRecordingParametersFirstPass(): " +
-                                    "rate = " + rate + "; bufferSize = " + bufferSize +
-                                    "<- " + e.toString());
+                            Log.d("SensorDataCollector",
+                                    "getValidRecordingParametersFirstPass(): probing audio sensor "
+                                            +
+                                            "(source, rate, channl, encoding, buffersize) = " +
+                                            "(" + source.getSourceId() + ", " +
+                                            rate + ", " + channel.getChannelId() + ", " +
+                                            format.getEncodingId() + ", " + bufferSize
+                                            + "): failure with reason: " + e.toString());
                             if (r != null) {
                                 r.release();
                                 r = null;
@@ -210,7 +233,7 @@ public class AudioSensorHelper {
             }
         }
     }
-    
+
     private static void scanValidRecordingParametersSecondPass(
             List<AudioRecordParameter> listParamsIn, List<AudioRecordParameter> listParamsOut,
             AsyncTask<Void, Integer, Void> asyncTask) {
@@ -218,32 +241,25 @@ public class AudioSensorHelper {
             return;
         }
         listParamsOut.clear();
-        
+
         int progressStep = 0;
         int progressValue = 0;
         if (asyncTask != null
                 && asyncTask instanceof AudioSensorProbingActivity.AudioSensorProbingTask) {
             progressValue = estimateWorkLoadOnSensorProbing() / 2;
-            progressStep =  progressValue / listParamsIn.size();
+            progressStep = progressValue / listParamsIn.size();
         }
-            
+
         for (AudioRecordParameter param : listParamsIn) {
 
             AudioRecord r = null;
             try {
                 r = new AudioRecord(param.getSource().getSourceId(),
                         param.getSamplingRate(),
-                        param.getChannel().getChannelId(), 
+                        param.getChannel().getChannelId(),
                         param.getEncoding().getEncodingId(),
                         param.getBufferSize());
 
-                Log.d("SensorDataCollector", "getValidRecordingParametersSecondPass(): " +
-                        "(source, rate, channl, encoding, buffersize) = " +
-                        "(" + param.getSource().getSourceId() + ", " +
-                        param.getSamplingRate() + ", " +
-                        param.getChannel().getChannelId() + ", " +
-                        param.getEncoding().getEncodingId() + ", " +
-                        param.getBufferSize() + ")");
                 r.startRecording();
                 ByteBuffer buf = ByteBuffer.allocateDirect(param.getBufferSize());
                 r.read(buf, param.getBufferSize());
@@ -251,28 +267,41 @@ public class AudioSensorHelper {
                 r.release();
                 r = null;
                 listParamsOut.add(param);
+
+                Log.d("SensorDataCollector",
+                        "getValidRecordingParametersSecondPass(): probing audio sensor " +
+                                "(source, rate, channl, encoding, buffersize) = " +
+                                "(" + param.getSource().getSourceId() + ", " +
+                                param.getSamplingRate() + ", " +
+                                param.getChannel().getChannelId() + ", " +
+                                param.getEncoding().getEncodingId() + ", " +
+                                param.getBufferSize() + "): success.");
             } catch (Exception e) {
-                Log.d("SensorDataCollector", "getValidRecordingParametersSecondPass(): " +
-                        "(source, rate, channl, encoding, buffersize) = " +
-                        "(" + param.getSource().getSourceId() + ", " +
-                        param.getSamplingRate() + ", " +
-                        param.getChannel().getChannelId() + ", " +
-                        param.getEncoding().getEncodingId() + ", " +
-                        param.getBufferSize() + ") will be removed.");
+                Log.d("SensorDataCollector",
+                        "getValidRecordingParametersSecondPass(): probing audio sensor " +
+                                "(source, rate, channl, encoding, buffersize) = " +
+                                "(" + param.getSource().getSourceId() + ", " +
+                                param.getSamplingRate() + ", " +
+                                param.getChannel().getChannelId() + ", " +
+                                param.getEncoding().getEncodingId() + ", " +
+                                param.getBufferSize() + "): failure with reason: " + e.toString());
                 if (r != null) {
                     r.release();
                     r = null;
                 }
             }
-            
+
             if (asyncTask != null
                     && asyncTask instanceof AudioSensorProbingActivity.AudioSensorProbingTask) {
                 progressValue += progressStep;
-                ((AudioSensorProbingActivity.AudioSensorProbingTask) asyncTask).doPublishProgress(progressValue);
+                ((AudioSensorProbingActivity.AudioSensorProbingTask) asyncTask)
+                        .doPublishProgress(progressValue);
 
             }
         }
-        Log.d("SensorDataCollector", "getValidRecordingParametersSecondPass(): number of parameters = " + listParamsOut.size());
+        Log.d("SensorDataCollector",
+                "getValidRecordingParametersSecondPass(): number of parameters = "
+                        + listParamsOut.size());
     }
 
 }

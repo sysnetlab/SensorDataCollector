@@ -48,6 +48,7 @@ public class CreateExperimentActivityFunctionTests extends
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        SensorDiscoverer.initialize(getInstrumentation().getTargetContext());
         setActivityInitialTouchMode(true);
         mCreateExperimentActivity = (CreateExperimentActivity) getActivity();
     }
@@ -118,7 +119,7 @@ public class CreateExperimentActivityFunctionTests extends
         getInstrumentation().waitForIdleSync();
         
         int numSensorSelected = 0;
-        for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(getActivity())) {
+        for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList()) {
             if (sensor.isSelected()) {
                 numSensorSelected++;
             }
@@ -140,7 +141,7 @@ public class CreateExperimentActivityFunctionTests extends
         });
 
         numSensorSelected = 0;
-        for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(getActivity())) {
+        for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList()) {
             if (sensor.isSelected()) {
                 numSensorSelected++;
             }

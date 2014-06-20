@@ -7,7 +7,7 @@ import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManager;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
-import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
+import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
 import sysnetlab.android.sdc.ui.SensorDataCollectorActivity;
 import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
@@ -17,7 +17,6 @@ import android.test.TouchUtils;
 import android.widget.Button;
 import android.app.AlertDialog;
 import android.app.Instrumentation.ActivityMonitor;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
@@ -56,8 +55,8 @@ public class RunExperimentFunctionTests extends
     	activeExperiment.setName("Unit Test Experiment");
     	
     	//Set the active experiment
-    	Context context = getInstrumentation().getTargetContext();
-        SensorUtilsSingleton.getInstance().setContext(context);
+        if (!SensorDiscoverer.isInitialized())
+            SensorDiscoverer.initialize(getInstrumentation().getTargetContext());
         ExperimentManager experimentManager = ExperimentManagerSingleton.getInstance();
         experimentManager.addExperimentStore(StoreSingleton.getInstance());
         experimentManager.setActiveExperiment(activeExperiment);

@@ -61,7 +61,8 @@ public class RunExperimentService extends Service {
 
         StoreSingleton.getInstance().setupNewExperimentStorage(null);
 
-        Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
+        if (!SensorDiscoverer.isInitialized()) SensorDiscoverer.initialize(getApplicationContext());
+        Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList().iterator();
         ArrayList<AbstractSensor> lstSensors = new ArrayList<AbstractSensor>();
 
         while (iter.hasNext()) {
@@ -74,8 +75,9 @@ public class RunExperimentService extends Service {
             switch (abstractSensor.getMajorType()) {
                 case AbstractSensor.ANDROID_SENSOR:
                     AndroidSensor sensor = (AndroidSensor) abstractSensor;
-                    Log.i("SensorDataCollector",
-                            "RunExperimentService::onHandleIntent(): process sensor "
+                    
+                    Log.d("SensorDataCollector",
+                            "RunExperimentService::runExperimentInService(): process sensor "
                                     + sensor.getName());
 
                     channel = StoreSingleton.getInstance().createChannel(sensor.getName(), Channel.WRITE_ONLY, Channel.CHANNEL_TYPE_CSV);
@@ -89,8 +91,8 @@ public class RunExperimentService extends Service {
                 case AbstractSensor.AUDIO_SENSOR:
                     AudioSensor audioSensor = (AudioSensor) abstractSensor;
 
-                    Log.i("SensorDataCollector",
-                            "RunExperimentService::onHandleIntent(): process sensor "
+                    Log.d("SensorDataCollector",
+                            "RunExperimentService::runExperimentInService(): process sensor "
                                     + audioSensor.getName());
 
                     channel = StoreSingleton.getInstance().createChannel(audioSensor.getName(),
@@ -104,7 +106,7 @@ public class RunExperimentService extends Service {
                     break;
                 default:
                     Log.e("SensorDataCollector",
-                            "RunExperimentService::onHandleIntent(): process sensor type "
+                            "RunExperimentService::runExperimentInService(): process sensor with major type "
                                     + abstractSensor.getMajorType() + ", but not implemented");
                     break;
             }
@@ -119,7 +121,8 @@ public class RunExperimentService extends Service {
             return;
         }
 
-        Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
+        if (!SensorDiscoverer.isInitialized()) SensorDiscoverer.initialize(getApplicationContext());
+        Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList().iterator();
 
         while (iter.hasNext()) {
             AbstractSensor abstractSensor = (AbstractSensor) iter.next();
@@ -140,7 +143,7 @@ public class RunExperimentService extends Service {
                     break;
                 default:
                     Log.e("SensorDataCollector",
-                            "RunExperimentService::onHandleIntent(): process sensor type "
+                            "RunExperimentService::stopExperimentInService(): process sensor with major type "
                                     + abstractSensor.getMajorType() + ", but not implemented");
                     break;
             }
