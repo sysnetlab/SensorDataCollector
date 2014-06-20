@@ -106,15 +106,15 @@ public class OperationAdapter extends BaseAdapter {
         // e.g., list of entered tags,
         // selected sensors, or first words of notes??
         if (position == OP_TAGS) {
-            icon.setImageResource(R.drawable.icon_tags);
+            icon.setImageResource(R.drawable.icon_tags_inverse);
             operation.setText(OP_TAGS_NAME);   
             listTagsInView(view, CREATE_EXPERIMENT);
         } else if (position == OP_NOTES) {
-            icon.setImageResource(R.drawable.icon_notes);
+            icon.setImageResource(R.drawable.icon_notes_inverse);
             operation.setText(OP_NOTES_NAME);    
             listNotesInView(view, CREATE_EXPERIMENT);
         } else if (position == OP_SENSORS) {
-            icon.setImageResource(R.drawable.icon_sensors);
+            icon.setImageResource(R.drawable.icon_sensors_inverse);
             operation.setText(OP_SENSORS_NAME);
             operationInfo.setText(view.getResources().getString(
                     R.string.text_run_sensor_operation_text));
@@ -134,15 +134,15 @@ public class OperationAdapter extends BaseAdapter {
         operationInfo.setVisibility(View.VISIBLE);
 
         if (position == OP_TAGS) {
-            icon.setImageResource(R.drawable.icon_tags);
+            icon.setImageResource(R.drawable.icon_tags_inverse);
             operation.setText(OP_TAGS_NAME);
             listTagsInView(view, VIEW_EXPERIMENT);
         } else if (position == OP_NOTES) {
-            icon.setImageResource(R.drawable.icon_notes);
+            icon.setImageResource(R.drawable.icon_notes_inverse);
             operation.setText(OP_NOTES_NAME);
             listNotesInView(view, VIEW_EXPERIMENT);
         } else if (position == OP_SENSORS) {
-            icon.setImageResource(R.drawable.icon_sensors);
+            icon.setImageResource(R.drawable.icon_sensors_inverse);
             operation.setText(OP_SENSORS_NAME);
             listSensorsSummaryInView(view);
         }
