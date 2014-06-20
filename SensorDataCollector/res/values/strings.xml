@@ -30,7 +30,7 @@
     <string name="text_number_10">10</string>
     <string name="text_not_applicable">Not Applicable</string>
     <string name="text_place_holder">Place Holder</string>
-    <string name="text_name">Name</string>
+    <string name="text_name">Name:</string>
     <string name="text_version">Version</string>
     <string name="text_resolution">Resolution</string>
     <string name="text_power_consumption">Power Consumption</string>

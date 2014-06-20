@@ -1,27 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/textview_experiment_view_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="12dp"
-        android:gravity="left"
-        android:text="@string/text_experiment_properties"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
+    android:layout_height="match_parent">        
+    
     <TextView
         android:id="@+id/textview_experiment_view_name_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/textview_experiment_view_title"
+        android:layout_alignParentLeft="true"        
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="12dp"        
         android:text="@string/text_name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -46,33 +35,35 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/textview_experiment_view_name_value"
-        android:layout_alignLeft="@id/textview_experiment_view_title"
+        android:layout_alignLeft="@id/textview_experiment_view_name_label"
         android:layout_alignRight="@id/textview_experiment_view_name_value"
         android:background="@android:color/darker_gray" />
 
-    <ListView
-        android:id="@+id/listview_experiment_view_operations"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/view_experiment_view_divider"
-        android:layout_marginTop="12dp"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="10.0sp" >
-    </ListView>
     
-
-
-    <LinearLayout
-        android:id="@+id/layout_experiment_view_sensor_list"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignLeft="@id/textview_experiment_view_name_label"
-        android:layout_below="@id/listview_experiment_view_operations"
+    <RelativeLayout
+        android:id="@+id/layout_experiment_view_center"
+        android:layout_below="@id/view_experiment_view_divider"
         android:layout_above="@+id/layout_experiment_view_buttons"
-        android:layout_marginRight="24dp"
-        android:orientation="vertical" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        
+	    <ListView
+	        android:id="@+id/listview_experiment_view_operations"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="12dp"
+	        android:divider="@android:color/transparent"
+	        android:dividerHeight="10.0sp" />    
+	
+	    <LinearLayout
+	        android:id="@+id/layout_experiment_view_sensor_list"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_below="@id/listview_experiment_view_operations"
+	        android:layout_marginRight="24dp"
+	        android:orientation="vertical" />
 
-       
+    </RelativeLayout>   
     
     <RelativeLayout
         android:id="@id/layout_experiment_view_buttons"
@@ -81,7 +72,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="8dp"
         android:gravity="center_horizontal" >
 
         <Button
