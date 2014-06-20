@@ -45,13 +45,13 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
     	mExperiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();
 
         if (mExperiment == null) {
-            Log.i("SensorDataColelctor",
+            Log.d("SensorDataColelctor",
                     "ViewExperimentActivity failed to get experiment from intent");
             Toast.makeText(this, "Failed to  load experiment.", Toast.LENGTH_LONG).show();
             finish();
         }
 
-        Log.i("SensorDataCollector",
+        Log.d("SensorDataCollector",
                 "ViewExperimentActivity: experiment is " + mExperiment.toString());
 
         if (findViewById(R.id.fragment_container) != null) {
@@ -63,7 +63,7 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
             transaction.commit();
         }
 
-        Log.i("SensorDataCollector", "ViewExperimentActivity.onCreate called.");
+        Log.d("SensorDataCollector", "ViewExperimentActivity.onCreate called.");
     }
     
     public void onResume() {
@@ -137,7 +137,7 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
 
     @Override
     public void onSensorClicked_ExperimentSensorListFragment(int sensorNo) {
-        Log.i("SensorDataCollector", "ViewExperimentActivity::onSensorClicked_ExperimentSensorListFragment() called with sensorNo = " + sensorNo);
+        Log.d("SensorDataCollector", "ViewExperimentActivity::onSensorClicked_ExperimentSensorListFragment() called with sensorNo = " + sensorNo);
         
         if (mExperimentViewSensorDataFragment == null) {
             mExperimentViewSensorDataFragment = new ExperimentViewSensorDataFragment();
@@ -151,7 +151,7 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
 
     @Override
     public void onSensorClicked_ExperimentSensorListFragment(AbstractSensor sensor) {
-        Log.i("SensorDataCollector", "ViewExperimentActivity::onSensorClicked_ExperimentSensorListFragment() called");
+        Log.d("SensorDataCollector", "ViewExperimentActivity::onSensorClicked_ExperimentSensorListFragment() called");
         // do nothing
     }
     
@@ -166,8 +166,6 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
     public ExperimentViewNotesFragment getExperimentViewNotesFragment(){
     	return mExperimentViewNotesFragment;
     }
-    
-    
     
     @Override
     public void onBackPressed(){

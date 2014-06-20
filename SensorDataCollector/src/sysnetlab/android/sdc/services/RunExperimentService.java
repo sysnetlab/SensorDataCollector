@@ -84,6 +84,7 @@ public class RunExperimentService extends Service {
                     AndroidSensorEventListener listener =
                             new AndroidSensorEventListener(channel);
                     sensor.setListener(listener);
+                    listener.getChannel().open();
                     sensorManager.registerListener(listener, (Sensor) sensor.getSensor(),
                             sensor.getSamplingInterval());
                     lstSensors.add(sensor);
@@ -97,6 +98,7 @@ public class RunExperimentService extends Service {
 
                     channel = StoreSingleton.getInstance().createChannel(audioSensor.getName(),
                             Channel.WRITE_ONLY, Channel.CHANNEL_TYPE_WAV);
+                    channel.open();
                     audioSensor.setChannel(channel);
 
                     audioSensor.start();
