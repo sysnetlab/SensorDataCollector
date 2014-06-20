@@ -5,6 +5,7 @@ import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.datacollector.DropboxHelper;
+import sysnetlab.android.sdc.ui.FragmentActivityBase.TaskLoadingSpinner;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewNotesFragment;
@@ -19,7 +20,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-public class ViewExperimentActivity extends ActionBarActivity implements
+public class ViewExperimentActivity extends FragmentActivityBase implements
         ExperimentViewFragment.OnFragmentClickListener,
         ExperimentSensorListFragment.OnFragmentClickListener {
 
@@ -33,11 +34,17 @@ public class ViewExperimentActivity extends ActionBarActivity implements
         // TODO handle configuration change
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
-
+        mLoadingTask=new TaskLoadingSpinner();
+        mLoadingTask.execute();
         // mExperiment = (Experiment)
         // getIntent().getParcelableExtra("experiment");
 
-        mExperiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();
+        
+    }
+    
+    @Override
+    protected void loadTask() {
+    	mExperiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();
 
         if (mExperiment == null) {
             Log.i("SensorDataColelctor",
@@ -50,9 +57,6 @@ public class ViewExperimentActivity extends ActionBarActivity implements
                 "ViewExperimentActivity: experiment is " + mExperiment.toString());
 
         if (findViewById(R.id.fragment_container) != null) {
-            if (savedInstanceState != null) {
-                return;
-            }
 
             mExperimentViewFragment = new ExperimentViewFragment();
             FragmentTransaction transaction = getSupportFragmentManager()
