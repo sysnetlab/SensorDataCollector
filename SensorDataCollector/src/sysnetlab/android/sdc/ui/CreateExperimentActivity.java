@@ -263,9 +263,15 @@ public class CreateExperimentActivity extends FragmentActivityBase
         if (mExperimentRunFragment != null && mExperimentRunFragment.isFragmentUIActive()) {            
             confirmToStopExperiment();            
         } else if(mExperimentSetupFragment != null && mExperimentSetupFragment.isFragmentUIActive()){
-    		if(!confirmToLeaveActivity())
-    			super.onBackPressed();
-        }else {
+    		if(!confirmToLeaveActivity()) {
+    			// super.onBackPressed();
+                Intent homeIntent = new Intent(CreateExperimentActivity.this,
+                        SensorDataCollectorActivity.class);
+                homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                homeIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(homeIntent);            		    
+    		} 
+        } else {
             super.onBackPressed();
         }
         changeActionBarTitle(R.string.text_creating_experiment, R.drawable.ic_launcher);
@@ -614,7 +620,12 @@ public class CreateExperimentActivity extends FragmentActivityBase
 	        builder.setPositiveButton(R.string.text_leave_experiment,
 	                new DialogInterface.OnClickListener() {
 	                    public void onClick(DialogInterface dialog, int id) {                        
-	                        finish();
+	                        // finish();
+	                        Intent homeIntent = new Intent(CreateExperimentActivity.this,
+	                                SensorDataCollectorActivity.class);
+	                        homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	                        homeIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+	                        startActivity(homeIntent);  	                        
 	                        dialog.dismiss();                        
 	                    }
 	                });	        

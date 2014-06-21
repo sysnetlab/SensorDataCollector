@@ -171,8 +171,14 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
     public void onBackPressed(){
     	if(!mExperimentViewFragment.isFragmentUIActive()){
     		changeActionBarTitle(R.string.text_viewing_experiment, R.drawable.ic_launcher);
+    	    super.onBackPressed();
+        } else {
+            Intent intent = new Intent(ViewExperimentActivity.this,
+                    SensorDataCollectorActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent); 
         }
-    	super.onBackPressed();
     }
     
 	public void changeActionBarTitle(int titleResId, int iconResId){    	
