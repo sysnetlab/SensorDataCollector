@@ -650,6 +650,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
                         Intent homeIntent = new Intent(CreateExperimentActivity.this,
                                 SensorDataCollectorActivity.class);
                         homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        homeIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                         startActivity(homeIntent);
                     }
                 });
