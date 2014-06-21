@@ -33,18 +33,19 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
-        mLoadingTask = new TaskLoadingSpinner();
+
 
         ExperimentManagerSingleton.getInstance().addExperimentStore(
                 StoreSingleton.getInstance());
 
         if (!SensorDiscoverer.isInitialized())
             SensorDiscoverer.initialize(getApplicationContext());
-
+        
+        mLoadingTask = new TaskLoadingSpinner();
         mLoadingTask.execute();
 
-        mExperimentListFragment = new ExperimentListFragment();
-        FragmentUtil.addFragment(this, mExperimentListFragment);    
+//        mExperimentListFragment = new ExperimentListFragment();
+//        FragmentUtil.addFragment(this, mExperimentListFragment);    
     }
     
     @Override
@@ -55,6 +56,12 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
     	for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList()) {
             sensor.setSelected(false);
         }
+    }
+    
+    @Override
+    protected void doPostLoadTask() {
+        mExperimentListFragment = new ExperimentListFragment();
+        FragmentUtil.addFragment(this, mExperimentListFragment);           
     }
     
     public void onResume() {
