@@ -44,8 +44,8 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
         mLoadingTask = new TaskLoadingSpinner();
         mLoadingTask.execute();
 
-//        mExperimentListFragment = new ExperimentListFragment();
-//        FragmentUtil.addFragment(this, mExperimentListFragment);    
+        mExperimentListFragment = new ExperimentListFragment();
+        FragmentUtil.addFragment(this, mExperimentListFragment);    
     }
     
     @Override
@@ -56,12 +56,6 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
     	for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList()) {
             sensor.setSelected(false);
         }
-    }
-    
-    @Override
-    protected void doPostLoadTask() {
-        mExperimentListFragment = new ExperimentListFragment();
-        FragmentUtil.addFragment(this, mExperimentListFragment);           
     }
     
     public void onResume() {

@@ -15,9 +15,6 @@ public abstract class FragmentActivityBase extends ActionBarActivity {
 
     protected abstract void loadTask();
 
-    protected void doPostLoadTask() {
-    }
-
     protected class TaskLoadingSpinner extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -37,7 +34,6 @@ public abstract class FragmentActivityBase extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(Void result) {
-            doPostLoadTask();
             RelativeLayout layoutProgress = (RelativeLayout) findViewById(R.id.layout_progressbar_loading);
             if (layoutProgress != null)
                 layoutProgress.setVisibility(View.GONE);
