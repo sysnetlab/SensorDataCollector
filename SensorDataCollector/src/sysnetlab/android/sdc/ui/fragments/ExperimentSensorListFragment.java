@@ -24,10 +24,10 @@ import android.widget.TextView;
 public class ExperimentSensorListFragment extends Fragment {
     private OnFragmentClickListener mCallback;
     private ListView mListView;
-    // public static ListView mListView2;
 
     public interface OnFragmentClickListener {
         public void onSensorClicked_ExperimentSensorListFragment(AbstractSensor sensor);
+
         public void onSensorClicked_ExperimentSensorListFragment(int sensorNo);
     }
 
@@ -41,27 +41,34 @@ public class ExperimentSensorListFragment extends Fragment {
 
         ArrayList<AbstractSensor> lstSensors = null;
         if (getActivity() instanceof ViewExperimentActivity) {
-            lstSensors = (ArrayList<AbstractSensor>)ExperimentManagerSingleton.getInstance()
-                .getActiveExperiment()
-                .getSensors();
-            Log.i("SensorDataCollector", "ViewExperimentActivity::ExperimentSensorListFragment::onCreateView() sensors: " + lstSensors.size());
-        } else if (getActivity() instanceof CreateExperimentActivity){
+            lstSensors = (ArrayList<AbstractSensor>) ExperimentManagerSingleton.getInstance()
+                    .getActiveExperiment()
+                    .getSensors();
+            Log.d("SensorDataCollector",
+                    "ViewExperimentActivity::ExperimentSensorListFragment::onCreateView() sensors: "
+                            + lstSensors.size());
+        } else if (getActivity() instanceof CreateExperimentActivity) {
             lstSensors = new ArrayList<AbstractSensor>();
-            for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(getActivity())) {
+            if (!SensorDiscoverer.isInitialized())
+                SensorDiscoverer.initialize(getActivity().getApplicationContext());
+            for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList()) {
                 if (sensor.isSelected()) {
                     lstSensors.add(sensor);
                 }
             }
-            Log.i("SensorDataCollector", "CreateExperimentActivity::ExperimentSensorListFragment::onCreateView() sensors: " + lstSensors.size());            
+            Log.d("SensorDataCollector",
+                    "CreateExperimentActivity::ExperimentSensorListFragment::onCreateView() sensors: "
+                            + lstSensors.size());
         }
 
         if (lstSensors == null || lstSensors.size() == 0) {
-            Log.i("SensorDataCollector", "CreateExperimentActivity::ExperimentSensorListFragment::onCreateView() nothing to show");            
-            // textView.setVisibility(View.VISIBLE);
+            Log.d("SensorDataCollector",
+                    "CreateExperimentActivity::ExperimentSensorListFragment::onCreateView() nothing to show");
             textView.setVisibility(View.GONE);
             listView.setVisibility(View.GONE);
         } else {
-            Log.i("SensorDataCollector", "CreateExperimentActivity::ExperimentSensorListFragment::onCreateView() show something");            
+            Log.d("SensorDataCollector",
+                    "CreateExperimentActivity::ExperimentSensorListFragment::onCreateView() show sensors");
             textView.setVisibility(View.GONE);
 
             SensorListAdapter sensorListAdaptor = new SensorListAdapter(getActivity(), lstSensors,
@@ -69,7 +76,6 @@ public class ExperimentSensorListFragment extends Fragment {
             listView.setAdapter(sensorListAdaptor);
 
             listView.setVisibility(View.VISIBLE);
-            // mListView2=listView;
         }
         mListView = listView;
 
@@ -85,7 +91,7 @@ public class ExperimentSensorListFragment extends Fragment {
 
                 @Override
                 public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
-                    Log.i("SensorDataCollector", "Sensor List item clicked at postion " + position);
+                    Log.d("SensorDataCollector", "onActivityCreated(): Sensor ListView clicked at postion " + position);
                     if (getActivity() instanceof ViewExperimentActivity) {
                         mCallback.onSensorClicked_ExperimentSensorListFragment(position);
                     } else if (getActivity() instanceof CreateExperimentActivity) {
@@ -109,7 +115,7 @@ public class ExperimentSensorListFragment extends Fragment {
                     + " must implement OnSwipeListener");
         }
     }
-    
+
     public ListView getListView() {
         return mListView;
     }

@@ -7,7 +7,6 @@ import android.annotation.SuppressLint;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Build;
-import android.util.Log;
 
 public class AndroidSensor extends AbstractSensor {
     private Sensor mSensor;
@@ -122,7 +121,7 @@ public class AndroidSensor extends AbstractSensor {
     public boolean equals(Object object) {
         if (this == object) return true;
         
-        Log.d("SensorDataCollector.UnitTes", "AndroidSensor::equals(): checkpoint #1.");
+        // Log.d("SensorDataCollector", "AndroidSensor::equals(): checkpoint #1.");
         
         // it also takes care of the case that object is null
         if (!(object instanceof AndroidSensor)) return false;
@@ -131,7 +130,7 @@ public class AndroidSensor extends AbstractSensor {
             return false;
         }
         
-        Log.d("SensorDataCollector.UnitTes", "AndroidSensor::equals(): checkpoint #2.");
+        // Log.d("SensorDataCollector", "AndroidSensor::equals(): checkpoint #2.");
         
         switch (getMajorType()) {
             case AbstractSensor.ANDROID_SENSOR:
@@ -140,22 +139,23 @@ public class AndroidSensor extends AbstractSensor {
                 if (this.mSamplingInterval != androidSensor.mSamplingInterval)
                     return false;
 
-                Log.d("SensorDataCollector.UnitTes", "AndroidSensor::equals(): checkpoint #3.");
+                // Log.d("SensorDataCollector", "AndroidSensor::equals(): checkpoint #3.");
 
                 if (this.mSensingType != androidSensor.mSensingType)
                     return false;
 
-                Log.d("SensorDataCollector.UnitTes", "AndroidSensor::equals(): checkpoint #4.");
+                // Log.d("SensorDataCollector", "AndroidSensor::equals(): checkpoint #4.");
 
                 if (this.mIsStreamingSensor != androidSensor.mIsStreamingSensor)
                     return false;
 
-                Log.d("SensorDataCollector.UnitTes", "AndroidSensor::equals(): checkpoint #5.");
+                // Log.d("SensorDataCollector", "AndroidSensor::equals(): checkpoint #5.");
 
                 if (!this.mSensor.equals(androidSensor.mSensor))
                     return false;
 
-                break;
+                // Log.d("SensorDataCollector", "AndroidSensor::equals(): checkpoint #6.");
+                break;              
         }
 
         return true;

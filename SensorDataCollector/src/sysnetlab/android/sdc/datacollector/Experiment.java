@@ -19,7 +19,7 @@ import sysnetlab.android.sdc.datastore.SimpleFileStore;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
-import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
+import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
@@ -462,16 +462,16 @@ public class Experiment implements Parcelable {
                     try {
                         channel = ((SimpleFileStore) store).new SimpleFileChannel(channelDescriptor);
                     } catch (FileNotFoundException e) {
-                        Log.i("SensordataCollector",
+                        Log.d("SensordataCollector",
                                 "Experiment::Expriment(Parcel): calling new SimpleFileChannel");
                     }
                 } else {
-                    Log.i("SensorDataCollector",
+                    Log.w("SensorDataCollector",
                             "Experiment::Expriment(Parcel): need to deal with " +
                                     store.getClass().getName());
                 }
             }
-            AbstractSensor sensor = SensorUtilsSingleton.getInstance().getSensor(sensorName,
+            AbstractSensor sensor = SensorDiscoverer.constructSensorObject(sensorName,
                     sensorMajorType,
                     sensorMinorType, channel, null);
             mSensors.add(sensor);

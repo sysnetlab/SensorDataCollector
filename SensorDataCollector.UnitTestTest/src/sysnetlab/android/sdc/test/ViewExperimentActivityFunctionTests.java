@@ -4,16 +4,16 @@ import java.util.Iterator;
 import java.util.List;
 
 import sysnetlab.android.sdc.R;
+import sysnetlab.android.sdc.datacollector.DropboxHelper;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datastore.AbstractStore;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
-import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
+import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.ui.ViewExperimentActivity;
 import sysnetlab.android.sdc.ui.adaptors.SensorListAdapter;
 import sysnetlab.android.sdc.ui.adaptors.SensorPropertyListAdapter;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewNotesFragment;
-import android.content.Context;
 import android.graphics.Rect;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
@@ -29,7 +29,6 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
 	
 	private ViewExperimentActivity mViewExperimentActivity;
 	private Experiment mExperiment;
-	private Context mContext;
 	private AbstractStore mStore;
 
 	public ViewExperimentActivityFunctionTests() {
@@ -51,8 +50,11 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
         setActivityInitialTouchMode(false);
         
         //setup the store and the sensorUtilSingleton
-        mContext = getInstrumentation().getTargetContext();
-        SensorUtilsSingleton.getInstance().setContext(mContext);
+        if (!SensorDiscoverer.isInitialized())
+            SensorDiscoverer.initialize(getInstrumentation().getTargetContext());
+        
+        DropboxHelper.getInstance(getInstrumentation().getTargetContext());
+        
         mStore = StoreSingleton.getInstance();
         ExperimentManagerSingleton.getInstance().addExperimentStore(
                 mStore);
@@ -82,7 +84,6 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
     public void testViewExperimentActivityLoaded()
 	{
     	assertNotNull("Failed to get ViewExperimentActivity", mViewExperimentActivity);
-    	assertNotNull("Failed to get the context", mContext);
     	assertNotNull("Failed to get the store", mStore);
 		assertNotNull("The ExperimentViewFragment was not loaded", mViewExperimentActivity.getExperimentViewFragment());
 		assertNotNull("The activity was not loaded", mViewExperimentActivity.findViewById(R.id.fragment_container));

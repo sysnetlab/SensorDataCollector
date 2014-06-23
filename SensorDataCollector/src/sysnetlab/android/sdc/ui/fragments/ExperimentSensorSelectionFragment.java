@@ -18,13 +18,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 public class ExperimentSensorSelectionFragment extends Fragment {
     private boolean mHavingHeader;
-    private boolean mHavingFooter;
 
     private View mView;
     private ListView mListView;
@@ -41,36 +39,26 @@ public class ExperimentSensorSelectionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("SensorDataCollector",
-                "ExperimentSensorSelectionFragment::onCreate(): " +
-                        "entering ......");
+        Log.d("SensorDataCollector",
+                "entered ExperimentSensorSelectionFragment::onCreate(). ");
         mHavingHeader = false;
-        mHavingFooter = false;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        Log.i("SensorDataCollector",
+        Log.d("SensorDataCollector",
                 "ExperimentSensorSelectionFragment::onCreateView(): " +
-                        "entering with mHavingHeader = " + mHavingHeader);
+                        "entered with mHavingHeader = " + mHavingHeader);
         super.onCreateView(inflater, container, savedInstanceState);
 
-        // inflate the fragment
         mView = inflater.inflate(R.layout.fragment_sensor_selection, container, false);
 
         mHavingHeader = getActivity().getIntent().getBooleanExtra("havingheader", false);
-        mHavingFooter = getActivity().getIntent().getBooleanExtra("havingfooter", false);
 
         if (mHavingHeader) {
             RelativeLayout layout = (RelativeLayout) mView
                     .findViewById(R.id.layout_sensor_selection_header);
-            layout.setVisibility(View.VISIBLE);
-        }
-
-        if (mHavingFooter) {
-            LinearLayout layout = (LinearLayout) mView
-                    .findViewById(R.id.layout_sensor_selection_footer);
             layout.setVisibility(View.VISIBLE);
         }
 
@@ -79,15 +67,16 @@ public class ExperimentSensorSelectionFragment extends Fragment {
                 .findViewById(R.id.layout_sensor_selection_list);
 
         mListView = new ListView(getActivity());
-        List<AbstractSensor> lstSensors = SensorDiscoverer.discoverSensorList(getActivity());
+        if (!SensorDiscoverer.isInitialized()) SensorDiscoverer.initialize(getActivity().getApplicationContext());
+        List<AbstractSensor> lstSensors = SensorDiscoverer.discoverSensorList();
         
         
         Activity activity = getActivity();
         if (activity instanceof CreateExperimentActivity) {
             ((CreateExperimentActivity)activity).selectSensors(lstSensors);
         } else {
-            Log.i("SensorDataCollector",
-                    "not a CreateExperimentActivity in ExperimentSensorSelectionFragment::onCreateView().");
+            Log.d("SensorDataCollector",
+                    "ExperimentSensorSelectionFragment::onCreate(): " + "not a CreateExperimentActivity.");
         }
         
         mSensorListAdaptor = new SensorListAdapter(getActivity(), lstSensors);
@@ -115,31 +104,17 @@ public class ExperimentSensorSelectionFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.i("SensorDataCollector", "ExperimentSensorSelection::onActivityCreated() called.");
+        Log.d("SensorDataCollector",
+                "ExperimentSensorSelectionFragment::onActivityCreated() called.");
 
-        if (mHavingFooter) {
-
-            try {
-                if (mHavingFooter)
-                    mCallback = (OnFragmentClickListener) getActivity();
-                else
-                    mCallback = null;
-            } catch (ClassCastException e) {
-                Log.e("SensorDataCollector",
-                        "ExperimentSensorSelectionFragment::onAttach(): failed to cast Activity to OnFragmentClickListener.");
-                e.printStackTrace();
-                throw new RuntimeException("Failed to cast Activity to OnFragmentClickListener");
+        final CheckBox checkAll = ((CheckBox) mView.findViewById(R.id.checkbox_check_all));
+        checkAll.setOnClickListener(new CheckBox.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final boolean checked = checkAll.isChecked();
+                mCallback.onBtnClearClicked_ExperimentSensorSelectionFragment(checked);
             }
-            
-            final CheckBox checkAll = ((CheckBox) mView.findViewById(R.id.checkbox_check_all));
-			checkAll.setOnClickListener(new CheckBox.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					final boolean checked = checkAll.isChecked();
-					mCallback.onBtnClearClicked_ExperimentSensorSelectionFragment(checked);
-				}
-			});
-        }
+        });
 
         // ((ListView) mView.findViewById(R.id.layout_sensor_list))
         mListView.setOnItemClickListener(new ListView.OnItemClickListener() {
@@ -160,7 +135,9 @@ public class ExperimentSensorSelectionFragment extends Fragment {
     }
     
     public boolean hasChanges(){
-    	Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(getActivity()).iterator();
+        if (!SensorDiscoverer.isInitialized())
+            SensorDiscoverer.initialize(getActivity().getApplicationContext());
+    	Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList().iterator();
         while (iter.hasNext()) {
             AbstractSensor sensor = (AbstractSensor) iter.next(); 
             if(sensor.isSelected())
