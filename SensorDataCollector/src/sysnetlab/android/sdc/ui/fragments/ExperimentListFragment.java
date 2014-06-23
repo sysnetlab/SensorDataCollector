@@ -1,6 +1,8 @@
 
 package sysnetlab.android.sdc.ui.fragments;
 
+import java.util.List;
+
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
@@ -66,8 +68,8 @@ public class ExperimentListFragment extends ListFragment {
         getListView().addHeaderView(mHeaderView);
         getListView().addFooterView(mFooterView);
         
-        setListAdapter(mExperimentListAdapter);
-
+        setListAdapter(mExperimentListAdapter);        
+        
         ((Button) mHeaderView.findViewById(R.id.button_create_experiment))
                 .setOnClickListener(new Button.OnClickListener() {
                     public void onClick(View v) {
@@ -77,7 +79,12 @@ public class ExperimentListFragment extends ListFragment {
                 });
     }
 
-    public ArrayAdapter<Experiment> getExperimentArray() {
+    public ArrayAdapter<Experiment> getExperimentListAdapter() {
         return mExperimentListAdapter;
+    }
+    
+    public void reloadExperiments(Experiment experiment){    	
+    		mExperimentListAdapter.insert(experiment, 0);
+    		mExperimentListAdapter.notifyDataSetChanged();
     }
 }

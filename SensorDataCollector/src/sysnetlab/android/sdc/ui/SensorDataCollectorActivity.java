@@ -48,6 +48,14 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
     }
     
     @Override
+    protected void onRestart() {    	
+    	Experiment experiment = getIntent().getParcelableExtra("newExperiment");
+    	if(experiment != null)
+    		mExperimentListFragment.reloadExperiments(experiment);
+    	super.onRestart();
+    }
+    
+    @Override
     protected void loadTask() {
     	// Dropbox
         DropboxHelper.getInstance(getApplicationContext());
@@ -135,4 +143,10 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
 	public void onBackPressed(){
     	moveTaskToBack(true);
 	}
+    
+    @Override    
+    protected void onNewIntent(Intent intent) {
+    	super.onNewIntent(intent);
+    	setIntent(intent);
+    }
 }

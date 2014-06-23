@@ -33,7 +33,7 @@ public class SensorDataCollectorActivityTests
         sdcActivity = getActivity();
         getInstrumentation().callActivityOnStart(sdcActivity);
         mExperimentListFragment = sdcActivity.getExperimentListFragment();
-        mExperimentList = mExperimentListFragment.getExperimentArray();
+        mExperimentList = mExperimentListFragment.getExperimentListAdapter();
 	}
 
 	protected void tearDown() throws Exception {

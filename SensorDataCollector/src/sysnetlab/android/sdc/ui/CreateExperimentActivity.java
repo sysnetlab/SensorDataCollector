@@ -645,7 +645,8 @@ public class CreateExperimentActivity extends FragmentActivityBase
 
                         mExperimentRunFragment.setIsUserTrigger(true);
                         Intent homeIntent = new Intent(CreateExperimentActivity.this,
-                                SensorDataCollectorActivity.class);
+                                SensorDataCollectorActivity.class);                        
+                        homeIntent.putExtra("newExperiment", mExperiment);
                         homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(homeIntent);
                     }
