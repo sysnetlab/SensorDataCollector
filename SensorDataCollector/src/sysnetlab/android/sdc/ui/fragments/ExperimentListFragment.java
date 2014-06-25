@@ -16,14 +16,19 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.support.v4.content.Loader;
+import android.support.v4.app.LoaderManager;
+import sysnetlab.android.sdc.loaders.ExperimentListLoader;
 
-public class ExperimentListFragment extends ListFragment {
+public class ExperimentListFragment extends ListFragment 
+	implements LoaderManager.LoaderCallbacks<List<Experiment>>{
 
     private OnFragmentClickListener mCallback;
     private View mHeaderView;
     private View mFooterView;
-    private ArrayAdapter<Experiment> mExperimentListAdapter;
-
+    //private ArrayAdapter<Experiment> mExperimentListAdapter;
+    private ExperimentListAdapter mExperimentListAdapter;
+    
     public interface OnFragmentClickListener {
         public void onExperimentClicked_ExperimentListFragment(Experiment experiment);
 
@@ -66,11 +71,9 @@ public class ExperimentListFragment extends ListFragment {
         getListView().addHeaderView(mHeaderView);
         getListView().addFooterView(mFooterView);
         
-        mExperimentListAdapter = new ExperimentListAdapter(getActivity(),
-                ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate());
-        
+        mExperimentListAdapter=new ExperimentListAdapter(getActivity());
         setListAdapter(mExperimentListAdapter);
-
+        
         ((Button) mHeaderView.findViewById(R.id.button_create_experiment))
                 .setOnClickListener(new Button.OnClickListener() {
                     public void onClick(View v) {
@@ -78,6 +81,7 @@ public class ExperimentListFragment extends ListFragment {
                                 .onCreateExperimentButtonClicked_ExperimentListFragment((Button) v);
                     }
                 });
+        getLoaderManager().initLoader(0,  null, this).forceLoad();
     }
 
     public ArrayAdapter<Experiment> getExperimentListAdapter() {
@@ -88,4 +92,20 @@ public class ExperimentListFragment extends ListFragment {
     		mExperimentListAdapter.insert(experiment, 0);
     		mExperimentListAdapter.notifyDataSetChanged();
     }
+    
+    @Override
+	public Loader<List<Experiment>> onCreateLoader(int id, Bundle args) {
+		return new ExperimentListLoader(getActivity());
+	}
+
+	@Override
+	public void onLoadFinished(Loader<List<Experiment>> loader,
+			List<Experiment> data) {
+		mExperimentListAdapter.setList(data);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<List<Experiment>> loader) {
+		
+	}
 }

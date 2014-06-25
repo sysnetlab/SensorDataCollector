@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class ExperimentListAdapter extends ArrayAdapter<Experiment> {
-    private final List<Experiment> mList;
+    private List<Experiment> mList;
     private final Activity mContext;
 
     public ExperimentListAdapter(Activity context, List<Experiment> list) {
@@ -21,6 +21,20 @@ public class ExperimentListAdapter extends ArrayAdapter<Experiment> {
         mContext = context;
         mList = list;
     }
+    
+    public ExperimentListAdapter(Activity context){
+        super(context, R.layout.experiment_row_layout);
+        mContext = context;
+        mList = null;
+    }
+
+	public void setList(List<Experiment> list){
+		clear();
+		if(list!=null){
+			addAll(list);
+			mList=list;
+		}
+	}
 
     static class ViewHolder {
         protected TextView text;
