@@ -69,8 +69,11 @@
     <string name="text_no_tagging_action_performed">
         No tagging actions were performed during the experiment.
     </string>
+    <string name="text_tags_plus">
+        , and %1$d more...
+    </string>
     <string name="text_experiment_collect_data_from">
-        The experiment collected data from a few selected sensors.
+       	The experiment collected data from a few selected sensors.
     </string>
     <string name="text_no_sensors_were_selected">
         No sensors were selected for data collection in the experiment. 

@@ -1,5 +1,7 @@
 package sysnetlab.android.sdc.ui.adaptors;
 
+import java.util.List;
+
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.Note;
@@ -180,15 +182,21 @@ public class OperationAdapter extends BaseAdapter {
         layoutParams.setMargins(0, 0, 24, 0);
         
         layout.removeAllViews();
-        for (Tag tag : mExperiment.getTags()) {
-            TextView tvTag = new TextView(mActivity);
-            //tvTag.setBackgroundResource(R.drawable.rounded_corner);
-            tvTag.setTextAppearance(mActivity, android.R.attr.textAppearanceSmall);
-            tvTag.setText(tag.getName());
-            tvTag.setPadding(0, 2, 8, 2);
+        List<Tag> tagsList = mExperiment.getTags();
+        
+        Tag tag = tagsList.get(0);
+        String strTagsNumber= "";        
+        if(tagsList.size()>2){
+        	strTagsNumber = mActivity.getResources().getString(R.string.text_tags_plus);
+		    strTagsNumber = String.format(strTagsNumber, tagsList.size()-1);
+		}	    
+        TextView tvTag = getSubTextView(tag.getName().concat(strTagsNumber));
+        layout.addView(tvTag, layoutParams);
+        if(tagsList.size()==2){
+        	tag = tagsList.get(1);
+        	tvTag = getSubTextView(tag.getName().concat(strTagsNumber));
             layout.addView(tvTag, layoutParams);
         }
-	    
 	    layout.setVisibility(View.VISIBLE);
 	}
 	
@@ -225,12 +233,7 @@ public class OperationAdapter extends BaseAdapter {
         layout.removeAllViews();
         
         Note note = mExperiment.getNotesSortedByDate().get(0);
-        TextView tvNote = new TextView(mActivity);
-        //tvNote.setBackgroundResource(R.drawable.rounded_corner);
-        tvNote.setTextAppearance(mActivity, android.R.attr.textAppearanceSmall);
-        tvNote.setText(note.getDateCreatedAsString() + ": " + note.getNote());
-        tvNote.setPadding(0, 2, 8, 2);
-        UserInterfaceUtil.setEllipsizeforTextView(tvNote, TextUtils.TruncateAt.END);
+        TextView tvNote = getSubTextView(note.getDateCreatedAsString() + ": " + note.getNote());                              
 
         layout.addView(tvNote, layoutParams);
 
@@ -247,6 +250,15 @@ public class OperationAdapter extends BaseAdapter {
         }
         textview.setVisibility(View.VISIBLE);
         return;
+    }
+    
+    private TextView getSubTextView(String subText){
+    	TextView textView = new TextView(mActivity);
+    	textView.setTextAppearance(mActivity, android.R.attr.textAppearanceSmall);
+    	textView.setPadding(0, 2, 8, 2);
+    	textView.setText(subText);
+    	UserInterfaceUtil.setEllipsizeforTextView(textView, TextUtils.TruncateAt.END);
+    	return textView;
     }
 	
 }
