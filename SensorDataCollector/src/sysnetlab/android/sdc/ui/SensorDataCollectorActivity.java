@@ -2,9 +2,9 @@
 package sysnetlab.android.sdc.ui;
 
 import sysnetlab.android.sdc.R;
+import sysnetlab.android.sdc.datacollector.DropboxHelper;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
-import sysnetlab.android.sdc.datacollector.DropboxHelper;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
@@ -18,16 +18,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 
 public class SensorDataCollectorActivity extends FragmentActivityBase 
 	implements
-        ExperimentListFragment.OnFragmentClickListener {
+        ExperimentListFragment.OnFragmentClickListener{
     
     public final static String APP_OPERATION_KEY = "operation";
     public final static int APP_OPERATION_CREATE_NEW_EXPERIMENT = 1;
     public final static int APP_OPERATION_CLONE_EXPERIMENT = 2;
-    
     
     private ExperimentListFragment mExperimentListFragment;
 
@@ -46,8 +44,14 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
         mLoadingTask = new TaskLoadingSpinner();
         mLoadingTask.execute();
 
+        /**
+         * Remove the spinning wheel so that it doesn't overlaps 
+         * with the experiment loading progress bar
+         */
+        mProgressBar.setVisibility(View.GONE);
+        
         mExperimentListFragment = new ExperimentListFragment();
-        FragmentUtil.addFragment(this, mExperimentListFragment);    
+        FragmentUtil.addFragment(this, mExperimentListFragment);
     }
     
     @Override

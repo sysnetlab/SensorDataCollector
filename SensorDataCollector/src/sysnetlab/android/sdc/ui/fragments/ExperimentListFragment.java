@@ -20,7 +20,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.app.LoaderManager;
 import sysnetlab.android.sdc.loaders.ExperimentListLoader;
 
-public class ExperimentListFragment extends ListFragment 
+public class ExperimentListFragment extends ListFragment
 	implements LoaderManager.LoaderCallbacks<List<Experiment>>{
 
     private OnFragmentClickListener mCallback;
@@ -71,7 +71,11 @@ public class ExperimentListFragment extends ListFragment
         getListView().addHeaderView(mHeaderView);
         getListView().addFooterView(mFooterView);
         
-        mExperimentListAdapter=new ExperimentListAdapter(getActivity());
+        mExperimentListAdapter=new ExperimentListAdapter(
+        		getActivity());//,
+        		//ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate()
+        		//);
+        //mExperimentListAdapter.setList(ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate());
         setListAdapter(mExperimentListAdapter);
         
         ((Button) mHeaderView.findViewById(R.id.button_create_experiment))
@@ -81,7 +85,7 @@ public class ExperimentListFragment extends ListFragment
                                 .onCreateExperimentButtonClicked_ExperimentListFragment((Button) v);
                     }
                 });
-        getLoaderManager().initLoader(0,  null, this).forceLoad();
+        getActivity().getSupportLoaderManager().initLoader(0,  null, this).forceLoad();
     }
 
     public ArrayAdapter<Experiment> getExperimentListAdapter() {
@@ -108,4 +112,5 @@ public class ExperimentListFragment extends ListFragment
 	public void onLoaderReset(Loader<List<Experiment>> loader) {
 		
 	}
+	
 }

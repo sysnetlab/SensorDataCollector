@@ -26,6 +26,7 @@ import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 /**
  * Assumptions The application allows a single experiment being run. No two
@@ -531,5 +532,27 @@ public class SimpleFileStore extends AbstractStore {
     public int getNextChannelNumber() {
         return mNextChannelNumber;
     }
+
+	@Override
+	public int getCountExperiments() {
+		return mNextExperimentNumber;
+	}
+
+	@Override
+	public List<Experiment> listStoredExperiments(ProgressBar mProgressBar) {
+		List<Experiment> listExperiments = new ArrayList<Experiment>();
+
+        DecimalFormat f = new DecimalFormat("00000");
+        for (int i = 1; i < mNextExperimentNumber; i++) {
+            String dirName = DIR_PREFIX + f.format(i);
+            String pathPrefix = mParentPath + "/" + dirName;
+
+            Experiment experiment = loadExperiment(dirName, pathPrefix);
+            if (experiment != null)
+                listExperiments.add(experiment);
+            mProgressBar.setProgress(i);
+        }
+        return listExperiments;
+	}
 
 }

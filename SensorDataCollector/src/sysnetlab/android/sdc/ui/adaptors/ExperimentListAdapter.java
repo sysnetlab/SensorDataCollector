@@ -1,6 +1,7 @@
 
 package sysnetlab.android.sdc.ui.adaptors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import sysnetlab.android.sdc.R;

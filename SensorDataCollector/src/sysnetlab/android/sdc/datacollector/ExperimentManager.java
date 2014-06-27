@@ -6,7 +6,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import android.widget.ProgressBar;
 import sysnetlab.android.sdc.datastore.AbstractStore;
+import sysnetlab.android.sdc.datastore.SimpleFileStore;
+import sysnetlab.android.sdc.datastore.SimpleXmlFileStore;
 
 public class ExperimentManager {
     private List<AbstractStore> mStores;    
@@ -28,7 +31,8 @@ public class ExperimentManager {
             allExperiments.addAll(experiments);
         }
         return allExperiments;
-    }       
+    }  
+    
     
     public List<Experiment> getExperimentsSortedByDate() {
         List<Experiment> allExperiments = getExperiments();
@@ -52,4 +56,21 @@ public class ExperimentManager {
     public List<AbstractStore> getStores() {
         return mStores;
     }
+
+	public int getCountExperiments() {
+		int count=0;
+		for (AbstractStore store : mStores) {
+			count+=store.getCountExperiments();
+        }
+		return count;
+	}
+
+	public List<Experiment> getExperiments(ProgressBar mProgressBar) {
+		List<Experiment> allExperiments = new ArrayList<Experiment>();
+        for (AbstractStore store : mStores) {
+            List<Experiment> experiments = store.listStoredExperiments(mProgressBar);
+            allExperiments.addAll(experiments);
+        }
+        return allExperiments;
+	}
 }

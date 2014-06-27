@@ -24,6 +24,7 @@ import android.hardware.Sensor;
 import android.os.Build;
 import android.util.Log;
 import android.util.Xml;
+import android.widget.ProgressBar;
 import sysnetlab.android.sdc.datacollector.DateUtils;
 import sysnetlab.android.sdc.datacollector.DeviceInformation;
 import sysnetlab.android.sdc.datacollector.Experiment;
@@ -51,6 +52,33 @@ public class SimpleXmlFileStore extends SimpleFileStore {
 
     public SimpleXmlFileStore() throws RuntimeException {
         super();
+    }
+    
+    @Override
+    public List<Experiment> listStoredExperiments(ProgressBar mProgressBar) {
+    	List<Experiment> listExperiments = new ArrayList<Experiment>();
+
+        DecimalFormat f = new DecimalFormat("00000");
+        for (int i = 1; i < mNextExperimentNumber; i++) {
+            String dirName = DIR_PREFIX + f.format(i);
+            String pathPrefix = mParentPath + "/" + dirName;
+
+            Experiment experiment; 
+            
+            String xmlConfigFile = pathPrefix + "/" + XML_EXPERIMENT_META_DATA_FILE;
+            File configFile = new File(xmlConfigFile);
+            
+            if (!configFile.exists()) {
+                experiment = super.loadExperiment(dirName, pathPrefix);
+            } else {
+                experiment = loadExperiment(pathPrefix);
+            }
+            if (experiment != null) {
+                listExperiments.add(experiment);
+            }
+            mProgressBar.setProgress(i);
+        }
+        return listExperiments;
     }
 
     @Override
