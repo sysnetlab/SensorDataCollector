@@ -147,6 +147,7 @@ public class ExperimentViewSensorDataFragment extends Fragment {
         switch (sensor.getMajorType()) {
             case AbstractSensor.ANDROID_SENSOR:
                 Channel channel = ((AndroidSensor) sensor).getListener().getChannel();
+                channel.open();
 
                 int i;
                 for (i = 0; i < maximumLines; i++) {
@@ -161,7 +162,7 @@ public class ExperimentViewSensorDataFragment extends Fragment {
                             + "\n";
                 }
 
-                channel.reset();
+                channel.close();
                 break;
             case AbstractSensor.AUDIO_SENSOR:
                 data = mView.getResources().getString(

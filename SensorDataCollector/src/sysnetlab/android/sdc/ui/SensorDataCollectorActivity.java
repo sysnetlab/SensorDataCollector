@@ -2,13 +2,12 @@
 package sysnetlab.android.sdc.ui;
 
 import sysnetlab.android.sdc.R;
+import sysnetlab.android.sdc.datacollector.DropboxHelper;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
-import sysnetlab.android.sdc.datacollector.DropboxHelper;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
-import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
 import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
 import android.content.Intent;
@@ -17,16 +16,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 
 public class SensorDataCollectorActivity extends FragmentActivityBase 
 	implements
-        ExperimentListFragment.OnFragmentClickListener {
+        ExperimentListFragment.OnFragmentClickListener{
     
     public final static String APP_OPERATION_KEY = "operation";
     public final static int APP_OPERATION_CREATE_NEW_EXPERIMENT = 1;
     public final static int APP_OPERATION_CLONE_EXPERIMENT = 2;
-    
     
     private ExperimentListFragment mExperimentListFragment;
 
@@ -34,17 +33,33 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
-        mLoadingTask=new TaskLoadingSpinner();
-        
+
+
         ExperimentManagerSingleton.getInstance().addExperimentStore(
                 StoreSingleton.getInstance());
+
+        if (!SensorDiscoverer.isInitialized())
+            SensorDiscoverer.initialize(getApplicationContext());
         
-        SensorUtilsSingleton.getInstance().setContext(getApplicationContext());
-        
+        mLoadingTask = new TaskLoadingSpinner();
         mLoadingTask.execute();
+
+        /**
+         * Remove the spinning wheel so that it doesn't overlaps 
+         * with the experiment loading progress bar
+         */
+        mProgressBar.setVisibility(View.GONE);
         
         mExperimentListFragment = new ExperimentListFragment();
         FragmentUtil.addFragment(this, mExperimentListFragment);
+    }
+    
+    @Override
+    protected void onRestart() {    	
+    	Experiment experiment = getIntent().getParcelableExtra("newExperiment");
+    	if(experiment != null)
+    		mExperimentListFragment.reloadExperiments(experiment);
+    	super.onRestart();
     }
     
     @Override
@@ -52,10 +67,9 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
     	// Dropbox
         DropboxHelper.getInstance(getApplicationContext());
     	
-    	for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(SensorDataCollectorActivity.this)) {
+    	for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList()) {
             sensor.setSelected(false);
         }
-    	
     }
     
     public void onResume() {
@@ -135,4 +149,10 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
 	public void onBackPressed(){
     	moveTaskToBack(true);
 	}
+    
+    @Override    
+    protected void onNewIntent(Intent intent) {
+    	super.onNewIntent(intent);
+    	setIntent(intent);
+    }
 }

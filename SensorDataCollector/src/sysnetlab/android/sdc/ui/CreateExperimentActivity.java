@@ -158,7 +158,11 @@ public class CreateExperimentActivity extends FragmentActivityBase
         // TODO handle configuration change
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
-        mLoadingTask=new TaskLoadingSpinner();
+        
+        if (!SensorDiscoverer.isInitialized())
+            SensorDiscoverer.initialize(getApplicationContext());
+        
+        mLoadingTask = new TaskLoadingSpinner();
         
         mOperation = getIntent().getIntExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
                 SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT);
@@ -179,7 +183,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
 			case SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT:
 				mExperiment = new Experiment();
 		    	ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);
-		        for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList(CreateExperimentActivity.this)) {
+		        for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList()) {
 		            sensor.setSelected(false);
 		        }
 		        if (view != null) {
@@ -259,9 +263,15 @@ public class CreateExperimentActivity extends FragmentActivityBase
         if (mExperimentRunFragment != null && mExperimentRunFragment.isFragmentUIActive()) {            
             confirmToStopExperiment();            
         } else if(mExperimentSetupFragment != null && mExperimentSetupFragment.isFragmentUIActive()){
-    		if(!confirmToLeaveActivity())
-    			super.onBackPressed();
-        }else {
+    		if(!confirmToLeaveActivity()) {
+    			// super.onBackPressed();
+                Intent homeIntent = new Intent(CreateExperimentActivity.this,
+                        SensorDataCollectorActivity.class);
+                homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                homeIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(homeIntent);            		    
+    		} 
+        } else {
             super.onBackPressed();
         }
         changeActionBarTitle(R.string.text_creating_experiment, R.drawable.ic_launcher);
@@ -293,7 +303,6 @@ public class CreateExperimentActivity extends FragmentActivityBase
             mExperimentSensorSelectionFragment = new ExperimentSensorSelectionFragment();
         }
         getIntent().putExtra("havingheader", true);
-        getIntent().putExtra("havingfooter", true);
         FragmentUtil.switchToFragment(this, mExperimentSensorSelectionFragment, "sensorselection");
         changeActionBarTitle(R.string.text_selecting_sensors, R.drawable.icon_sensors_inverse);
     }
@@ -523,7 +532,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
 
     @Override
     public void onBtnClearClicked_ExperimentSensorSelectionFragment(boolean checked) {
-        Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList(this).iterator();
+        Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList().iterator();
         while (iter.hasNext()) {
             AbstractSensor sensor = (AbstractSensor) iter.next();            
                 sensor.setSelected(checked);            
@@ -611,7 +620,12 @@ public class CreateExperimentActivity extends FragmentActivityBase
 	        builder.setPositiveButton(R.string.text_leave_experiment,
 	                new DialogInterface.OnClickListener() {
 	                    public void onClick(DialogInterface dialog, int id) {                        
-	                        finish();
+	                        // finish();
+	                        Intent homeIntent = new Intent(CreateExperimentActivity.this,
+	                                SensorDataCollectorActivity.class);
+	                        homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	                        homeIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+	                        startActivity(homeIntent);  	                        
 	                        dialog.dismiss();                        
 	                    }
 	                });	        
@@ -645,8 +659,10 @@ public class CreateExperimentActivity extends FragmentActivityBase
 
                         mExperimentRunFragment.setIsUserTrigger(true);
                         Intent homeIntent = new Intent(CreateExperimentActivity.this,
-                                SensorDataCollectorActivity.class);
+                                SensorDataCollectorActivity.class);                        
+                        homeIntent.putExtra("newExperiment", mExperiment);
                         homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        homeIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                         startActivity(homeIntent);
                     }
                 });

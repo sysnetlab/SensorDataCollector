@@ -16,11 +16,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-public class ViewExperimentActivity extends ActionBarActivity implements
+public class ViewExperimentActivity extends FragmentActivityBase implements
         ExperimentViewFragment.OnFragmentClickListener,
         ExperimentSensorListFragment.OnFragmentClickListener {
 
@@ -36,26 +35,29 @@ public class ViewExperimentActivity extends ActionBarActivity implements
         // TODO handle configuration change
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
-
+        mLoadingTask=new TaskLoadingSpinner();
+        mLoadingTask.execute();
         // mExperiment = (Experiment)
         // getIntent().getParcelableExtra("experiment");
 
-        mExperiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();
+        
+    }
+    
+    @Override
+    protected void loadTask() {
+    	mExperiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();
 
         if (mExperiment == null) {
-            Log.i("SensorDataColelctor",
+            Log.d("SensorDataColelctor",
                     "ViewExperimentActivity failed to get experiment from intent");
             Toast.makeText(this, "Failed to  load experiment.", Toast.LENGTH_LONG).show();
             finish();
         }
 
-        Log.i("SensorDataCollector",
+        Log.d("SensorDataCollector",
                 "ViewExperimentActivity: experiment is " + mExperiment.toString());
 
         if (findViewById(R.id.fragment_container) != null) {
-            if (savedInstanceState != null) {
-                return;
-            }
 
             mExperimentViewFragment = new ExperimentViewFragment();
             FragmentTransaction transaction = getSupportFragmentManager()
@@ -64,7 +66,7 @@ public class ViewExperimentActivity extends ActionBarActivity implements
             transaction.commit();
         }
 
-        Log.i("SensorDataCollector", "ViewExperimentActivity.onCreate called.");
+        Log.d("SensorDataCollector", "ViewExperimentActivity.onCreate called.");
     }
     
     public void onResume() {
@@ -143,7 +145,7 @@ public class ViewExperimentActivity extends ActionBarActivity implements
 
     @Override
     public void onSensorClicked_ExperimentSensorListFragment(int sensorNo) {
-        Log.i("SensorDataCollector", "ViewExperimentActivity::onSensorClicked_ExperimentSensorListFragment() called with sensorNo = " + sensorNo);
+        Log.d("SensorDataCollector", "ViewExperimentActivity::onSensorClicked_ExperimentSensorListFragment() called with sensorNo = " + sensorNo);
         
         if (mExperimentViewSensorDataFragment == null) {
             mExperimentViewSensorDataFragment = new ExperimentViewSensorDataFragment();
@@ -157,7 +159,7 @@ public class ViewExperimentActivity extends ActionBarActivity implements
 
     @Override
     public void onSensorClicked_ExperimentSensorListFragment(AbstractSensor sensor) {
-        Log.i("SensorDataCollector", "ViewExperimentActivity::onSensorClicked_ExperimentSensorListFragment() called");
+        Log.d("SensorDataCollector", "ViewExperimentActivity::onSensorClicked_ExperimentSensorListFragment() called");
         // do nothing
     }
     
@@ -177,14 +179,18 @@ public class ViewExperimentActivity extends ActionBarActivity implements
     	return mExperimentViewNotesFragment;
     }
     
-    
-    
     @Override
     public void onBackPressed(){
     	if(!mExperimentViewFragment.isFragmentUIActive()){
     		changeActionBarTitle(R.string.text_viewing_experiment, R.drawable.ic_launcher);
+    	    super.onBackPressed();
+        } else {
+            Intent intent = new Intent(ViewExperimentActivity.this,
+                    SensorDataCollectorActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent); 
         }
-    	super.onBackPressed();
     }
     
 	public void changeActionBarTitle(int titleResId, int iconResId){    	

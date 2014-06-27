@@ -23,9 +23,10 @@ import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.datacollector.TaggingAction;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
-import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
+import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 /**
  * Assumptions The application allows a single experiment being run. No two
@@ -42,8 +43,7 @@ public class SimpleFileStore extends AbstractStore {
 
     public SimpleFileStore() throws RuntimeException {
 
-        Log.i("SensorDataCollector",
-                "entering SimpleFileStore.constructor() ...");
+        Log.d("SensorDataCollector", "Entered SimpleFileStore.constructor().");
 
         String parentPath = Environment.getExternalStorageDirectory().getPath();
         parentPath = parentPath + "/SensorData";
@@ -235,7 +235,7 @@ public class SimpleFileStore extends AbstractStore {
 
                             Channel channel = new SimpleFileChannel(channelDescriptor,
                                     Channel.READ_ONLY);
-                            AbstractSensor sensor = SensorUtilsSingleton.getInstance().getSensor(
+                            AbstractSensor sensor = SensorDiscoverer.constructSensorObject(
                                     sensorName,
                                     sensorMajorType,
                                     sensorMinorType, channel, null);
@@ -250,12 +250,6 @@ public class SimpleFileStore extends AbstractStore {
                 experiment.setSensors(lstSensors);
                 
                 in.close();
-
-                Log.i("SensorDataCollector",
-                        "SimpleFileStore::loadExperiment(): load experiment("
-                                + experiment.getName() + ", " + experiment.getDateTimeCreatedAsString()
-                                + ") successfully.");
-                return experiment;
             } else {
                 file = new File(parentDir);
 
@@ -264,42 +258,27 @@ public class SimpleFileStore extends AbstractStore {
 
                 Log.w("SensorDataCollector",
                         "SimpleFileStore::loadExperiment(): no configuraiton file is found for " + name);
-                Experiment e = new Experiment(name, dateCreated);
-                e.setPath(parentDir);
-                return e;
+                experiment = new Experiment(name, dateCreated);
+                experiment.setPath(parentDir);
             }
         } catch (NumberFormatException e) {
-            if (name != null && dateTimeCreated != null) {
-                Log.w("SensorDataCollector",
-                        "SimpleFileStore::loadExperiment(): Found an old configuration file for " + name);
-                return null;
-            }
-
-            Log.e("SensorDataCollector", "SimpleFileStore::loadExperiment(): " +
-                    "Failed to load the configuration file.");
-            e.printStackTrace();
-
-            return null;
-
+            Log.w("SensorDataCollector",
+                    "SimpleFileStore::loadExperiment(): failed to parse an old configuration file for "
+                            + name + " with error " + e.toString());
+            experiment = null;
         } catch (IOException e) {
-
-            if (name != null && dateTimeCreated != null) {
-                Log.w("SensorDataCollector",
-                        "SimpleFileStore::loadExperiment(): Found an old configuration file for " + name);
-                return null;
-            }
-
-            Log.e("SensorDataCollector", "SimpleFileStore::loadExperiment(): " +
-                    "Failed to load the configuration file.");
-            e.printStackTrace();
-
-            return null;
+            Log.w("SensorDataCollector", "SimpleFileStore::loadExperiment(): " +
+                    "failed to read an old configuration file with error message " + e.toString());
+            experiment = null;
         } catch (RuntimeException e) {
             Log.w("SensorDataCollector",
-                    "SimpleFileStore::loadExperiment(): Found an old configuration file "
+                    "SimpleFileStore::loadExperiment(): found an old configuration file "
                             + experiment.getName() + ", " + experiment.getDateTimeCreatedAsString());
-            return experiment;
         }
+
+        Log.d("SensorDataCollector", "SimpleFileStore::loadExperiment(): loaded experiment ["
+                + (experiment != null ? experiment.toString() : "null") + "]");
+        return experiment;
     }
 
     public class SimpleFileChannel extends AbstractStore.Channel {
@@ -308,6 +287,7 @@ public class SimpleFileStore extends AbstractStore {
         private RandomAccessFile mRandomAccessFile;
         private String mPath;
         private int mType;
+        private int mFlags;
 
         protected SimpleFileChannel() {
             // prohibit from creating SimpleFileChannel object without an argument
@@ -321,44 +301,62 @@ public class SimpleFileStore extends AbstractStore {
             this(path, flags, CHANNEL_TYPE_CSV);
         }        
         
-        public SimpleFileChannel(String path, int flags, int type) throws FileNotFoundException {
+        public SimpleFileChannel(String path, int flags, int type) {
+            mFlags = flags;
             mType = type;
+            mPath = path;
             mBlockingQueue = null;
             mDeferredClosing = false;
+        } 
 
-            if (flags == READ_ONLY) {
-                mRandomAccessFile = null;
-                mOut = null;
-                File file = new File(path);
-                if (file.exists()) {
-                    mIn = new BufferedReader(new FileReader(path));
-                } else {
-                    throw new RuntimeException("SimpleFileChannel: cannot open file " + path);
-                }
-                mPath = path;
-            } else if (flags == WRITE_ONLY) {
-                mIn = null;
-                mPath = path;
+        @Override
+        public boolean open() {
+            try {
+                if (mFlags == READ_ONLY) {
+                    mRandomAccessFile = null;
+                    mOut = null;
+                    File file = new File(mPath);
+                    if (file.exists()) {
+                        mIn = new BufferedReader(new FileReader(mPath));
+                    } else {
+                        Log.e("SensorDataCollector", "SimpleFileChannel::open(): "
+                                + "error on open openning the channel: cannot find the file: " + mPath);
+                        return false;
+                    }
+                } else if (mFlags == WRITE_ONLY) {
+                    mIn = null;
 
-                if (type == AbstractStore.Channel.CHANNEL_TYPE_WAV) {
-                    mRandomAccessFile = new RandomAccessFile(path, "rw");
-                    try {
-                        mOut = new PrintStream(new BufferedOutputStream(new FileOutputStream(
-                                mRandomAccessFile.getFD())));
-                    } catch (IOException e) {
-                        mOut = null;
+                    if (mType == AbstractStore.Channel.CHANNEL_TYPE_WAV) {
+                        mRandomAccessFile = new RandomAccessFile(mPath, "rw");
+                        try {
+                            mOut = new PrintStream(new BufferedOutputStream(new FileOutputStream(
+                                    mRandomAccessFile.getFD())));
+                        } catch (IOException e) {
+                            mOut = null;
+                            mRandomAccessFile = null;
+                            Log.e("SensorDataCollector", "SimpleFileChannel::open(): "
+                                    + "error on open openning the channel: " + e.toString());
+                            return false;
+                        }
+                    } else {
+                        mOut = new PrintStream(
+                                new BufferedOutputStream(new FileOutputStream(mPath)));
                         mRandomAccessFile = null;
-                        throw new RuntimeException("SimpleFileChannel: " + e.toString());
                     }
                 } else {
-                    mOut = new PrintStream(new BufferedOutputStream(new FileOutputStream(path)));
-                    mRandomAccessFile = null;
+                    Log.e("SensorDataCollector", "SimpleFileChannel::open(): "
+                            + "encountered unsupported creation flag " + mFlags);
+                    return false;
                 }
-            } else {
-                throw new RuntimeException(
-                        "SimpleFileChannel: encountered unsupported creation flag " + flags);
+            } catch (FileNotFoundException e) {
+                Log.e("SensorDataCollector", "SimpleFileChannel::open(): "
+                        + " error on opening the channel: "
+                        + e.toString());
+                return false;
             }
-        } 
+            
+            return true;
+        }
 
         public void close() {
             if (!mDeferredClosing) {
@@ -398,7 +396,7 @@ public class SimpleFileStore extends AbstractStore {
                     mIn.close();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.i("SensorDataCollector", "close error in SimpleFileStore::close().");
+                    Log.e("SensorDataCollector", "SimpleFileStore::close(): mIn.close() failed.");
                 }
             }
         }
@@ -448,7 +446,7 @@ public class SimpleFileStore extends AbstractStore {
                     return mIn.readLine();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.i("SensorDataCollector", "read error in SimpleFileStore::read().");
+                    Log.i("SensorDataCollector", "SimpleFileStore::read(): mIn.readLine() failed.");
                     return null;
                 }
             } else {
@@ -465,15 +463,11 @@ public class SimpleFileStore extends AbstractStore {
                     mIn = new BufferedReader(new FileReader(mPath));
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.i("SensorDataCollector", "reset error in SimpleFileStore::mark().");              
+                    Log.i("SensorDataCollector", "SimpleFileStore::reset(): mIn.close() failed.");              
                 }
             }
         }        
 
-        @Override
-        public void open() {
-        }
-        
         @Override
         public int getType() {
             return mType;
@@ -511,20 +505,11 @@ public class SimpleFileStore extends AbstractStore {
             path = mNewExperimentPath + "/" + tag.replace(' ', '_') + extension;
         }
 
-        try {
-            Channel channel;
-            channel = new SimpleFileChannel(path, flags, type);
-            mChannels.add(channel);
+        Channel channel;
+        channel = new SimpleFileChannel(path, flags, type);
+        mChannels.add(channel);
 
-            return channel;
-        } catch (FileNotFoundException e) {
-            Log.e("SensorDataCollector",
-                    "SimpleFileStore::getChannel: cannot open the channel file: "
-                            + path);
-            e.printStackTrace();
-
-            return null;
-        }
+        return channel;
     }
 
     @Override
@@ -547,5 +532,27 @@ public class SimpleFileStore extends AbstractStore {
     public int getNextChannelNumber() {
         return mNextChannelNumber;
     }
+
+	@Override
+	public int getCountExperiments() {
+		return mNextExperimentNumber;
+	}
+
+	@Override
+	public List<Experiment> listStoredExperiments(ProgressBar mProgressBar) {
+		List<Experiment> listExperiments = new ArrayList<Experiment>();
+
+        DecimalFormat f = new DecimalFormat("00000");
+        for (int i = 1; i < mNextExperimentNumber; i++) {
+            String dirName = DIR_PREFIX + f.format(i);
+            String pathPrefix = mParentPath + "/" + dirName;
+
+            Experiment experiment = loadExperiment(dirName, pathPrefix);
+            if (experiment != null)
+                listExperiments.add(experiment);
+            mProgressBar.setProgress(i);
+        }
+        return listExperiments;
+	}
 
 }

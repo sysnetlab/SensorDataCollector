@@ -24,6 +24,7 @@ import android.hardware.Sensor;
 import android.os.Build;
 import android.util.Log;
 import android.util.Xml;
+import android.widget.ProgressBar;
 import sysnetlab.android.sdc.datacollector.DateUtils;
 import sysnetlab.android.sdc.datacollector.DeviceInformation;
 import sysnetlab.android.sdc.datacollector.Experiment;
@@ -34,7 +35,7 @@ import sysnetlab.android.sdc.datacollector.TaggingAction;
 import sysnetlab.android.sdc.datacollector.TaggingState;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
-import sysnetlab.android.sdc.sensor.SensorUtilsSingleton;
+import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.sensor.audio.AudioChannelIn;
 import sysnetlab.android.sdc.sensor.audio.AudioEncoding;
 import sysnetlab.android.sdc.sensor.audio.AudioRecordParameter;
@@ -51,6 +52,33 @@ public class SimpleXmlFileStore extends SimpleFileStore {
 
     public SimpleXmlFileStore() throws RuntimeException {
         super();
+    }
+    
+    @Override
+    public List<Experiment> listStoredExperiments(ProgressBar mProgressBar) {
+    	List<Experiment> listExperiments = new ArrayList<Experiment>();
+
+        DecimalFormat f = new DecimalFormat("00000");
+        for (int i = 1; i < mNextExperimentNumber; i++) {
+            String dirName = DIR_PREFIX + f.format(i);
+            String pathPrefix = mParentPath + "/" + dirName;
+
+            Experiment experiment; 
+            
+            String xmlConfigFile = pathPrefix + "/" + XML_EXPERIMENT_META_DATA_FILE;
+            File configFile = new File(xmlConfigFile);
+            
+            if (!configFile.exists()) {
+                experiment = super.loadExperiment(dirName, pathPrefix);
+            } else {
+                experiment = loadExperiment(pathPrefix);
+            }
+            if (experiment != null) {
+                listExperiments.add(experiment);
+            }
+            mProgressBar.setProgress(i);
+        }
+        return listExperiments;
     }
 
     @Override
@@ -95,29 +123,28 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             
             out.println(stringWriter.toString());
             out.close();
-            Log.d("SensorDataCollector.UnitTest", "xml file = <" + stringWriter.toString() + ">");
+            // Log.d("SensorDataCollector", "xml file = [ " + stringWriter.toString() + " ]");
         } catch (IllegalArgumentException e) {
             // TODO
             e.printStackTrace();
-            Log.e("SensorDataCollector.UnitTest", e.toString());
-            
+            Log.e("SensorDataCollector", "SimpleXmlFileStore::writeExperimentMetaData(): " + e.toString());
         } catch (IllegalStateException e) {
             // TODO
             e.printStackTrace();
-            Log.e("SensorDataCollector.UnitTest", e.toString());            
+            Log.e("SensorDataCollector", "SimpleXmlFileStore::writeExperimentMetaData(): " + e.toString());
         } catch (FileNotFoundException e) {
             // TODO
             e.printStackTrace();
-            Log.e("SensorDataCollector.UnitTest", e.toString());            
+            Log.e("SensorDataCollector", "SimpleXmlFileStore::writeExperimentMetaData(): " + e.toString());
         } catch (IOException e) {
             // TODO
             e.printStackTrace();
-            Log.e("SensorDataCollector.UnitTest", e.toString());            
+            Log.e("SensorDataCollector", "SimpleXmlFileStore::writeExperimentMetaData(): " + e.toString());
         } 
     }
     
     public Experiment loadExperiment(String experimentPath) {
-        Log.d("SensorDataCollector.UnitTest", "entered loadExperiment() ...");        
+        // Log.d("SensorDataCollector.UnitTest", "entered loadExperiment().");        
         Experiment experiment = null;
         
         String configFilePath = experimentPath + "/" + XML_EXPERIMENT_META_DATA_FILE;
@@ -140,21 +167,33 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             in.close();
         } catch (FileNotFoundException e) {
             experiment = null;
-            Log.d("SensorDataCollector.UnitTest", "not found " + configFilePath);
+            Log.e("SensorDataCollector",
+                    "SimpleXmlFileStore()::loadExperiment(): configFilePath = " + configFilePath
+                            + " : " + e.toString());
         } catch (XmlPullParserException e) {
             experiment = null;
-            Log.d("SensorDataCollector.UnitTest", e.toString());            
+            Log.e("SensorDataCollector",
+                    "SimpleXmlFileStore()::loadExperiment(): configFilePath = " + configFilePath
+                            + " : " + e.toString());            
         } catch (IOException e) {
             experiment = null;
-            Log.d("SensorDataCollector.UnitTest", e.toString());            
+            Log.e("SensorDataCollector",
+                    "SimpleXmlFileStore()::loadExperiment(): configFilePath = " + configFilePath
+                            + " : " + e.toString());         
         } catch (IllegalStateException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            experiment = null;
+            Log.e("SensorDataCollector",
+                    "SimpleXmlFileStore()::loadExperiment(): configFilePath = " + configFilePath
+                            + " : " + e.toString());
         } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            experiment = null;
+            Log.e("SensorDataCollector",
+                    "SimpleXmlFileStore()::loadExperiment(): configFilePath = " + configFilePath
+                            + " : " + e.toString());
         } 
         
+        Log.d("SensorDataCollector", "SimpleXmlFileStore::loadExperiment(): loaded experiment ["
+                + (experiment != null ? experiment.toString() : "null") + "]");
         return experiment;
     }
 
@@ -540,20 +579,20 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             }
             String elem = xpp.getName();
 
-            Log.d("SensorDataCollector.UnitTest", "element = " + elem);
+            // Log.d("SensorDataCollector", "SimpleXmlFileStore::readExperiment(): element = " + elem);
 
             if (elem.equals("name")) {
                 String name = readXmlElementText(xpp, "name");
                 experiment.setName(name);
-                Log.d("SensorDataCollector.UnitTest", "readExperiment(): " + xpp.getText());                
+                // Log.d("SensorDataCollector", "readExperiment(): " + xpp.getText());                
             } else if (elem.equals("device")) {
                 DeviceInformation device = readDevice(xpp);
                 experiment.setDeviceInformation(device);
-                Log.d("SensorDataCollector.UnitTest", "readExperiment(): " + device.toString());                
+                // Log.d("SensorDataCollector", "readExperiment(): " + device.toString());                
             } else if (elem.equals("datetimecreation")) {
                 String datetime = readXmlElementText(xpp, "datetimecreation");
                 experiment.setDateTimeCreatedFromStringUTC(datetime);
-                Log.d("SensorDataCollector.UnitTest", "readExperiment(): " + xpp.getText());
+                // Log.d("SensorDataCollector", "readExperiment(): " + xpp.getText());
             } else if (elem.equals("datetimecompletion")) {
                 String datetime = readXmlElementText(xpp, "datetimecompletion");
                 experiment.setDateTimeDoneFromStringUTC(datetime);
@@ -574,6 +613,7 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             }
         }
         
+        /*
         String dbgString = " name = " + experiment.getName() +  
                 " datetimecreated = " + experiment.getDateTimeCreatedAsStringUTC() +
                 " datetimecompleted = " + experiment.getDateTimeDoneAsStringUTC();
@@ -581,13 +621,14 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             dbgString += " Tag = (" + tag.getName() + ", " + tag.getShortDescription() + ", " + tag.getLongDescription() + ") ";
         }
 
-        Log.d("SensorDataCollector.UnitTest", dbgString);
-                
+        Log.d("SensorDataCollector", "SimpleXmlFileStore():readExperiment(): " + dbgString);
+        */
+        
         return experiment;
     }
     
     private DeviceInformation readDevice(XmlPullParser xpp) throws XmlPullParserException, IOException {
-        Log.d("SensorDataCollector.UnitTest", "entered readDevice()");                
+        // Log.d("SensorDataCollector", "entered readDevice()");                
 
         xpp.require(XmlPullParser.START_TAG, XMLNS, "device");
         
@@ -907,7 +948,7 @@ public class SimpleXmlFileStore extends SimpleFileStore {
 
             if (name.equals("sensor")) {
                 listSensors.add(readSensor(xpp));
-                Log.d("SensorDataCollector.UnitTest", "SimpleXMLFileStore::readSensors(): read a sensor");
+                // Log.d("SensorDataCollector", "SimpleXMLFileStore::readSensors(): read a sensor");
             } else {
                 skip(xpp);
             }
@@ -924,11 +965,12 @@ public class SimpleXmlFileStore extends SimpleFileStore {
     private AbstractSensor readSensor(XmlPullParser xpp) throws XmlPullParserException, IOException {
         xpp.require(XmlPullParser.START_TAG, XMLNS, "sensor");
         
-        Log.d("SensorDataCollector.UnitTest", "sensor id = " + xpp.getAttributeValue(XMLNS, "id"));
-        Log.d("SensorDataCollector.UnitTest", "sensor count = " + xpp.getAttributeCount());
-        Log.d("SensorDataCollector.UnitTest", "sensor name = " + xpp.getAttributeName(0));
-        Log.d("SensorDataCollector.UnitTest", "sensor namespace = " + xpp.getAttributeNamespace(0));
-
+        /*
+        Log.d("SensorDataCollector", "SimpleXmlFileStore::readSensor(): sensor id = " + xpp.getAttributeValue(XMLNS, "id"));
+        Log.d("SensorDataCollector", "SimpleXmlFileStore::readSensor(): sensor count = " + xpp.getAttributeCount());
+        Log.d("SensorDataCollector", "SimpleXmlFileStore::readSensor(): sensor name = " + xpp.getAttributeName(0));
+        Log.d("SensorDataCollector", "SimpleXmlFileStore::readSensor(): sensor namespace = " + xpp.getAttributeNamespace(0));
+        */
         
         int id = Integer.parseInt(xpp.getAttributeValue("", "id"));
         
@@ -963,6 +1005,11 @@ public class SimpleXmlFileStore extends SimpleFileStore {
                     case AbstractSensor.AUDIO_SENSOR:
                         audioDataDefinition = readAudiodSensorDataDefinition(xpp, channelType);
                         break;
+                    default:
+                        Log.w("SensorDataCollector",
+                                "SimpleXmlFileStore::readSensor(): unsupported sensor major type "
+                                        + majorType);
+                        break;
                 }
             } else {
                 skip(xpp);
@@ -971,10 +1018,18 @@ public class SimpleXmlFileStore extends SimpleFileStore {
         
         switch (majorType) {
             case AbstractSensor.ANDROID_SENSOR:
-                sensor = SensorUtilsSingleton.getInstance().getSensor(sensorName, majorType, minorType, id, channel, null);
+                sensor = SensorDiscoverer.constructSensorObject(sensorName, majorType, minorType,
+                        id, channel, null);
                 break;
             case AbstractSensor.AUDIO_SENSOR:
-                sensor = SensorUtilsSingleton.getInstance().getSensor(sensorName, majorType, minorType, id, audioDataDefinition.mChannel, audioDataDefinition.mAudioDataParameter);
+                sensor = SensorDiscoverer.constructSensorObject(sensorName, majorType, minorType,
+                        id, audioDataDefinition.mChannel, audioDataDefinition.mAudioDataParameter);
+                break;
+            default:
+                sensor = null;
+                Log.w("SensorDataCollector",
+                        "SimpleXmlFileStore::readSensor(): unsupported sensor major type "
+                                + majorType);
                 break;
         }
         return sensor;

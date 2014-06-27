@@ -1,8 +1,6 @@
 
 package sysnetlab.android.sdc.sensor;
 
-import android.util.Log;
-
 public abstract class AbstractSensor {
     private int mSensorId;
     private int mMajorType;
@@ -58,7 +56,7 @@ public abstract class AbstractSensor {
     public abstract String toString();
     
     public boolean equals(Object object) {
-        Log.d("SensorDataCollector.UnitTest", "AbstractSensor::equals(): checkpoint #1");
+        // Log.d("SensorDataCollector", "AbstractSensor::equals(): checkpoint #1");
         if (this == object) return true;
         
         // it also takes care of the case that object is null

@@ -69,8 +69,11 @@
     <string name="text_no_tagging_action_performed">
         No tagging actions were performed during the experiment.
     </string>
+    <string name="text_tags_plus">
+        , and %1$d more...
+    </string>
     <string name="text_experiment_collect_data_from">
-        The experiment collected data from a few selected sensors.
+       	The experiment collected data from a few selected sensors.
     </string>
     <string name="text_no_sensors_were_selected">
         No sensors were selected for data collection in the experiment. 
@@ -194,7 +197,7 @@
 	<string name="text_discover_sensors_text">Probing sensors &#8230; It may take two minutes.</string>
 	
 	<string name="text_enter_a_tag">Please enter a tag.</string>
-	<string name="text_tag_must_be_unique">Tag must be unique.</string>
+	<string name="text_tag_must_be_unique">Tags must be unique.</string>
 	
 	<string name="text_audio_sensor_probing_activity">Probing Sensors</string>
     

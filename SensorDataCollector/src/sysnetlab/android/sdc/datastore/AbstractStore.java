@@ -4,6 +4,7 @@ package sysnetlab.android.sdc.datastore;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
+import android.widget.ProgressBar;
 import sysnetlab.android.sdc.datacollector.Experiment;
 
 public abstract class AbstractStore {
@@ -22,7 +23,7 @@ public abstract class AbstractStore {
         protected boolean mDeferredClosing;
         protected BlockingQueue<Integer> mBlockingQueue;
         
-        public abstract void open();
+        public abstract boolean open();
         public abstract void write(String s);
         public abstract void write(byte[] buffer, int offset, int length);
         public abstract void write(byte[] buffer, int bufferOffset, int bufferLength, int fileOffset);
@@ -44,7 +45,10 @@ public abstract class AbstractStore {
     public abstract void setupNewExperimentStorage(Experiment experiment);
     public abstract void writeExperimentMetaData(Experiment experiment);
     public abstract List<Experiment> listStoredExperiments();
+    public abstract List<Experiment> listStoredExperiments(ProgressBar mProgressBar);
+    public abstract int getCountExperiments();
     
     public abstract Channel createChannel(String tag, int operationFlags, int channelType);
     public abstract void closeAllChannels();
+	
 }
