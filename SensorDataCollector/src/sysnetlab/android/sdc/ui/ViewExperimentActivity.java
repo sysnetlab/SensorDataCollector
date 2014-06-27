@@ -7,6 +7,7 @@ import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.datacollector.DropboxHelper;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewFragment;
+import sysnetlab.android.sdc.ui.fragments.ExperimentViewTagsFragment; //maybe class name is different
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewNotesFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewSensorDataFragment;
 import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
@@ -24,8 +25,10 @@ public class ViewExperimentActivity extends ActionBarActivity implements
         ExperimentSensorListFragment.OnFragmentClickListener {
 
     private ExperimentViewFragment mExperimentViewFragment;
+    private ExperimentViewTagsFragment mExperimentViewTagsFragment; 
     private ExperimentViewNotesFragment mExperimentViewNotesFragment;
     private ExperimentViewSensorDataFragment mExperimentViewSensorDataFragment;
+
     private Experiment mExperiment;
 
     @Override
@@ -110,7 +113,12 @@ public class ViewExperimentActivity extends ActionBarActivity implements
 
     @Override
     public void onTagsClicked_ExperimentViewFragment() {
-        // choose to do nothing. 
+    	   if (mExperimentViewTagsFragment == null) {
+               mExperimentViewTagsFragment = new ExperimentViewTagsFragment();
+           }
+           FragmentUtil.switchToFragment(this, mExperimentViewTagsFragment,
+                   "experimentviewmoretags");
+           changeActionBarTitle(R.string.text_viewing_tags, R.drawable.icon_tags_inverse);
     }
 
     @Override
@@ -157,6 +165,10 @@ public class ViewExperimentActivity extends ActionBarActivity implements
         return mExperiment;
     }   
     
+    public ExperimentViewTagsFragment getExperimentViewTagsFragment(){
+    	return mExperimentViewTagsFragment;
+    }
+  
     public ExperimentViewFragment getExperimentViewFragment(){
     	return mExperimentViewFragment;
     }
