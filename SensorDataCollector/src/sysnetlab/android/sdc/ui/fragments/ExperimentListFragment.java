@@ -6,6 +6,7 @@ import java.util.List;
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
+import sysnetlab.android.sdc.ui.adaptors.ArrayAdapter;
 import sysnetlab.android.sdc.ui.adaptors.ExperimentListAdapter;
 import android.app.Activity;
 import android.os.Bundle;
@@ -13,7 +14,6 @@ import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.support.v4.content.Loader;
@@ -73,8 +73,7 @@ public class ExperimentListFragment extends ListFragment
         
         mExperimentListAdapter=new ExperimentListAdapter(
         		getActivity());//,
-        		//ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate()
-        		//);
+        		//ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate());
         //mExperimentListAdapter.setList(ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate());
         setListAdapter(mExperimentListAdapter);
         
@@ -96,7 +95,6 @@ public class ExperimentListFragment extends ListFragment
     		mExperimentListAdapter.insert(experiment, 0);
     		mExperimentListAdapter.notifyDataSetChanged();
     }
-    
     @Override
 	public Loader<List<Experiment>> onCreateLoader(int id, Bundle args) {
 		return new ExperimentListLoader(getActivity());
@@ -112,5 +110,4 @@ public class ExperimentListFragment extends ListFragment
 	public void onLoaderReset(Loader<List<Experiment>> loader) {
 		
 	}
-	
 }
