@@ -98,6 +98,7 @@
             android:layout_height="0dp"
             android:layout_weight="382"
             android:layout_marginBottom="24dp"
+            android:textColor="@color/DarkTextViewFont"
             android:background="@drawable/layerlist_background_border_lines"
             android:gravity="left|top"
             android:text="@string/text_experiment"
