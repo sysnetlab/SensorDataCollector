@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 public abstract class FragmentActivityBase extends ActionBarActivity {
 
     protected TaskLoadingSpinner mLoadingTask;
-    private ProgressBar mProgressBar;
+    protected ProgressBar mProgressBar;
 
     protected abstract void loadTask();
 

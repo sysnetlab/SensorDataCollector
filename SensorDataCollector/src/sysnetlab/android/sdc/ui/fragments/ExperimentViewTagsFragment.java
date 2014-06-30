@@ -1,43 +1,51 @@
 
 package sysnetlab.android.sdc.ui.fragments;
 
+import java.util.List;
+
 import sysnetlab.android.sdc.R;
+import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datacollector.Tag;
+import sysnetlab.android.sdc.ui.adaptors.TagListAdapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class ExperimentViewTagsFragment extends Fragment {
     private View mView;
-
+  
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        mView = inflater.inflate(R.layout.fragment_experiment_tag_viewing, container,
-                false);
+        mView = inflater.inflate(R.layout.fragment_experiment_view_tags, container, false);
+       
+        ListView lv = (ListView) mView.findViewById(R.id.listview_fragment_experiment_view_tag_tag_properties); 
+        Experiment experiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();
+       
+        List<Tag> tags = experiment.getTags();
+        TagListAdapter adaptTags = new TagListAdapter(getActivity(),tags);
+        lv.setAdapter(adaptTags);
+         
+        String strHeadingSubTextFormatter = getResources().getString(
+                R.string.text_for_experiment_name_x);
+        String strHeadingSubText = String.format(strHeadingSubTextFormatter, experiment.getName());
+        ((TextView) mView.findViewById(R.id.textview_experiment_tag_viewing_subtext))
+                .setText(strHeadingSubText);
 
-        LinearLayout layout = (LinearLayout) mView
-                .findViewById(R.id.layout_fragment_tag_viewing_tags);
+        ((TextView) mView
+                .findViewById(R.id.textview_fragment_experiment_view_tag_experiment_time_created))
+                .setText(experiment.getDateTimeCreatedAsString());
 
-        for (Tag tag : ExperimentManagerSingleton.getInstance().getActiveExperiment().getTags()) {
-            TextView tv = (TextView) inflater.inflate(R.layout.textview_experiment_tag, null);
-            tv.setText(tag.getName());
-            LinearLayout.LayoutParams layoutParams =
-                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(8, 0, 8, 0);
-            tv.setTextAppearance(tv.getContext(), android.R.style.TextAppearance_Small);
-            layout.addView(tv, layoutParams);
-        }
-
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.commit();
+        ((TextView) mView
+                .findViewById(R.id.textview_fragment_experiment_view_tags_experiment_time_done))
+                .setText(experiment.getDateTimeDoneAsString());
+  
         return mView;
     }
 }

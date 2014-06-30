@@ -6,6 +6,7 @@ import java.util.List;
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
+import sysnetlab.android.sdc.ui.adaptors.ArrayAdapter;
 import sysnetlab.android.sdc.ui.adaptors.ExperimentListAdapter;
 import android.app.Activity;
 import android.os.Bundle;
@@ -13,14 +14,13 @@ import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.support.v4.content.Loader;
 import android.support.v4.app.LoaderManager;
 import sysnetlab.android.sdc.loaders.ExperimentListLoader;
 
-public class ExperimentListFragment extends ListFragment 
+public class ExperimentListFragment extends ListFragment
 	implements LoaderManager.LoaderCallbacks<List<Experiment>>{
 
     private OnFragmentClickListener mCallback;
@@ -71,7 +71,10 @@ public class ExperimentListFragment extends ListFragment
         getListView().addHeaderView(mHeaderView);
         getListView().addFooterView(mFooterView);
         
-        mExperimentListAdapter=new ExperimentListAdapter(getActivity());
+        mExperimentListAdapter=new ExperimentListAdapter(
+        		getActivity());//,
+        		//ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate());
+        //mExperimentListAdapter.setList(ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate());
         setListAdapter(mExperimentListAdapter);
         
         ((Button) mHeaderView.findViewById(R.id.button_create_experiment))
@@ -81,7 +84,7 @@ public class ExperimentListFragment extends ListFragment
                                 .onCreateExperimentButtonClicked_ExperimentListFragment((Button) v);
                     }
                 });
-        getLoaderManager().initLoader(0,  null, this).forceLoad();
+        getActivity().getSupportLoaderManager().initLoader(0,  null, this).forceLoad();
     }
 
     public ArrayAdapter<Experiment> getExperimentListAdapter() {
@@ -92,7 +95,6 @@ public class ExperimentListFragment extends ListFragment
     		mExperimentListAdapter.insert(experiment, 0);
     		mExperimentListAdapter.notifyDataSetChanged();
     }
-    
     @Override
 	public Loader<List<Experiment>> onCreateLoader(int id, Bundle args) {
 		return new ExperimentListLoader(getActivity());
