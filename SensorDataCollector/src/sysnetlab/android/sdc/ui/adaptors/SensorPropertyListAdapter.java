@@ -12,13 +12,11 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class SensorPropertyListAdapter extends ArrayAdapter<SensorProperty> {
-        private final List<SensorProperty> mList;
         private final Activity mActivity;
 
         public SensorPropertyListAdapter(Activity activity, List<SensorProperty> list) {
             super(activity, R.layout.sensor_property_row, list);
             mActivity = activity;
-            mList = list;
         }
         
         static class SensorPropertyViewHolder {
@@ -41,12 +39,8 @@ public class SensorPropertyListAdapter extends ArrayAdapter<SensorProperty> {
                 view = convertView;
             }
             SensorPropertyViewHolder holder = (SensorPropertyViewHolder) view.getTag();
-            holder.textViewPropertyName.setText(mList.get(position).getName());
-            holder.textViewPropertyValue.setText(mList.get(position).getValue());
+            holder.textViewPropertyName.setText(getItem(position).getName());
+            holder.textViewPropertyValue.setText(getItem(position).getValue());
             return view;
-        }
-        
-        public List<SensorProperty> getProperties(){
-        	return mList;
         }
     }

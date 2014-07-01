@@ -112,7 +112,7 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
 		
 		if(sensorsList.getCount()>0){
 			SensorListAdapter sensorListAdapter = (SensorListAdapter) sensorsList.getAdapter();
-			sensorClicked=sensorListAdapter.getSensors().get(0).getName();
+			sensorClicked=sensorListAdapter.getItem(0).getName();
 			
 			getInstrumentation().runOnMainSync(new Runnable() {
 				@Override
@@ -127,7 +127,7 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
 			sensorProperties=(ListView) mViewExperimentActivity.
 					findViewById(R.id.listview_fragment_experiment_view_sensor_data_sensor_properties);
 			sensorPropertyListAdapter = (SensorPropertyListAdapter) sensorProperties.getAdapter();
-			sensorDisplayed=sensorPropertyListAdapter.getProperties().get(0).getValue();
+			sensorDisplayed=sensorPropertyListAdapter.getItem(0).getValue();
 			assertEquals("The sensor selected in the list differs from the sensor being displayed", 
 					sensorClicked,
 					sensorDisplayed);

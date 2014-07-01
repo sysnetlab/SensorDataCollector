@@ -165,7 +165,7 @@ public class CreateExperimentActivityFunctionTests extends
 
         final ListView sensorsList = mExperimentSensorListFragment.getListView();
         SensorListAdapter sensorListAdapter = (SensorListAdapter) sensorsList.getAdapter();
-        String sensorClicked = sensorListAdapter.getSensors().get(1).getName();
+        String sensorClicked = sensorListAdapter.getItem(1).getName();
 
         getInstrumentation().runOnMainSync(new Runnable() {
             @Override

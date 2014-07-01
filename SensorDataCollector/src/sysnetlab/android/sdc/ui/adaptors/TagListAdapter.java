@@ -13,13 +13,11 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class TagListAdapter extends ArrayAdapter<Tag> {
-    private final List<Tag> mList;
     private final Activity mContext;
 
     public TagListAdapter(Activity context, List<Tag> list) {
         super(context, R.layout.tag_row_layout, list);
         mContext = context;
-        mList = list;
     }
 
     static class ViewHolder {
@@ -29,7 +27,7 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
     
     @Override
     public int getCount() {
-        return mList.size();
+        return super.getCount();
     }
 
     @Override
@@ -49,8 +47,8 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
         
         ViewHolder holder = (ViewHolder) view.getTag();
         // TODO: If the Tag description exceeds one line, cut off and add ellipses.
-        holder.tag.setText(mList.get(position).getName());
-        holder.description.setText(mList.get(position).getShortDescription());
+        holder.tag.setText(getItem(position).getName());
+        holder.description.setText(getItem(position).getShortDescription());
         return view;
     }
 }

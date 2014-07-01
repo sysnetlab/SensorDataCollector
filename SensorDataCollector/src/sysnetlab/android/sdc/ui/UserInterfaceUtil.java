@@ -2,6 +2,7 @@
 package sysnetlab.android.sdc.ui;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
@@ -21,6 +22,7 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -248,4 +250,18 @@ public class UserInterfaceUtil {
             return false;
         }
     }
+    
+    @SuppressLint("NewApi")
+    public static <T> void addAllCompatible(ArrayAdapter<T> adapter, List<T> list) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            adapter.addAll(list);
+        } else {
+            adapter.setNotifyOnChange(false);
+            for (T e : list) {
+                adapter.add(e);
+            }
+            adapter.setNotifyOnChange(true);
+            adapter.notifyDataSetChanged();
+        }
+    }         
 }
