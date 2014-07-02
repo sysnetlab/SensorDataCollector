@@ -10,7 +10,7 @@
         android:layout_alignParentLeft="true"        
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:layout_marginTop="12dp"        
+        android:layout_marginTop="2dp"        
         android:text="@string/text_name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -21,8 +21,7 @@
         android:layout_alignBaseline="@id/textview_experiment_view_name_label"
         android:layout_alignBottom="@id/textview_experiment_view_name_label"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginRight="12dp"        
         android:layout_toRightOf="@+id/textview_experiment_view_name_label"
         android:ellipsize="end"
         android:maxLines="1"
@@ -45,15 +44,16 @@
         android:layout_below="@id/view_experiment_view_divider"
         android:layout_above="@+id/layout_experiment_view_buttons"
         android:layout_width="match_parent"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
         android:layout_height="match_parent">
         
 	    <ListView
 	        android:id="@+id/listview_experiment_view_operations"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_marginTop="12dp"
 	        android:divider="@android:color/transparent"
-	        android:dividerHeight="10.0sp" />    
+	        android:dividerHeight="5.0sp" />    
 	
 	    <LinearLayout
 	        android:id="@+id/layout_experiment_view_sensor_list"
@@ -72,7 +72,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="2dp"
         android:gravity="center_horizontal" >
 
         <Button
