@@ -4,10 +4,10 @@ import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.ui.SensorDataCollectorActivity;
-import sysnetlab.android.sdc.ui.adaptors.ArrayAdapter;
 import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 

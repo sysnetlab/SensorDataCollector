@@ -44,7 +44,7 @@ public class TaggingGridView extends GridView {
         }
         
         int width = MeasureSpec.getSize(widthMeasureSpec);
-        mChildWidth = width / UserInterfaceUtil.getNumColumnsCompatible(this);
+        mChildWidth = width / 2;//UserInterfaceUtil.getNumColumnsCompatible(this);
         
         setMeasuredDimension(width, height);
     }

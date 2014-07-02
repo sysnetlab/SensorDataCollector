@@ -2,6 +2,7 @@
 package sysnetlab.android.sdc.ui;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
@@ -21,11 +22,14 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class UserInterfaceUtil {
+	
+	private static int mTagsGridColumns;
 
     public static void fillSensorProperties(Activity activity, ListView listView,
             AbstractSensor sensor) {
@@ -227,16 +231,20 @@ public class UserInterfaceUtil {
     @SuppressLint("NewApi")
     public static int getNumColumnsCompatible(GridView gridView) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            return gridView.getNumColumns();
+        	return gridView.getNumColumns();
         } else {
-            int columns = 0;
-            if (gridView.getChildCount() > 0) {
-                int width = gridView.getChildAt(0).getMeasuredWidth();
-                if (width > 0) {
-                    columns = gridView.getWidth() / width;
-                }
-            }
-            return columns > 0 ? columns : GridView.AUTO_FIT;
+        	if(mTagsGridColumns>0){
+        		return mTagsGridColumns;
+        	}else{
+	            if (gridView.getChildCount() > 0) {
+	                int width = gridView.getChildAt(0).getMeasuredWidth();
+	                if (width > 0) {
+	                    mTagsGridColumns = gridView.getWidth() / width;
+	                }
+	            }
+        	}
+        	return mTagsGridColumns > 0 ? mTagsGridColumns : GridView.AUTO_FIT;
+        	
         }
     }
     
@@ -248,4 +256,18 @@ public class UserInterfaceUtil {
             return false;
         }
     }
+    
+    @SuppressLint("NewApi")
+    public static <T> void addAllCompatible(ArrayAdapter<T> adapter, List<T> list) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            adapter.addAll(list);
+        } else {
+            adapter.setNotifyOnChange(false);
+            for (T e : list) {
+                adapter.add(e);
+            }
+            adapter.setNotifyOnChange(true);
+            adapter.notifyDataSetChanged();
+        }
+    }         
 }

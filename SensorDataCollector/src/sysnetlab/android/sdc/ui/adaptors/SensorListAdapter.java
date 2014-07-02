@@ -15,21 +15,19 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 public class SensorListAdapter extends ArrayAdapter<AbstractSensor> {
-    private final List<AbstractSensor> mList;
     private final Activity mContext;
     private final int mCheckBoxVisiblity;
 
     public SensorListAdapter(Activity context, List<AbstractSensor> list, int checkBoxVisibility) {
         super(context, R.layout.sensor_row_layout, list);
         mContext = context;
-        mList = list;
         mCheckBoxVisiblity = checkBoxVisibility;
     }
 
     public SensorListAdapter(Activity context, List<AbstractSensor> list) {
         this(context, list, View.VISIBLE);
     }
-
+    
     static class ViewHolder {
         protected TextView text;
         protected CheckBox checkbox;
@@ -59,14 +57,10 @@ public class SensorListAdapter extends ArrayAdapter<AbstractSensor> {
             view = convertView;
         }
         ViewHolder holder = (ViewHolder) view.getTag();
-        holder.checkbox.setTag(mList.get(position));
-        holder.text.setText(mList.get(position).getName());
-        holder.checkbox.setChecked(mList.get(position).isSelected());
+        holder.checkbox.setTag(getItem(position));
+        holder.text.setText(getItem(position).getName());
+        holder.checkbox.setChecked(getItem(position).isSelected());
         holder.checkbox.setVisibility(mCheckBoxVisiblity);
         return view;
     }
-    
-    public List<AbstractSensor> getSensors() {
-		return mList;
-	}
 }
