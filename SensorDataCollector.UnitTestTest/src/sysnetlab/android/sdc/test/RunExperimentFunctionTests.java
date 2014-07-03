@@ -10,6 +10,7 @@ import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
 import sysnetlab.android.sdc.ui.SensorDataCollectorActivity;
+import sysnetlab.android.sdc.ui.TaggingGridView;
 import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentRunFragment;
 import android.test.ActivityInstrumentationTestCase2;
@@ -119,4 +120,46 @@ public class RunExperimentFunctionTests extends
         List<Experiment> listExperiments = experimentManager.getExperimentsSortedByDate();
     	assertEquals("The experiment created is not on the top of the list", listExperiments.get(0), activeExperiment);
     }       
+    
+    public void testExperimentRunTagging(){
+    	StoreSingleton.resetInstance();
+
+    	//Create the experiment to be run
+    	Experiment activeExperiment = new Experiment();
+    	activeExperiment.setName("Unit Test Experiment");
+    	activeExperiment.addTag("tag1", null);
+    	activeExperiment.addTag("tag2", null);
+    	
+    	//Set the active experiment
+        if (!SensorDiscoverer.isInitialized())
+            SensorDiscoverer.initialize(getInstrumentation().getTargetContext());
+        ExperimentManager experimentManager = ExperimentManagerSingleton.getInstance();
+        experimentManager.addExperimentStore(StoreSingleton.getInstance());
+        experimentManager.setActiveExperiment(activeExperiment);
+    	
+    	//Start activity cloning the active experiment
+    	Intent intent = new Intent(Intent.ACTION_MAIN);
+    	intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    	intent.putExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
+                SensorDataCollectorActivity.APP_OPERATION_CLONE_EXPERIMENT);
+    	this.setActivityIntent(intent);
+    	CreateExperimentActivity createExperimentActivity = (CreateExperimentActivity) this.getActivity();
+    	getInstrumentation().waitForIdleSync();
+    	assertNotNull("The CreateExperimentActivity should not be null.", createExperimentActivity);
+    	//Get the cloned experiment with new date
+        activeExperiment = createExperimentActivity.getExperiment();
+        
+    	Button runButton = (Button) createExperimentActivity.findViewById(R.id.button_experiment_run);
+    	assertNotNull("The button experiment run failed to load", runButton);
+    	
+    	TouchUtils.clickView(this, runButton);
+    	getInstrumentation().waitForIdleSync();
+    	ExperimentRunFragment runFragment = createExperimentActivity.getExperimentRunFragment();
+    	assertNotNull("The run fragment cannot be null", runFragment);
+    	
+    	TaggingGridView gridview = (TaggingGridView) runFragment.getView().findViewById(R.id.gridview_experiment_tagging);
+    	int width=gridview.getChildAt(0).getWidth();
+    	
+    	assertEquals("The size of the tags at the screen are changing over time",width, gridview.getChildAt(0).getWidth());
+    }
 }
