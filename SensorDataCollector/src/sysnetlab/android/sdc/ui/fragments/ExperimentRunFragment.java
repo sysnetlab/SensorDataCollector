@@ -152,7 +152,11 @@ public class ExperimentRunFragment extends Fragment{
         }
     }
     
-    
+    @Override
+    public void onDestroyView(){
+    	super.onDestroyView();
+    	mHandler.removeInBackgroundNotification_ExperimentRunFragment();
+    }
     
     public void setIsUserTrigger(boolean isUserTrigger){
     	mIsUserTrigger=isUserTrigger;
