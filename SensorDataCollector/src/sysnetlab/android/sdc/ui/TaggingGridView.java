@@ -3,12 +3,14 @@ package sysnetlab.android.sdc.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.AbsListView;
 import android.widget.GridView;
 
 public class TaggingGridView extends GridView {
     private int mChildHeight;
     private int mChildWidth;
     private boolean mTagResized = false;
+    int mGdvHeight;
     
     public TaggingGridView(Context context) {
         super(context);
@@ -31,22 +33,15 @@ public class TaggingGridView extends GridView {
      * 
      * Futher study is needed
      * */ 
+    
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        int height = MeasureSpec.getSize(heightMeasureSpec);
-        int n = (getCount() + 1)/2;
-        if (n > 0) {
-            mChildHeight = height / n;
-        } else {
-            mChildHeight = height;
-        }
         
+        mGdvHeight = MeasureSpec.getSize(heightMeasureSpec);
         int width = MeasureSpec.getSize(widthMeasureSpec);
-        mChildWidth = width / 2;//UserInterfaceUtil.getNumColumnsCompatible(this);
         
-        setMeasuredDimension(width, height);
+        setMeasuredDimension(width, mGdvHeight);
     }
 
     @Override
@@ -55,10 +50,10 @@ public class TaggingGridView extends GridView {
         if (mTagResized && UserInterfaceUtil.isInLayoutCompatible(this)) return;
 
         for(int i = 0; i < getChildCount(); i++) {
-            LayoutParams params = (LayoutParams) getChildAt(i).getLayoutParams();
-            params.height = mChildHeight;
-            params.width = mChildWidth;
-            getChildAt(i).setLayoutParams(params);
+        	AbsListView.LayoutParams param = new AbsListView.LayoutParams(
+                    android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                    mGdvHeight/getChildCount());
+            getChildAt(i).setLayoutParams(param);
         }
         mTagResized = true;
     }  

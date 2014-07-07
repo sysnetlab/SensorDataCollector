@@ -29,7 +29,7 @@ import android.widget.TextView;
 
 public class UserInterfaceUtil {
 	
-	private static int mTagsGridColumns;
+	private static int mTagsGridNumColumns;
 
     public static void fillSensorProperties(Activity activity, ListView listView,
             AbstractSensor sensor) {
@@ -233,17 +233,17 @@ public class UserInterfaceUtil {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
         	return gridView.getNumColumns();
         } else {
-        	if(mTagsGridColumns>0){
-        		return mTagsGridColumns;
+        	if(mTagsGridNumColumns>0){
+        		return mTagsGridNumColumns;
         	}else{
 	            if (gridView.getChildCount() > 0) {
 	                int width = gridView.getChildAt(0).getMeasuredWidth();
 	                if (width > 0) {
-	                    mTagsGridColumns = gridView.getWidth() / width;
+	                    mTagsGridNumColumns = gridView.getWidth() / width;
 	                }
 	            }
         	}
-        	return mTagsGridColumns > 0 ? mTagsGridColumns : GridView.AUTO_FIT;
+        	return mTagsGridNumColumns > 0 ? mTagsGridNumColumns : GridView.AUTO_FIT;
         	
         }
     }
