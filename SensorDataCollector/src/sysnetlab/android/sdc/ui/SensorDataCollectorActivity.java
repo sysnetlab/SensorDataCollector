@@ -34,7 +34,6 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
 
-
         ExperimentManagerSingleton.getInstance().addExperimentStore(
                 StoreSingleton.getInstance());
 
@@ -140,7 +139,6 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
         startActivity(intent);
     }
     
-
     public ExperimentListFragment getExperimentListFragment() {
         return mExperimentListFragment;
     }
