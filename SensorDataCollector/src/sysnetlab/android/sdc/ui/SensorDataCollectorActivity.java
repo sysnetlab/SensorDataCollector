@@ -94,7 +94,6 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
     		item.setTitle(getString(R.string.text_link_to_dropbox));
     	}
     	return super.onPrepareOptionsMenu(menu);
-    	
     }
     
     @Override
@@ -103,13 +102,13 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
     	DropboxHelper dbHelper = DropboxHelper.getInstance();
         switch (item.getItemId()) {
             case R.id.action_dropbox:
-	          // This logs you out if you're logged in, or vice versa
-	          if (dbHelper.isLinked()) {
-	        	  dbHelper.unlink();
-	          } else {
-	              dbHelper.link();
-	          }
-              return true;
+			  // This logs you out if you're logged in, or vice versa
+			  if (dbHelper.isLinked()) {
+				  dbHelper.unlink();
+			  } else {
+			      dbHelper.link();
+			  }
+			  return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

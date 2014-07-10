@@ -200,5 +200,11 @@
 	<string name="text_tag_must_be_unique">Tags must be unique.</string>
 	
 	<string name="text_audio_sensor_probing_activity">Probing Sensors</string>
-    
+	<string name="text_about">About</string>
+	<string name="text_title_about">SenSee %1$s</string>
+    <string name="text_description_about">
+        The SenSee is a open source project that aims 
+        to help developers build better Android apps.\n
+        Find more at: github.com/sysnetlab/SensorDataCollector
+        </string>
 </resources>
