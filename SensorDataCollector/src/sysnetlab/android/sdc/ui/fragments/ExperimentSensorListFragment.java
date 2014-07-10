@@ -2,6 +2,8 @@
 package sysnetlab.android.sdc.ui.fragments;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
@@ -38,8 +40,11 @@ public class ExperimentSensorListFragment extends Fragment {
 
         ListView listView = (ListView) view.findViewById(R.id.listview_experiment_view_sensor_list);
         TextView textView = (TextView) view.findViewById(R.id.textview_experiment_view_no_sensors);
-
-        ArrayList<AbstractSensor> lstSensors = null;
+        Activity activity = getActivity();
+        
+        List<AbstractSensor> lstSensors = null;
+        List<AbstractSensor> selectedSensors = new ArrayList<AbstractSensor>();
+        
         if (getActivity() instanceof ViewExperimentActivity) {
             lstSensors = (ArrayList<AbstractSensor>) ExperimentManagerSingleton.getInstance()
                     .getActiveExperiment()
@@ -47,21 +52,31 @@ public class ExperimentSensorListFragment extends Fragment {
             Log.d("SensorDataCollector",
                     "ViewExperimentActivity::ExperimentSensorListFragment::onCreateView() sensors: "
                             + lstSensors.size());
-        } else if (getActivity() instanceof CreateExperimentActivity) {
-            lstSensors = new ArrayList<AbstractSensor>();
+        } else if (activity instanceof CreateExperimentActivity) {            
             if (!SensorDiscoverer.isInitialized())
-                SensorDiscoverer.initialize(getActivity().getApplicationContext());
-            for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList()) {
-                if (sensor.isSelected()) {
-                    lstSensors.add(sensor);
-                }
+                SensorDiscoverer.initialize(activity.getApplicationContext());
+            lstSensors = SensorDiscoverer.discoverSensorList();
+            
+            
+            if (activity instanceof CreateExperimentActivity) {
+                ((CreateExperimentActivity)activity).selectSensors(lstSensors);
+            } else {
+                Log.d("SensorDataCollector",
+                        "ExperimentSensorListFragment::onCreateView(): " + "not a CreateExperimentActivity.");
             }
+            for (Iterator<AbstractSensor> it = lstSensors.iterator(); it.hasNext(); ) {
+            	AbstractSensor sensor = it.next();
+            	if (sensor.isSelected()) {
+                    selectedSensors.add(sensor);
+                }
+            }            
+            
             Log.d("SensorDataCollector",
                     "CreateExperimentActivity::ExperimentSensorListFragment::onCreateView() sensors: "
-                            + lstSensors.size());
+                            + selectedSensors.size());
         }
 
-        if (lstSensors == null || lstSensors.size() == 0) {
+        if (selectedSensors == null || selectedSensors.size() == 0) {
             Log.d("SensorDataCollector",
                     "CreateExperimentActivity::ExperimentSensorListFragment::onCreateView() nothing to show");
             textView.setVisibility(View.GONE);
@@ -70,8 +85,7 @@ public class ExperimentSensorListFragment extends Fragment {
             Log.d("SensorDataCollector",
                     "CreateExperimentActivity::ExperimentSensorListFragment::onCreateView() show sensors");
             textView.setVisibility(View.GONE);
-
-            SensorListAdapter sensorListAdaptor = new SensorListAdapter(getActivity(), lstSensors,
+            SensorListAdapter sensorListAdaptor = new SensorListAdapter(activity, selectedSensors,
                     View.GONE);
             listView.setAdapter(sensorListAdaptor);
 

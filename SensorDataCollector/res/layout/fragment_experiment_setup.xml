@@ -29,8 +29,9 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="12dp"        
         android:layout_toRightOf="@+id/tv_experiment_setup_name"
-        android:ems="10"        
-        android:inputType="text|textAutoCorrect|textAutoComplete"
+        android:ems="10"
+        android:imeOptions=""          
+        android:inputType="text|textAutoCorrect"
         android:textAppearance="?android:attr/textAppearanceLargeInverse" />
 		
 	</RelativeLayout>

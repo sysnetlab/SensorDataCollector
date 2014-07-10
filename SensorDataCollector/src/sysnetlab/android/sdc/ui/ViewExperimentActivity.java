@@ -39,8 +39,6 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
         mLoadingTask.execute();
         // mExperiment = (Experiment)
         // getIntent().getParcelableExtra("experiment");
-
-        
     }
     
     @Override
