@@ -167,7 +167,6 @@ public class CreateExperimentActivity extends FragmentActivityBase
         mOperation = getIntent().getIntExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
                 SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT);
         
-        
         mLoadingTask.execute();
     }
     
@@ -282,7 +281,10 @@ public class CreateExperimentActivity extends FragmentActivityBase
         if (mExperimentEditTagsFragment == null) {
             mExperimentEditTagsFragment = new ExperimentEditTagsFragment();
         }
-        FragmentUtil.switchToFragment(this, mExperimentEditTagsFragment, "edittags");
+        FragmentUtil.switchFragment(this, 
+        		mExperimentEditTagsFragment, 
+        		"edittags",
+        		FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
         changeActionBarTitle(R.string.text_creating_tags, R.drawable.icon_tags_inverse);
     }
 
@@ -291,7 +293,10 @@ public class CreateExperimentActivity extends FragmentActivityBase
     	if (mExperimentEditNotesFragment == null) {
             mExperimentEditNotesFragment = new ExperimentEditNotesFragment();
         }
-        FragmentUtil.switchToFragment(this, mExperimentEditNotesFragment, "editnotes");        
+        FragmentUtil.switchFragment(this, 
+        		mExperimentEditNotesFragment, 
+        		"editnotes",
+        		FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);        
         changeActionBarTitle(R.string.text_creating_notes, R.drawable.icon_notes_inverse);
     }
 
@@ -303,7 +308,10 @@ public class CreateExperimentActivity extends FragmentActivityBase
             mExperimentSensorSelectionFragment = new ExperimentSensorSelectionFragment();
         }
         getIntent().putExtra("havingheader", true);
-        FragmentUtil.switchToFragment(this, mExperimentSensorSelectionFragment, "sensorselection");
+        FragmentUtil.switchFragment(this, 
+        		mExperimentSensorSelectionFragment, 
+        		"sensorselection",
+        		FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
         changeActionBarTitle(R.string.text_selecting_sensors, R.drawable.icon_sensors_inverse);
     }
     
@@ -315,7 +323,10 @@ public class CreateExperimentActivity extends FragmentActivityBase
         if (mExperimentDataStoreFragment == null) {
             mExperimentDataStoreFragment = new ExperimentDataStoreFragment();
         }
-        FragmentUtil.switchToFragment(this, mExperimentDataStoreFragment, "datastoreselection");
+        FragmentUtil.switchFragment(this, 
+        		mExperimentDataStoreFragment, 
+        		"datastoreselection",
+        		FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
     }
 
     @Override
@@ -330,8 +341,10 @@ public class CreateExperimentActivity extends FragmentActivityBase
                 .findViewById(R.id.et_experiment_setup_name)).getText()
                 .toString());
 
-        FragmentUtil.switchToFragment(this, mExperimentRunFragment,
-                "experimentrun");
+        FragmentUtil.switchFragment(this, 
+        		mExperimentRunFragment,
+                "experimentrun",
+                FragmentUtil.FRAGMENT_SWITCH_NO_BACKSTACK);
     }
     
     @Override
@@ -548,7 +561,10 @@ public class CreateExperimentActivity extends FragmentActivityBase
             mSensorSetupFragment = new ExperimentSensorSetupFragment();
         }
         mSensorSetupFragment.setSensor(sensor);
-        FragmentUtil.switchToFragment(this, mSensorSetupFragment, "sensorsetup");
+        FragmentUtil.switchFragment(this, 
+        		mSensorSetupFragment, 
+        		"sensorsetup",
+        		FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
     }
     
 
@@ -560,7 +576,10 @@ public class CreateExperimentActivity extends FragmentActivityBase
             mSensorSetupFragment = new ExperimentSensorSetupFragment();
         }
         mSensorSetupFragment.setSensor(sensor);
-        FragmentUtil.switchToFragment(this, mSensorSetupFragment, "sensorsetup");        
+        FragmentUtil.switchFragment(this, 
+        		mSensorSetupFragment, 
+        		"sensorsetup",
+        		FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);        
     }
     
 
