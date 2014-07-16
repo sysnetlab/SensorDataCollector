@@ -25,7 +25,7 @@
         android:layout_marginRight="12dp"
         android:layout_marginBottom="12dp"
         android:imeOptions="actionDone"
-        android:inputType="textAutoComplete"
+        android:inputType="text|textAutoCorrect"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceInverse" >
     </EditText>

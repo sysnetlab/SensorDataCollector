@@ -1,6 +1,7 @@
 
 package sysnetlab.android.sdc.ui;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
@@ -405,7 +406,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
         Timer T = new Timer();
         T.scheduleAtFixedRate(new TimerTask() {
             int seconds = 0;
-
+            long startMilliSeconds = new Date().getTime();
             @Override
             public void run() {
                 runOnUiThread(new Runnable()
@@ -413,9 +414,10 @@ public class CreateExperimentActivity extends FragmentActivityBase
                     @Override
                     public void run()
                     {
+                    	seconds = (int)((new Date().getTime()-startMilliSeconds)/1000); 
                         int hr = seconds / 3600;
                         int rem = seconds % 3600;
-                        int min = seconds / 60;
+                        int min = rem / 60;
                         int sec = rem % 60;
                         String hrStr = (hr < 10 ? "0" : "") + hr;
                         String mnStr = (min < 10 ? "0" : "") + min;
@@ -425,7 +427,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
                     }
                 });
             }
-        }, 1000, 1000);
+        }, 750, 750);
     }
         
     public void notifyInBackground_ExperimentRunFragment(){

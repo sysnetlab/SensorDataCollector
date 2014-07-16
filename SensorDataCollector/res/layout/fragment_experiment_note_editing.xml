@@ -36,8 +36,8 @@
         android:textColor="@color/DarkTextViewFont"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:background="@drawable/layerlist_background_border_lines"
-        android:imeOptions="actionNone"
-        android:inputType="text|textAutoCorrect|textAutoComplete|textCapSentences|textMultiLine|textLongMessage" />
+        android:imeOptions="actionNone"        
+        android:inputType="text|textAutoCorrect|textCapSentences|textMultiLine|textLongMessage" />
 
     <LinearLayout
         android:id="@id/layout_experiment_note_editing_buttons"
