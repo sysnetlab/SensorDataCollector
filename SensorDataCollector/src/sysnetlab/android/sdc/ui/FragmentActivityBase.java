@@ -3,13 +3,18 @@ package sysnetlab.android.sdc.ui;
 
 import sysnetlab.android.sdc.R;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -72,31 +77,49 @@ public abstract class FragmentActivityBase extends ActionBarActivity {
     }
 
 	private void showAboutDialog() {
-		String titleAbout = getResources().getString(R.string.text_title_about);
+		String textTitle = getResources().getString(R.string.text_title_about);
+		String textDescription = getResources().getString(R.string.text_about_description);
+		String textAuthors = getResources().getString(R.string.text_about_authors);
+		String textVersion = getResources().getString(R.string.text_about_version);
+				
 		try {
-			titleAbout = String.format(titleAbout, 
+			
+			textDescription = String.format(textDescription,
 						getPackageManager()
 						.getPackageInfo(getPackageName(), 0)
 						.versionName);
+						
 		} catch (NameNotFoundException e) {
 			Log.e("about", "Failure when trying to get the app version: "+e.getMessage());
-			titleAbout="SenSee";
+			textVersion="Not Available";
 		}
 		
-		SpannableString spannableString=
-				new SpannableString(getResources()
-						.getString(R.string.text_description_about));
+		TextView textViewAuthors=new TextView(this);
+		textViewAuthors.setText(textDescription);
+		textViewAuthors.setGravity(Gravity.CENTER_HORIZONTAL);
 		
-		Linkify.addLinks(spannableString, Linkify.WEB_URLS);
-		
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        
+        builder.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {                        
+                    	
+                    }
+                });	        
+        builder.setNegativeButton(R.string.text_about_webpage,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    	Intent viewIntent =
+						new Intent("android.intent.action.VIEW",
+						Uri.parse("https://github.com/sysnetlab/SensorDataCollector"));
+                		startActivity(viewIntent);
+                    }
+                });
 
-        builder.setTitle(titleAbout)
-        		.setMessage(spannableString)
+        builder.setTitle(textTitle)
+        		.setView(textViewAuthors)
         		.setCancelable(true)
         		.create();
-        
-        
         
         builder.create().show();
 	}
