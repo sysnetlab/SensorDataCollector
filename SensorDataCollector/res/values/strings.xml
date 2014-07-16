@@ -2,7 +2,7 @@
 <resources>
     <!--  conform naming vention below -->
     <!--  for reusing strings, name it as text_engligh_word_seperated_by_underscore -->
-    <string name="app_name">Sensor Data Collector</string>
+    <string name="app_name">SenSee</string>
     <string name="text_settings">Settings</string>
 	<string name="text_sensors">Sensors</string>
 	<string name="text_sensors_description_text">Sensors from which data were collected.</string>
