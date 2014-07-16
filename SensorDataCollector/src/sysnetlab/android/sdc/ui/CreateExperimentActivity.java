@@ -422,12 +422,11 @@ public class CreateExperimentActivity extends FragmentActivityBase
                         String hrStr = (hr < 10 ? "0" : "") + hr;
                         String mnStr = (min < 10 ? "0" : "") + min;
                         String secStr = (sec < 10 ? "0" : "") + sec;
-                        mTextView.setText(hrStr + ":" + mnStr + ":" + secStr);
-                        seconds++;
+                        mTextView.setText(hrStr + ":" + mnStr + ":" + secStr);                        
                     }
                 });
             }
-        }, 750, 750);
+        }, 250, 250);
     }
         
     public void notifyInBackground_ExperimentRunFragment(){
