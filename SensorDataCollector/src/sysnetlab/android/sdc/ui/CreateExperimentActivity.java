@@ -64,7 +64,10 @@ public class CreateExperimentActivity extends FragmentActivityBase
         ExperimentRunTaggingFragment.OnFragmentClickListener,
         ExperimentEditNotesFragment.OnFragmentClickListener
 {
-    private final int MICROSECONS_IN_A_SECOND = 1000000;
+    private final int LEAVE_ACTION_BACK_BUTTON = 0;
+    private final int LEAVE_ACTION_UP_BUTTON = 1;
+
+	private final int MICROSECONS_IN_A_SECOND = 1000000;
     
     private ExperimentSetupFragment mExperimentSetupFragment;
     private ExperimentSensorSelectionFragment mExperimentSensorSelectionFragment;
@@ -84,7 +87,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
     private TextView mTextView;
     private AlertDialog mAlertDialog;
 
-	private int mOperation;                         
+	private int mOperation;     
 
     public ExperimentSensorSelectionFragment getExperimentSensorSensorSelectionFragment()
     {
@@ -157,7 +160,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO handle configuration change
-        super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
         
         if (!SensorDiscoverer.isInitialized())
@@ -248,31 +251,25 @@ public class CreateExperimentActivity extends FragmentActivityBase
 	        	if(mExperimentRunFragment!=null && mExperimentRunFragment.isFragmentUIActive()){	            	
 	        		confirmToStopExperiment();
 	            	return true;	    	        		            	
-	            }else{
-	            	if(confirmToLeaveActivity())
-	            		return true;
-	            	else
-	            		return super.onOptionsItemSelected(item);
-	            }	        
-        }		
-        return super.onOptionsItemSelected(item);
-    }
+	            }
+	        	else{
+	            	confirmToLeaveActivity(LEAVE_ACTION_UP_BUTTON, item);
+	            	return true;
+	            }
+        	default:
+        		return super.onOptionsItemSelected(item);
+        }
+    }	
     
     @Override
     public void onBackPressed() {
         if (mExperimentRunFragment != null && mExperimentRunFragment.isFragmentUIActive()) {            
             confirmToStopExperiment();            
         } else if(mExperimentSetupFragment != null && mExperimentSetupFragment.isFragmentUIActive()){
-    		if(!confirmToLeaveActivity()) {
-    			// super.onBackPressed();
-                Intent homeIntent = new Intent(CreateExperimentActivity.this,
-                        SensorDataCollectorActivity.class);
-                homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                homeIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(homeIntent);            		    
-    		} 
+            confirmToLeaveActivity(LEAVE_ACTION_BACK_BUTTON,null);
         } else {
             super.onBackPressed();
+            finish();
         }
         changeActionBarTitle(R.string.text_creating_experiment, R.drawable.ic_launcher);
     }       
@@ -632,21 +629,19 @@ public class CreateExperimentActivity extends FragmentActivityBase
         }
     }	
 	
-	private boolean confirmToLeaveActivity(){
+	private void confirmToLeaveActivity(final int action,final MenuItem item){
 		if(hasChanges()){
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 	        builder.setMessage(R.string.text_do_you_want_to_leave_experiment)
 	                .setTitle(R.string.text_experiment);
 	        builder.setPositiveButton(R.string.text_leave_experiment,
 	                new DialogInterface.OnClickListener() {
-	                    public void onClick(DialogInterface dialog, int id) {                        
-	                        // finish();
-	                        Intent homeIntent = new Intent(CreateExperimentActivity.this,
-	                                SensorDataCollectorActivity.class);
-	                        homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	                        homeIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-	                        startActivity(homeIntent);  	                        
-	                        dialog.dismiss();                        
+	                    public void onClick(DialogInterface dialog, int id) {
+	                    	if(action==LEAVE_ACTION_BACK_BUTTON)
+	                    		CreateExperimentActivity.super.onBackPressed();
+	                    	else if(action==LEAVE_ACTION_UP_BUTTON)
+	                    		CreateExperimentActivity.super.onOptionsItemSelected(item);
+	                    	finish();
 	                    }
 	                });	        
 	        builder.setNegativeButton(R.string.text_continue_experiment,
@@ -657,9 +652,14 @@ public class CreateExperimentActivity extends FragmentActivityBase
 	                });
 	        mAlertDialog = builder.create();
 	        mAlertDialog.show();
-	        return true;
 		}
-        return false;
+		else{
+			if(action==LEAVE_ACTION_BACK_BUTTON)
+        		CreateExperimentActivity.super.onBackPressed();
+        	else if(action==LEAVE_ACTION_UP_BUTTON)
+        		CreateExperimentActivity.super.onOptionsItemSelected(item);
+        	finish();
+		}
 	}
 
     private void confirmToStopExperiment() {
@@ -674,16 +674,15 @@ public class CreateExperimentActivity extends FragmentActivityBase
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(CreateExperimentActivity.this,
                                 R.string.text_stopping_experiment, Toast.LENGTH_SHORT).show();
-
                         dialog.dismiss();
-
+                        
                         mExperimentRunFragment.setIsUserTrigger(true);
                         Intent homeIntent = new Intent(CreateExperimentActivity.this,
                                 SensorDataCollectorActivity.class);                        
                         homeIntent.putExtra("newExperiment", mExperiment);
                         homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        homeIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                         startActivity(homeIntent);
+                        finish();
                     }
                 });
 
@@ -770,5 +769,5 @@ public class CreateExperimentActivity extends FragmentActivityBase
     		
     	return false;
     }
-    
+
 }

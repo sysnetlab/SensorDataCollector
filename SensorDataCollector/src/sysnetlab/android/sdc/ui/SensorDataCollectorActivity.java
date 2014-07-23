@@ -120,11 +120,7 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
                 + experiment);
 
         Intent intent = new Intent(this, ViewExperimentActivity.class);
-
-        // intent.putExtra("experiment", experiment);
-
         ExperimentManagerSingleton.getInstance().setActiveExperiment(experiment);
-
         startActivity(intent);
     }
 

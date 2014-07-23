@@ -96,8 +96,7 @@ public class AudioSensorProbingActivity extends Activity {
 
             Intent intent = new Intent(AudioSensorProbingActivity.this,
                     SensorDataCollectorActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
     }
