@@ -121,16 +121,15 @@ public class ExperimentViewSensorDataFragment extends Fragment {
 
         UserInterfaceUtil.fillSensorProperties(getActivity(), listView, sensor, true);
 
-        String sensorData = getSensorData(sensor, MAXIMUM_LINES_OF_DATA_TO_READ);
-
+        String sensorData = getSensorData(sensor, MAXIMUM_LINES_OF_DATA_TO_READ);        
+        
+        TextView textView = (TextView) mView
+                .findViewById(R.id.textview_fragment_experiment_view_notes_note_text);
         if (sensorData.trim().equals("")) {
-            ((TextView) mView
-                    .findViewById(R.id.textview_fragment_experiment_view_notes_note_text))
-                    .setText(getResources().getString(
+            textView.setText(getResources().getString(
                             R.string.text_sensor_has_not_recorded_any_data));
-        } else {
-            TextView textView = (TextView) mView
-                    .findViewById(R.id.textview_fragment_experiment_view_notes_note_text);
+            textView.setMovementMethod(new ScrollingMovementMethod());
+        } else {            
             textView.setText(sensorData);
             textView.setMovementMethod(new ScrollingMovementMethod());
         }
