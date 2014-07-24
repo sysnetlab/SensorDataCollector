@@ -83,6 +83,7 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.sensordatacollector_activity_menu, menu);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         return super.onCreateOptionsMenu(menu);
     }
     
@@ -120,11 +121,7 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
                 + experiment);
 
         Intent intent = new Intent(this, ViewExperimentActivity.class);
-
-        // intent.putExtra("experiment", experiment);
-
         ExperimentManagerSingleton.getInstance().setActiveExperiment(experiment);
-
         startActivity(intent);
     }
 
