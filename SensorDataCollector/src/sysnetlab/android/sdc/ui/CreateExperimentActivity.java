@@ -250,11 +250,11 @@ public class CreateExperimentActivity extends FragmentActivityBase
 	        case android.R.id.home:
 	        	if(mExperimentRunFragment!=null && mExperimentRunFragment.isFragmentUIActive()){	            	
 	        		confirmToStopExperiment();
-	            	return true;	    	        		            	
+	            	//return false;	    	        		            	
 	            }
 	        	else{
 	            	confirmToLeaveActivity(LEAVE_ACTION_UP_BUTTON, item);
-	            	return true;
+	            	//return false;
 	            }
         	default:
         		return super.onOptionsItemSelected(item);
@@ -269,7 +269,6 @@ public class CreateExperimentActivity extends FragmentActivityBase
             confirmToLeaveActivity(LEAVE_ACTION_BACK_BUTTON,null);
         } else {
             super.onBackPressed();
-            finish();
         }
         changeActionBarTitle(R.string.text_creating_experiment, R.drawable.ic_launcher);
     }       
@@ -641,7 +640,6 @@ public class CreateExperimentActivity extends FragmentActivityBase
 	                    		CreateExperimentActivity.super.onBackPressed();
 	                    	else if(action==LEAVE_ACTION_UP_BUTTON)
 	                    		CreateExperimentActivity.super.onOptionsItemSelected(item);
-	                    	finish();
 	                    }
 	                });	        
 	        builder.setNegativeButton(R.string.text_continue_experiment,
@@ -658,7 +656,6 @@ public class CreateExperimentActivity extends FragmentActivityBase
         		CreateExperimentActivity.super.onBackPressed();
         	else if(action==LEAVE_ACTION_UP_BUTTON)
         		CreateExperimentActivity.super.onOptionsItemSelected(item);
-        	finish();
 		}
 	}
 
@@ -769,5 +766,4 @@ public class CreateExperimentActivity extends FragmentActivityBase
     		
     	return false;
     }
-
 }
