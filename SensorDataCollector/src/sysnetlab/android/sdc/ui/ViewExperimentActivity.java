@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 public class ViewExperimentActivity extends FragmentActivityBase implements
@@ -57,10 +58,7 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
 
         if (findViewById(R.id.fragment_container) != null) {
             mExperimentViewFragment = new ExperimentViewFragment();
-            FragmentUtil.switchFragment(this, 
-            		mExperimentViewFragment, 
-            		"viewexperiment", 
-            		FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
+            FragmentUtil.addFragment(this, mExperimentViewFragment);
         }
 
         Log.d("SensorDataCollector", "ViewExperimentActivity.onCreate called.");
