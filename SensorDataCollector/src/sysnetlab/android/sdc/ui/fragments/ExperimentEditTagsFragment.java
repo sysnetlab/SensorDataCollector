@@ -118,7 +118,7 @@ public class ExperimentEditTagsFragment extends Fragment {
     	return mTagListAdapter;
     }
     
-    public boolean hasChanges(){
+    public boolean hasTags(){
     	String tagName = ((EditText) mView.findViewById(R.id.edittext_tag))
     			.getText().toString();
     	if(!tagName.trim().equals(""))

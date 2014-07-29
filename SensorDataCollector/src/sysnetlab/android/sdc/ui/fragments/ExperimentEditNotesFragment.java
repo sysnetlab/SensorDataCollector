@@ -55,7 +55,7 @@ public class ExperimentEditNotesFragment extends Fragment {
                     }
                 });
     }
-    public boolean hasChanges(){
+    public boolean hasNotes(){
     	String noteDescription = ((EditText) mView.findViewById(R.id.edittext_experiment_note_editing_note))
     			.getText().toString();
     	if(!noteDescription.trim().equals(""))

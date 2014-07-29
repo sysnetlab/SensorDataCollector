@@ -134,7 +134,7 @@ public class ExperimentSensorSelectionFragment extends Fragment {
     	return mListView;
     }
     
-    public boolean hasChanges(){
+    public boolean hasSensorsSelected(){
         if (!SensorDiscoverer.isInitialized())
             SensorDiscoverer.initialize(getActivity().getApplicationContext());
     	Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList().iterator();

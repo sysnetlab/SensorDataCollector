@@ -117,9 +117,15 @@
     <string name="text_clear_selection">Clear Selection</string>
     <string name="text_do_you_want_to_stop_experiment">
         Do you want to stop the experiment?
-    </string>
+    </string>    
     <string name="text_do_you_want_to_leave_experiment">
         Do you want to leave the experiment setup? All data will be lost.
+    </string>
+    <string name="text_need_to_select_sensors">
+        Select at least one sensor before running the experiment.
+    </string>
+    <string name="text_dismiss">
+        Dismiss
     </string>
     <string name="text_leave_experiment">Leave Experiment</string>
     <string name="text_stop_experiment">Stop Experiment</string>

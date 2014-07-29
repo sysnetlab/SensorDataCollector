@@ -328,20 +328,28 @@ public class CreateExperimentActivity extends FragmentActivityBase
 
     @Override
     public void onBtnRunClicked_ExperimentSetupFragment(View view) {
-        if (mExperimentRunFragment == null)
-            mExperimentRunFragment = new ExperimentRunFragment();
+    	
+    	if(mExperimentSensorSelectionFragment==null || 
+    			!mExperimentSensorSelectionFragment.hasSensorsSelected()){
+    		
+    		alertNoSensorSelected();
+    		
+    	}else{
+    		if (mExperimentRunFragment == null)
+                mExperimentRunFragment = new ExperimentRunFragment();
 
-        Log.d("SensorDataCollector",
-                "CreateExperimentActivity::onBtnRunClicked_ExperimentSetupFragment(): "
-                        + view.findViewById(R.id.et_experiment_setup_name));
-        mExperiment.setName(((EditText) view
-                .findViewById(R.id.et_experiment_setup_name)).getText()
-                .toString());
+            Log.d("SensorDataCollector",
+                    "CreateExperimentActivity::onBtnRunClicked_ExperimentSetupFragment(): "
+                            + view.findViewById(R.id.et_experiment_setup_name));
+            mExperiment.setName(((EditText) view
+                    .findViewById(R.id.et_experiment_setup_name)).getText()
+                    .toString());
 
-        FragmentUtil.switchFragment(this, 
-        		mExperimentRunFragment,
-                "experimentrun",
-                FragmentUtil.FRAGMENT_SWITCH_NO_BACKSTACK);
+            FragmentUtil.switchFragment(this, 
+            		mExperimentRunFragment,
+                    "experimentrun",
+                    FragmentUtil.FRAGMENT_SWITCH_NO_BACKSTACK);
+    	}
     }
     
     @Override
@@ -659,6 +667,23 @@ public class CreateExperimentActivity extends FragmentActivityBase
 		}
 	}
 
+	private void alertNoSensorSelected(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(R.string.text_need_to_select_sensors);
+                
+        builder.setNeutralButton(R.string.text_dismiss,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mAlertDialog.dismiss();
+                    }
+                });
+        
+        mAlertDialog = builder.create();
+
+        mAlertDialog.show();
+	}
+	
     private void confirmToStopExperiment() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -726,7 +751,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
     };
     
     private void runExperiment() {
-        
+    	
         if (mRunExperimentServiceBound) {
             SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     
@@ -755,11 +780,11 @@ public class CreateExperimentActivity extends FragmentActivityBase
     private boolean hasChanges(){
     	if(mExperiment.hasChanges())
     		return true;    	
-    	if(mExperimentEditNotesFragment!=null && mExperimentEditNotesFragment.hasChanges())    		
+    	if(mExperimentEditNotesFragment!=null && mExperimentEditNotesFragment.hasNotes())    		
     		return true;
-    	if(mExperimentEditTagsFragment!=null && mExperimentEditTagsFragment.hasChanges())
+    	if(mExperimentEditTagsFragment!=null && mExperimentEditTagsFragment.hasTags())
     		return true;
-    	if(mExperimentSensorSelectionFragment!=null && mExperimentSensorSelectionFragment.hasChanges())
+    	if(mExperimentSensorSelectionFragment!=null && mExperimentSensorSelectionFragment.hasSensorsSelected())
     		return true;
     	if(mExperimentSetupFragment!=null && mExperimentSetupFragment.hasChanges())
     		return true;
