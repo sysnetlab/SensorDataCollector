@@ -211,13 +211,12 @@
 	<string name="text_audio_sensor_probing_activity">Probing Sensors</string>
 	<string name="text_about">About</string>
 	<string name="text_title_about">About SenSee</string>
-    <string name="text_about_description">\nThe SenSee is a open source app that collects data from the sensors on your phone.\n\n
+    <string name="text_about_description">\nSenSee is an open source app supporting collection of sensor data on Android devices.  Developers, students, and researchers can experiment with sensor parameters and easily collect data from the variety of device sensors using this app.\n\n
         
     Version: %1$s\n\n
         
-    Hui Chen, Kostadin Damevski, David Walter, Andrios Robert, Geraldo Lemos, 
-    Neyda Chavez, LaTasha Bagby, Christy Holmes.\n
-    SenSee Authors.\n</string>
+    SenSee Authors:\n Hui Chen, Kostadin Damevski, Andrios Robert, Geraldo Lemos, David Walter, 
+    Neyda Chavez, LaTasha Bagby, Christy Holmes.</string>
     <string name="text_about_authors">
     
     </string>
