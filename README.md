@@ -8,7 +8,7 @@ The Sensor Data Collector tool is a creation of the <a href="http://sysnetgrp.ne
 For more information on the project, visit the <a href="https://github.com/sysnetlab/SensorDataCollector/wiki">Project  Wiki</a> that includes, but is not limited to the topics below.
 <ul>
 <li>
-<a href="https://github.com/sysnetlab/SensorDataCollector/wiki/How-to-Contribute%3F">How to contribute to the project</a>, which includes how you may prepare the development environment and how you may obtain the source code. 
+<a href="https://github.com/sysnetlab/SensorDataCollector/wiki/How-to-Contribute">How to contribute to the project</a>, which includes how you may prepare the development environment and how you may obtain the source code. 
 </li>
 <li>
 <a href="https://github.com/sysnetlab/SensorDataCollector/wiki/Application-Architecture">Application architecture</a>, which is an evovling document that helps contributors quickly get started. 
