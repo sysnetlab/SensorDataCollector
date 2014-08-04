@@ -1,6 +1,5 @@
 package sysnetlab.android.sdc.loaders;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -8,7 +7,6 @@ import java.util.List;
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
-import sysnetlab.android.sdc.datastore.AbstractStore;
 import android.support.v4.content.AsyncTaskLoader;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -44,7 +42,6 @@ public class ExperimentListLoader extends AsyncTaskLoader<List<Experiment>>{
 		super.onStartLoading();
 		mProgressBar.setMax(
 				ExperimentManagerSingleton.getInstance().getCountExperiments());
-		int aux=ExperimentManagerSingleton.getInstance().getCountExperiments();
 	}
 
 	@Override

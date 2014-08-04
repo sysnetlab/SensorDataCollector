@@ -8,8 +8,6 @@ import java.util.List;
 
 import android.widget.ProgressBar;
 import sysnetlab.android.sdc.datastore.AbstractStore;
-import sysnetlab.android.sdc.datastore.SimpleFileStore;
-import sysnetlab.android.sdc.datastore.SimpleXmlFileStore;
 
 public class ExperimentManager {
     private List<AbstractStore> mStores;    

@@ -7,8 +7,6 @@ import android.widget.AbsListView;
 import android.widget.GridView;
 
 public class TaggingGridView extends GridView {
-    private int mChildHeight;
-    private int mChildWidth;
     private boolean mTagResized = false;
     int mGdvHeight;
     

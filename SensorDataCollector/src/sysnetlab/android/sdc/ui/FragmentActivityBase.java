@@ -8,11 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
-import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -79,8 +75,8 @@ public abstract class FragmentActivityBase extends ActionBarActivity {
 	private void showAboutDialog() {
 		String textTitle = getResources().getString(R.string.text_title_about);
 		String textDescription = getResources().getString(R.string.text_about_description);
-		String textAuthors = getResources().getString(R.string.text_about_authors);
-		String textVersion = getResources().getString(R.string.text_about_version);
+		//String textAuthors = getResources().getString(R.string.text_about_authors);
+		//String textVersion = getResources().getString(R.string.text_about_version);
 				
 		try {
 			
@@ -91,7 +87,7 @@ public abstract class FragmentActivityBase extends ActionBarActivity {
 						
 		} catch (NameNotFoundException e) {
 			Log.e("about", "Failure when trying to get the app version: "+e.getMessage());
-			textVersion="Not Available";
+			//textVersion="Not Available";
 		}
 		
 		TextView textViewAuthors=new TextView(this);
