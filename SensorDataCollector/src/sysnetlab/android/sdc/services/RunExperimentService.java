@@ -168,6 +168,7 @@ public class RunExperimentService extends Service {
         }
 
         experiment.setDateTimeDone(Calendar.getInstance().getTime());
+        experiment.setPath(StoreSingleton.getInstance().getNewExperimentPath());
 
         StoreSingleton.getInstance().writeExperimentMetaData(experiment);
 
