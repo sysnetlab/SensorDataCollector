@@ -22,24 +22,34 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 
 public class Tag implements Parcelable {
+	private int mId;
     private String mName;
     private String mShortDescription;
     private String mLongDescription;
     
-    public Tag(String name) {
-        this(name, "", "");
+    public Tag(String name, int tagId) {
+        this(name, "", "", tagId);
     }
 
-    public Tag(String name, String shortDesc) {
-        this(name, shortDesc, "");
+    public Tag(String name, String shortDesc, int tagId) {
+        this(name, shortDesc, "", tagId);
     }
  
-    public Tag(String name, String shortDesc, String longDesc) {
+    public Tag(String name, String shortDesc, String longDesc, int tagId) {
         mName = name;
         mShortDescription = shortDesc;
         mLongDescription = longDesc;
+        this.mId = tagId;
     }
 
+    public int getTagId(){
+    	return mId;
+    }
+    
+    public void setTagId(int tagId){
+    	this.mId = tagId;
+    }
+    
     public String getName() {
         return mName;
     }
@@ -123,6 +133,7 @@ public class Tag implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel outParcel, int flags) {
+    	outParcel.writeInt(mId);
         outParcel.writeString(mName);
         outParcel.writeString(mShortDescription);
         outParcel.writeString(mLongDescription);       

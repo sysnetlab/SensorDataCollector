@@ -28,9 +28,11 @@ import android.util.Log;
 
 public class AndroidSensorEventListener implements SensorEventListener {
     private Channel mChannel;
+    private Experiment mExperiment;
 
     public AndroidSensorEventListener(Channel channel) {
         mChannel = channel;
+        mExperiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();
     }
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -50,6 +52,13 @@ public class AndroidSensorEventListener implements SensorEventListener {
         }
         for (int i = 0; i < event.values.length; i++) {
             mChannel.write(", " + event.values[i]);
+        }
+        
+        TaggingAction lastTaggingAction = mExperiment.getLastTagging();
+        if(lastTaggingAction != null && lastTaggingAction.getTagState()==TaggingState.TAG_ON){
+        	mChannel.write(Integer.toString(lastTaggingAction.getTag().getTagId()));
+        }else{
+        	mChannel.write("0");
         }
         mChannel.write("\n");
     }

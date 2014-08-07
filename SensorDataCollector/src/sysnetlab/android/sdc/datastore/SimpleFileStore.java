@@ -126,13 +126,14 @@ public class SimpleFileStore extends AbstractStore {
         try {
             out = new PrintStream(new BufferedOutputStream(
                     new FileOutputStream(configFilePath)));
-
+            
             out.println(experiment.getName());
             out.println(experiment.getDateTimeCreatedAsString());
             out.println(experiment.getDateTimeDoneAsString());
 
             out.println(experiment.getTags().size());
             for (Tag tag : experiment.getTags()) {
+            	out.println(tag.getTagId());
                 out.println(tag.getName());
                 out.println(tag.getShortDescription());
                 out.println(tag.getLongDescription());
@@ -205,11 +206,11 @@ public class SimpleFileStore extends AbstractStore {
                     ArrayList<Tag> tags = new ArrayList<Tag>();
 
                     for (int i = 0; i < n; i++) {
+                    	String tagId = in.readLine();
                         String tagName = in.readLine();
                         String tagShortDesc = in.readLine();
                         String tagLongDesc = in.readLine();
-
-                        Tag tag = new Tag(tagName, tagShortDesc, tagLongDesc);
+                        Tag tag = new Tag(tagName, tagShortDesc, tagLongDesc,Integer.parseInt(tagId));
                         tags.add(tag);
                     }
                     experiment.setTags(tags);

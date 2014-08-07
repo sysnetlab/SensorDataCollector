@@ -49,9 +49,11 @@ public class Experiment implements Parcelable {
     private List<Tag> mTags;
     private List<Note> mNotes;
     private List<TaggingAction> mTaggingActions;
+    private TaggingAction mLastTagging = null;
     private String mPath;
     private boolean mHasChanges = false;
     private static String mDefaultName = "Unnamed Experiment";
+    private int tagCount = 1;
 
     private List<AbstractSensor> mSensors;
     //private AbstractStore mStore;
@@ -107,8 +109,8 @@ public class Experiment implements Parcelable {
             return false;
         }
         
-        Tag t = new Tag(strTag, strDescription);
-        
+        Tag t = new Tag(strTag, strDescription, this.tagCount);
+        this.tagCount++;
         boolean tagExists = false;
         for (Tag tagInList : mTags) {
             if (TextUtils.equals(t.getName(), tagInList.getName())) {
@@ -297,6 +299,15 @@ public class Experiment implements Parcelable {
     
     public List<TaggingAction> getTaggingActions() {
         return mTaggingActions;
+    }
+    
+    public void setLastTagging(TaggingAction activeTag){
+    	mTaggingActions.add(activeTag);    	       
+    	mLastTagging = activeTag;
+    }
+    
+    public TaggingAction getLastTagging(){
+    	return mLastTagging;
     }
     
     public void setTaggingActions(List<TaggingAction> taggingActions) {

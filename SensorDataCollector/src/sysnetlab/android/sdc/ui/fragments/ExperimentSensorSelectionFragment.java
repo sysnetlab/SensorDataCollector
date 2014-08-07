@@ -149,17 +149,5 @@ public class ExperimentSensorSelectionFragment extends Fragment {
 
     public ListView getSensorListView(){
     	return mListView;
-    }
-    
-    public boolean hasSensorsSelected(){
-        if (!SensorDiscoverer.isInitialized())
-            SensorDiscoverer.initialize(getActivity().getApplicationContext());
-    	Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList().iterator();
-        while (iter.hasNext()) {
-            AbstractSensor sensor = (AbstractSensor) iter.next(); 
-            if(sensor.isSelected())
-            	return true;
-        }
-    	return false;
-    }
+    }      
 }

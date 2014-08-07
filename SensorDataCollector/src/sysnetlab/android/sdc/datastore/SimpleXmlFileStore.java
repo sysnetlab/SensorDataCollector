@@ -308,7 +308,12 @@ public class SimpleXmlFileStore extends SimpleFileStore {
                 xs.startTag("", "name");
                 xs.text(tag.getName());
                 xs.endTag("", "name");
-
+                
+                xs.startTag("", "number");
+                xs.text(Integer.toString(tag.getTagId()));
+                xs.endTag("", "number");
+                
+                
                 if (tag.getShortDescription() != null && tag.getShortDescription().trim().length() > 0) {
                     xs.startTag("", "shortdescription");
                     xs.text(tag.getShortDescription());
@@ -360,6 +365,7 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             for (TaggingAction action : listTaggingActions) {
                 xs.startTag("", "tagreference");
                 xs.attribute("", "name", action.getTag().getName());
+                xs.attribute("", "number", Integer.toString(action.getTag().getTagId()));
                 xs.endTag("", "tagreference");
 
                 xs.startTag("", "experimenttime");
@@ -745,6 +751,7 @@ public class SimpleXmlFileStore extends SimpleFileStore {
         String tagName = null;
         String shortDescription = null;
         String longDescription = null;
+        int tagId = 0;
         
         while (xpp.next() != XmlPullParser.END_TAG) {
             if (xpp.getEventType() != XmlPullParser.START_TAG) {
@@ -753,6 +760,8 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             String name = xpp.getName();
             if (name.equals("name")) {
                 tagName = readTagName(xpp);
+            }else if (name.equals("tagId")){
+            	tagId = readTagId(xpp);
             } else if (name.equals("shortdescription")) {
                 shortDescription = readShortDescription(xpp);
             } else if (name.equals("longdescription")) {
@@ -762,11 +771,15 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             }
         }
         
-        return new Tag(tagName, shortDescription, longDescription);
+        return new Tag(tagName, shortDescription, longDescription, tagId);
     }
     
     private String readTagName(XmlPullParser xpp) throws XmlPullParserException, IOException {
         return readXmlElementText(xpp, "name");
+    }
+    
+    private int readTagId(XmlPullParser xpp) throws XmlPullParserException, IOException{
+    	return Integer.parseInt(readXmlElementText(xpp, "tagId"));
     }
     
     private String readShortDescription(XmlPullParser xpp) throws XmlPullParserException, IOException {
@@ -863,7 +876,8 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             }
             String name = xpp.getName();
             if (name.equals("tagreference")) {
-                String tagReference = xpp.getAttributeValue(XMLNS, "name"); 
+                String tagReference = xpp.getAttributeValue(XMLNS, "name");
+                int tagId = Integer.parseInt(xpp.getAttributeValue(XMLNS, "id"));
                 taggingTag = null;
                 for (Tag tag : listTags) {
                     if (tag.getName().equals(tagReference)) {
@@ -872,7 +886,7 @@ public class SimpleXmlFileStore extends SimpleFileStore {
                     }
                 }
                 if (taggingTag == null) {
-                    taggingTag = new Tag(tagReference);
+                    taggingTag = new Tag(tagReference, tagId);
                 }
             } else if (name.equals("experimenttime")) {
                 taggingTime = readTaggingActionTime(xpp);

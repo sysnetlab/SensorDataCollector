@@ -345,8 +345,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
     @Override
     public void onBtnRunClicked_ExperimentSetupFragment(View view) {
     	
-    	if(mExperimentSensorSelectionFragment==null || 
-    			!mExperimentSensorSelectionFragment.hasSensorsSelected()){
+    	if(!experimentHasSensorsSelected()){
     		
     		alertNoSensorSelected();
     		
@@ -504,11 +503,10 @@ public class CreateExperimentActivity extends FragmentActivityBase
                         /*
                         gridview.getChildAt(mPreviousTagPosition).setBackgroundColor(
                                 getResources().getColor(android.R.color.background_light));
-                                */
-                        mExperiment.getTaggingActions()
-                                .add(new TaggingAction(mStateTagPrevious.getTag(),
-                                        new ExperimentTime(),
-                                        TaggingState.TAG_OFF));
+                                */                        
+                        mExperiment.setLastTagging(new TaggingAction(mStateTagPrevious.getTag(),
+                                new ExperimentTime(),
+                                TaggingState.TAG_OFF));
                         break;
                     case TAG_OFF:
                     case TAG_CONTEXT:
@@ -519,8 +517,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
     
             // turn on current tag
             stateTag.setState(TaggingState.TAG_ON);
-            mExperiment.getTaggingActions()
-                    .add(new TaggingAction(stateTag.getTag(), new ExperimentTime(),
+            mExperiment.setLastTagging(new TaggingAction(stateTag.getTag(), new ExperimentTime(),
                             TaggingState.TAG_ON));
             view.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
     
@@ -543,8 +540,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
                     view.setBackgroundColor(getResources().getColor(
                             android.R.color.background_light));
                             */
-                    mExperiment.getTaggingActions()
-                            .add(new TaggingAction(mStateTagPrevious.getTag(),
+                    mExperiment.setLastTagging(new TaggingAction(mStateTagPrevious.getTag(),
                                     new ExperimentTime(),
                                     TaggingState.TAG_OFF));
                     break;
@@ -552,8 +548,8 @@ public class CreateExperimentActivity extends FragmentActivityBase
                     // turn it on
                     stateTag.setState(TaggingState.TAG_ON);
                     view.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
-                    mExperiment.getTaggingActions()
-                            .add(new TaggingAction(stateTag.getTag(), new ExperimentTime(),
+                    mExperiment.setLastTagging(new TaggingAction(stateTag.getTag(),
+                    				new ExperimentTime(),
                                     TaggingState.TAG_ON));
                     break;
                 case TAG_CONTEXT:
@@ -800,11 +796,23 @@ public class CreateExperimentActivity extends FragmentActivityBase
     		return true;
     	if(mExperimentEditTagsFragment!=null && mExperimentEditTagsFragment.hasTags())
     		return true;
-    	if(mExperimentSensorSelectionFragment!=null && mExperimentSensorSelectionFragment.hasSensorsSelected())
+    	if(experimentHasSensorsSelected())
     		return true;
     	if(mExperimentSetupFragment!=null && mExperimentSetupFragment.hasChanges())
     		return true;
     		
+    	return false;
+    }
+    
+    public boolean experimentHasSensorsSelected(){
+        if (!SensorDiscoverer.isInitialized())
+            SensorDiscoverer.initialize(this.getApplicationContext());
+    	Iterator<AbstractSensor> iter = SensorDiscoverer.discoverSensorList().iterator();
+        while (iter.hasNext()) {
+            AbstractSensor sensor = (AbstractSensor) iter.next(); 
+            if(sensor.isSelected())
+            	return true;
+        }
     	return false;
     }
 }
