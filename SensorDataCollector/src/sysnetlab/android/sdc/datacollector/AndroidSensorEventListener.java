@@ -56,9 +56,9 @@ public class AndroidSensorEventListener implements SensorEventListener {
         
         TaggingAction lastTaggingAction = mExperiment.getLastTagging();
         if(lastTaggingAction != null && lastTaggingAction.getTagState()==TaggingState.TAG_ON){
-        	mChannel.write(Integer.toString(lastTaggingAction.getTag().getTagId()));
+        	mChannel.write(","+Integer.toString(lastTaggingAction.getTag().getTagId()));
         }else{
-        	mChannel.write("0");
+        	mChannel.write(",0");
         }
         mChannel.write("\n");
     }
