@@ -570,5 +570,9 @@ public class SimpleFileStore extends AbstractStore {
         }
         return listExperiments;
 	}
+	
+	public String getExperimentPath(){
+		return mNewExperimentPath;
+	}
 
 }

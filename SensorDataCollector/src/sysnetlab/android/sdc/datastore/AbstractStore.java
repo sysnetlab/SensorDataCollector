@@ -63,6 +63,7 @@ public abstract class AbstractStore {
     public abstract List<Experiment> listStoredExperiments();
     public abstract List<Experiment> listStoredExperiments(ProgressBar mProgressBar);
     public abstract int getCountExperiments();
+    public abstract String getNewExperimentPath();
     
     public abstract Channel createChannel(String tag, int operationFlags, int channelType);
     public abstract void closeAllChannels();

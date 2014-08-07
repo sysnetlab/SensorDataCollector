@@ -70,11 +70,13 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
     }
     
     @Override
-    protected void onRestart() {    	
-    	Experiment experiment = getIntent().getParcelableExtra("newExperiment");
-    	if(experiment != null){
+    protected void onRestart() {
+    	boolean isNewExperiment;
+		isNewExperiment=getIntent().getBooleanExtra("newExperiment",false);
+    	if(isNewExperiment){
     		getIntent().removeExtra("newExperiment");
-    		mExperimentListFragment.reloadExperiments(experiment);
+    		Experiment activeExperiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();
+    		mExperimentListFragment.reloadExperiments(ExperimentManagerSingleton.getInstance().getActiveExperiment());
     	}
     	super.onRestart();
     }

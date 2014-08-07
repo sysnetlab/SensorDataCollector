@@ -716,8 +716,8 @@ public class CreateExperimentActivity extends FragmentActivityBase
                         
                         mExperimentRunFragment.setIsUserTrigger(true);
                         Intent homeIntent = new Intent(CreateExperimentActivity.this,
-                                SensorDataCollectorActivity.class);                        
-                        homeIntent.putExtra("newExperiment", mExperiment);
+                                SensorDataCollectorActivity.class);
+                        homeIntent.putExtra("newExperiment", true);
                         homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(homeIntent);
                         finish();
@@ -786,7 +786,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
             SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     
             mRunExperimentService.stopExperimentInService(sensorManager, mExperiment);
-    
+            
             CharSequence text = "Stopped data collection for " + mExperiment.getSensors().size()
                     + " Sensors";
             Toast.makeText(this, text, Toast.LENGTH_LONG).show();
