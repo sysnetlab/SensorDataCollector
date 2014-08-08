@@ -407,7 +407,9 @@ public class SimpleFileStore extends AbstractStore {
         }        
 
         private void closeImediately() {
-            if (mOut != null) mOut.close();
+            if (mOut != null){
+            	mOut.close();
+            } 
             if (mIn != null) {
                 try {
                     mIn.close();
@@ -416,6 +418,7 @@ public class SimpleFileStore extends AbstractStore {
                     Log.e("SensorDataCollector", "SimpleFileStore::close(): mIn.close() failed.");
                 }
             }
+            mFlags=Channel.READ_ONLY;
         }
         
         private void closeWhenReady() {
