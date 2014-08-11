@@ -90,6 +90,10 @@ public class Tag implements Parcelable {
         
         Tag tag = (Tag) rhs;
        
+        if(mId != tag.mId){
+        	return false;
+        }
+        
         if (!TextUtils.equals(mName, tag.mName)){
             return false;
         }
@@ -120,6 +124,7 @@ public class Tag implements Parcelable {
     };
     
     public Tag(Parcel inParcel) {
+    	mId = inParcel.readInt();
         mName = inParcel.readString();
         mShortDescription = inParcel.readString();
         mLongDescription = inParcel.readString();

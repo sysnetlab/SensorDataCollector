@@ -109,8 +109,7 @@ public class Experiment implements Parcelable {
             return false;
         }
         
-        Tag t = new Tag(strTag, strDescription, this.tagCount);
-        this.tagCount++;
+        Tag t = new Tag(strTag, strDescription, this.tagCount);        
         boolean tagExists = false;
         for (Tag tagInList : mTags) {
             if (TextUtils.equals(t.getName(), tagInList.getName())) {
@@ -120,6 +119,7 @@ public class Experiment implements Parcelable {
         }
         
         if (!tagExists) {
+        	this.tagCount++;
         	this.mHasChanges = true;
             return mTags.add(t);
         } else {

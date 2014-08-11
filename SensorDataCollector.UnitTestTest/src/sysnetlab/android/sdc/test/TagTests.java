@@ -25,9 +25,9 @@ public class TagTests extends AndroidTestCase {
 	
 	protected void setUp() throws Exception {
         super.setUp();
-        mTag = new Tag("Tag name");
-    	mTag2 = new Tag("Second tag", "Short Description");
-    	mTag3 = new Tag("Third tag", "Short Description", "Long Description");
+        mTag = new Tag("Tag name", 0);
+    	mTag2 = new Tag("Second tag", "Short Description", 0);
+    	mTag3 = new Tag("Third tag", "Short Description", "Long Description", 0);
     }
 
     protected void tearDown() throws Exception {
@@ -52,7 +52,7 @@ public class TagTests extends AndroidTestCase {
     	assertEquals("mtag Short Description", mTag.getShortDescription());
     	assertEquals("Short Description", mTag2.getShortDescription());
     	assertEquals("Long Description", mTag3.getLongDescription());
-    	mTag = new Tag("Tag name");
+    	mTag = new Tag("Tag name", 0);
     }
     
     public void testCreatorInstantiation() {

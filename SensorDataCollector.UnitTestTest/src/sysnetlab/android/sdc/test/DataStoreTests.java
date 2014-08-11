@@ -111,7 +111,7 @@ public class DataStoreTests extends AndroidTestCase {
             String name = "Tag_" + i;
             String shortDescription = "Short description for tag " + i;
             String longDescription = "Long description for tag " + i;
-            Tag tag = new Tag(name, shortDescription, longDescription);
+            Tag tag = new Tag(name, shortDescription, longDescription, 0);
             listTags.add(tag);        
         }
         exp1.setTags(listTags);
