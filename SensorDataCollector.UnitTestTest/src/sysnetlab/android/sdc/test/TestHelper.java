@@ -24,6 +24,7 @@ import sysnetlab.android.sdc.ui.SensorDataCollectorActivity;
 import sysnetlab.android.sdc.ui.ViewExperimentActivity;
 import sysnetlab.android.sdc.ui.fragments.ExperimentEditTagsFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentRunFragment;
+import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSetupFragment;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -34,9 +35,11 @@ import android.support.v4.app.ListFragment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 public class TestHelper {
 
@@ -81,15 +84,13 @@ public class TestHelper {
     }
     
     public static void enterTags(ActivityInstrumentationTestCase2<?> testCase, Activity activity, int maximumNumberOfTags) {
-        Fragment fragment; 
-        
         Assert.assertTrue("The activity must be a CreateExperimentActivity.",
                 activity instanceof CreateExperimentActivity);   
         
         // choose to enter tags
         CreateExperimentActivity createExperimentActivity = (CreateExperimentActivity) activity;
 
-        fragment = createExperimentActivity.getSupportFragmentManager().findFragmentById(
+        Fragment fragment = createExperimentActivity.getSupportFragmentManager().findFragmentById(
                 R.id.fragment_container);
         Assert.assertNotNull("The ExperimentSetupFragment should not be null.", fragment);
         Assert.assertTrue("The fragment should be an ExperimentSetupFragment.",
@@ -136,6 +137,66 @@ public class TestHelper {
         Assert.assertEquals("The number of tags entered must be " + numberOfTags, listViewTags.getCount(),
                 numberOfTags);        
     }    
+    
+    public static void selectSensors(ActivityInstrumentationTestCase2<?> testCase, Activity activity) {
+        Assert.assertTrue("The activity must be a CreateExperimentActivity.",
+                activity instanceof CreateExperimentActivity);
+
+        // choose to select sensors
+        CreateExperimentActivity createExperimentActivity = (CreateExperimentActivity) activity;
+
+        Fragment fragment = createExperimentActivity.getSupportFragmentManager().findFragmentById(
+                R.id.fragment_container);
+        Assert.assertNotNull("The ExperimentSetupFragment should not be null.", fragment);
+        Assert.assertTrue("The fragment should be an ExperimentSetupFragment.",
+                fragment instanceof ExperimentSetupFragment);
+
+        ListView listViewOperations = (ListView) fragment.getView()
+                .findViewById(R.id.lv_operations);
+        Assert.assertNotNull("The operations ListView should not be null.", listViewOperations);
+        Assert.assertEquals("The operations ListView should has 3 items", listViewOperations.getCount(), 3);
+
+        TouchUtils.clickView(testCase, listViewOperations.getChildAt(2));
+
+        testCase.getInstrumentation().waitForIdleSync();
+        
+
+        // select the 1st sensor
+        fragment = createExperimentActivity.getSupportFragmentManager().findFragmentById(
+                R.id.fragment_container);
+        Assert.assertNotNull("The ExperimentSensorSelectionFragment should not be null.", fragment);
+        Assert.assertTrue("The fragment should be an ExperimentSensorListFragment.",
+                fragment instanceof ExperimentSensorSelectionFragment);
+        
+        
+        RelativeLayout layout = (RelativeLayout) fragment.getView()
+                .findViewById(R.id.layout_sensor_selection_list);
+        Assert.assertNotNull("The Sensor ListView should not be null.", layout);
+        ListView sensorListView = null;
+        for(int i=0; i<layout.getChildCount(); i++) {
+            View child = layout.getChildAt(i);
+            if (child instanceof ListView) sensorListView = (ListView) child;
+        }
+        Assert.assertNotNull("The Sensor ListView should not be null", sensorListView);
+
+        int numberOfSensorsToSelect = (int) (Math.random() * sensorListView.getCount()) + 1;
+        int numberOfSensorsSelected = 0;
+        int sensorPosition = 0;
+        while (numberOfSensorsSelected < numberOfSensorsToSelect) {
+            double rn = Math.random();
+            if ((sensorListView.getCount() - sensorPosition) * rn >= numberOfSensorsToSelect
+                    - numberOfSensorsSelected) {
+                sensorPosition++;
+            } else {
+                TouchUtils.clickView(testCase, sensorListView.getChildAt(sensorPosition)
+                        .findViewById(R.id.check));
+                sensorPosition++;
+                numberOfSensorsSelected++;
+            }
+        }   
+        
+        testCase.getInstrumentation().waitForIdleSync();
+    }
     
     public static void startExperiment(ActivityInstrumentationTestCase2<?> testCase, Activity activity) {
         Assert.assertTrue("The activity must be a CreateExperimentActivity.",

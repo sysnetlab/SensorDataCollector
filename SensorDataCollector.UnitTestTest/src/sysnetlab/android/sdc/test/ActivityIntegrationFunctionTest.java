@@ -73,6 +73,12 @@ public class ActivityIntegrationFunctionTest extends
         // go back to experiment setup screen
         TestHelper.goBack(this);
         
+        // select a few sensors
+        TestHelper.selectSensors(this, mCeActivity);
+        
+        // go back to experiment setup screen
+        TestHelper.goBack(this);
+        
         // run the experiment
         TestHelper.startExperiment(this, mCeActivity);
         

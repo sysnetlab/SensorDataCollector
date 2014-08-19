@@ -17,7 +17,6 @@
 
 package sysnetlab.android.sdc.ui.fragments;
 
-import java.util.Iterator;
 import java.util.List;
 
 import sysnetlab.android.sdc.R;
@@ -67,7 +66,6 @@ public class ExperimentSensorSelectionFragment extends Fragment {
         Log.d("SensorDataCollector",
                 "ExperimentSensorSelectionFragment::onCreateView(): " +
                         "entered with mHavingHeader = " + mHavingHeader);
-        super.onCreateView(inflater, container, savedInstanceState);
 
         mView = inflater.inflate(R.layout.fragment_sensor_selection, container, false);
 

@@ -75,7 +75,6 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
 		isNewExperiment=getIntent().getBooleanExtra("newExperiment",false);
     	if(isNewExperiment){
     		getIntent().removeExtra("newExperiment");
-    		Experiment activeExperiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();
     		mExperimentListFragment.reloadExperiments(ExperimentManagerSingleton.getInstance().getActiveExperiment());
     	}
     	super.onRestart();
