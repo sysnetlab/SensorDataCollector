@@ -21,7 +21,7 @@ import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.DataCollectionState;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
 import android.content.Context;
-import android.content.Intent;
+import android.view.KeyEvent;
 
 public class CreateExperimentActivityTests
         extends android.test.ActivityUnitTestCase<CreateExperimentActivity> {
@@ -34,16 +34,20 @@ public class CreateExperimentActivityTests
 
     protected void setUp() throws Exception {
         super.setUp();
-        
+
+        /*
+        //
+        // This somehow leads to an error similar to
+        //      ActionBarActivityDelegate getUiOptionsFromMetadata: Activity not in manifest
+        // To work around, use launchActivity instead
+        // 
         Context context = getInstrumentation().getTargetContext();
         context.setTheme(R.style.Theme_AppCompat);
         Intent intent = new Intent(context, CreateExperimentActivity.class);
         
         startActivity(intent, null, null);                
         mCreateExperimentActivity = getActivity();
-        
-        
-        // createExperimentActivity = launchActivity(context.getPackageName(), CreateExperimentActivity.class, null);
+        */
     }
 
     protected void tearDown() throws Exception {
@@ -51,13 +55,27 @@ public class CreateExperimentActivityTests
     }
     
     public void testLayout() {
+
+        Context context = getInstrumentation().getTargetContext();
+        context.setTheme(R.style.Theme_AppCompat);        
+        mCreateExperimentActivity = launchActivity(context.getPackageName(), CreateExperimentActivity.class, null);
+        getInstrumentation().waitForIdleSync();        
+        
         assertNotNull("The activity cannot be null.", mCreateExperimentActivity);
         assertNotNull("Fragment container must exist.", mCreateExperimentActivity.findViewById(R.id.fragment_container));
         assertNotNull("ProgressBar Layout must exist.", mCreateExperimentActivity.findViewById(R.id.progressbar_task_in_progress));
+        
+        sendKeys(KeyEvent.KEYCODE_BACK);
     }
 
     public void testSensorDataCollectionState() {
+        Context context = getInstrumentation().getTargetContext();
+        context.setTheme(R.style.Theme_AppCompat);        
+        mCreateExperimentActivity = launchActivity(context.getPackageName(), CreateExperimentActivity.class, null);
+        getInstrumentation().waitForIdleSync(); 
+        
         assertNotNull("The activity cannot be null.", mCreateExperimentActivity);
-        assert(mCreateExperimentActivity.getCurrentCollectionState() == DataCollectionState.DATA_COLLECTION_STOPPED);
+        assertEquals("The initial collection state should be DATA_COLLECTION_STOPPED", mCreateExperimentActivity.getCurrentCollectionState(), DataCollectionState.DATA_COLLECTION_STOPPED);
+        sendKeys(KeyEvent.KEYCODE_BACK);
     }
 }
