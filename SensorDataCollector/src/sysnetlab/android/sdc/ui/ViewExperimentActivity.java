@@ -22,8 +22,8 @@ import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.datacollector.DropboxHelper;
-import sysnetlab.android.sdc.ui.fragments.ExperimentSensorListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewFragment;
+import sysnetlab.android.sdc.ui.fragments.ExperimentViewSensorListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewTagsFragment; //maybe class name is different
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewNotesFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewSensorDataFragment;
@@ -37,11 +37,12 @@ import android.widget.Toast;
 
 public class ViewExperimentActivity extends FragmentActivityBase implements
         ExperimentViewFragment.OnFragmentClickListener,
-        ExperimentSensorListFragment.OnFragmentClickListener {
+        ExperimentViewSensorListFragment.OnFragmentClickListener {
 
     private ExperimentViewFragment mExperimentViewFragment;
     private ExperimentViewTagsFragment mExperimentViewTagsFragment;
     private ExperimentViewNotesFragment mExperimentViewNotesFragment;
+    private ExperimentViewSensorListFragment mExperimentViewSensorListFragment;
     private ExperimentViewSensorDataFragment mExperimentViewSensorDataFragment;
 
     private Experiment mExperiment;
@@ -53,8 +54,6 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
         setContentView(R.layout.fragment_container);
         mLoadingTask = new TaskLoadingSpinner();
         mLoadingTask.execute();
-        // mExperiment = (Experiment)
-        // getIntent().getParcelableExtra("experiment");
     }
 
     @Override
@@ -76,7 +75,7 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
             FragmentUtils.addFragment(this, mExperimentViewFragment);
         }
 
-        Log.d("SensorDataCollector", "ViewExperimentActivity.onCreate called.");
+        Log.d("SensorDataCollector", "ViewExperimentActivity.loadTask() called.");
     }
 
     public void onResume() {
@@ -146,7 +145,20 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
                 FragmentUtils.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
         changeActionBarTitle(R.string.text_viewing_notes, R.drawable.icon_notes_inverse);
     }
-
+    
+    @Override
+    public void onSensorsClicked_ExperimentViewFragment() {
+        if (mExperimentViewSensorListFragment == null) {
+            mExperimentViewSensorListFragment = new ExperimentViewSensorListFragment();
+        }
+        FragmentUtils.switchFragment(this,
+                mExperimentViewSensorListFragment,
+                "experimentviewsensorlist",
+                FragmentUtils.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
+        changeActionBarTitle(R.string.text_viewing_sensors, R.drawable.icon_sensors_inverse);
+    }
+    
+    /*
     @Override
     public void onSensorsClicked_ExperimentViewFragment() {
         if (mExperimentViewSensorDataFragment == null) {
@@ -158,9 +170,10 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
                 FragmentUtils.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
         changeActionBarTitle(R.string.text_viewing_sensors, R.drawable.icon_sensors_inverse);
     }
+    */
 
     @Override
-    public void onSensorClicked_ExperimentSensorListFragment(int sensorNo) {
+    public void onSensorClicked_ExperimentViewSensorListFragment(int sensorNo) {
         Log.d("SensorDataCollector",
                 "ViewExperimentActivity::onSensorClicked_ExperimentSensorListFragment() called with sensorNo = "
                         + sensorNo);
@@ -178,11 +191,13 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
     }
 
     @Override
-    public void onSensorClicked_ExperimentSensorListFragment(AbstractSensor sensor) {
+    public void onSensorClicked_ExperimentViewSensorListFragment(AbstractSensor sensor) {
         Log.d("SensorDataCollector",
                 "ViewExperimentActivity::onSensorClicked_ExperimentSensorListFragment() called");
         // do nothing
     }
+    
+
 
     public Experiment getExperiment() {
         return mExperiment;
@@ -212,5 +227,4 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
         getSupportActionBar().setTitle(titleResId);
         getSupportActionBar().setIcon(iconResId);
     }
-
 }

@@ -23,7 +23,6 @@ import sysnetlab.android.sdc.ui.adapters.OperationAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +32,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class ExperimentViewFragment extends Fragment {
-    private ExperimentSensorListFragment mExperimentSensorListFragment;
+    private ExperimentViewSensorListFragment mExperimentViewSensorListFragment;
     private OnFragmentClickListener mCallback;
 
     public interface OnFragmentClickListener {
@@ -89,13 +88,15 @@ public class ExperimentViewFragment extends Fragment {
             }
         });
 
+        /*
         // use nested fragment
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        if (mExperimentSensorListFragment == null) {
-            mExperimentSensorListFragment = new ExperimentSensorListFragment();
-            transaction.add(R.id.layout_experiment_view_sensor_list, mExperimentSensorListFragment);
+        if (mExperimentViewSensorListFragment == null) {
+            mExperimentViewSensorListFragment = new ExperimentViewSensorListFragment();
+            transaction.add(R.id.layout_experiment_view_sensor_list, mExperimentViewSensorListFragment);
         }
         transaction.commit();
+        */
 
         ((Button) getActivity().findViewById(R.id.button_experiment_view_clone))
                 .setOnClickListener(new Button.OnClickListener() {
@@ -128,8 +129,8 @@ public class ExperimentViewFragment extends Fragment {
         }
     }
 
-    public ExperimentSensorListFragment getExperimentSensorListFragment() {
-        return mExperimentSensorListFragment;
+    public ExperimentViewSensorListFragment getExperimentSensorListFragment() {
+        return mExperimentViewSensorListFragment;
     }
 
     public boolean isFragmentUIActive() {

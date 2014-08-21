@@ -26,7 +26,7 @@ import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
-import sysnetlab.android.sdc.ui.adaptors.SensorListAdapter;
+import sysnetlab.android.sdc.ui.adapters.SensorListAdapter;
 import sysnetlab.android.sdc.ui.fragments.ExperimentEditNotesFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentEditTagsFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorListFragment;
