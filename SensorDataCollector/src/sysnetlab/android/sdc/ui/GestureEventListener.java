@@ -35,19 +35,19 @@ public abstract class GestureEventListener implements OnTouchListener {
     private final GestureDetector mGestureDetector;
 
     public void onSwipeLeft() {
-        Log.i("SensorDataCollector", "called onSwipeLeft.");
+        Log.d("SensorDataCollector", "called onSwipeLeft.");
     }
 
     public void onSwipeRight() {
-        Log.i("SensorDataCollector", "called onSwipeRight.");
+        Log.d("SensorDataCollector", "called onSwipeRight.");
     }
 
     public void onSwipeTop() {
-        Log.i("SensorDataCollector", "called onSwipeTop.");
+        Log.d("SensorDataCollector", "called onSwipeTop.");
     }
 
     public void onSwipeBottom() {
-        Log.i("SensorDataCollector", "called onSwipeBottom.");
+        Log.d("SensorDataCollector", "called onSwipeBottom.");
     }
 
     public boolean onTouch(final View v, final MotionEvent event) {

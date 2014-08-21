@@ -35,14 +35,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-public class SensorDataCollectorActivity extends FragmentActivityBase 
-	implements
-        ExperimentListFragment.OnFragmentClickListener{
-    
+public class SensorDataCollectorActivity extends FragmentActivityBase
+        implements
+        ExperimentListFragment.OnFragmentClickListener {
+
     public final static String APP_OPERATION_KEY = "operation";
     public final static int APP_OPERATION_CREATE_NEW_EXPERIMENT = 1;
     public final static int APP_OPERATION_CLONE_EXPERIMENT = 2;
-    
+
     private ExperimentListFragment mExperimentListFragment;
 
     @Override
@@ -55,48 +55,49 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
 
         if (!SensorDiscoverer.isInitialized())
             SensorDiscoverer.initialize(getApplicationContext());
-        
+
         mLoadingTask = new TaskLoadingSpinner();
         mLoadingTask.execute();
 
         /**
-         * Remove the spinning wheel so that it doesn't overlaps 
-         * with the experiment loading progress bar
+         * Remove the spinning wheel so that it doesn't overlaps with the
+         * experiment loading progress bar
          */
         mProgressBar.setVisibility(View.GONE);
-        
+
         mExperimentListFragment = new ExperimentListFragment();
         FragmentUtil.addFragment(this, mExperimentListFragment);
     }
-    
+
     @Override
     protected void onRestart() {
-    	boolean isNewExperiment;
-		isNewExperiment=getIntent().getBooleanExtra("newExperiment",false);
-    	if(isNewExperiment){
-    		getIntent().removeExtra("newExperiment");
-    		mExperimentListFragment.reloadExperiments(ExperimentManagerSingleton.getInstance().getActiveExperiment());
-    	}
-    	super.onRestart();
+        boolean isNewExperiment;
+        isNewExperiment = getIntent().getBooleanExtra("newExperiment", false);
+        if (isNewExperiment) {
+            getIntent().removeExtra("newExperiment");
+            mExperimentListFragment.reloadExperiments(ExperimentManagerSingleton.getInstance()
+                    .getActiveExperiment());
+        }
+        super.onRestart();
     }
-    
+
     @Override
     protected void loadTask() {
-    	// Dropbox
+        // Dropbox
         DropboxHelper.getInstance(getApplicationContext());
-    	
-    	for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList()) {
+
+        for (AbstractSensor sensor : SensorDiscoverer.discoverSensorList()) {
             sensor.setSelected(false);
         }
     }
-    
+
     public void onResume() {
-    	super.onResume();
-    	
+        super.onResume();
+
         // Complete the Dropbox Authorization
         DropboxHelper.getInstance(SensorDataCollectorActivity.this).completeAuthentication();
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
@@ -105,38 +106,38 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         return super.onCreateOptionsMenu(menu);
     }
-    
+
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem item = menu.findItem(R.id.action_dropbox);
-    	if (DropboxHelper.getInstance().isLinked()) {
-    		item.setTitle(getString(R.string.text_unlink_from_dropbox));
-    	} else {
-    		item.setTitle(getString(R.string.text_link_to_dropbox));
-    	}
-    	return super.onPrepareOptionsMenu(menu);
+        if (DropboxHelper.getInstance().isLinked()) {
+            item.setTitle(getString(R.string.text_unlink_from_dropbox));
+        } else {
+            item.setTitle(getString(R.string.text_link_to_dropbox));
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
-    	DropboxHelper dbHelper = DropboxHelper.getInstance();
+        DropboxHelper dbHelper = DropboxHelper.getInstance();
         switch (item.getItemId()) {
             case R.id.action_dropbox:
-			  // This logs you out if you're logged in, or vice versa
-			  if (dbHelper.isLinked()) {
-				  dbHelper.unlink();
-			  } else {
-			      dbHelper.link();
-			  }
-			  return true;
+                // This logs you out if you're logged in, or vice versa
+                if (dbHelper.isLinked()) {
+                    dbHelper.unlink();
+                } else {
+                    dbHelper.link();
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-    
+
     @Override
     public void onExperimentClicked_ExperimentListFragment(Experiment experiment) {
-        Log.i("SensorDataCollector", "Creating ViewExperimentActivity with experiment = "
+        Log.d("SensorDataCollector", "Creating ViewExperimentActivity with experiment = "
                 + experiment);
 
         Intent intent = new Intent(this, ViewExperimentActivity.class);
@@ -146,26 +147,26 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
 
     @Override
     public void onCreateExperimentButtonClicked_ExperimentListFragment(Button b) {
-        Log.i("SensorDataCollector", "Creating CreateExperimentActivity ...");
-        
+        Log.d("SensorDataCollector", "Creating CreateExperimentActivity ...");
+
         Intent intent = new Intent(this, CreateExperimentActivity.class);
         intent.putExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
                 SensorDataCollectorActivity.APP_OPERATION_CREATE_NEW_EXPERIMENT);
         startActivity(intent);
     }
-    
+
     public ExperimentListFragment getExperimentListFragment() {
         return mExperimentListFragment;
     }
-    
+
     @Override
-	public void onBackPressed(){
-    	moveTaskToBack(true);
-	}
-    
-    @Override    
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
+
+    @Override
     protected void onNewIntent(Intent intent) {
-    	super.onNewIntent(intent);
-    	setIntent(intent);
+        super.onNewIntent(intent);
+        setIntent(intent);
     }
 }

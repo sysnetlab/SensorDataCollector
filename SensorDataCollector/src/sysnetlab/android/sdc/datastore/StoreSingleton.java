@@ -18,7 +18,7 @@
 package sysnetlab.android.sdc.datastore;
 
 public class StoreSingleton {
-	
+
     private static AbstractStore instance = null;
 
     protected StoreSingleton() {
@@ -31,7 +31,7 @@ public class StoreSingleton {
         }
         return instance;
     }
-    
+
     public static void resetInstance() {
         instance = new SimpleXmlFileStore();
     }

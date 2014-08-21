@@ -57,10 +57,10 @@ public class ExperimentSensorListFragment extends Fragment {
         ListView listView = (ListView) view.findViewById(R.id.listview_experiment_view_sensor_list);
         TextView textView = (TextView) view.findViewById(R.id.textview_experiment_view_no_sensors);
         Activity activity = getActivity();
-        
+
         List<AbstractSensor> lstSensors = null;
         List<AbstractSensor> selectedSensors = new ArrayList<AbstractSensor>();
-        
+
         if (getActivity() instanceof ViewExperimentActivity) {
             lstSensors = (ArrayList<AbstractSensor>) ExperimentManagerSingleton.getInstance()
                     .getActiveExperiment()
@@ -68,26 +68,27 @@ public class ExperimentSensorListFragment extends Fragment {
             Log.d("SensorDataCollector",
                     "ViewExperimentActivity::ExperimentSensorListFragment::onCreateView() sensors: "
                             + lstSensors.size());
-        } else if (activity instanceof CreateExperimentActivity) {            
+        } else if (activity instanceof CreateExperimentActivity) {
             if (!SensorDiscoverer.isInitialized())
                 SensorDiscoverer.initialize(activity.getApplicationContext());
             lstSensors = SensorDiscoverer.discoverSensorList();
-            
-            ((CreateExperimentActivity)activity).selectSensors(lstSensors);
-            
-            for (Iterator<AbstractSensor> it = lstSensors.iterator(); it.hasNext(); ) {
-            	AbstractSensor sensor = it.next();
-            	if (sensor.isSelected()) {
+
+            ((CreateExperimentActivity) activity).selectSensors(lstSensors);
+
+            for (Iterator<AbstractSensor> it = lstSensors.iterator(); it.hasNext();) {
+                AbstractSensor sensor = it.next();
+                if (sensor.isSelected()) {
                     selectedSensors.add(sensor);
                 }
-            }            
-            
+            }
+
             Log.d("SensorDataCollector",
                     "CreateExperimentActivity::ExperimentSensorListFragment::onCreateView() sensors: "
                             + selectedSensors.size());
         } else {
             Log.d("SensorDataCollector",
-                    "ExperimentSensorListFragment::onCreateView(): " + "not a CreateExperimentActivity.");            
+                    "ExperimentSensorListFragment::onCreateView(): "
+                            + "not a CreateExperimentActivity.");
         }
 
         if (selectedSensors == null || selectedSensors.size() == 0) {
@@ -119,7 +120,8 @@ public class ExperimentSensorListFragment extends Fragment {
 
                 @Override
                 public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
-                    Log.d("SensorDataCollector", "onActivityCreated(): Sensor ListView clicked at postion " + position);
+                    Log.d("SensorDataCollector",
+                            "onActivityCreated(): Sensor ListView clicked at postion " + position);
                     if (getActivity() instanceof ViewExperimentActivity) {
                         mCallback.onSensorClicked_ExperimentSensorListFragment(position);
                     } else if (getActivity() instanceof CreateExperimentActivity) {

@@ -23,24 +23,26 @@ public class WaveHeader {
 
     private byte[] mHeader = {
             'R', 'I', 'F', 'F', // ChunkId = "RIFF"
-            0, 0, 0, 0,         // ChunkSize = 36 + SubChunk2Size
+            0, 0, 0, 0, // ChunkSize = 36 + SubChunk2Size
             // ChunkSize counting from below to the end of file
             'W', 'A', 'V', 'E', // format = "WAVE"
 
             // format subchunk or subchunk1
             'f', 'm', 't', ' ', // SubChuck1Id = "fmt "
-            16, 0, 0, 0,    // SubChunk1Size 16 for PCM
+            16, 0, 0, 0, // SubChunk1Size 16 for PCM
             // SubChunk1
-            1, 0,           // AudioFormat 1 for PCM
-            0, 0,           // NumChannels 1 for Mono 2 for Stereo
-            0, 0, 0, 0,     // SamplingRate
-            0, 0, 0, 0,     // ByteRate == SampleRate * NumChannels * BitsPerSample/8
-            0, 0,           // BlockAlign == NumChannels * BitsPerSample/8
-            0, 0,           // BitsPerSample 8 bits = 8, 16 bits = 16
+            1, 0, // AudioFormat 1 for PCM
+            0, 0, // NumChannels 1 for Mono 2 for Stereo
+            0, 0, 0, 0, // SamplingRate
+            0, 0, 0, 0, // ByteRate == SampleRate * NumChannels *
+                        // BitsPerSample/8
+            0, 0, // BlockAlign == NumChannels * BitsPerSample/8
+            0, 0, // BitsPerSample 8 bits = 8, 16 bits = 16
 
             // data subchunk or SubChunk2
             'd', 'a', 't', 'a', // SubChunk2ID == "data"
-            0, 0, 0, 0      // SubChunk2Size == NumSamples * NumChannels * BitsPerSample/8
+            0, 0, 0, 0
+    // SubChunk2Size == NumSamples * NumChannels * BitsPerSample/8
     };
 
     private long mChunkSize;
@@ -54,12 +56,13 @@ public class WaveHeader {
     private long mSubChunk2Size;
 
     private short mBitsPerSample;
-    
+
     private short mBlockAlign;
 
     private boolean mHeaderFilled = false;
 
-    public WaveHeader(short numberOfChannels, long samplingRate, short bitsPerSample, long numberOfSamples) {
+    public WaveHeader(short numberOfChannels, long samplingRate, short bitsPerSample,
+            long numberOfSamples) {
         mNumberOfChannels = numberOfChannels;
         mSamplingRate = samplingRate;
         mBitsPerSample = bitsPerSample;
@@ -90,7 +93,7 @@ public class WaveHeader {
         mHeader[29] = (byte) ((mByteRate >> 8) & 0xff);
         mHeader[30] = (byte) ((mByteRate >> 16) & 0xff);
         mHeader[31] = (byte) ((mByteRate >> 24) & 0xff);
-        
+
         mHeader[32] = (byte) (mBlockAlign & 0xff);
         mHeader[31] = (byte) (mBlockAlign >> 8 & 0xff);
 
@@ -104,7 +107,7 @@ public class WaveHeader {
 
         mHeaderFilled = true;
     }
-    
+
     public byte[] getHeader() {
         if (mHeaderFilled) {
             return mHeader;

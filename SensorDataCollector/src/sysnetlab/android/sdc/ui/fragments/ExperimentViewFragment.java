@@ -38,7 +38,7 @@ public class ExperimentViewFragment extends Fragment {
 
     public interface OnFragmentClickListener {
         public void onBtnCloneClicked_ExperimentViewFragment();
-        
+
         public void onBtnDropboxClicked_ExperimentViewFragment();
 
         public void onTagsClicked_ExperimentViewFragment();
@@ -105,15 +105,15 @@ public class ExperimentViewFragment extends Fragment {
                         mCallback.onBtnCloneClicked_ExperimentViewFragment();
                     }
                 });
-        
-        ((Button) getActivity().findViewById(R.id.button_experiment_view_dropbox))
-        .setOnClickListener(new Button.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                mCallback.onBtnDropboxClicked_ExperimentViewFragment();
-            }
-        });
+        ((Button) getActivity().findViewById(R.id.button_experiment_view_dropbox))
+                .setOnClickListener(new Button.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        mCallback.onBtnDropboxClicked_ExperimentViewFragment();
+                    }
+                });
     }
 
     @Override
@@ -127,13 +127,13 @@ public class ExperimentViewFragment extends Fragment {
                     + " must implement OnFragmentClickListener");
         }
     }
-    
-    public ExperimentSensorListFragment getExperimentSensorListFragment(){
-    	return mExperimentSensorListFragment;
+
+    public ExperimentSensorListFragment getExperimentSensorListFragment() {
+        return mExperimentSensorListFragment;
     }
-    
+
     public boolean isFragmentUIActive() {
         return isAdded() && !isDetached() && !isRemoving();
     }
-    
+
 }

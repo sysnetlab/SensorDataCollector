@@ -76,47 +76,58 @@ public class AudioRecordParameter {
 
     public void setBufferSize(int bufferSize) {
         mBufferSize = bufferSize;
-    }  
-    
+    }
+
     public int getMinBufferSize() {
         return mBufferSize;
     }
 
     public void setMinBufferSize(int minBufferSize) {
         mBufferSize = minBufferSize;
-    }  
-    
+    }
+
     public boolean equals(Object rhs) {
-        if (this == rhs) return true;
-        
-        if (!(rhs instanceof AudioRecordParameter)) return false;
-        
+        if (this == rhs)
+            return true;
+
+        if (!(rhs instanceof AudioRecordParameter))
+            return false;
+
         AudioRecordParameter p = (AudioRecordParameter) rhs;
-        
-        if (mSamplingRate != p.mSamplingRate) return false;
-        
-        if (mBufferSize != p.mBufferSize) return false;
-        
-        if (mMinBufferSize != p.mMinBufferSize) return false;
-        
+
+        if (mSamplingRate != p.mSamplingRate)
+            return false;
+
+        if (mBufferSize != p.mBufferSize)
+            return false;
+
+        if (mMinBufferSize != p.mMinBufferSize)
+            return false;
+
         if (mChannel == null) {
-            if (p.mChannel != null) return false;
+            if (p.mChannel != null)
+                return false;
         } else {
-            if (!mChannel.equals(p.mChannel)) return false;
+            if (!mChannel.equals(p.mChannel))
+                return false;
         }
-        
+
         if (mEncoding == null) {
-            if (p.mEncoding != null) return false;
+            if (p.mEncoding != null)
+                return false;
         } else {
-            if (!mEncoding.equals(p.mEncoding)) return false;            
+            if (!mEncoding.equals(p.mEncoding))
+                return false;
         }
-        
+
         if (mSource == null) {
-            if (p.mSource != null) return false;
+            if (p.mSource != null)
+                return false;
         } else {
-            if (!mSource.equals(p.mSource)) return false;
+            if (!mSource.equals(p.mSource))
+                return false;
         }
-        
+
         return true;
     }
 }

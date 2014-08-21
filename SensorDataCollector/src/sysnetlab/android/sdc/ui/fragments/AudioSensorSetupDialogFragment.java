@@ -26,7 +26,7 @@ import sysnetlab.android.sdc.sensor.audio.AudioEncoding;
 import sysnetlab.android.sdc.sensor.audio.AudioRecordParameter;
 import sysnetlab.android.sdc.sensor.audio.AudioRecordSettingDataSource;
 import sysnetlab.android.sdc.sensor.audio.AudioSource;
-import sysnetlab.android.sdc.ui.UserInterfaceUtil;
+import sysnetlab.android.sdc.ui.UserInterfaceUtils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -78,11 +78,11 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         CharSequence[] cs;
         int checkedItem;
-        
+
         AudioRecordSettingDataSource.initializeInstance(getActivity());
         AudioRecordSettingDataSource dbSource = AudioRecordSettingDataSource.getInstance();
         dbSource.open();
-        
+
         switch (operation) {
             case SELECT_SOURCE:
 
@@ -102,20 +102,26 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Log.i("SensorDataCollector", "AudioSensorSetupDialog::SOURCE_SLECT: which = " + which);
+                                Log.d("SensorDataCollector",
+                                        "AudioSensorSetupDialog::SOURCE_SLECT: which = " + which);
                                 AudioSource source = listSources.get(which);
                                 List<AudioRecordParameter> params = lookupAudioRecordParameter(source);
                                 if (params == null || params.isEmpty()) {
-                                    Log.i("SensorDataCollector", "AudioSensorSetupDialog::SOURCE_SELECT:params is empty");                                
+                                    Log.d("SensorDataCollector",
+                                            "AudioSensorSetupDialog::SOURCE_SELECT:params is empty");
                                     return;
                                 }
 
                                 AudioRecordParameter p = params.get(0);
 
-                                Log.i("SensorDataCollector", "AudioSensorSetupDialog::SOURCE_SLECT:BEFORE:SourceId = " + mAudioRecordParameter.getSource().getSourceId());                                
+                                Log.d("SensorDataCollector",
+                                        "AudioSensorSetupDialog::SOURCE_SLECT:BEFORE:SourceId = "
+                                                + mAudioRecordParameter.getSource().getSourceId());
                                 mAudioRecordParameter.setSource(source);
-                                Log.i("SensorDataCollector", "AudioSensorSetupDialog::SOURCE_SLECT:AFTER:SourceId = " + mAudioRecordParameter.getSource().getSourceId());                                
-                                
+                                Log.d("SensorDataCollector",
+                                        "AudioSensorSetupDialog::SOURCE_SLECT:AFTER:SourceId = "
+                                                + mAudioRecordParameter.getSource().getSourceId());
+
                                 mAudioRecordParameter.setChannel(p.getChannel());
                                 mAudioRecordParameter.setEncoding(p.getEncoding());
                                 mAudioRecordParameter.setSamplingRate(p.getSamplingRate());
@@ -128,14 +134,15 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                UserInterfaceUtil.updateAudioSensorPropertyListView(mActivity,
+                                UserInterfaceUtils.updateAudioSensorPropertyListView(mActivity,
                                         mListView, mAudioRecordParameter);
                             }
                         });
 
                 break;
             case SELECT_CHANNEL_IN:
-                final List<AudioChannelIn> listChannels = dbSource.getAllAudioChannelIns(mAudioRecordParameter.getSource());
+                final List<AudioChannelIn> listChannels = dbSource
+                        .getAllAudioChannelIns(mAudioRecordParameter.getSource());
 
                 cs = new CharSequence[listChannels.size()];
                 checkedItem = 0;
@@ -174,15 +181,16 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                UserInterfaceUtil.updateAudioSensorPropertyListView(mActivity,
+                                UserInterfaceUtils.updateAudioSensorPropertyListView(mActivity,
                                         mListView, mAudioRecordParameter);
                             }
                         });
 
                 break;
             case SELECT_ENCODING:
-                final List<AudioEncoding> listEncodings = dbSource.getAllAudioEncodings(mAudioRecordParameter.getSource(),
-                                mAudioRecordParameter.getChannel());
+                final List<AudioEncoding> listEncodings = dbSource.getAllAudioEncodings(
+                        mAudioRecordParameter.getSource(),
+                        mAudioRecordParameter.getChannel());
 
                 cs = new CharSequence[listEncodings.size()];
                 checkedItem = 0;
@@ -223,16 +231,17 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                UserInterfaceUtil.updateAudioSensorPropertyListView(mActivity,
+                                UserInterfaceUtils.updateAudioSensorPropertyListView(mActivity,
                                         mListView, mAudioRecordParameter);
                             }
                         });
 
                 break;
             case SELECT_SAMPLING_RATE:
-                final List<Integer> listSamplingRates = dbSource.getAllSamplingRates(mAudioRecordParameter.getSource(),
-                                mAudioRecordParameter.getChannel(),
-                                mAudioRecordParameter.getEncoding());
+                final List<Integer> listSamplingRates = dbSource.getAllSamplingRates(
+                        mAudioRecordParameter.getSource(),
+                        mAudioRecordParameter.getChannel(),
+                        mAudioRecordParameter.getEncoding());
 
                 cs = new CharSequence[listSamplingRates.size()];
                 checkedItem = 0;
@@ -274,7 +283,7 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                UserInterfaceUtil.updateAudioSensorPropertyListView(mActivity,
+                                UserInterfaceUtils.updateAudioSensorPropertyListView(mActivity,
                                         mListView, mAudioRecordParameter);
                             }
                         });
@@ -282,7 +291,7 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
                 break;
 
             case SELECT_MIN_BUFFER_SIZE:
-                
+
                 // TODO change it to slider/seek bar instead of list
                 final int minBufferSize = dbSource.getMinBufferSize(
                         mAudioRecordParameter.getSource(), mAudioRecordParameter.getChannel(),
@@ -324,7 +333,7 @@ public class AudioSensorSetupDialogFragment extends DialogFragment {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                UserInterfaceUtil.updateAudioSensorPropertyListView(mActivity,
+                                UserInterfaceUtils.updateAudioSensorPropertyListView(mActivity,
                                         mListView, mAudioRecordParameter);
                             }
                         });

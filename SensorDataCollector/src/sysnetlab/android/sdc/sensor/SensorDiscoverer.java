@@ -38,18 +38,21 @@ public class SensorDiscoverer {
     public static void initialize(Context context) {
         mContext = context;
     }
-    
+
     public static boolean isInitialized() {
-        if (mContext == null) return false;
+        if (mContext == null)
+            return false;
         return true;
     }
 
-    public static AbstractSensor constructSensorObject(String sensorName, int majorType, int minorType,
+    public static AbstractSensor constructSensorObject(String sensorName, int majorType,
+            int minorType,
             Channel channel, Object object) {
         return constructSensorObject(sensorName, majorType, minorType, -1, channel, object);
     }
 
-    public static AbstractSensor constructSensorObject(String sensorName, int majorType, int minorType,
+    public static AbstractSensor constructSensorObject(String sensorName, int majorType,
+            int minorType,
             int id, Channel channel, Object object) {
         if (mContext == null) {
             throw new RuntimeException(
@@ -95,7 +98,7 @@ public class SensorDiscoverer {
         Iterator<Sensor> iter = sensorList.iterator();
         while (iter.hasNext()) {
             Sensor sensor = (Sensor) iter.next();
-            Log.i("SENSOR", "sensor = [" + sensor.getName() + "]");
+            Log.d("SENSOR", "sensor = [" + sensor.getName() + "]");
             AndroidSensor androidSensor = new AndroidSensor(sensor);
             mListAbstractSensors.add(androidSensor);
         }
@@ -130,7 +133,7 @@ public class SensorDiscoverer {
 
     private static AndroidSensor constructAndroidSensorObject(String sensorName, int majorType,
             int minorType, int id, Channel channel) {
-        
+
         AndroidSensor androidSensor = new AndroidSensor();
 
         List<Sensor> lstSensors = ((SensorManager) mContext
@@ -159,9 +162,10 @@ public class SensorDiscoverer {
         return androidSensor;
     }
 
-    private static AudioSensor constructAudioSensorObject(String sensorName, int majorType, int minorType,
+    private static AudioSensor constructAudioSensorObject(String sensorName, int majorType,
+            int minorType,
             int id, Channel channel, Object object) {
-        
+
         AudioRecordParameter param = (AudioRecordParameter) object;
         AudioSensor audioSensor = AudioSensor.getInstance();
         audioSensor.setAudioRecordParameter(param);

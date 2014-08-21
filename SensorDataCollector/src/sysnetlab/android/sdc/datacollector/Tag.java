@@ -22,11 +22,11 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 
 public class Tag implements Parcelable {
-	private int mId;
+    private int mId;
     private String mName;
     private String mShortDescription;
     private String mLongDescription;
-    
+
     public Tag(String name, int tagId) {
         this(name, "", "", tagId);
     }
@@ -34,7 +34,7 @@ public class Tag implements Parcelable {
     public Tag(String name, String shortDesc, int tagId) {
         this(name, shortDesc, "", tagId);
     }
- 
+
     public Tag(String name, String shortDesc, String longDesc, int tagId) {
         mName = name;
         mShortDescription = shortDesc;
@@ -42,14 +42,14 @@ public class Tag implements Parcelable {
         this.mId = tagId;
     }
 
-    public int getTagId(){
-    	return mId;
+    public int getTagId() {
+        return mId;
     }
-    
-    public void setTagId(int tagId){
-    	this.mId = tagId;
+
+    public void setTagId(int tagId) {
+        this.mId = tagId;
     }
-    
+
     public String getName() {
         return mName;
     }
@@ -83,21 +83,21 @@ public class Tag implements Parcelable {
         if (rhs == this) {
             return true;
         }
-        
+
         if (!(rhs instanceof Tag)) {
             return false;
         }
-        
+
         Tag tag = (Tag) rhs;
-       
-        if(mId != tag.mId){
-        	return false;
-        }
-        
-        if (!TextUtils.equals(mName, tag.mName)){
+
+        if (mId != tag.mId) {
             return false;
         }
-        
+
+        if (!TextUtils.equals(mName, tag.mName)) {
+            return false;
+        }
+
         if (!TextUtils.equals(mShortDescription, tag.mShortDescription)) {
             return false;
         }
@@ -105,10 +105,10 @@ public class Tag implements Parcelable {
         if (!TextUtils.equals(mLongDescription, tag.mLongDescription)) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     public static final Parcelable.Creator<Tag> CREATOR = new Parcelable.Creator<Tag>() {
 
         @Override
@@ -120,16 +120,15 @@ public class Tag implements Parcelable {
         public Tag[] newArray(int size) {
             return new Tag[size];
         }
-        
+
     };
-    
+
     public Tag(Parcel inParcel) {
-    	mId = inParcel.readInt();
+        mId = inParcel.readInt();
         mName = inParcel.readString();
         mShortDescription = inParcel.readString();
         mLongDescription = inParcel.readString();
     }
-
 
     @Override
     public int describeContents() {
@@ -138,13 +137,13 @@ public class Tag implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel outParcel, int flags) {
-    	outParcel.writeInt(mId);
+        outParcel.writeInt(mId);
         outParcel.writeString(mName);
         outParcel.writeString(mShortDescription);
-        outParcel.writeString(mLongDescription);       
+        outParcel.writeString(mLongDescription);
     }
-    
+
     public Parcelable.Creator<Tag> getCreator() {
-		return CREATOR;
-	}
+        return CREATOR;
+    }
 }

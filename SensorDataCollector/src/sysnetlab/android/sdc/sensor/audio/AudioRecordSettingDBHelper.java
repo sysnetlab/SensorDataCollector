@@ -28,11 +28,14 @@ public class AudioRecordSettingDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_NAME_ID = "id";
     public static final String COLUMN_NAME_SAMPLING_RATE = "sampling_rate";
     public static final String COLUMN_NAME_CHANNEL_IN_ID = "channel_in_id";
-    //public static final String COLUMN_NAME_CHANNEL_IN_RES_ID = "channel_in_res_id";
+    // public static final String COLUMN_NAME_CHANNEL_IN_RES_ID =
+    // "channel_in_res_id";
     public static final String COLUMN_NAME_CHANNEL_ENCODING_ID = "channel_encoding_id";
-    //public static final String COLUMN_NAME_CHANNEL_ENCODING_RES_ID = "channel_encoding_res_id";
+    // public static final String COLUMN_NAME_CHANNEL_ENCODING_RES_ID =
+    // "channel_encoding_res_id";
     public static final String COLUMN_NAME_AUDIO_SOURCE_ID = "audio_source_id";
-    //public static final String COLUMN_NAME_AUDIO_SOURCE_RES_ID = "audio_source_res_id";
+    // public static final String COLUMN_NAME_AUDIO_SOURCE_RES_ID =
+    // "audio_source_res_id";
     public static final String COLUMN_NAME_MIN_BUFFER_SIZE = "min_buffer_size";
     public static final String COLUMN_NAME_STATUS = "status";
 
@@ -43,11 +46,11 @@ public class AudioRecordSettingDBHelper extends SQLiteOpenHelper {
             COLUMN_NAME_ID + " integer primary key autoincrement," +
             COLUMN_NAME_SAMPLING_RATE + " integer not null," +
             COLUMN_NAME_CHANNEL_IN_ID + " integer not null," +
-            //COLUMN_NAME_CHANNEL_IN_RES_ID + " integer not null," +
+            // COLUMN_NAME_CHANNEL_IN_RES_ID + " integer not null," +
             COLUMN_NAME_CHANNEL_ENCODING_ID + " integer not null," +
-            //COLUMN_NAME_CHANNEL_ENCODING_RES_ID + " integer not null," +
+            // COLUMN_NAME_CHANNEL_ENCODING_RES_ID + " integer not null," +
             COLUMN_NAME_AUDIO_SOURCE_ID + " integer not null," +
-            //COLUMN_NAME_AUDIO_SOURCE_RES_ID + " integer not null," +
+            // COLUMN_NAME_AUDIO_SOURCE_RES_ID + " integer not null," +
             COLUMN_NAME_MIN_BUFFER_SIZE + " integer not null)";
     private static final String DB_TABLE_AUDIORECORDDISCOVERSTATUS_CREATE = "CREATE TABLE "
             + TABLE_AUDIORECORDDISCOVERSTATUS + " ("
@@ -67,22 +70,21 @@ public class AudioRecordSettingDBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.w("SensorDataCollector", AudioRecordSettingDBHelper.class.getName() +
                 ":" + "Upgrading database "
-                        + DB_NAME + " from version " + oldVersion + " to " + newVersion
-                        + ", which destroys all old data");
+                + DB_NAME + " from version " + oldVersion + " to " + newVersion
+                + ", which destroys all old data");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_AUDIORECORDSETTINGS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_AUDIORECORDDISCOVERSTATUS);
         onCreate(db);
     }
 
-
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.w("SensorDataCollector", AudioRecordSettingDBHelper.class.getName() +
                 ":" + "Downgrade database "
-                        + DB_NAME + " from version " + newVersion + " to " + oldVersion
-                        + ", which destroys all old data");
+                + DB_NAME + " from version " + newVersion + " to " + oldVersion
+                + ", which destroys all old data");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_AUDIORECORDSETTINGS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_AUDIORECORDDISCOVERSTATUS);
         onCreate(db);
-    }    
+    }
 }

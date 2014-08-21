@@ -37,7 +37,7 @@ public class Note implements Parcelable {
     }
 
     public Note(String note, Date dateCreated) {
-        mNote = note != null ? note : "";        
+        mNote = note != null ? note : "";
         mDateCreated = dateCreated != null ? dateCreated : Calendar.getInstance().getTime();
     }
 
@@ -48,7 +48,7 @@ public class Note implements Parcelable {
     public void setNote(String mNote) {
         this.mNote = mNote;
     }
-    
+
     public Date getDateCreated() {
         return mDateCreated;
     }
@@ -56,52 +56,57 @@ public class Note implements Parcelable {
     public String getDateCreatedAsString() {
         return SimpleDateFormat.getDateTimeInstance().format(mDateCreated);
     }
-    
+
     public String getDateCreatedAsStringUTC() {
         // use XML dateTimeType format
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm:ss.SSSZ", Locale.US);
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return formatter.format(mDateCreated);    
+        return formatter.format(mDateCreated);
     }
-    
+
     public void setDateCreatedFromString(String dateTime) {
-    	try {
- 			mDateCreated = SimpleDateFormat.getDateTimeInstance().parse(dateTime);
- 		} catch (ParseException e) {
- 			// TODO Auto-generated catch block
- 			e.printStackTrace();
- 		}
-    }
-    
-    public long getDateCreatedAsLong(){
-    	return mDateCreated.getTime();
-    }
-    
-    public void setDateCreatedFromLong(long dateTime){    	
-    		mDateCreated = new Date(dateTime);    	
-    }
-    
-    public void setDateCreatedFromStringUTC(String dateTime) {
         try {
-            // use XML dateTimeType format
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm:ss.SSSZ", Locale.US);
-            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-            mDateCreated = formatter.parse(dateTime);                
+            mDateCreated = SimpleDateFormat.getDateTimeInstance().parse(dateTime);
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
-    
+
+    public long getDateCreatedAsLong() {
+        return mDateCreated.getTime();
+    }
+
+    public void setDateCreatedFromLong(long dateTime) {
+        mDateCreated = new Date(dateTime);
+    }
+
+    public void setDateCreatedFromStringUTC(String dateTime) {
+        try {
+            // use XML dateTimeType format
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm:ss.SSSZ",
+                    Locale.US);
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            mDateCreated = formatter.parse(dateTime);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     public boolean equals(Object object) {
-        if (this == object) return true;
+        if (this == object)
+            return true;
         // it also takes care of the case that rhs is null
-        if (!(object instanceof Note)) return false;
-        
-        Note note = (Note) object;        
-        if (!this.mNote.equals(note.mNote)) return false;
-        if (!this.mDateCreated.equals(note.mDateCreated)) return false;
-        
+        if (!(object instanceof Note))
+            return false;
+
+        Note note = (Note) object;
+        if (!this.mNote.equals(note.mNote))
+            return false;
+        if (!this.mDateCreated.equals(note.mDateCreated))
+            return false;
+
         return true;
     }
 
@@ -132,6 +137,6 @@ public class Note implements Parcelable {
     @Override
     public void writeToParcel(Parcel outParcel, int flags) {
         outParcel.writeString(mNote);
-        outParcel.writeLong(getDateCreatedAsLong());        
+        outParcel.writeLong(getDateCreatedAsLong());
     }
 }

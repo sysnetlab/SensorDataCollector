@@ -34,20 +34,21 @@ import android.widget.TextView;
 
 public class ExperimentViewTagsFragment extends Fragment {
     private View mView;
-  
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         mView = inflater.inflate(R.layout.fragment_experiment_view_tags, container, false);
-       
-        ListView lv = (ListView) mView.findViewById(R.id.listview_fragment_experiment_view_tag_tag_properties); 
+
+        ListView lv = (ListView) mView
+                .findViewById(R.id.listview_fragment_experiment_view_tag_tag_properties);
         Experiment experiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();
-       
+
         List<Tag> tags = experiment.getTags();
-        TagListAdapter adaptTags = new TagListAdapter(getActivity(),tags);
+        TagListAdapter adaptTags = new TagListAdapter(getActivity(), tags);
         lv.setAdapter(adaptTags);
-         
+
         String strHeadingSubTextFormatter = getResources().getString(
                 R.string.text_for_experiment_name_x);
         String strHeadingSubText = String.format(strHeadingSubTextFormatter, experiment.getName());
@@ -61,7 +62,7 @@ public class ExperimentViewTagsFragment extends Fragment {
         ((TextView) mView
                 .findViewById(R.id.textview_fragment_experiment_view_tags_experiment_time_done))
                 .setText(experiment.getDateTimeDoneAsString());
-  
+
         return mView;
     }
 }

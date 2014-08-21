@@ -40,7 +40,7 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
         protected TextView tag;
         protected TextView description;
     }
-    
+
     @Override
     public int getCount() {
         return super.getCount();
@@ -60,9 +60,10 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
         } else {
             view = convertView;
         }
-        
+
         ViewHolder holder = (ViewHolder) view.getTag();
-        // TODO: If the Tag description exceeds one line, cut off and add ellipses.
+        // TODO: If the Tag description exceeds one line, cut off and add
+        // ellipses.
         holder.tag.setText(getItem(position).getName());
         holder.description.setText(getItem(position).getShortDescription());
         return view;

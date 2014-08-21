@@ -47,18 +47,22 @@ public class SensorProperty {
     public void setValue(final String value) {
         mValue = value;
     }
-    
+
     public boolean equals(Object rhs) {
-        if (this == rhs) return true;
-        
-        if (!(rhs instanceof SensorProperty)) return false;
-        
+        if (this == rhs)
+            return true;
+
+        if (!(rhs instanceof SensorProperty))
+            return false;
+
         SensorProperty property = (SensorProperty) rhs;
-        
-        if (!TextUtils.equals(mName, property.mName)) return false;
-        
-        if (!TextUtils.equals(mValue, property.mValue)) return false;
-        
+
+        if (!TextUtils.equals(mName, property.mName))
+            return false;
+
+        if (!TextUtils.equals(mValue, property.mValue))
+            return false;
+
         return true;
     }
 }

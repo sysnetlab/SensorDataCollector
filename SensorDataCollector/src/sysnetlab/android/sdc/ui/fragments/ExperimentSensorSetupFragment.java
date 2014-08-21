@@ -25,7 +25,7 @@ import sysnetlab.android.sdc.sensor.SensorProperty;
 import sysnetlab.android.sdc.sensor.audio.AudioRecordParameter;
 import sysnetlab.android.sdc.sensor.audio.AudioRecordSettingDataSource;
 import sysnetlab.android.sdc.sensor.audio.AudioSensor;
-import sysnetlab.android.sdc.ui.UserInterfaceUtil;
+import sysnetlab.android.sdc.ui.UserInterfaceUtils;
 import sysnetlab.android.sdc.R;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -49,7 +49,7 @@ public class ExperimentSensorSetupFragment extends Fragment {
     private AbstractSensor mSensor;
     private List<AudioRecordParameter> mAudioRecordParameters;
     private ListView mListView;
-    
+
     public interface OnFragmentClickListener {
         public void onBtnSetParameterClicked_SensorSetupFragment(View v, AbstractSensor sensor);
     }
@@ -60,7 +60,7 @@ public class ExperimentSensorSetupFragment extends Fragment {
         // TODO: handle configuration changes
         AudioRecordSettingDataSource.initializeInstance(getActivity());
         AudioRecordSettingDataSource dbSource = AudioRecordSettingDataSource.getInstance();
-        
+
         dbSource.open();
         if (!dbSource.isDataSourceReady()) {
             // add progress wheel
@@ -69,7 +69,7 @@ public class ExperimentSensorSetupFragment extends Fragment {
         }
         mAudioRecordParameters = dbSource.getAllAudioRecordParameters();
         dbSource.close();
-        
+
         switch (mSensor.getMajorType()) {
             case AbstractSensor.ANDROID_SENSOR:
                 mView = inflater.inflate(R.layout.fragment_sensor_setup, container, false);
@@ -84,42 +84,43 @@ public class ExperimentSensorSetupFragment extends Fragment {
 
                 if (mSensor != null) {
                     AudioRecordParameter param = ((AudioSensor) mSensor).getAudioRecordParameter();
-                    Log.d("SensorDataCollector", "AUDIO_SENSOR: (id, resid) = " + 
-                            param.getSource().getSourceId() + "," + 
-                            param.getSource().getSourceNameResId());                    
+                    Log.d("SensorDataCollector", "AUDIO_SENSOR: (id, resid) = " +
+                            param.getSource().getSourceId() + "," +
+                            param.getSource().getSourceNameResId());
                     updateAudioSensorSetupView();
                 }
 
-                break; 
+                break;
 
             case AbstractSensor.CAMERA_SENSOR:
                 // TODO: camera sensor
-                Log.i("SensorDataCollector", "ToDo: Camera sensor.");
+                Log.w("SensorDataCollector", "ToDo: Camera sensor.");
                 mView = inflater.inflate(R.layout.fragment_sensor_setup, container, false);
                 break;
             case AbstractSensor.WIFI_SENSOR:
                 // TODO: WiFi sensor
-                Log.i("SensorDataCollector", "Todo: WiFi RSSI sensor.");
+                Log.w("SensorDataCollector", "Todo: WiFi RSSI sensor.");
                 mView = inflater.inflate(R.layout.fragment_sensor_setup, container, false);
                 break;
             case AbstractSensor.BLUETOOTH_SENSOR:
                 // TODO: Bluetooth sensor
-                Log.i("SensorDataCollector", "Todo: Bluetooth RSSI sensor.");
+                Log.w("SensorDataCollector", "Todo: Bluetooth RSSI sensor.");
                 mView = inflater.inflate(R.layout.fragment_sensor_setup, container, false);
                 break;
             default:
-                Log.e("SensorDataCollector", "Invalid major sensor type = " + mSensor.getMajorType());
+                Log.e("SensorDataCollector",
+                        "Invalid major sensor type = " + mSensor.getMajorType());
 
                 mView = inflater.inflate(R.layout.fragment_sensor_setup, container, false);
-                
+
                 String strWarnMsgFormatter = mView.getResources().getString(
                         R.string.text_sensor_type_x_not_handled);
                 String strWargMsg = String.format(strWarnMsgFormatter, mSensor.getMajorType());
-                
-                Toast.makeText(getActivity(), strWargMsg,  Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(getActivity(), strWargMsg, Toast.LENGTH_SHORT).show();
                 break;
         }
-        
+
         return mView;
     }
 
@@ -150,7 +151,7 @@ public class ExperimentSensorSetupFragment extends Fragment {
                     }
                 });
     }
-    
+
     public void setSensor(AbstractSensor sensor) {
         mSensor = sensor;
     }
@@ -158,10 +159,10 @@ public class ExperimentSensorSetupFragment extends Fragment {
     private void updateAndroidSensorSetupView(AbstractSensor sensor) {
         TextView tv = (TextView) mView.findViewById(R.id.textview_sensor_setup_sensor_name);
         tv.setText(sensor.getName());
-        
+
         Log.d("SensorDataCollector", "Android sensor.");
 
-        UserInterfaceUtil
+        UserInterfaceUtils
                 .fillSensorProperties(getActivity(), (ListView) mView
                         .findViewById(R.id.listview_sensor_setup_sensor_properties), sensor);
 
@@ -193,51 +194,63 @@ public class ExperimentSensorSetupFragment extends Fragment {
             Log.d("SensorDataCollector", "Non-streaming (onchange) sensor.");
         }
     }
-    
-    private void updateAudioSensorSetupView() {    
+
+    private void updateAudioSensorSetupView() {
         Button btnSetSamplingRate = (Button) mView
                 .findViewById(R.id.button_sensor_setup_set_parameter);
         btnSetSamplingRate.setVisibility(View.GONE);
-        
-        
+
         TextView tv = (TextView) mView.findViewById(R.id.textview_sensor_setup_sensor_name);
         tv.setText(mSensor.getName());
 
         mListView = (ListView) mView.findViewById(R.id.listview_audio_sensor_setup);
-        
-        UserInterfaceUtil.fillSensorProperties(getActivity(), mListView, mSensor);
+
+        UserInterfaceUtils.fillSensorProperties(getActivity(), mListView, mSensor);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
                 SensorProperty property = (SensorProperty) listView.getItemAtPosition(position);
-                
-                if (property.getName().equals(getActivity().getResources().getString(R.string.text_audio_source))) {
-                    showAudioSensorDialog(mAudioRecordParameters, ((AudioSensor) mSensor).getAudioRecordParameter(),
+
+                if (property.getName().equals(
+                        getActivity().getResources().getString(R.string.text_audio_source))) {
+                    showAudioSensorDialog(mAudioRecordParameters,
+                            ((AudioSensor) mSensor).getAudioRecordParameter(),
                             AudioSensorSetupDialogFragment.SELECT_SOURCE);
-                } else if (property.getName().equals(getActivity().getResources().getString(R.string.text_audio_channel_in))) {
-                    showAudioSensorDialog(mAudioRecordParameters, ((AudioSensor) mSensor).getAudioRecordParameter(),
-                            AudioSensorSetupDialogFragment.SELECT_CHANNEL_IN);  
-                } else if (property.getName().equals(getActivity().getResources().getString(R.string.text_audio_encoding))) {
-                    showAudioSensorDialog(mAudioRecordParameters, ((AudioSensor) mSensor).getAudioRecordParameter(),
-                            AudioSensorSetupDialogFragment.SELECT_ENCODING);    
-                } else if (property.getName().equals(getActivity().getResources().getString(R.string.text_audio_sampling_rate))) {
-                    showAudioSensorDialog(mAudioRecordParameters, ((AudioSensor) mSensor).getAudioRecordParameter(),
-                            AudioSensorSetupDialogFragment.SELECT_SAMPLING_RATE);   
-                } else if (property.getName().equals(getActivity().getResources().getString(R.string.text_audio_min_buffer_size))) {
-                    showAudioSensorDialog(mAudioRecordParameters, ((AudioSensor) mSensor).getAudioRecordParameter(),
-                            AudioSensorSetupDialogFragment.SELECT_MIN_BUFFER_SIZE); 
+                } else if (property.getName().equals(
+                        getActivity().getResources().getString(R.string.text_audio_channel_in))) {
+                    showAudioSensorDialog(mAudioRecordParameters,
+                            ((AudioSensor) mSensor).getAudioRecordParameter(),
+                            AudioSensorSetupDialogFragment.SELECT_CHANNEL_IN);
+                } else if (property.getName().equals(
+                        getActivity().getResources().getString(R.string.text_audio_encoding))) {
+                    showAudioSensorDialog(mAudioRecordParameters,
+                            ((AudioSensor) mSensor).getAudioRecordParameter(),
+                            AudioSensorSetupDialogFragment.SELECT_ENCODING);
+                } else if (property.getName().equals(
+                        getActivity().getResources().getString(R.string.text_audio_sampling_rate))) {
+                    showAudioSensorDialog(mAudioRecordParameters,
+                            ((AudioSensor) mSensor).getAudioRecordParameter(),
+                            AudioSensorSetupDialogFragment.SELECT_SAMPLING_RATE);
+                } else if (property.getName()
+                        .equals(getActivity().getResources().getString(
+                                R.string.text_audio_min_buffer_size))) {
+                    showAudioSensorDialog(mAudioRecordParameters,
+                            ((AudioSensor) mSensor).getAudioRecordParameter(),
+                            AudioSensorSetupDialogFragment.SELECT_MIN_BUFFER_SIZE);
                 }
             }
         });
     }
-    
-    private void showAudioSensorDialog(List<AudioRecordParameter> allParams, AudioRecordParameter param, int operation) {
-        DialogFragment newFragment = AudioSensorSetupDialogFragment.newInstance(getActivity(), allParams, param, mListView, operation);
-        
+
+    private void showAudioSensorDialog(List<AudioRecordParameter> allParams,
+            AudioRecordParameter param, int operation) {
+        DialogFragment newFragment = AudioSensorSetupDialogFragment.newInstance(getActivity(),
+                allParams, param, mListView, operation);
+
         final FragmentManager fm = getActivity().getSupportFragmentManager();
-        newFragment.show(fm, "dialog");   
+        newFragment.show(fm, "dialog");
     }
 
 }

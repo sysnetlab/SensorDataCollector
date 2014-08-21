@@ -104,18 +104,15 @@ public class CreateExperimentActivity extends FragmentActivityBase
 
     private int mOperation;
 
-    public ExperimentSensorSelectionFragment getExperimentSensorSensorSelectionFragment()
-    {
+    public ExperimentSensorSelectionFragment getExperimentSensorSensorSelectionFragment() {
         return mExperimentSensorSelectionFragment;
     }
 
-    public ExperimentEditNotesFragment getExperimentEditNotesFragment()
-    {
+    public ExperimentEditNotesFragment getExperimentEditNotesFragment() {
         return mExperimentEditNotesFragment;
     }
 
-    public ExperimentSensorSetupFragment getSensorSetupFragment()
-    {
+    public ExperimentSensorSetupFragment getSensorSetupFragment() {
         return mSensorSetupFragment;
     }
 
@@ -127,8 +124,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
         return mExperimentRunFragment;
     }
 
-    public DataCollectionState getCurrentCollectionState()
-    {
+    public DataCollectionState getCurrentCollectionState() {
         return mCollectionState;
     }
 
@@ -252,7 +248,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
         super.onResume();
 
         // bind the local service
-        boolean status = UserInterfaceUtil.bindRunExperimentServiceCompatible(this, new Intent(
+        boolean status = UserInterfaceUtils.bindRunExperimentServiceCompatible(this, new Intent(
                 this, RunExperimentService.class), mRunExperimentServiceConnection);
         Log.d("SensorDataCollector", "CreateExperimentActivity::onStart() called. status = "
                 + status);
@@ -388,7 +384,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
         Log.d("SensorDataCollector", "ExperimentEditNotesFragment: Button Cancel clicked.");
         Log.d("SensorDataCollector", "Entered note: [" + note + "]");
 
-        note = UserInterfaceUtil.filterOutNewLines(note);
+        note = UserInterfaceUtils.filterOutNewLines(note);
 
         Log.d("SensorDataCollector", "Filtered note: [" + note + "]");
 
@@ -499,7 +495,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
                     case TAG_ON:
                         // turn off previous tag
                         mStateTagPrevious.setState(TaggingState.TAG_OFF);
-                        UserInterfaceUtil.setViewBackgroundCompatible(
+                        UserInterfaceUtils.setViewBackgroundCompatible(
                                 gridview.getChildAt(mPreviousTagPosition),
                                 mDrawableBackground);
                         /*
@@ -539,7 +535,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
                 case TAG_ON:
                     // turn it off
                     stateTag.setState(TaggingState.TAG_OFF);
-                    UserInterfaceUtil.setViewBackgroundCompatible(view, mDrawableBackground);
+                    UserInterfaceUtils.setViewBackgroundCompatible(view, mDrawableBackground);
                     /*
                      * view.setBackgroundColor(getResources().getColor(
                      * android.R.color.background_light));

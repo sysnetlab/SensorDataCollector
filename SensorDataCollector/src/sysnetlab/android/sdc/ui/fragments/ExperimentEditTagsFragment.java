@@ -40,9 +40,10 @@ public class ExperimentEditTagsFragment extends Fragment {
     private OnFragmentClickListener mCallback;
     private View mView;
     private TagListAdapter mTagListAdapter;
-    
+
     public interface OnFragmentClickListener {
-    	public boolean onBtnAddTagClicked_ExperimentEditTagsFragment(String strTag, String strDescription);
+        public boolean onBtnAddTagClicked_ExperimentEditTagsFragment(String strTag,
+                String strDescription);
     }
 
     @Override
@@ -58,28 +59,31 @@ public class ExperimentEditTagsFragment extends Fragment {
 
         mView = inflater.inflate(R.layout.fragment_experiment_tag_editing, container, false);
 
-        ListView lv = (ListView) mView.findViewById(R.id.listview_tags);    
-        
+        ListView lv = (ListView) mView.findViewById(R.id.listview_tags);
+
         ArrayList<Tag> tmpTags;
         Activity activity = getActivity();
-        
 
         if (activity instanceof CreateExperimentActivity) {
-            tmpTags = (ArrayList<Tag>)((CreateExperimentActivity) activity).getExperiment().getTags();
-        }  else {
-            tmpTags = (ArrayList<Tag>)((ViewExperimentActivity) activity).getExperiment().getTags();
+            tmpTags = (ArrayList<Tag>) ((CreateExperimentActivity) activity).getExperiment()
+                    .getTags();
+        } else {
+            tmpTags = (ArrayList<Tag>) ((ViewExperimentActivity) activity).getExperiment()
+                    .getTags();
         }
-        mTagListAdapter = new TagListAdapter(activity, tmpTags);     
-        
-        Log.i("SensorDataCollector", "ExperimentEditTagsFragment.onCreateView: tmpTags = " + tmpTags);
-        Log.i("SensorDataCollector", "ExperimentEditTagsFragment.onCreateView: lv = " + lv);
-        Log.i("SensorDataCollector", "ExperimentEditTagsFragment.onCreateView: adapter = " + mTagListAdapter);
+        mTagListAdapter = new TagListAdapter(activity, tmpTags);
 
-        if (activity instanceof CreateExperimentActivity){
-        	lv.setAdapter(mTagListAdapter);
+        Log.d("SensorDataCollector", "ExperimentEditTagsFragment.onCreateView: tmpTags = "
+                + tmpTags);
+        Log.d("SensorDataCollector", "ExperimentEditTagsFragment.onCreateView: lv = " + lv);
+        Log.d("SensorDataCollector", "ExperimentEditTagsFragment.onCreateView: adapter = "
+                + mTagListAdapter);
+
+        if (activity instanceof CreateExperimentActivity) {
+            lv.setAdapter(mTagListAdapter);
         }
         else
-            Log.i("SensorDataCollector", "not yet implemented for ViewExperimentActivity");        
+            Log.d("SensorDataCollector", "not yet implemented for ViewExperimentActivity");
         return mView;
     }
 
@@ -110,39 +114,41 @@ public class ExperimentEditTagsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         ((Button) mView.findViewById(R.id.btn_add_tag))
-        .setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("ExperimentEditTagsFragment", "Add Tag Clicked");
-                EditText editTextTag = (EditText) mView.findViewById(R.id.edittext_tag);
-                
-                EditText editTextDescription = (EditText) mView.findViewById(R.id.edittext_description);
-	               if(mCallback.onBtnAddTagClicked_ExperimentEditTagsFragment(editTextTag.getText().toString(),
-	               		editTextDescription.getText().toString()))
-	               {
-		               mTagListAdapter.notifyDataSetChanged();
-		               editTextTag.setText("");
-		               editTextDescription.setText("");
-	               }
-               
-            }
-        });
+                .setOnClickListener(new Button.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d("ExperimentEditTagsFragment", "Add Tag Clicked");
+                        EditText editTextTag = (EditText) mView.findViewById(R.id.edittext_tag);
+
+                        EditText editTextDescription = (EditText) mView
+                                .findViewById(R.id.edittext_description);
+                        if (mCallback.onBtnAddTagClicked_ExperimentEditTagsFragment(editTextTag
+                                .getText().toString(),
+                                editTextDescription.getText().toString()))
+                        {
+                            mTagListAdapter.notifyDataSetChanged();
+                            editTextTag.setText("");
+                            editTextDescription.setText("");
+                        }
+
+                    }
+                });
 
     }
-    
-    public ArrayAdapter<Tag> getTagListAdapter(){
-    	return mTagListAdapter;
+
+    public ArrayAdapter<Tag> getTagListAdapter() {
+        return mTagListAdapter;
     }
-    
-    public boolean hasTags(){
-    	String tagName = ((EditText) mView.findViewById(R.id.edittext_tag))
-    			.getText().toString();
-    	if(!tagName.trim().equals(""))
-    		return true;    	
-    	String tagDescription = ((EditText) mView.findViewById(R.id.edittext_description))
-    			.getText().toString();
-    	if(!tagDescription.trim().equals(""))
-    		return true;    	
-    	return false;
+
+    public boolean hasTags() {
+        String tagName = ((EditText) mView.findViewById(R.id.edittext_tag))
+                .getText().toString();
+        if (!tagName.trim().equals(""))
+            return true;
+        String tagDescription = ((EditText) mView.findViewById(R.id.edittext_description))
+                .getText().toString();
+        if (!tagDescription.trim().equals(""))
+            return true;
+        return false;
     }
 }

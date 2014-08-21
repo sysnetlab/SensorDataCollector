@@ -33,12 +33,12 @@ public class ExperimentManagerTests extends AndroidTestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
     }
-    
+
     public void testExperimentManager() {
         ExperimentManager manager = ExperimentManagerSingleton.getInstance();
-        
+
         assertNotNull("ExperimentManagerSingleton does not return null", manager);
-        
+
         manager.addExperimentStore(StoreSingleton.getInstance());
         assertTrue("ExperimentManager should now have 1 store.", manager.getStores().size() == 1);
     }

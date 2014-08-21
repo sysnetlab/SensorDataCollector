@@ -28,10 +28,11 @@ public class DeviceInformation implements Parcelable {
     private String mManufacturer;
     private String mModel;
     private int mSdkInt;
-    private String mSdkCodeName; 
+    private String mSdkCodeName;
     private String mSdkRelease;
-    
-    public DeviceInformation(String manufacturer, String model, int sdkInt, String sdkCodeName, String sdkRelease) {
+
+    public DeviceInformation(String manufacturer, String model, int sdkInt, String sdkCodeName,
+            String sdkRelease) {
         setDeviceInformation(manufacturer, model);
         mSdkInt = sdkInt;
         mSdkCodeName = sdkCodeName;
@@ -44,14 +45,13 @@ public class DeviceInformation implements Parcelable {
         mSdkCodeName = getCodeName();
         mSdkRelease = Build.VERSION.RELEASE;
     }
-    
+
     public DeviceInformation(String manufacturer, String model) {
         setDeviceInformation(manufacturer, model);
         mSdkInt = Build.VERSION.SDK_INT;
         mSdkCodeName = getCodeName();
         mSdkRelease = Build.VERSION.RELEASE;
     }
-    
 
     public DeviceInformation(DeviceInformation deviceInfo) {
         mManufacturer = deviceInfo.mManufacturer;
@@ -61,10 +61,9 @@ public class DeviceInformation implements Parcelable {
         mSdkRelease = deviceInfo.mSdkRelease;
     }
 
-
     public void setDeviceInformation(String manufacturer, String model) {
         mManufacturer = manufacturer != null ? manufacturer : "";
-        model = model !=null ? model: "";
+        model = model != null ? model : "";
         if (model.startsWith(mManufacturer)) {
             mModel = model.replaceFirst(mManufacturer + "(\\ *)", "");
         } else {
@@ -74,7 +73,7 @@ public class DeviceInformation implements Parcelable {
         if (Character.isLowerCase(first)) {
             mModel = Character.toUpperCase(first) + mModel.substring(1);
         }
-        
+
         mSdkInt = -1;
         mSdkCodeName = "unknown";
         mSdkRelease = "unknown";
@@ -95,31 +94,31 @@ public class DeviceInformation implements Parcelable {
     public void setManufacturer(String mManufacturer) {
         this.mManufacturer = mManufacturer;
     }
-    
+
     public int getSdkInt() {
         return mSdkInt;
     }
-    
+
     public void setSdkInt(int sdkint) {
         mSdkInt = sdkint;
     }
-    
+
     public String getSdkCodeName() {
         return mSdkCodeName;
     }
-    
+
     public void setSdkCodeName(String codeName) {
         mSdkCodeName = codeName;
     }
-    
+
     public String getSdkRelease() {
         return mSdkRelease;
     }
-    
+
     public void setSdkRelease(String sdkRelease) {
         mSdkRelease = sdkRelease;
     }
-    
+
     public String toString() {
         return mManufacturer + " " + mModel;
     }
@@ -128,41 +127,42 @@ public class DeviceInformation implements Parcelable {
         if (rhs == this) {
             return true;
         }
-        
+
         if (!(rhs instanceof DeviceInformation)) {
             return false;
         }
-        
+
         DeviceInformation deviceInfo = (DeviceInformation) rhs;
-        
+
         if (!TextUtils.equals(mManufacturer, deviceInfo.mManufacturer)) {
             return false;
         }
-        
+
         if (!TextUtils.equals(mModel, deviceInfo.mModel)) {
             return false;
         }
-        
-        if (!TextUtils.equals(mSdkRelease,  deviceInfo.mSdkRelease)) {
+
+        if (!TextUtils.equals(mSdkRelease, deviceInfo.mSdkRelease)) {
             return false;
         }
 
         if (mSdkInt != deviceInfo.mSdkInt) {
             return false;
         }
-        
+
         if (!TextUtils.equals(mSdkCodeName, deviceInfo.mSdkCodeName)) {
             return false;
-        }        
+        }
 
         return true;
     }
-    
+
     private String getCodeName() {
-        if (!Build.VERSION.CODENAME.equals("REL")) return Build.VERSION.CODENAME;
-        
+        if (!Build.VERSION.CODENAME.equals("REL"))
+            return Build.VERSION.CODENAME;
+
         String codeName = Build.VERSION.CODENAME;
-        
+
         Field[] fields = Build.VERSION_CODES.class.getFields();
         for (Field f : fields) {
             try {
@@ -176,10 +176,10 @@ public class DeviceInformation implements Parcelable {
                 // use whatever in code name
             }
         }
-        
+
         return codeName;
     }
-    
+
     public static final Parcelable.Creator<DeviceInformation> CREATOR = new Parcelable.Creator<DeviceInformation>() {
         @Override
         public DeviceInformation createFromParcel(Parcel inParcel) {
@@ -191,7 +191,7 @@ public class DeviceInformation implements Parcelable {
             return new DeviceInformation[size];
         }
     };
-    
+
     public DeviceInformation(Parcel inParcel) {
         mManufacturer = inParcel.readString();
         mModel = inParcel.readString();

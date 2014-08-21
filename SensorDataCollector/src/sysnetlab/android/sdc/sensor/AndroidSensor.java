@@ -29,7 +29,7 @@ public class AndroidSensor extends AbstractSensor {
     private int mSamplingInterval; /* in microseconds */
     private int mSensingType;
     private boolean mIsStreamingSensor;
-    
+
     private AndroidSensorEventListener mListener;
 
     public AndroidSensor() {
@@ -38,7 +38,7 @@ public class AndroidSensor extends AbstractSensor {
         mSensingType = -1;
         mIsStreamingSensor = false;
     }
-    
+
     @SuppressLint("NewApi")
     public AndroidSensor(Sensor sensor) {
         mSamplingInterval = 0;
@@ -74,7 +74,7 @@ public class AndroidSensor extends AbstractSensor {
     public String toString() {
         return mSensor.toString();
     }
- 
+
     public void setSensor(Object sensor) {
         this.mSensor = (Sensor) sensor;
     }
@@ -109,22 +109,21 @@ public class AndroidSensor extends AbstractSensor {
         return mSensor.getVendor();
     }
 
-    // TODO carefully check how Sensor objects should be reconstructed from 
-    // persistent storage and copied from one instance to another.  
+    // TODO carefully check how Sensor objects should be reconstructed from
+    // persistent storage and copied from one instance to another.
     @Override
     public int getVersion() {
         return mSensor.getVersion();
     }
-    
-    
+
     public void setListener(AndroidSensorEventListener listener) {
         mListener = listener;
     }
 
     public AndroidSensorEventListener getListener() {
         return mListener;
-    }    
-    
+    }
+
     public AbstractStore.Channel getChannel() {
         if (mListener != null) {
             return mListener.getChannel();
@@ -132,46 +131,54 @@ public class AndroidSensor extends AbstractSensor {
             return null;
         }
     }
-    
+
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        
-        // Log.d("SensorDataCollector", "AndroidSensor::equals(): checkpoint #1.");
-        
+        if (this == object)
+            return true;
+
+        // Log.d("SensorDataCollector",
+        // "AndroidSensor::equals(): checkpoint #1.");
+
         // it also takes care of the case that object is null
-        if (!(object instanceof AndroidSensor)) return false;
-        
+        if (!(object instanceof AndroidSensor))
+            return false;
+
         if (!super.equals(object)) {
             return false;
         }
-        
-        // Log.d("SensorDataCollector", "AndroidSensor::equals(): checkpoint #2.");
-        
+
+        // Log.d("SensorDataCollector",
+        // "AndroidSensor::equals(): checkpoint #2.");
+
         switch (getMajorType()) {
             case AbstractSensor.ANDROID_SENSOR:
                 AndroidSensor androidSensor = (AndroidSensor) object;
-                
+
                 if (this.mSamplingInterval != androidSensor.mSamplingInterval)
                     return false;
 
-                // Log.d("SensorDataCollector", "AndroidSensor::equals(): checkpoint #3.");
+                // Log.d("SensorDataCollector",
+                // "AndroidSensor::equals(): checkpoint #3.");
 
                 if (this.mSensingType != androidSensor.mSensingType)
                     return false;
 
-                // Log.d("SensorDataCollector", "AndroidSensor::equals(): checkpoint #4.");
+                // Log.d("SensorDataCollector",
+                // "AndroidSensor::equals(): checkpoint #4.");
 
                 if (this.mIsStreamingSensor != androidSensor.mIsStreamingSensor)
                     return false;
 
-                // Log.d("SensorDataCollector", "AndroidSensor::equals(): checkpoint #5.");
+                // Log.d("SensorDataCollector",
+                // "AndroidSensor::equals(): checkpoint #5.");
 
                 if (!this.mSensor.equals(androidSensor.mSensor))
                     return false;
 
-                // Log.d("SensorDataCollector", "AndroidSensor::equals(): checkpoint #6.");
-                break;              
+                // Log.d("SensorDataCollector",
+                // "AndroidSensor::equals(): checkpoint #6.");
+                break;
         }
 
         return true;

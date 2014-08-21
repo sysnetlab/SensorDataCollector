@@ -43,13 +43,13 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class UserInterfaceUtil {
-	
-	private static int mTagsGridNumColumns;
+public class UserInterfaceUtils {
+
+    private static int mTagsGridNumColumns;
 
     public static void fillSensorProperties(Activity activity, ListView listView,
             AbstractSensor sensor) {
-        UserInterfaceUtil.fillSensorProperties(activity, listView, sensor, false);
+        UserInterfaceUtils.fillSensorProperties(activity, listView, sensor, false);
     }
 
     public static void fillSensorProperties(Activity activity, ListView listView,
@@ -66,14 +66,16 @@ public class UserInterfaceUtil {
 
         switch (sensor.getMajorType()) {
             case AbstractSensor.ANDROID_SENSOR:
-                property = new SensorProperty(activity.getResources().getString(R.string.text_vendor),
+                property = new SensorProperty(activity.getResources().getString(
+                        R.string.text_vendor),
                         sensor.getVendor());
                 lstSensorProperties.add(property);
 
-                property = new SensorProperty(activity.getResources().getString(R.string.text_version),
+                property = new SensorProperty(activity.getResources().getString(
+                        R.string.text_version),
                         Integer.toString(sensor.getVersion()));
-                lstSensorProperties.add(property);                
-                
+                lstSensorProperties.add(property);
+
                 Sensor aSensor = (Sensor) (((AndroidSensor) sensor).getSensor());
 
                 property = new SensorProperty(activity.getResources().getString(
@@ -116,9 +118,9 @@ public class UserInterfaceUtil {
                 property = new SensorProperty(activity.getResources().getString(
                         R.string.text_audio_source), activity.getResources().getString(
                         param.getSource().getSourceNameResId()));
-                Log.d("SensorDataCollector", "AUDIO_SENSOR Property: (name, id, resid, string) = " + 
-                        property.getName() + "," + 
-                        param.getSource().getSourceId() + "," + 
+                Log.d("SensorDataCollector", "AUDIO_SENSOR Property: (name, id, resid, string) = " +
+                        property.getName() + "," +
+                        param.getSource().getSourceId() + "," +
                         param.getSource().getSourceNameResId() + "," +
                         property.getValue());
                 lstSensorProperties.add(property);
@@ -139,25 +141,26 @@ public class UserInterfaceUtil {
                 lstSensorProperties.add(property);
 
                 property = new SensorProperty(activity.getResources().getString(
-                        R.string.text_audio_min_buffer_size), Integer.toString(param.getBufferSize()));
+                        R.string.text_audio_min_buffer_size), Integer.toString(param
+                        .getBufferSize()));
                 lstSensorProperties.add(property);
 
                 break;
             case AbstractSensor.CAMERA_SENSOR:
                 // TODO: todo ...
-                Log.i("SensorDataCollector", "Camera Sensor is a todo.");
+                Log.w("SensorDataCollector", "Camera Sensor is a todo.");
                 break;
             case AbstractSensor.WIFI_SENSOR:
                 // TODO: todo ...
-                Log.i("SensorDataCollector", "WiFi Sensor is a todo.");
+                Log.w("SensorDataCollector", "WiFi Sensor is a todo.");
                 break;
             case AbstractSensor.BLUETOOTH_SENSOR:
                 // TODO: todo ...
-                Log.i("SensorDataCollector", "Bluetooth Sensor is a todo.");
+                Log.w("SensorDataCollector", "Bluetooth Sensor is a todo.");
                 break;
             default:
                 // TODO: todo ...
-                Log.i("SensorDataCollector", "unknown sensor. unexpected.");
+                Log.w("SensorDataCollector", "unknown sensor. unexpected.");
                 break;
         }
         SensorPropertyListAdapter sensorPropertyListAdaptor = new SensorPropertyListAdapter(
@@ -165,12 +168,13 @@ public class UserInterfaceUtil {
 
         listView.setAdapter(sensorPropertyListAdaptor);
     }
-    
-    public static void updateAudioSensorPropertyListView(Activity activity, ListView listView, AudioRecordParameter param) {
-        ArrayList<SensorProperty> listProperties = new ArrayList<SensorProperty>();  
-        
+
+    public static void updateAudioSensorPropertyListView(Activity activity, ListView listView,
+            AudioRecordParameter param) {
+        ArrayList<SensorProperty> listProperties = new ArrayList<SensorProperty>();
+
         SensorProperty property;
-        
+
         property = new SensorProperty(activity.getResources().getString(
                 R.string.text_audio_source), activity.getResources().getString(
                 param.getSource().getSourceNameResId()));
@@ -193,16 +197,15 @@ public class UserInterfaceUtil {
 
         property = new SensorProperty(activity.getResources().getString(
                 R.string.text_audio_min_buffer_size), Integer.toString(param.getBufferSize()));
-        listProperties.add(property);    
-        
+        listProperties.add(property);
+
         SensorPropertyListAdapter sensorPropertyListAdaptor = new SensorPropertyListAdapter(
                 activity, listProperties);
 
         listView.setAdapter(sensorPropertyListAdaptor);
-      
+
     }
-    
-    
+
     @SuppressWarnings("deprecation")
     @SuppressLint("NewApi")
     public static void setViewBackgroundCompatible(View view, Drawable background) {
@@ -210,22 +213,20 @@ public class UserInterfaceUtil {
             view.setBackground(background);
         } else {
             view.setBackgroundDrawable(background);
-        }        
+        }
     }
-    
+
     public static void setEllipsizeforTextView(TextView textView, TextUtils.TruncateAt truncateAt) {
         // truncateAt can be any of the 4 values
         /*
-         * TextUtils.TruncateAt.END      
-         * TextUtils.TruncateAt.MARQUEE      
-         * TextUtils.TruncateAt.MIDDLE       
-         * TextUtils.TruncateAt.START 
+         * TextUtils.TruncateAt.END TextUtils.TruncateAt.MARQUEE
+         * TextUtils.TruncateAt.MIDDLE TextUtils.TruncateAt.START
          */
         textView.setEllipsize(truncateAt);
         textView.setSingleLine();
         textView.setHorizontallyScrolling(false);
     }
-    
+
     public static String filterOutNewLines(String text) {
         String[] lines = text.split(System.getProperty("line.separator"));
         String strLongLine = "";
@@ -234,36 +235,37 @@ public class UserInterfaceUtil {
         }
         return strLongLine;
     }
-    
+
     @SuppressLint("InlinedApi")
-    public static boolean bindRunExperimentServiceCompatible(Context context, Intent service, ServiceConnection conn) {
+    public static boolean bindRunExperimentServiceCompatible(Context context, Intent service,
+            ServiceConnection conn) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            return context.bindService(service, conn, Context.BIND_ABOVE_CLIENT); 
+            return context.bindService(service, conn, Context.BIND_ABOVE_CLIENT);
         } else {
-            return context.bindService(service, conn, Context.BIND_AUTO_CREATE);             
+            return context.bindService(service, conn, Context.BIND_AUTO_CREATE);
         }
     }
-    
+
     @SuppressLint("NewApi")
     public static int getNumColumnsCompatible(GridView gridView) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-        	return gridView.getNumColumns();
+            return gridView.getNumColumns();
         } else {
-        	if(mTagsGridNumColumns>0){
-        		return mTagsGridNumColumns;
-        	}else{
-	            if (gridView.getChildCount() > 0) {
-	                int width = gridView.getChildAt(0).getMeasuredWidth();
-	                if (width > 0) {
-	                    mTagsGridNumColumns = gridView.getWidth() / width;
-	                }
-	            }
-        	}
-        	return mTagsGridNumColumns > 0 ? mTagsGridNumColumns : GridView.AUTO_FIT;
-        	
+            if (mTagsGridNumColumns > 0) {
+                return mTagsGridNumColumns;
+            } else {
+                if (gridView.getChildCount() > 0) {
+                    int width = gridView.getChildAt(0).getMeasuredWidth();
+                    if (width > 0) {
+                        mTagsGridNumColumns = gridView.getWidth() / width;
+                    }
+                }
+            }
+            return mTagsGridNumColumns > 0 ? mTagsGridNumColumns : GridView.AUTO_FIT;
+
         }
     }
-    
+
     @SuppressLint("NewApi")
     public static boolean isInLayoutCompatible(View view) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -272,7 +274,7 @@ public class UserInterfaceUtil {
             return false;
         }
     }
-    
+
     @SuppressLint("NewApi")
     public static <T> void addAllCompatible(ArrayAdapter<T> adapter, List<T> list) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -285,5 +287,5 @@ public class UserInterfaceUtil {
             adapter.setNotifyOnChange(true);
             adapter.notifyDataSetChanged();
         }
-    }         
+    }
 }

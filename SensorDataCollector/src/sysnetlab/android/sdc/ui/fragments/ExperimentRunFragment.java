@@ -30,7 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class ExperimentRunFragment extends Fragment{
+public class ExperimentRunFragment extends Fragment {
     private View mView;
     private OnFragmentClickListener mCallback;
     private ExperimentHandler mHandler;
@@ -44,11 +44,15 @@ public class ExperimentRunFragment extends Fragment{
 
     public interface ExperimentHandler {
         public void runExperiment_ExperimentRunFragment();
+
         public void stopExperiment_ExperimentRunFragment();
+
         public void notifyInBackground_ExperimentRunFragment();
+
         public void removeInBackgroundNotification_ExperimentRunFragment();
-        public void runTimer_ExperimentRunFragment();        
-    }       
+
+        public void runTimer_ExperimentRunFragment();
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -79,7 +83,7 @@ public class ExperimentRunFragment extends Fragment{
             throw new ClassCastException(activity.toString()
                     + " must implement ExperimentRunFragment.ExperimentHandler");
         }
-        
+
         if (mCallback == null) {
             Log.e("SensorDataCollector", "ExperimentRunFragment.mCallback should not be null");
         }
@@ -88,24 +92,24 @@ public class ExperimentRunFragment extends Fragment{
     }
 
     @Override
-    public void onStop(){
-	    if(!mIsUserTrigger){
-	    	mHandler.notifyInBackground_ExperimentRunFragment();    		
-	    }
+    public void onStop() {
+        if (!mIsUserTrigger) {
+            mHandler.notifyInBackground_ExperimentRunFragment();
+        }
         super.onStop();
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
         mIsUserTrigger = false;
         mHandler.removeInBackgroundNotification_ExperimentRunFragment();
-    }    
-    
+    }
+
     public boolean isFragmentUIActive() {
         return isAdded() && !isDetached() && !isRemoving();
     }
-       
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -119,31 +123,31 @@ public class ExperimentRunFragment extends Fragment{
         }
         transaction.replace(R.id.layout_experiment_run_tags, mExperimenRunTaggingFragment).commit();
         setHasOptionsMenu(true);
-        
+
         mHandler.runTimer_ExperimentRunFragment();
-        
+
         return mView;
     }
-    
+
     @Override
     public void onPause() {
-    	if(mIsUserTrigger){
-	    	if (mCallback == null) {
-	            Log.e("SensorDataCollector", "ExperimentRunFragment.mCallback should not be null");
-	        }
-	
-	        if (this.mView == null) {
-	            Log.e("SensorDataCollector", "ExperimentRunFragment.mView should not be null");
-	        }
-	        mHandler.stopExperiment_ExperimentRunFragment();
-    	}    	
-    	super.onPause();
+        if (mIsUserTrigger) {
+            if (mCallback == null) {
+                Log.e("SensorDataCollector", "ExperimentRunFragment.mCallback should not be null");
+            }
+
+            if (this.mView == null) {
+                Log.e("SensorDataCollector", "ExperimentRunFragment.mView should not be null");
+            }
+            mHandler.stopExperiment_ExperimentRunFragment();
+        }
+        super.onPause();
     }
-    
+
     @Override
     public void onDetach() {
-    	super.onDetach();
-    	
+        super.onDetach();
+
         /*
          * it appears that there is a bug in the support library that dealing
          * with nested fragments as discussed in
@@ -167,22 +171,22 @@ public class ExperimentRunFragment extends Fragment{
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
-    public void onDestroyView(){
-    	super.onDestroyView();
-    	mHandler.removeInBackgroundNotification_ExperimentRunFragment();
+    public void onDestroyView() {
+        super.onDestroyView();
+        mHandler.removeInBackgroundNotification_ExperimentRunFragment();
     }
-    
-    public void setIsUserTrigger(boolean isUserTrigger){
-    	mIsUserTrigger=isUserTrigger;
+
+    public void setIsUserTrigger(boolean isUserTrigger) {
+        mIsUserTrigger = isUserTrigger;
     }
-    
-    public boolean getIsUserTrigger(){
-    	return mIsUserTrigger;
+
+    public boolean getIsUserTrigger() {
+        return mIsUserTrigger;
     }
-    
-    public View getView(){
-    	return mView;
+
+    public View getView() {
+        return mView;
     }
 }

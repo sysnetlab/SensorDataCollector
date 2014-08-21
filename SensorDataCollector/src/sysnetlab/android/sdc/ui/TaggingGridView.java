@@ -25,7 +25,7 @@ import android.widget.GridView;
 public class TaggingGridView extends GridView {
     private boolean mTagResized = false;
     int mGdvHeight;
-    
+
     public TaggingGridView(Context context) {
         super(context);
     }
@@ -37,38 +37,36 @@ public class TaggingGridView extends GridView {
     public TaggingGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-    
+
     /*
      * the code below follows the documentation at
-     * http://developer.android.com/reference/android/widget/GridView.html
-     * 
-     * but it produces many "requestLayout() improperly called by 
-     * android.widget.TextView warning messages
-     * 
-     * Futher study is needed
-     * */ 
-    
+     * http://developer.android.com/reference/android/widget/GridView.html but
+     * it produces many "requestLayout() improperly called by
+     * android.widget.TextView warning messages Futher study is needed
+     */
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        
+
         mGdvHeight = MeasureSpec.getSize(heightMeasureSpec);
         int width = MeasureSpec.getSize(widthMeasureSpec);
-        
+
         setMeasuredDimension(width, mGdvHeight);
     }
 
     @Override
     protected void layoutChildren() {
         super.layoutChildren();
-        if (mTagResized && UserInterfaceUtil.isInLayoutCompatible(this)) return;
+        if (mTagResized && UserInterfaceUtils.isInLayoutCompatible(this))
+            return;
 
-        for(int i = 0; i < getChildCount(); i++) {
-        	AbsListView.LayoutParams param = new AbsListView.LayoutParams(
+        for (int i = 0; i < getChildCount(); i++) {
+            AbsListView.LayoutParams param = new AbsListView.LayoutParams(
                     android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-                    mGdvHeight/getChildCount());
+                    mGdvHeight / getChildCount());
             getChildAt(i).setLayoutParams(param);
         }
         mTagResized = true;
-    }  
+    }
 }

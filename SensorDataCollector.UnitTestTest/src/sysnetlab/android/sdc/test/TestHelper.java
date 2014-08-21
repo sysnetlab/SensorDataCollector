@@ -43,10 +43,10 @@ import android.widget.RelativeLayout;
 
 public class TestHelper {
 
-    
-    public static Activity launchSensorDataCollectorActivity(ActivityInstrumentationTestCase2<?> testCase) {
+    public static Activity launchSensorDataCollectorActivity(
+            ActivityInstrumentationTestCase2<?> testCase) {
         Activity activity;
-        
+
         testCase.setActivityInitialTouchMode(true);
         activity = testCase.getActivity();
         testCase.getInstrumentation().waitForIdleSync();
@@ -55,10 +55,10 @@ public class TestHelper {
                 activity instanceof SensorDataCollectorActivity);
         return activity;
     }
-    
+
     public static Activity launchCreateExperimentActivity(
             ActivityInstrumentationTestCase2<?> testCase, Activity activity) {
-        
+
         // click the Create-New-Experiment button
         ActivityMonitor activityMonitor = testCase.getInstrumentation().addMonitor(
                 CreateExperimentActivity.class.getName(), null, false);
@@ -77,16 +77,17 @@ public class TestHelper {
         testCase.getInstrumentation().removeMonitor(activityMonitor);
         return activity;
     }
-    
+
     public static void goBack(ActivityInstrumentationTestCase2<?> testCase) {
         testCase.sendKeys(KeyEvent.KEYCODE_BACK);
-        testCase.getInstrumentation().waitForIdleSync();        
+        testCase.getInstrumentation().waitForIdleSync();
     }
-    
-    public static void enterTags(ActivityInstrumentationTestCase2<?> testCase, Activity activity, int maximumNumberOfTags) {
+
+    public static void enterTags(ActivityInstrumentationTestCase2<?> testCase, Activity activity,
+            int maximumNumberOfTags) {
         Assert.assertTrue("The activity must be a CreateExperimentActivity.",
-                activity instanceof CreateExperimentActivity);   
-        
+                activity instanceof CreateExperimentActivity);
+
         // choose to enter tags
         CreateExperimentActivity createExperimentActivity = (CreateExperimentActivity) activity;
 
@@ -99,7 +100,8 @@ public class TestHelper {
         ListView listViewOperations = (ListView) fragment.getView()
                 .findViewById(R.id.lv_operations);
         Assert.assertNotNull("The operations ListView should not be null.", listViewOperations);
-        Assert.assertEquals("The operations ListView should has 3 items", listViewOperations.getCount(), 3);
+        Assert.assertEquals("The operations ListView should has 3 items",
+                listViewOperations.getCount(), 3);
 
         TouchUtils.clickView(testCase, listViewOperations.getChildAt(0));
 
@@ -134,10 +136,11 @@ public class TestHelper {
 
         ListView listViewTags = (ListView) fragment.getView().findViewById(R.id.listview_tags);
         Assert.assertNotNull("The ListView for entered tags should not be null.", listViewTags);
-        Assert.assertEquals("The number of tags entered must be " + numberOfTags, listViewTags.getCount(),
-                numberOfTags);        
-    }    
-    
+        Assert.assertEquals("The number of tags entered must be " + numberOfTags,
+                listViewTags.getCount(),
+                numberOfTags);
+    }
+
     public static void selectSensors(ActivityInstrumentationTestCase2<?> testCase, Activity activity) {
         Assert.assertTrue("The activity must be a CreateExperimentActivity.",
                 activity instanceof CreateExperimentActivity);
@@ -154,12 +157,12 @@ public class TestHelper {
         ListView listViewOperations = (ListView) fragment.getView()
                 .findViewById(R.id.lv_operations);
         Assert.assertNotNull("The operations ListView should not be null.", listViewOperations);
-        Assert.assertEquals("The operations ListView should has 3 items", listViewOperations.getCount(), 3);
+        Assert.assertEquals("The operations ListView should has 3 items",
+                listViewOperations.getCount(), 3);
 
         TouchUtils.clickView(testCase, listViewOperations.getChildAt(2));
 
         testCase.getInstrumentation().waitForIdleSync();
-        
 
         // select the 1st sensor
         fragment = createExperimentActivity.getSupportFragmentManager().findFragmentById(
@@ -167,15 +170,15 @@ public class TestHelper {
         Assert.assertNotNull("The ExperimentSensorSelectionFragment should not be null.", fragment);
         Assert.assertTrue("The fragment should be an ExperimentSensorListFragment.",
                 fragment instanceof ExperimentSensorSelectionFragment);
-        
-        
+
         RelativeLayout layout = (RelativeLayout) fragment.getView()
                 .findViewById(R.id.layout_sensor_selection_list);
         Assert.assertNotNull("The Sensor ListView should not be null.", layout);
         ListView sensorListView = null;
-        for(int i=0; i<layout.getChildCount(); i++) {
+        for (int i = 0; i < layout.getChildCount(); i++) {
             View child = layout.getChildAt(i);
-            if (child instanceof ListView) sensorListView = (ListView) child;
+            if (child instanceof ListView)
+                sensorListView = (ListView) child;
         }
         Assert.assertNotNull("The Sensor ListView should not be null", sensorListView);
 
@@ -193,80 +196,91 @@ public class TestHelper {
                 sensorPosition++;
                 numberOfSensorsSelected++;
             }
-        }   
-        
+        }
+
         testCase.getInstrumentation().waitForIdleSync();
     }
-    
-    public static void startExperiment(ActivityInstrumentationTestCase2<?> testCase, Activity activity) {
+
+    public static void startExperiment(ActivityInstrumentationTestCase2<?> testCase,
+            Activity activity) {
         Assert.assertTrue("The activity must be a CreateExperimentActivity.",
                 activity instanceof CreateExperimentActivity);
-        
+
         Button buttonRunExperiment = (Button) activity.findViewById(R.id.button_experiment_run);
         Assert.assertNotNull("The Run-Experiment button should not be null.", buttonRunExperiment);
-        
+
         TouchUtils.clickView(testCase, buttonRunExperiment);
         testCase.getInstrumentation().waitForIdleSync();
-     }
-    
-    
-    public static Activity stopExperiment(ActivityInstrumentationTestCase2<?> testCase, Activity activity) {
+    }
+
+    public static Activity stopExperiment(ActivityInstrumentationTestCase2<?> testCase,
+            Activity activity) {
         Assert.assertTrue("The activity must be a CreateExperimentActivity.",
                 activity instanceof CreateExperimentActivity);
-        
-        Fragment fragment = ((CreateExperimentActivity) activity).getSupportFragmentManager().findFragmentById(
-                R.id.fragment_container);
+
+        Fragment fragment = ((CreateExperimentActivity) activity).getSupportFragmentManager()
+                .findFragmentById(
+                        R.id.fragment_container);
         Assert.assertNotNull("The ExperimentRunFragment should not be null.", fragment);
         Assert.assertTrue("The fragment should be an ExperimentRunFragment.",
                 fragment instanceof ExperimentRunFragment);
-        
-        Button buttonExperimentDone = (Button) fragment.getView().findViewById(R.id.button_experiment_done);
+
+        Button buttonExperimentDone = (Button) fragment.getView().findViewById(
+                R.id.button_experiment_done);
         Assert.assertNotNull("The Experiment-Done button shoud not be null.", buttonExperimentDone);
-        
-        TouchUtils.clickView(testCase,  buttonExperimentDone);
+
+        TouchUtils.clickView(testCase, buttonExperimentDone);
         testCase.getInstrumentation().waitForIdleSync();
-        
+
         AlertDialog dialog = ((CreateExperimentActivity) activity).getAlertDialog();
         Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
 
-        ActivityMonitor monitor = testCase.getInstrumentation().addMonitor(SensorDataCollectorActivity.class.getName(), null, false);        
+        ActivityMonitor monitor = testCase.getInstrumentation().addMonitor(
+                SensorDataCollectorActivity.class.getName(), null, false);
 
         TouchUtils.clickView(testCase, positiveButton);
-        testCase.getInstrumentation().waitForIdleSync();  
-        
-        SensorDataCollectorActivity sensorDataCollectorActivity = 
+        testCase.getInstrumentation().waitForIdleSync();
+
+        SensorDataCollectorActivity sensorDataCollectorActivity =
                 (SensorDataCollectorActivity) testCase.getInstrumentation().waitForMonitor(monitor);
         testCase.getInstrumentation().removeMonitor(monitor);
-        Assert.assertNotNull("SensorDataCollector Activity was not loaded", sensorDataCollectorActivity);
-        
+        Assert.assertNotNull("SensorDataCollector Activity was not loaded",
+                sensorDataCollectorActivity);
+
         return sensorDataCollectorActivity;
-    }    
-    
-    public static Activity viewMostRecentExperiment(ActivityInstrumentationTestCase2<?> testCase, Activity activity) {
+    }
+
+    public static Activity viewMostRecentExperiment(ActivityInstrumentationTestCase2<?> testCase,
+            Activity activity) {
         // view the most recent experiment
-        Fragment fragment = ((SensorDataCollectorActivity) activity).getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        Fragment fragment = ((SensorDataCollectorActivity) activity).getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_container);
         Assert.assertNotNull("The Sensor List Fragment should not be null.", fragment);
-        
+
         ListView listView = ((ListFragment) fragment).getListView();
         Assert.assertNotNull("ListView should not be null.", listView);
-        
-        ActivityMonitor monitor = testCase.getInstrumentation().addMonitor(ViewExperimentActivity.class.getName(), null, false);
-        TouchUtils.clickView(testCase, listView.getChildAt( listView.getHeaderViewsCount()));
+
+        ActivityMonitor monitor = testCase.getInstrumentation().addMonitor(
+                ViewExperimentActivity.class.getName(), null, false);
+        TouchUtils.clickView(testCase, listView.getChildAt(listView.getHeaderViewsCount()));
         testCase.getInstrumentation().waitForIdleSync();
-        
-        ViewExperimentActivity viewExperimentActivity = (ViewExperimentActivity) testCase.getInstrumentation().waitForMonitor(monitor);
-        Assert.assertTrue("activity should be a ViewExperimentActivity.", viewExperimentActivity instanceof ViewExperimentActivity);
+
+        ViewExperimentActivity viewExperimentActivity = (ViewExperimentActivity) testCase
+                .getInstrumentation().waitForMonitor(monitor);
+        Assert.assertTrue("activity should be a ViewExperimentActivity.",
+                viewExperimentActivity instanceof ViewExperimentActivity);
         testCase.getInstrumentation().removeMonitor(monitor);
-      
+
         // clone the experiment
-        testCase.getInstrumentation().waitForIdleSync();     
+        testCase.getInstrumentation().waitForIdleSync();
         return viewExperimentActivity;
     }
-    
+
     public static Activity cloneExperiment(ActivityInstrumentationTestCase2<?> testCase,
             Activity activity) {
-        Assert.assertTrue("The acitivty must be a ViewExperimentActivity.", activity instanceof ViewExperimentActivity);
-        
+        Assert.assertTrue("The acitivty must be a ViewExperimentActivity.",
+                activity instanceof ViewExperimentActivity);
+
         Button buttonCloneExperiment = (Button) activity
                 .findViewById(R.id.button_experiment_view_clone);
         Assert.assertNotNull("Button should not be null.", buttonCloneExperiment);

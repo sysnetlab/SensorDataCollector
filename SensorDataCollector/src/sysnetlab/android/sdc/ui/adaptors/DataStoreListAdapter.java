@@ -107,9 +107,8 @@ public class DataStoreListAdapter extends BaseAdapter {
 
         if (mInitialPositionChecked >= 0 && mInitialPositionChecked == position) {
             holder.radioButton.setChecked(true);
-        } 
-       
-        
+        }
+
         return view;
     }
 }

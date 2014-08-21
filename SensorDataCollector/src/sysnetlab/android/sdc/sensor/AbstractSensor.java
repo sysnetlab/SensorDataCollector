@@ -28,11 +28,11 @@ public abstract class AbstractSensor {
     public final static int AUDIO_SENSOR = 3;
     public final static int WIFI_SENSOR = 4; /* RSSI */
     public final static int BLUETOOTH_SENSOR = 5; /* RSSI */
-    
+
     public int getId() {
         return mSensorId;
     }
-    
+
     public void setId(int id) {
         mSensorId = id;
     }
@@ -54,9 +54,9 @@ public abstract class AbstractSensor {
     }
 
     public abstract String getName();
-    
+
     public abstract String getVendor();
-    
+
     public abstract int getVersion();
 
     public abstract boolean isSameSensor(AbstractSensor sensor);
@@ -70,19 +70,25 @@ public abstract class AbstractSensor {
     }
 
     public abstract String toString();
-    
+
     public boolean equals(Object object) {
-        // Log.d("SensorDataCollector", "AbstractSensor::equals(): checkpoint #1");
-        if (this == object) return true;
-        
+        // Log.d("SensorDataCollector",
+        // "AbstractSensor::equals(): checkpoint #1");
+        if (this == object)
+            return true;
+
         // it also takes care of the case that object is null
-        if (!(object instanceof AbstractSensor)) return false;
-        
-        AbstractSensor rhs = (AbstractSensor) object; 
-        if (mMajorType != rhs.mMajorType) return false;
-        if (mMinorType != rhs.mMinorType) return false; 
-        if (mSelected != rhs.mSelected) return false; 
-        
+        if (!(object instanceof AbstractSensor))
+            return false;
+
+        AbstractSensor rhs = (AbstractSensor) object;
+        if (mMajorType != rhs.mMajorType)
+            return false;
+        if (mMinorType != rhs.mMinorType)
+            return false;
+        if (mSelected != rhs.mSelected)
+            return false;
+
         return true;
     }
 }

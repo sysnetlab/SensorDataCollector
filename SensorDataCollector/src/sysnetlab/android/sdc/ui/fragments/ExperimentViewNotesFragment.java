@@ -120,7 +120,8 @@ public class ExperimentViewNotesFragment extends Fragment {
         } else {
             String strNoteCaptionFormatter = mView.getResources().getString(
                     R.string.text_note_x_of_y_taken_at_time_z);
-            strNoteCaption = String.format(strNoteCaptionFormatter, noteNo + 1, list.size(), list.get(noteNo).getDateCreatedAsString());
+            strNoteCaption = String.format(strNoteCaptionFormatter, noteNo + 1, list.size(), list
+                    .get(noteNo).getDateCreatedAsString());
             strNoteText = list.get(noteNo).getNote();
         }
 

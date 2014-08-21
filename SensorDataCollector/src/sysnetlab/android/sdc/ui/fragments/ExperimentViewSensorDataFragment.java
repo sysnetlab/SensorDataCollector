@@ -26,7 +26,7 @@ import sysnetlab.android.sdc.datastore.AbstractStore.Channel;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.ui.GestureEventListener;
-import sysnetlab.android.sdc.ui.UserInterfaceUtil;
+import sysnetlab.android.sdc.ui.UserInterfaceUtils;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
@@ -43,13 +43,13 @@ public class ExperimentViewSensorDataFragment extends Fragment {
     private int mSensorNo;
 
     private int MAXIMUM_LINES_OF_DATA_TO_READ = 100;
-    
+
     public static ExperimentViewSensorDataFragment newInstance() {
-    	ExperimentViewSensorDataFragment f=new ExperimentViewSensorDataFragment();
-		f.setSensorNo(0);
-		return f;
-	}
-    
+        ExperimentViewSensorDataFragment f = new ExperimentViewSensorDataFragment();
+        f.setSensorNo(0);
+        return f;
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -135,17 +135,17 @@ public class ExperimentViewSensorDataFragment extends Fragment {
         ListView listView = (ListView) mView
                 .findViewById(R.id.listview_fragment_experiment_view_sensor_data_sensor_properties);
 
-        UserInterfaceUtil.fillSensorProperties(getActivity(), listView, sensor, true);
+        UserInterfaceUtils.fillSensorProperties(getActivity(), listView, sensor, true);
 
-        String sensorData = getSensorData(sensor, MAXIMUM_LINES_OF_DATA_TO_READ);        
-        
+        String sensorData = getSensorData(sensor, MAXIMUM_LINES_OF_DATA_TO_READ);
+
         TextView textView = (TextView) mView
                 .findViewById(R.id.textview_fragment_experiment_view_notes_note_text);
         if (sensorData.trim().equals("")) {
             textView.setText(getResources().getString(
-                            R.string.text_sensor_has_not_recorded_any_data));
+                    R.string.text_sensor_has_not_recorded_any_data));
             textView.setMovementMethod(new ScrollingMovementMethod());
-        } else {            
+        } else {
             textView.setText(sensorData);
             textView.setMovementMethod(new ScrollingMovementMethod());
         }

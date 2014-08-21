@@ -43,7 +43,7 @@ public class SensorListAdapter extends ArrayAdapter<AbstractSensor> {
     public SensorListAdapter(Activity context, List<AbstractSensor> list) {
         this(context, list, View.VISIBLE);
     }
-    
+
     static class ViewHolder {
         protected TextView text;
         protected CheckBox checkbox;

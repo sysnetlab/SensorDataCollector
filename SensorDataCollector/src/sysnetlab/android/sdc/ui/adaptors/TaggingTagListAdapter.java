@@ -33,12 +33,12 @@ import android.widget.TextView;
 public class TaggingTagListAdapter extends BaseAdapter {
     private List<StateTag> mListStateTags;
     private Activity mActivity;
-    
+
     public TaggingTagListAdapter(Activity activity, List<Tag> listTags) {
-        mActivity = activity; 
-        
+        mActivity = activity;
+
         mListStateTags = new ArrayList<StateTag>();
-        
+
         for (Tag tag : listTags) {
             mListStateTags.add(new StateTag(tag, TaggingState.TAG_OFF));
         }
@@ -65,23 +65,23 @@ public class TaggingTagListAdapter extends BaseAdapter {
         if (convertView == null) {
             LayoutInflater inflator = mActivity.getLayoutInflater();
             view = inflator.inflate(R.layout.tag_cell, parent, false);
-            
+
             final ViewHolder viewHolder = new ViewHolder();
-            
+
             viewHolder.text = (TextView) view.findViewById(R.id.textview_tag_cell);
-            
+
             view.setTag(viewHolder);
         } else {
             view = convertView;
         }
-        
+
         ViewHolder holder = (ViewHolder) view.getTag();
-        holder.text.setText(mListStateTags.get(position).getTag().getName());    
+        holder.text.setText(mListStateTags.get(position).getTag().getName());
         // view.setBackgroundColor(view.getResources().getColor(android.R.color.background_light));
         return view;
     }
-    
+
     static class ViewHolder {
-        protected TextView text;        
+        protected TextView text;
     }
 }

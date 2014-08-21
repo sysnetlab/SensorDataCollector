@@ -29,20 +29,23 @@ public class AudioChannelIn {
     public int getChannelId() {
         return mChannelId;
     }
-    
+
     public int getChannelNameResId() {
         return mChannelNameResId;
     }
-    
+
     public boolean equals(Object rhs) {
-        if (this == rhs) return true;
-        
-        if (!(rhs instanceof AudioSource)) return false;
-        
+        if (this == rhs)
+            return true;
+
+        if (!(rhs instanceof AudioSource))
+            return false;
+
         AudioChannelIn c = (AudioChannelIn) rhs;
-        
-        if (mChannelId != c.mChannelId) return false;
-        
+
+        if (mChannelId != c.mChannelId)
+            return false;
+
         return true;
-    }    
+    }
 }

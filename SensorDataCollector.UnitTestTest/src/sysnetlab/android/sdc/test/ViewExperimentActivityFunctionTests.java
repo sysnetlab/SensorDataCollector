@@ -42,21 +42,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class ViewExperimentActivityFunctionTests extends
-ActivityInstrumentationTestCase2<ViewExperimentActivity> {
-	
-	private ViewExperimentActivity mViewExperimentActivity;
-	private Experiment mExperiment;
-	private AbstractStore mStore;
+        ActivityInstrumentationTestCase2<ViewExperimentActivity> {
 
-	public ViewExperimentActivityFunctionTests() {
+    private ViewExperimentActivity mViewExperimentActivity;
+    private Experiment mExperiment;
+    private AbstractStore mStore;
+
+    public ViewExperimentActivityFunctionTests() {
         super(ViewExperimentActivity.class);
     }
-	
-	public ViewExperimentActivityFunctionTests(Class<ViewExperimentActivity> activityClass) {
+
+    public ViewExperimentActivityFunctionTests(Class<ViewExperimentActivity> activityClass) {
         super(activityClass);
     }
-	
-	@Override
+
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
     }
@@ -65,92 +65,101 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
     protected void setUp() throws Exception {
         super.setUp();
         setActivityInitialTouchMode(false);
-        
-        //setup the store and the sensorUtilSingleton
+
+        // setup the store and the sensorUtilSingleton
         if (!SensorDiscoverer.isInitialized())
             SensorDiscoverer.initialize(getInstrumentation().getTargetContext());
-        
+
         DropboxHelper.getInstance(getInstrumentation().getTargetContext());
-        
+
         mStore = StoreSingleton.getInstance();
         ExperimentManagerSingleton.getInstance().addExperimentStore(
                 mStore);
-        
-        //list all experiments and get one suitable experiment
-        List<Experiment> listExperiments= ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate();
-        Iterator<Experiment> it=listExperiments.iterator();
-        while(it.hasNext()){
-        	mExperiment=(Experiment) it.next();
-        	if(mExperiment.getSensors().size()>0)
-        		break;
+
+        // list all experiments and get one suitable experiment
+        List<Experiment> listExperiments = ExperimentManagerSingleton.getInstance()
+                .getExperimentsSortedByDate();
+        Iterator<Experiment> it = listExperiments.iterator();
+        while (it.hasNext()) {
+            mExperiment = (Experiment) it.next();
+            if (mExperiment.getSensors().size() > 0)
+                break;
         }
-        if(mExperiment.getSensors().size()>0){
-	        ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);	        
-	        mViewExperimentActivity=getActivity();
-	        if (mViewExperimentActivity == null) {
-	            Log.e("Test Setup Error", "Activity is null!");
-  
-	        }
-	        getInstrumentation().waitForIdleSync();
+        if (mExperiment.getSensors().size() > 0) {
+            ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);
+            mViewExperimentActivity = getActivity();
+            if (mViewExperimentActivity == null) {
+                Log.e("Test Setup Error", "Activity is null!");
+
+            }
+            getInstrumentation().waitForIdleSync();
         }
         else {
-        	Log.e("Test Setup Error", "At least one sensor is required in one of the created experimentes in order to run some tests");
+            Log.e("Test Setup Error",
+                    "At least one sensor is required in one of the created experimentes in order to run some tests");
         }
     }
-    
+
     public void testViewExperimentActivityLoaded()
-	{
-    	assertNotNull("Failed to get ViewExperimentActivity", mViewExperimentActivity);
-    	assertNotNull("Failed to get the store", mStore);
-		assertNotNull("The ExperimentViewFragment was not loaded", mViewExperimentActivity.getExperimentViewFragment());
-		assertNotNull("The activity was not loaded", mViewExperimentActivity.findViewById(R.id.fragment_container));
-		assertEquals("The set experiment and the activity experiment must be the same", mExperiment, mViewExperimentActivity.getExperiment());
-	}
-    
-    public void testButtonsPosition(){
-        assertNotNull("Activity should not be null.", mViewExperimentActivity);
-		RelativeLayout buttons = (RelativeLayout) mViewExperimentActivity.findViewById(R.id.layout_experiment_view_buttons);
-		assertNotNull("View buttons not allowed to be null", buttons);
-		LinearLayout sensorList = (LinearLayout) mViewExperimentActivity.findViewById(R.id.layout_experiment_view_sensor_list);
-		assertNotNull("Sensor list not allowed to be null", sensorList);
-		int buttonsTop, sensorsBottom;				
-		buttonsTop = buttons.getTop();
-		sensorsBottom = sensorList.getBottom();
-		assertTrue("The sensor list is not above the clone button", buttonsTop >= sensorsBottom);
+    {
+        assertNotNull("Failed to get ViewExperimentActivity", mViewExperimentActivity);
+        assertNotNull("Failed to get the store", mStore);
+        assertNotNull("The ExperimentViewFragment was not loaded",
+                mViewExperimentActivity.getExperimentViewFragment());
+        assertNotNull("The activity was not loaded",
+                mViewExperimentActivity.findViewById(R.id.fragment_container));
+        assertEquals("The set experiment and the activity experiment must be the same",
+                mExperiment, mViewExperimentActivity.getExperiment());
     }
-    
+
+    public void testButtonsPosition() {
+        assertNotNull("Activity should not be null.", mViewExperimentActivity);
+        RelativeLayout buttons = (RelativeLayout) mViewExperimentActivity
+                .findViewById(R.id.layout_experiment_view_buttons);
+        assertNotNull("View buttons not allowed to be null", buttons);
+        LinearLayout sensorList = (LinearLayout) mViewExperimentActivity
+                .findViewById(R.id.layout_experiment_view_sensor_list);
+        assertNotNull("Sensor list not allowed to be null", sensorList);
+        int buttonsTop, sensorsBottom;
+        buttonsTop = buttons.getTop();
+        sensorsBottom = sensorList.getBottom();
+        assertTrue("The sensor list is not above the clone button", buttonsTop >= sensorsBottom);
+    }
+
     public void testSensorListClicked() throws Exception {
-		String sensorClicked,sensorDisplayed;
-		SensorPropertyListAdapter sensorPropertyListAdapter;
-		ListView sensorProperties;
-		final ListView sensorsList;
-		
-		sensorsList = (ListView) mViewExperimentActivity.findViewById(R.id.listview_experiment_view_sensor_list);
-		
-		if(sensorsList.getCount()>0){
-			SensorListAdapter sensorListAdapter = (SensorListAdapter) sensorsList.getAdapter();
-			sensorClicked=sensorListAdapter.getItem(0).getName();
-			
-			getInstrumentation().runOnMainSync(new Runnable() {
-				@Override
-				public void run() {
-					sensorsList.performItemClick(
-							sensorsList.getAdapter().getView(0, null, null), 
-							0, 
-							sensorsList.getAdapter().getItemId(0));
-				}
-			});
-			getInstrumentation().waitForIdleSync();
-			sensorProperties=(ListView) mViewExperimentActivity.
-					findViewById(R.id.listview_fragment_experiment_view_sensor_data_sensor_properties);
-			sensorPropertyListAdapter = (SensorPropertyListAdapter) sensorProperties.getAdapter();
-			sensorDisplayed=sensorPropertyListAdapter.getItem(0).getValue();
-			assertEquals("The sensor selected in the list differs from the sensor being displayed", 
-					sensorClicked,
-					sensorDisplayed);
-		}
-	}
-    
+        String sensorClicked, sensorDisplayed;
+        SensorPropertyListAdapter sensorPropertyListAdapter;
+        ListView sensorProperties;
+        final ListView sensorsList;
+
+        sensorsList = (ListView) mViewExperimentActivity
+                .findViewById(R.id.listview_experiment_view_sensor_list);
+
+        if (sensorsList.getCount() > 0) {
+            SensorListAdapter sensorListAdapter = (SensorListAdapter) sensorsList.getAdapter();
+            sensorClicked = sensorListAdapter.getItem(0).getName();
+
+            getInstrumentation().runOnMainSync(new Runnable() {
+                @Override
+                public void run() {
+                    sensorsList.performItemClick(
+                            sensorsList.getAdapter().getView(0, null, null),
+                            0,
+                            sensorsList.getAdapter().getItemId(0));
+                }
+            });
+            getInstrumentation().waitForIdleSync();
+            sensorProperties = (ListView) mViewExperimentActivity
+                    .
+                    findViewById(R.id.listview_fragment_experiment_view_sensor_data_sensor_properties);
+            sensorPropertyListAdapter = (SensorPropertyListAdapter) sensorProperties.getAdapter();
+            sensorDisplayed = sensorPropertyListAdapter.getItem(0).getValue();
+            assertEquals("The sensor selected in the list differs from the sensor being displayed",
+                    sensorClicked,
+                    sensorDisplayed);
+        }
+    }
+
     public void testNoteSwipeDirection() {
         final ListView listOperations;
         ExperimentViewNotesFragment mExperimentViewNotesFragment;
@@ -202,26 +211,27 @@ ActivityInstrumentationTestCase2<ViewExperimentActivity> {
 
     }
 
-	private boolean loadExperimentWithNotes() {
-		if(mExperiment.getNotes().size()>1)
-			return true;
-		
-		List<Experiment> listExperiments= ExperimentManagerSingleton.getInstance().getExperimentsSortedByDate();
-        Iterator<Experiment> it=listExperiments.iterator();
-        while(it.hasNext()){
-        	mExperiment=(Experiment) it.next();
-        	if(mExperiment.getNotes().size()>1)
-        		break;
+    private boolean loadExperimentWithNotes() {
+        if (mExperiment.getNotes().size() > 1)
+            return true;
+
+        List<Experiment> listExperiments = ExperimentManagerSingleton.getInstance()
+                .getExperimentsSortedByDate();
+        Iterator<Experiment> it = listExperiments.iterator();
+        while (it.hasNext()) {
+            mExperiment = (Experiment) it.next();
+            if (mExperiment.getNotes().size() > 1)
+                break;
         }
-        if(mExperiment.getNotes().size()>1){
-	        ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);
-	        mViewExperimentActivity.finish();
-	        setActivity(null);
-	        mViewExperimentActivity=getActivity();
-	        getInstrumentation().waitForIdleSync();
-	        return true;
+        if (mExperiment.getNotes().size() > 1) {
+            ExperimentManagerSingleton.getInstance().setActiveExperiment(mExperiment);
+            mViewExperimentActivity.finish();
+            setActivity(null);
+            mViewExperimentActivity = getActivity();
+            getInstrumentation().waitForIdleSync();
+            return true;
         }
         else
-        	return false;
-	}
+            return false;
+    }
 }

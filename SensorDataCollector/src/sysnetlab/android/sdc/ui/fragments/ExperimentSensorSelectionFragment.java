@@ -82,20 +82,21 @@ public class ExperimentSensorSelectionFragment extends Fragment {
                 .findViewById(R.id.layout_sensor_selection_list);
 
         mListView = new ListView(getActivity());
-        if (!SensorDiscoverer.isInitialized()) SensorDiscoverer.initialize(getActivity().getApplicationContext());
+        if (!SensorDiscoverer.isInitialized())
+            SensorDiscoverer.initialize(getActivity().getApplicationContext());
         List<AbstractSensor> lstSensors = SensorDiscoverer.discoverSensorList();
-        
-        
+
         Activity activity = getActivity();
         if (activity instanceof CreateExperimentActivity) {
-            ((CreateExperimentActivity)activity).selectSensors(lstSensors);
+            ((CreateExperimentActivity) activity).selectSensors(lstSensors);
         } else {
             Log.d("SensorDataCollector",
-                    "ExperimentSensorSelectionFragment::onCreate(): " + "not a CreateExperimentActivity.");
+                    "ExperimentSensorSelectionFragment::onCreate(): "
+                            + "not a CreateExperimentActivity.");
         }
-        
+
         mSensorListAdaptor = new SensorListAdapter(getActivity(), lstSensors);
-        
+
         mListView.setAdapter(mSensorListAdaptor);
         layout.addView(mListView);
 
@@ -145,7 +146,7 @@ public class ExperimentSensorSelectionFragment extends Fragment {
         return mSensorListAdaptor;
     }
 
-    public ListView getSensorListView(){
-    	return mListView;
-    }      
+    public ListView getSensorListView() {
+        return mListView;
+    }
 }

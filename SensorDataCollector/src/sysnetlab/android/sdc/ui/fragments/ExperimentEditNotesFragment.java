@@ -29,7 +29,7 @@ import android.widget.EditText;
 
 public class ExperimentEditNotesFragment extends Fragment {
 
-	private View mView;
+    private View mView;
     private OnFragmentClickListener mCallback;
 
     public interface OnFragmentClickListener {
@@ -39,10 +39,10 @@ public class ExperimentEditNotesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        
+
         mView = inflater.inflate(R.layout.fragment_experiment_note_editing, container,
                 false);
-        return 	mView;
+        return mView;
     }
 
     @Override
@@ -59,28 +59,29 @@ public class ExperimentEditNotesFragment extends Fragment {
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        
+
         ((Button) getActivity().findViewById(R.id.button_experiment_note_editing_add_note))
                 .setOnClickListener(new Button.OnClickListener() {
                     public void onClick(View v) {
                         mCallback.onButtonAddNoteClicked_ExperimentEditNotesFragment(
                                 ((EditText) getActivity().findViewById(
-                        		R.id.edittext_experiment_note_editing_note)).getText()
+                                        R.id.edittext_experiment_note_editing_note)).getText()
                                         .toString()
                                 );
                     }
                 });
     }
-    public boolean hasNotes(){
-    	String noteDescription = ((EditText) mView.findViewById(R.id.edittext_experiment_note_editing_note))
-    			.getText().toString();
-    	if(!noteDescription.trim().equals(""))
-    		return true;
-    	return false;
+
+    public boolean hasNotes() {
+        String noteDescription = ((EditText) mView
+                .findViewById(R.id.edittext_experiment_note_editing_note))
+                .getText().toString();
+        if (!noteDescription.trim().equals(""))
+            return true;
+        return false;
     }
-    
-    
-    public View getView(){
-    	return mView;
+
+    public View getView() {
+        return mView;
     }
 }

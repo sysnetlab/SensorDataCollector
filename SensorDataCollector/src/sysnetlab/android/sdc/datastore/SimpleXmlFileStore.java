@@ -70,21 +70,21 @@ public class SimpleXmlFileStore extends SimpleFileStore {
     public SimpleXmlFileStore() throws RuntimeException {
         super();
     }
-    
+
     @Override
     public List<Experiment> listStoredExperiments(ProgressBar mProgressBar) {
-    	List<Experiment> listExperiments = new ArrayList<Experiment>();
+        List<Experiment> listExperiments = new ArrayList<Experiment>();
 
         DecimalFormat f = new DecimalFormat("00000");
         for (int i = 1; i < mNextExperimentNumber; i++) {
             String dirName = DIR_PREFIX + f.format(i);
             String pathPrefix = mParentPath + "/" + dirName;
 
-            Experiment experiment; 
-            
+            Experiment experiment;
+
             String xmlConfigFile = pathPrefix + "/" + XML_EXPERIMENT_META_DATA_FILE;
             File configFile = new File(xmlConfigFile);
-            
+
             if (!configFile.exists()) {
                 experiment = super.loadExperiment(dirName, pathPrefix);
             } else {
@@ -107,11 +107,11 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             String dirName = DIR_PREFIX + f.format(i);
             String pathPrefix = mParentPath + "/" + dirName;
 
-            Experiment experiment; 
-            
+            Experiment experiment;
+
             String xmlConfigFile = pathPrefix + "/" + XML_EXPERIMENT_META_DATA_FILE;
             File configFile = new File(xmlConfigFile);
-            
+
             if (!configFile.exists()) {
                 experiment = super.loadExperiment(dirName, pathPrefix);
             } else {
@@ -127,60 +127,65 @@ public class SimpleXmlFileStore extends SimpleFileStore {
     @Override
     public void writeExperimentMetaData(Experiment experiment) {
         XmlSerializer xmlSerializer = Xml.newSerializer();
-        
+
         try {
             StringWriter stringWriter = new StringWriter();
             xmlSerializer.setOutput(stringWriter);
-            
-            serializeExperiment(xmlSerializer, experiment); 
-            
+
+            serializeExperiment(xmlSerializer, experiment);
+
             String configFilePath = getNewExperimentPath() + "/" + XML_EXPERIMENT_META_DATA_FILE;
             PrintStream out;
             out = new PrintStream(new BufferedOutputStream(new FileOutputStream(configFilePath)));
-            
+
             out.println(stringWriter.toString());
             out.close();
-            // Log.d("SensorDataCollector", "xml file = [ " + stringWriter.toString() + " ]");
+            // Log.d("SensorDataCollector", "xml file = [ " +
+            // stringWriter.toString() + " ]");
         } catch (IllegalArgumentException e) {
             // TODO
             e.printStackTrace();
-            Log.e("SensorDataCollector", "SimpleXmlFileStore::writeExperimentMetaData(): " + e.toString());
+            Log.e("SensorDataCollector",
+                    "SimpleXmlFileStore::writeExperimentMetaData(): " + e.toString());
         } catch (IllegalStateException e) {
             // TODO
             e.printStackTrace();
-            Log.e("SensorDataCollector", "SimpleXmlFileStore::writeExperimentMetaData(): " + e.toString());
+            Log.e("SensorDataCollector",
+                    "SimpleXmlFileStore::writeExperimentMetaData(): " + e.toString());
         } catch (FileNotFoundException e) {
             // TODO
             e.printStackTrace();
-            Log.e("SensorDataCollector", "SimpleXmlFileStore::writeExperimentMetaData(): " + e.toString());
+            Log.e("SensorDataCollector",
+                    "SimpleXmlFileStore::writeExperimentMetaData(): " + e.toString());
         } catch (IOException e) {
             // TODO
             e.printStackTrace();
-            Log.e("SensorDataCollector", "SimpleXmlFileStore::writeExperimentMetaData(): " + e.toString());
-        } 
+            Log.e("SensorDataCollector",
+                    "SimpleXmlFileStore::writeExperimentMetaData(): " + e.toString());
+        }
     }
-    
+
     public Experiment loadExperiment(String experimentPath) {
-        // Log.d("SensorDataCollector.UnitTest", "entered loadExperiment().");        
+        // Log.d("SensorDataCollector.UnitTest", "entered loadExperiment().");
         Experiment experiment = null;
-        
+
         String configFilePath = experimentPath + "/" + XML_EXPERIMENT_META_DATA_FILE;
-        
+
         try {
-            
+
             BufferedReader in = new BufferedReader(new FileReader(configFilePath));
-        
+
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
             XmlPullParser xpp = factory.newPullParser();
             xpp.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, true);
-            
+
             xpp.setInput(in);
-            
+
             xpp.nextTag();
             experiment = readExperiment(xpp);
             experiment.setPath(experimentPath);
-        
+
             in.close();
         } catch (FileNotFoundException e) {
             experiment = null;
@@ -191,12 +196,12 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             experiment = null;
             Log.e("SensorDataCollector",
                     "SimpleXmlFileStore()::loadExperiment(): configFilePath = " + configFilePath
-                            + " : " + e.toString());            
+                            + " : " + e.toString());
         } catch (IOException e) {
             experiment = null;
             Log.e("SensorDataCollector",
                     "SimpleXmlFileStore()::loadExperiment(): configFilePath = " + configFilePath
-                            + " : " + e.toString());         
+                            + " : " + e.toString());
         } catch (IllegalStateException e) {
             experiment = null;
             Log.e("SensorDataCollector",
@@ -207,14 +212,13 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             Log.e("SensorDataCollector",
                     "SimpleXmlFileStore()::loadExperiment(): configFilePath = " + configFilePath
                             + " : " + e.toString());
-        } 
-        
+        }
+
         Log.d("SensorDataCollector", "SimpleXmlFileStore::loadExperiment(): loaded experiment ["
                 + (experiment != null ? experiment.toString() : "null") + "]");
         return experiment;
     }
 
-    
     private void serializeExperiment(XmlSerializer xs, Experiment e)
             throws IllegalArgumentException, IllegalStateException, IOException {
         xs.startDocument("UTF-8", false);
@@ -249,14 +253,14 @@ public class SimpleXmlFileStore extends SimpleFileStore {
 
         xs.endDocument();
     }
-    
+
     private void serializeExperimentNameElement(XmlSerializer xs, String name)
             throws IllegalArgumentException, IllegalStateException, IOException {
         xs.startTag("", "name");
         xs.text(name);
         xs.endTag("", "name");
     }
-    
+
     private void serializeExperimentDeviceInfo(XmlSerializer xs, DeviceInformation deviceInfo)
             throws IllegalArgumentException, IllegalStateException, IOException {
         xs.startTag("", "device");
@@ -269,23 +273,23 @@ public class SimpleXmlFileStore extends SimpleFileStore {
         xs.startTag("", "model");
         xs.text(deviceInfo.getModel());
         xs.endTag("", "model");
-        
+
         xs.startTag("", "sdk-int");
         xs.text(Integer.toString(deviceInfo.getSdkInt()));
         xs.endTag("", "sdk-int");
-        
+
         xs.startTag("", "sdk-codename");
         xs.text(deviceInfo.getSdkCodeName());
-        xs.endTag("",  "sdk-codename");
+        xs.endTag("", "sdk-codename");
 
         xs.startTag("", "sdk-release");
         xs.text(deviceInfo.getSdkRelease());
-        xs.endTag("",  "sdk-release");
-        
+        xs.endTag("", "sdk-release");
+
         xs.endTag("", "android");
         xs.endTag("", "device");
     }
-    
+
     private void serializeExperimentTimes(XmlSerializer xs, Date dateCreated,
             Date dateDone) throws IllegalArgumentException, IllegalStateException, IOException {
         xs.startTag("", "datetimecreation");
@@ -296,7 +300,7 @@ public class SimpleXmlFileStore extends SimpleFileStore {
         xs.text(DateUtils.getStringUTCFromDate(dateDone));
         xs.endTag("", "datetimecompletion");
     }
-    
+
     private void serializeExperimentTagList(XmlSerializer xs, List<Tag> listTags)
             throws IllegalArgumentException, IllegalStateException, IOException {
         if (!listTags.isEmpty()) {
@@ -308,19 +312,20 @@ public class SimpleXmlFileStore extends SimpleFileStore {
                 xs.startTag("", "name");
                 xs.text(tag.getName());
                 xs.endTag("", "name");
-                
+
                 xs.startTag("", "number");
                 xs.text(Integer.toString(tag.getTagId()));
                 xs.endTag("", "number");
-                
-                
-                if (tag.getShortDescription() != null && tag.getShortDescription().trim().length() > 0) {
+
+                if (tag.getShortDescription() != null
+                        && tag.getShortDescription().trim().length() > 0) {
                     xs.startTag("", "shortdescription");
                     xs.text(tag.getShortDescription());
                     xs.endTag("", "shortdescription");
                 }
 
-                if (tag.getLongDescription() != null && tag.getLongDescription().trim().length() > 0) {
+                if (tag.getLongDescription() != null
+                        && tag.getLongDescription().trim().length() > 0) {
                     xs.startTag("", "longdescription");
                     xs.text(tag.getLongDescription());
                     xs.endTag("", "longdescription");
@@ -332,7 +337,7 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             xs.endTag("", "taglist");
         }
     }
-    
+
     private void serializeExperimentNoteList(XmlSerializer xs, List<Note> listNotes)
             throws IllegalArgumentException, IllegalStateException, IOException {
         if (!listNotes.isEmpty()) {
@@ -355,7 +360,7 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             xs.endTag("", "notelist");
         }
     }
-    
+
     private void serializeExperimentTaggingActionList(XmlSerializer xs,
             List<TaggingAction> listTaggingActions) throws IllegalArgumentException,
             IllegalStateException, IOException {
@@ -397,7 +402,7 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             xs.endTag("", "taggingactionlist");
         }
     }
-    
+
     private void serializeExperimentSensorList(XmlSerializer xs, List<AbstractSensor> listSensors)
             throws IllegalArgumentException, IllegalStateException, IOException {
         if (!listSensors.isEmpty()) {
@@ -418,12 +423,12 @@ public class SimpleXmlFileStore extends SimpleFileStore {
                 xs.startTag("", "minortype");
                 xs.text(Integer.toString(sensor.getMinorType()));
                 xs.endTag("", "minortype");
-                
-                xs.startTag("",  "selected");
+
+                xs.startTag("", "selected");
                 xs.text(Boolean.toString(sensor.isSelected()));
                 xs.endTag("", "selected");
 
-                switch(sensor.getMajorType()) {
+                switch (sensor.getMajorType()) {
                     case AbstractSensor.ANDROID_SENSOR:
                         serializeAndroidSensor(xs, (AndroidSensor) sensor);
                         break;
@@ -438,30 +443,34 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             xs.endTag("", "sensorlist");
         }
     }
-    
+
     @SuppressWarnings("deprecation")
-    private void serializeAndroidSensor(XmlSerializer xs, AndroidSensor sensor) throws IllegalArgumentException, IllegalStateException, IOException {
-        xs.startTag("",  "datadescription");
-        xs.attribute("",  "type",  getChannelTypeString(sensor.getChannel().getType()));
+    private void serializeAndroidSensor(XmlSerializer xs, AndroidSensor sensor)
+            throws IllegalArgumentException, IllegalStateException, IOException {
+        xs.startTag("", "datadescription");
+        xs.attribute("", "type", getChannelTypeString(sensor.getChannel().getType()));
 
-        xs.startTag("",  "location");
+        xs.startTag("", "location");
         xs.text(sensor.getChannel().describe());
-        xs.endTag("",  "location");
+        xs.endTag("", "location");
 
-        final String eventTimes[] = {"threadtimemillis", 
+        final String eventTimes[] = {
+                "threadtimemillis",
                 "elapsedrealtime",
-                "elapsedrealtimenanos"};
+                "elapsedrealtimenanos"
+        };
         int pos = -1;
-        for (int i = 0; i < eventTimes.length; i ++) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1 && i == eventTimes.length - 1) {
+        for (int i = 0; i < eventTimes.length; i++) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1
+                    && i == eventTimes.length - 1) {
                 break;
             }
-            
-            pos ++;
+
+            pos++;
             xs.startTag("", "column");
-            xs.attribute("",  "id",  Integer.toString(pos));
-            xs.attribute("",  "pos",  Integer.toString(pos));
-            xs.attribute("",  "type",  "long");
+            xs.attribute("", "id", Integer.toString(pos));
+            xs.attribute("", "pos", Integer.toString(pos));
+            xs.attribute("", "type", "long");
             xs.attribute("", "description", eventTimes[i]);
             xs.endTag("", "column");
         }
@@ -492,89 +501,92 @@ public class SimpleXmlFileStore extends SimpleFileStore {
                     nValues = 5;
                 }
                 break;
-                
+
             case Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED:
             case Sensor.TYPE_GYROSCOPE_UNCALIBRATED:
                 nValues = 6;
                 break;
-                
+
             default:
                 nValues = 3;
         }
-        for (int i = 0; i < nValues; i ++) {
-            pos ++;
+        for (int i = 0; i < nValues; i++) {
+            pos++;
             xs.startTag("", "column");
-            xs.attribute("",  "id",  Integer.toString(pos));
-            xs.attribute("",  "pos",  Integer.toString(pos));
-            xs.attribute("",  "type",  "double");
+            xs.attribute("", "id", Integer.toString(pos));
+            xs.attribute("", "pos", Integer.toString(pos));
+            xs.attribute("", "type", "double");
             xs.attribute("", "description", "value");
-            xs.endTag("", "column");                    
-        }  
-        
-        xs.endTag("",  "datadescription");        
-    }
-    
-    private void serializeAudioSensor(XmlSerializer xs, AudioSensor sensor) throws IllegalArgumentException, IllegalStateException, IOException {
-        xs.startTag("",  "datadescription");
-        xs.attribute("",  "type",  getChannelTypeString(sensor.getChannel().getType()));
+            xs.endTag("", "column");
+        }
 
-        xs.startTag("",  "location");
+        xs.endTag("", "datadescription");
+    }
+
+    private void serializeAudioSensor(XmlSerializer xs, AudioSensor sensor)
+            throws IllegalArgumentException, IllegalStateException, IOException {
+        xs.startTag("", "datadescription");
+        xs.attribute("", "type", getChannelTypeString(sensor.getChannel().getType()));
+
+        xs.startTag("", "location");
         xs.text(sensor.getChannel().describe());
-        xs.endTag("",  "location");
-        
+        xs.endTag("", "location");
+
         xs.startTag("", "source");
         xs.startTag("", "id");
         xs.text(Integer.toString(sensor.getAudioRecordParameter().getSource().getSourceId()));
         xs.endTag("", "id");
-        // Resource Id changes when the string.xml is updated. It is not good to use them in 
-        // persistent manner. 
+        // Resource Id changes when the string.xml is updated. It is not good to
+        // use them in
+        // persistent manner.
         /*
-        xs.startTag("", "nameresid");
-        xs.text(Integer.toString(sensor.getAudioRecordParameter().getSource().getSourceNameResId()));
-        xs.endTag("", "nameresid");
-        */
-        xs.endTag("",  "source");
-        
+         * xs.startTag("", "nameresid");
+         * xs.text(Integer.toString(sensor.getAudioRecordParameter
+         * ().getSource().getSourceNameResId())); xs.endTag("", "nameresid");
+         */
+        xs.endTag("", "source");
+
         xs.startTag("", "channelin");
         xs.startTag("", "id");
         xs.text(Integer.toString(sensor.getAudioRecordParameter().getChannel().getChannelId()));
         xs.endTag("", "id");
         /*
-        xs.startTag("", "nameresid");
-        xs.text(Integer.toString(sensor.getAudioRecordParameter().getChannel().getChannelNameResId()));
-        xs.endTag("", "nameresid");
-        */
-        xs.endTag("",  "channelin");
-        
+         * xs.startTag("", "nameresid");
+         * xs.text(Integer.toString(sensor.getAudioRecordParameter
+         * ().getChannel().getChannelNameResId())); xs.endTag("", "nameresid");
+         */
+        xs.endTag("", "channelin");
+
         xs.startTag("", "encoding");
         xs.startTag("", "id");
         xs.text(Integer.toString(sensor.getAudioRecordParameter().getEncoding().getEncodingId()));
         xs.endTag("", "id");
         /*
-        xs.startTag("", "nameresid");
-        xs.text(Integer.toString(sensor.getAudioRecordParameter().getEncoding().getEncodingNameResId()));
-        xs.endTag("", "nameresid");
-        */
-        xs.endTag("",  "encoding");
-        
+         * xs.startTag("", "nameresid");
+         * xs.text(Integer.toString(sensor.getAudioRecordParameter
+         * ().getEncoding().getEncodingNameResId())); xs.endTag("",
+         * "nameresid");
+         */
+        xs.endTag("", "encoding");
+
         xs.startTag("", "samplingrate");
         xs.text(Integer.toString(sensor.getAudioRecordParameter().getSamplingRate()));
-        xs.endTag("",  "samplingrate");    
-        
+        xs.endTag("", "samplingrate");
+
         xs.startTag("", "buffersize");
         xs.text(Integer.toString(sensor.getAudioRecordParameter().getBufferSize()));
-        xs.endTag("",  "buffersize");  
-        
+        xs.endTag("", "buffersize");
+
         xs.startTag("", "minbuffersize");
         xs.text(Integer.toString(sensor.getAudioRecordParameter().getMinBufferSize()));
-        xs.endTag("",  "minbuffersize");  
-        
-        xs.endTag("",  "datadescription");
+        xs.endTag("", "minbuffersize");
+
+        xs.endTag("", "datadescription");
     }
-    
+
     private String getChannelTypeString(int type) {
         String strType;
-        
+
         if (type == AbstractStore.Channel.CHANNEL_TYPE_CSV) {
             strType = "csv";
         } else if (type == AbstractStore.Channel.CHANNEL_TYPE_BIN) {
@@ -586,10 +598,10 @@ public class SimpleXmlFileStore extends SimpleFileStore {
         } else {
             strType = "txt";
         }
-        
+
         return strType;
     }
-    
+
     private Experiment readExperiment(XmlPullParser xpp) throws IllegalStateException,
             XmlPullParserException, IOException, ParseException {
         Experiment experiment = new Experiment();
@@ -602,31 +614,36 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             }
             String elem = xpp.getName();
 
-            // Log.d("SensorDataCollector", "SimpleXmlFileStore::readExperiment(): element = " + elem);
+            // Log.d("SensorDataCollector",
+            // "SimpleXmlFileStore::readExperiment(): element = " + elem);
 
             if (elem.equals("name")) {
                 String name = readXmlElementText(xpp, "name");
                 experiment.setName(name);
-                // Log.d("SensorDataCollector", "readExperiment(): " + xpp.getText());                
+                // Log.d("SensorDataCollector", "readExperiment(): " +
+                // xpp.getText());
             } else if (elem.equals("device")) {
                 DeviceInformation device = readDevice(xpp);
                 experiment.setDeviceInformation(device);
-                // Log.d("SensorDataCollector", "readExperiment(): " + device.toString());                
+                // Log.d("SensorDataCollector", "readExperiment(): " +
+                // device.toString());
             } else if (elem.equals("datetimecreation")) {
                 String datetime = readXmlElementText(xpp, "datetimecreation");
                 experiment.setDateTimeCreatedFromStringUTC(datetime);
-                // Log.d("SensorDataCollector", "readExperiment(): " + xpp.getText());
+                // Log.d("SensorDataCollector", "readExperiment(): " +
+                // xpp.getText());
             } else if (elem.equals("datetimecompletion")) {
                 String datetime = readXmlElementText(xpp, "datetimecompletion");
                 experiment.setDateTimeDoneFromStringUTC(datetime);
             } else if (elem.equals("taglist")) {
                 List<Tag> listTags = readTags(xpp);
-                experiment.setTags(listTags);                
+                experiment.setTags(listTags);
             } else if (elem.equals("notelist")) {
                 List<Note> listNotes = readNotes(xpp);
                 experiment.setNotes(listNotes);
             } else if (elem.equals("taggingactionlist")) {
-                List<TaggingAction> listTaggingActions = readTaggingActions(xpp, experiment.getTags());
+                List<TaggingAction> listTaggingActions = readTaggingActions(xpp,
+                        experiment.getTags());
                 experiment.setTaggingActions(listTaggingActions);
             } else if (elem.equals("sensorlist")) {
                 List<AbstractSensor> listSensors = readSensors(xpp);
@@ -635,28 +652,28 @@ public class SimpleXmlFileStore extends SimpleFileStore {
                 skip(xpp);
             }
         }
-        
-        /*
-        String dbgString = " name = " + experiment.getName() +  
-                " datetimecreated = " + experiment.getDateTimeCreatedAsStringUTC() +
-                " datetimecompleted = " + experiment.getDateTimeDoneAsStringUTC();
-        for (Tag tag : experiment.getTags()) {
-            dbgString += " Tag = (" + tag.getName() + ", " + tag.getShortDescription() + ", " + tag.getLongDescription() + ") ";
-        }
 
-        Log.d("SensorDataCollector", "SimpleXmlFileStore():readExperiment(): " + dbgString);
-        */
-        
+        /*
+         * String dbgString = " name = " + experiment.getName() +
+         * " datetimecreated = " + experiment.getDateTimeCreatedAsStringUTC() +
+         * " datetimecompleted = " + experiment.getDateTimeDoneAsStringUTC();
+         * for (Tag tag : experiment.getTags()) { dbgString += " Tag = (" +
+         * tag.getName() + ", " + tag.getShortDescription() + ", " +
+         * tag.getLongDescription() + ") "; } Log.d("SensorDataCollector",
+         * "SimpleXmlFileStore():readExperiment(): " + dbgString);
+         */
+
         return experiment;
     }
-    
-    private DeviceInformation readDevice(XmlPullParser xpp) throws XmlPullParserException, IOException {
-        // Log.d("SensorDataCollector", "entered readDevice()");                
+
+    private DeviceInformation readDevice(XmlPullParser xpp) throws XmlPullParserException,
+            IOException {
+        // Log.d("SensorDataCollector", "entered readDevice()");
 
         xpp.require(XmlPullParser.START_TAG, XMLNS, "device");
-        
-        DeviceInformation deviceInfo = null; 
-        
+
+        DeviceInformation deviceInfo = null;
+
         while (xpp.next() != XmlPullParser.END_TAG) {
             if (xpp.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -668,19 +685,20 @@ public class SimpleXmlFileStore extends SimpleFileStore {
                 skip(xpp);
             }
         }
-        
-        return deviceInfo;        
+
+        return deviceInfo;
     }
-    
-    private DeviceInformation readAndroidDevice(XmlPullParser xpp) throws XmlPullParserException, IOException {
+
+    private DeviceInformation readAndroidDevice(XmlPullParser xpp) throws XmlPullParserException,
+            IOException {
         xpp.require(XmlPullParser.START_TAG, XMLNS, "android");
-        
+
         String make = null;
         String model = null;
         String sdkRelease = null;
         int sdkInt = -1;
         String sdkCodeName = null;
-        
+
         while (xpp.next() != XmlPullParser.END_TAG) {
             if (xpp.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -700,33 +718,38 @@ public class SimpleXmlFileStore extends SimpleFileStore {
                 skip(xpp);
             }
         }
-        
-        return new DeviceInformation(make, model, sdkInt, sdkCodeName, sdkRelease); 
+
+        return new DeviceInformation(make, model, sdkInt, sdkCodeName, sdkRelease);
     }
-    
-    private String readAndroidDeviceMake(XmlPullParser xpp) throws XmlPullParserException, IOException {
+
+    private String readAndroidDeviceMake(XmlPullParser xpp) throws XmlPullParserException,
+            IOException {
         return readXmlElementText(xpp, "make");
     }
-    
-    private String readAndroidDeviceModel(XmlPullParser xpp) throws XmlPullParserException, IOException {
+
+    private String readAndroidDeviceModel(XmlPullParser xpp) throws XmlPullParserException,
+            IOException {
         return readXmlElementText(xpp, "model");
     }
-    
-    private int readAndroidDeviceSdkInt(XmlPullParser xpp) throws XmlPullParserException, IOException {
+
+    private int readAndroidDeviceSdkInt(XmlPullParser xpp) throws XmlPullParserException,
+            IOException {
         return Integer.parseInt(readXmlElementText(xpp, "sdk-int"));
     }
-    
-    private String readAndroidDeviceSdkCodeName(XmlPullParser xpp) throws XmlPullParserException, IOException {
+
+    private String readAndroidDeviceSdkCodeName(XmlPullParser xpp) throws XmlPullParserException,
+            IOException {
         return readXmlElementText(xpp, "sdk-codename");
     }
-    
-    private String readAndroidDeviceSdkRelease(XmlPullParser xpp) throws XmlPullParserException, IOException {
+
+    private String readAndroidDeviceSdkRelease(XmlPullParser xpp) throws XmlPullParserException,
+            IOException {
         return readXmlElementText(xpp, "sdk-release");
     }
-   
+
     private List<Tag> readTags(XmlPullParser xpp) throws XmlPullParserException, IOException {
         List<Tag> listTags = new ArrayList<Tag>();
-            
+
         xpp.require(XmlPullParser.START_TAG, XMLNS, "taglist");
 
         while (xpp.next() != XmlPullParser.END_TAG) {
@@ -740,19 +763,19 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             } else {
                 skip(xpp);
             }
-        }  
+        }
 
         return listTags;
     }
-    
+
     private Tag readTag(XmlPullParser xpp) throws XmlPullParserException, IOException {
         xpp.require(XmlPullParser.START_TAG, XMLNS, "tag");
-        
+
         String tagName = null;
         String shortDescription = null;
         String longDescription = null;
         int tagId = 0;
-        
+
         while (xpp.next() != XmlPullParser.END_TAG) {
             if (xpp.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -760,8 +783,8 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             String name = xpp.getName();
             if (name.equals("name")) {
                 tagName = readTagName(xpp);
-            }else if (name.equals("tagId")){
-            	tagId = readTagId(xpp);
+            } else if (name.equals("tagId")) {
+                tagId = readTagId(xpp);
             } else if (name.equals("shortdescription")) {
                 shortDescription = readShortDescription(xpp);
             } else if (name.equals("longdescription")) {
@@ -770,29 +793,32 @@ public class SimpleXmlFileStore extends SimpleFileStore {
                 skip(xpp);
             }
         }
-        
+
         return new Tag(tagName, shortDescription, longDescription, tagId);
     }
-    
+
     private String readTagName(XmlPullParser xpp) throws XmlPullParserException, IOException {
         return readXmlElementText(xpp, "name");
     }
-    
-    private int readTagId(XmlPullParser xpp) throws XmlPullParserException, IOException{
-    	return Integer.parseInt(readXmlElementText(xpp, "tagId"));
+
+    private int readTagId(XmlPullParser xpp) throws XmlPullParserException, IOException {
+        return Integer.parseInt(readXmlElementText(xpp, "tagId"));
     }
-    
-    private String readShortDescription(XmlPullParser xpp) throws XmlPullParserException, IOException {
+
+    private String readShortDescription(XmlPullParser xpp) throws XmlPullParserException,
+            IOException {
         return readXmlElementText(xpp, "shortdescription");
     }
-    
-    private String readLongDescription(XmlPullParser xpp) throws XmlPullParserException, IOException {
+
+    private String readLongDescription(XmlPullParser xpp) throws XmlPullParserException,
+            IOException {
         return readXmlElementText(xpp, "longdescription");
     }
-    
-    private List<Note> readNotes(XmlPullParser xpp) throws XmlPullParserException, IOException, ParseException {
+
+    private List<Note> readNotes(XmlPullParser xpp) throws XmlPullParserException, IOException,
+            ParseException {
         List<Note> listNotes = new ArrayList<Note>();
-        
+
         xpp.require(XmlPullParser.START_TAG, XMLNS, "notelist");
 
         while (xpp.next() != XmlPullParser.END_TAG) {
@@ -806,17 +832,18 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             } else {
                 skip(xpp);
             }
-        }  
+        }
 
         return listNotes;
     }
-    
-    private Note readNote(XmlPullParser xpp) throws XmlPullParserException, IOException, ParseException {
+
+    private Note readNote(XmlPullParser xpp) throws XmlPullParserException, IOException,
+            ParseException {
         xpp.require(XmlPullParser.START_TAG, XMLNS, "note");
-        
+
         String text = null;
         String dateTime = null;
-        
+
         while (xpp.next() != XmlPullParser.END_TAG) {
             if (xpp.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -830,21 +857,22 @@ public class SimpleXmlFileStore extends SimpleFileStore {
                 skip(xpp);
             }
         }
-        
+
         return new Note(text, DateUtils.getDatefromStringUTC(dateTime));
     }
-    
+
     private String readNoteText(XmlPullParser xpp) throws XmlPullParserException, IOException {
         return readXmlElementText(xpp, "notetext");
     }
-    
+
     private String readNoteDateTime(XmlPullParser xpp) throws XmlPullParserException, IOException {
         return readXmlElementText(xpp, "datetime");
     }
-    
-    private List<TaggingAction> readTaggingActions(XmlPullParser xpp, List<Tag> listTags) throws XmlPullParserException, IOException {
+
+    private List<TaggingAction> readTaggingActions(XmlPullParser xpp, List<Tag> listTags)
+            throws XmlPullParserException, IOException {
         List<TaggingAction> listTaggingActions = new ArrayList<TaggingAction>();
-        
+
         xpp.require(XmlPullParser.START_TAG, XMLNS, "taggingactionlist");
 
         while (xpp.next() != XmlPullParser.END_TAG) {
@@ -858,18 +886,19 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             } else {
                 skip(xpp);
             }
-        }  
+        }
 
         return listTaggingActions;
     }
-    
-    private TaggingAction readTaggingAction(XmlPullParser xpp, List<Tag> listTags) throws XmlPullParserException, IOException {
+
+    private TaggingAction readTaggingAction(XmlPullParser xpp, List<Tag> listTags)
+            throws XmlPullParserException, IOException {
         xpp.require(XmlPullParser.START_TAG, XMLNS, "taggingaction");
-        
+
         Tag taggingTag = null;
         ExperimentTime taggingTime = null;
         TaggingState taggingState = TaggingState.TAG_CONTEXT;
-        
+
         while (xpp.next() != XmlPullParser.END_TAG) {
             if (xpp.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -896,17 +925,18 @@ public class SimpleXmlFileStore extends SimpleFileStore {
                 skip(xpp);
             }
         }
-        
-        return new TaggingAction(taggingTag, taggingTime, taggingState);        
+
+        return new TaggingAction(taggingTag, taggingTime, taggingState);
     }
-    
-    private ExperimentTime readTaggingActionTime(XmlPullParser xpp) throws XmlPullParserException, IOException {
+
+    private ExperimentTime readTaggingActionTime(XmlPullParser xpp) throws XmlPullParserException,
+            IOException {
         xpp.require(XmlPullParser.START_TAG, XMLNS, "experimenttime");
-        
+
         Long threadTimeMillis = -1l;
         Long elapsedRealTime = -1l;
         Long elapsedRealTimeNanos = -1l;
-        
+
         while (xpp.next() != XmlPullParser.END_TAG) {
             if (xpp.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -917,58 +947,62 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             } else if (name.equals("elapsedrealtime")) {
                 elapsedRealTime = readElapsedRealTime(xpp);
             } else if (name.equals("elapsedrealtimenanos")) {
-                elapsedRealTimeNanos = readElapsedRealTimeNanos(xpp);    
+                elapsedRealTimeNanos = readElapsedRealTimeNanos(xpp);
             } else {
                 skip(xpp);
             }
         }
-        
-        return new ExperimentTime(threadTimeMillis, elapsedRealTime, elapsedRealTimeNanos);        
+
+        return new ExperimentTime(threadTimeMillis, elapsedRealTime, elapsedRealTimeNanos);
     }
-    
+
     private Long readThreadTimeMillis(XmlPullParser xpp) throws XmlPullParserException, IOException {
         String text = readXmlElementText(xpp, "threadtimemillis");
         return Long.parseLong(text);
     }
-    
+
     private Long readElapsedRealTime(XmlPullParser xpp) throws XmlPullParserException, IOException {
         String text = readXmlElementText(xpp, "elapsedrealtime");
         return Long.parseLong(text);
     }
-    
-    private Long readElapsedRealTimeNanos(XmlPullParser xpp) throws XmlPullParserException, IOException {
+
+    private Long readElapsedRealTimeNanos(XmlPullParser xpp) throws XmlPullParserException,
+            IOException {
         String text = readXmlElementText(xpp, "elapsedrealtimenanos");
         return Long.parseLong(text);
     }
-    
-    private TaggingState readTaggingState(XmlPullParser xpp) throws XmlPullParserException, IOException {
+
+    private TaggingState readTaggingState(XmlPullParser xpp) throws XmlPullParserException,
+            IOException {
         xpp.require(XmlPullParser.START_TAG, XMLNS, "taggingstate");
-        
+
         TaggingState taggingState = TaggingState.TAG_CONTEXT;
-        
+
         while (xpp.next() != XmlPullParser.END_TAG) {
             if (xpp.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
             String name = xpp.getName();
             if (name.equals("name")) {
-                String taggingStateTextValue = readTaggingStateTextValue(xpp);   
+                String taggingStateTextValue = readTaggingStateTextValue(xpp);
                 taggingState = TaggingState.valueOf(taggingStateTextValue);
             } else {
                 skip(xpp);
             }
-        }    
-        
+        }
+
         return taggingState;
     }
-    
-    private String readTaggingStateTextValue(XmlPullParser xpp) throws XmlPullParserException, IOException {
-        return readXmlElementText(xpp, "name");        
+
+    private String readTaggingStateTextValue(XmlPullParser xpp) throws XmlPullParserException,
+            IOException {
+        return readXmlElementText(xpp, "name");
     }
-    
-    private List<AbstractSensor> readSensors(XmlPullParser xpp) throws XmlPullParserException, IOException {
+
+    private List<AbstractSensor> readSensors(XmlPullParser xpp) throws XmlPullParserException,
+            IOException {
         List<AbstractSensor> listSensors = new ArrayList<AbstractSensor>();
-        
+
         xpp.require(XmlPullParser.START_TAG, XMLNS, "sensorlist");
 
         while (xpp.next() != XmlPullParser.END_TAG) {
@@ -979,40 +1013,46 @@ public class SimpleXmlFileStore extends SimpleFileStore {
 
             if (name.equals("sensor")) {
                 listSensors.add(readSensor(xpp));
-                // Log.d("SensorDataCollector", "SimpleXMLFileStore::readSensors(): read a sensor");
+                // Log.d("SensorDataCollector",
+                // "SimpleXMLFileStore::readSensors(): read a sensor");
             } else {
                 skip(xpp);
             }
-        }  
+        }
 
         return listSensors;
     }
-    
+
     private class AudioDataDefinition {
         AudioRecordParameter mAudioDataParameter;
         AbstractStore.Channel mChannel;
     }
-    
+
     private AbstractSensor readSensor(XmlPullParser xpp) throws XmlPullParserException, IOException {
         xpp.require(XmlPullParser.START_TAG, XMLNS, "sensor");
-        
+
         /*
-        Log.d("SensorDataCollector", "SimpleXmlFileStore::readSensor(): sensor id = " + xpp.getAttributeValue(XMLNS, "id"));
-        Log.d("SensorDataCollector", "SimpleXmlFileStore::readSensor(): sensor count = " + xpp.getAttributeCount());
-        Log.d("SensorDataCollector", "SimpleXmlFileStore::readSensor(): sensor name = " + xpp.getAttributeName(0));
-        Log.d("SensorDataCollector", "SimpleXmlFileStore::readSensor(): sensor namespace = " + xpp.getAttributeNamespace(0));
-        */
-        
+         * Log.d("SensorDataCollector",
+         * "SimpleXmlFileStore::readSensor(): sensor id = " +
+         * xpp.getAttributeValue(XMLNS, "id")); Log.d("SensorDataCollector",
+         * "SimpleXmlFileStore::readSensor(): sensor count = " +
+         * xpp.getAttributeCount()); Log.d("SensorDataCollector",
+         * "SimpleXmlFileStore::readSensor(): sensor name = " +
+         * xpp.getAttributeName(0)); Log.d("SensorDataCollector",
+         * "SimpleXmlFileStore::readSensor(): sensor namespace = " +
+         * xpp.getAttributeNamespace(0));
+         */
+
         int id = Integer.parseInt(xpp.getAttributeValue("", "id"));
-        
+
         String sensorName = null;
         int majorType = -1;
         int minorType = -1;
         AbstractStore.Channel channel = null;
         int channelType = -1;
-        
+
         AudioDataDefinition audioDataDefinition = new AudioDataDefinition();
-        
+
         AbstractSensor sensor = null;
 
         while (xpp.next() != XmlPullParser.END_TAG) {
@@ -1045,8 +1085,8 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             } else {
                 skip(xpp);
             }
-        } 
-        
+        }
+
         switch (majorType) {
             case AbstractSensor.ANDROID_SENSOR:
                 sensor = SensorDiscoverer.constructSensorObject(sensorName, majorType, minorType,
@@ -1065,13 +1105,13 @@ public class SimpleXmlFileStore extends SimpleFileStore {
         }
         return sensor;
     }
-    
+
     private int readChannelType(XmlPullParser xpp) throws XmlPullParserException, IOException {
         int type = -1;
-        
+
         xpp.require(XmlPullParser.START_TAG, XMLNS, "datadescription");
-        
-        String strType = xpp.getAttributeValue("", "type"); 
+
+        String strType = xpp.getAttributeValue("", "type");
         if ("csv".equals(strType)) {
             type = AbstractStore.Channel.CHANNEL_TYPE_CSV;
         } else if ("bin".equals(strType)) {
@@ -1081,13 +1121,14 @@ public class SimpleXmlFileStore extends SimpleFileStore {
         } else if ("wav".equals(strType)) {
             type = AbstractStore.Channel.CHANNEL_TYPE_WAV;
         }
-        
+
         return type;
     }
-    
-    private AbstractStore.Channel readAndroidSensorDataDefinition(XmlPullParser xpp, int channelType) throws XmlPullParserException, IOException {
+
+    private AbstractStore.Channel readAndroidSensorDataDefinition(XmlPullParser xpp, int channelType)
+            throws XmlPullParserException, IOException {
         xpp.require(XmlPullParser.START_TAG, XMLNS, "datadescription");
-        
+
         String location = "";
         while (xpp.next() != XmlPullParser.END_TAG) {
             if (xpp.getEventType() != XmlPullParser.START_TAG) {
@@ -1100,27 +1141,29 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             } else {
                 skip(xpp);
             }
-        } 
-        
-        String channelFilePath = location; 
-        
-        return new SimpleFileStore.SimpleFileChannel(channelFilePath, AbstractStore.Channel.READ_ONLY, channelType);   
+        }
+
+        String channelFilePath = location;
+
+        return new SimpleFileStore.SimpleFileChannel(channelFilePath,
+                AbstractStore.Channel.READ_ONLY, channelType);
     }
-    
-    private AudioDataDefinition readAudiodSensorDataDefinition(XmlPullParser xpp, int channelType) throws XmlPullParserException, IOException {
+
+    private AudioDataDefinition readAudiodSensorDataDefinition(XmlPullParser xpp, int channelType)
+            throws XmlPullParserException, IOException {
         AudioDataDefinition audioDataDefinition = new AudioDataDefinition();
-        
+
         xpp.require(XmlPullParser.START_TAG, XMLNS, "datadescription");
-        
+
         String location = "";
-        
+
         AudioSource s = null;
         AudioChannelIn c = null;
         AudioEncoding e = null;
         int r = -1;
         int bs = -1;
         int mbs = -1;
-        
+
         while (xpp.next() != XmlPullParser.END_TAG) {
             if (xpp.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -1144,17 +1187,19 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             } else {
                 skip(xpp);
             }
-        } 
-        
-        audioDataDefinition.mChannel = new SimpleFileStore.SimpleFileChannel(location, AbstractStore.Channel.READ_ONLY, channelType);
+        }
+
+        audioDataDefinition.mChannel = new SimpleFileStore.SimpleFileChannel(location,
+                AbstractStore.Channel.READ_ONLY, channelType);
         audioDataDefinition.mAudioDataParameter = new AudioRecordParameter(r, c, e, s, bs, mbs);
-        
+
         return audioDataDefinition;
-    }    
-    
-    private AudioSource readAudioSource(XmlPullParser xpp) throws XmlPullParserException, IOException {
+    }
+
+    private AudioSource readAudioSource(XmlPullParser xpp) throws XmlPullParserException,
+            IOException {
         xpp.require(XmlPullParser.START_TAG, XMLNS, "source");
-        
+
         int id = -1;
         int nameresid = -1;
         while (xpp.next() != XmlPullParser.END_TAG) {
@@ -1166,19 +1211,21 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             if (name.equals("id")) {
                 id = Integer.parseInt(readXmlElementText(xpp, "id"));
                 nameresid = AudioSensorHelper.getSourceNameResId(id);
-            } /*else if (name.equals("nameresid")) {
-                nameresid = Integer.parseInt(readXmlElementText(xpp, "nameresid"));
-            } */ else {
+            } /*
+               * else if (name.equals("nameresid")) { nameresid =
+               * Integer.parseInt(readXmlElementText(xpp, "nameresid")); }
+               */else {
                 skip(xpp);
             }
-        } 
-        
-        return new AudioSource(id, nameresid);       
+        }
+
+        return new AudioSource(id, nameresid);
     }
-    
-    private AudioChannelIn readAudioChannelIn(XmlPullParser xpp) throws XmlPullParserException, IOException {
+
+    private AudioChannelIn readAudioChannelIn(XmlPullParser xpp) throws XmlPullParserException,
+            IOException {
         xpp.require(XmlPullParser.START_TAG, XMLNS, "channelin");
-        
+
         int id = -1;
         int nameresid = -1;
         while (xpp.next() != XmlPullParser.END_TAG) {
@@ -1190,19 +1237,21 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             if (name.equals("id")) {
                 id = Integer.parseInt(readXmlElementText(xpp, "id"));
                 nameresid = AudioSensorHelper.getChannelInNameResId(id);
-            } /* else if (name.equals("nameresid")) {
-                nameresid = Integer.parseInt(readXmlElementText(xpp, "nameresid"));
-            } */ else {
+            } /*
+               * else if (name.equals("nameresid")) { nameresid =
+               * Integer.parseInt(readXmlElementText(xpp, "nameresid")); }
+               */else {
                 skip(xpp);
             }
-        } 
-        
-        return new AudioChannelIn(id, nameresid);       
+        }
+
+        return new AudioChannelIn(id, nameresid);
     }
-    
-    private AudioEncoding readAudioEncoding(XmlPullParser xpp) throws XmlPullParserException, IOException {
+
+    private AudioEncoding readAudioEncoding(XmlPullParser xpp) throws XmlPullParserException,
+            IOException {
         xpp.require(XmlPullParser.START_TAG, XMLNS, "encoding");
-        
+
         int id = -1;
         int nameresid = -1;
         while (xpp.next() != XmlPullParser.END_TAG) {
@@ -1214,40 +1263,42 @@ public class SimpleXmlFileStore extends SimpleFileStore {
             if (name.equals("id")) {
                 id = Integer.parseInt(readXmlElementText(xpp, "id"));
                 nameresid = AudioSensorHelper.getEncodingNameResId(id);
-            } /* else if (name.equals("nameresid")) {
-                nameresid = Integer.parseInt(readXmlElementText(xpp, "nameresid"));
-            } */ else {
+            } /*
+               * else if (name.equals("nameresid")) { nameresid =
+               * Integer.parseInt(readXmlElementText(xpp, "nameresid")); }
+               */else {
                 skip(xpp);
             }
-        } 
-        
-        return new AudioEncoding(id, nameresid);       
+        }
+
+        return new AudioEncoding(id, nameresid);
     }
-    
-    private String readChannelLocation(XmlPullParser xpp) throws XmlPullParserException, IOException {
+
+    private String readChannelLocation(XmlPullParser xpp) throws XmlPullParserException,
+            IOException {
         return readXmlElementText(xpp, "location");
     }
-    
+
     private String readSensorName(XmlPullParser xpp) throws XmlPullParserException, IOException {
         return readXmlElementText(xpp, "name");
     }
-    
+
     private int readSensorMajorType(XmlPullParser xpp) throws XmlPullParserException, IOException {
         return Integer.parseInt(readXmlElementText(xpp, "majortype"));
     }
-    
+
     private int readSensorMinorType(XmlPullParser xpp) throws XmlPullParserException, IOException {
         return Integer.parseInt(readXmlElementText(xpp, "minortype"));
     }
-    
-    
-    private String readXmlElementText(XmlPullParser xpp, String xmlElementName) throws XmlPullParserException, IOException {
+
+    private String readXmlElementText(XmlPullParser xpp, String xmlElementName)
+            throws XmlPullParserException, IOException {
         xpp.require(XmlPullParser.START_TAG, XMLNS, xmlElementName);
         String text = readText(xpp);
         xpp.require(XmlPullParser.END_TAG, XMLNS, xmlElementName);
         return text;
     }
-    
+
     private String readText(XmlPullParser xpp) throws IOException, XmlPullParserException {
         String text = "";
         if (xpp.next() == XmlPullParser.TEXT) {
@@ -1264,13 +1315,13 @@ public class SimpleXmlFileStore extends SimpleFileStore {
         int depth = 1;
         while (depth != 0) {
             switch (parser.next()) {
-            case XmlPullParser.END_TAG:
-                depth--;
-                break;
-            case XmlPullParser.START_TAG:
-                depth++;
-                break;
+                case XmlPullParser.END_TAG:
+                    depth--;
+                    break;
+                case XmlPullParser.START_TAG:
+                    depth++;
+                    break;
             }
         }
-     }    
+    }
 }

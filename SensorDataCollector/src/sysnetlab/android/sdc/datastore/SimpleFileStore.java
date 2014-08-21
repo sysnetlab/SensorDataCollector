@@ -90,8 +90,9 @@ public class SimpleFileStore extends AbstractStore {
         mNewExperimentPath = mParentPath + "/" + DIR_PREFIX
                 + f.format(mNextExperimentNumber);
 
-        Log.d("SensorDataCollector", "SimpleFileStore::setupNewExperimentStorage(): " + mNewExperimentPath);
-        
+        Log.d("SensorDataCollector", "SimpleFileStore::setupNewExperimentStorage(): "
+                + mNewExperimentPath);
+
         File dir = new File(mNewExperimentPath);
         if (!dir.mkdir()) {
             throw new RuntimeException(
@@ -126,14 +127,14 @@ public class SimpleFileStore extends AbstractStore {
         try {
             out = new PrintStream(new BufferedOutputStream(
                     new FileOutputStream(configFilePath)));
-            
+
             out.println(experiment.getName());
             out.println(experiment.getDateTimeCreatedAsString());
             out.println(experiment.getDateTimeDoneAsString());
 
             out.println(experiment.getTags().size());
             for (Tag tag : experiment.getTags()) {
-            	out.println(tag.getTagId());
+                out.println(tag.getTagId());
                 out.println(tag.getName());
                 out.println(tag.getShortDescription());
                 out.println(tag.getLongDescription());
@@ -153,13 +154,13 @@ public class SimpleFileStore extends AbstractStore {
                 out.println(sensor.getName());
                 out.println(sensor.getMajorType());
                 out.println(sensor.getMinorType());
-                switch(sensor.getMajorType()) {
+                switch (sensor.getMajorType()) {
                     case AbstractSensor.ANDROID_SENSOR:
                         out.println(((AndroidSensor) sensor).getListener().getChannel().describe());
                         break;
                 }
             }
-            
+
             out.println(experiment.getTaggingActions().size());
             for (TaggingAction taggingAction : experiment.getTaggingActions()) {
                 out.println(taggingAction.toString());
@@ -193,7 +194,7 @@ public class SimpleFileStore extends AbstractStore {
                 name = in.readLine();
                 dateTimeCreated = in.readLine();
                 dateTimeDone = in.readLine();
-                
+
                 experiment = new Experiment();
                 experiment.setPath(parentDir);
                 experiment.setName(name);
@@ -206,16 +207,16 @@ public class SimpleFileStore extends AbstractStore {
                     ArrayList<Tag> tags = new ArrayList<Tag>();
 
                     for (int i = 0; i < n; i++) {
-                    	String tagId = in.readLine();
+                        String tagId = in.readLine();
                         String tagName = in.readLine();
                         String tagShortDesc = in.readLine();
                         String tagLongDesc = in.readLine();
-                        Tag tag = new Tag(tagName, tagShortDesc, tagLongDesc,Integer.parseInt(tagId));
+                        Tag tag = new Tag(tagName, tagShortDesc, tagLongDesc,
+                                Integer.parseInt(tagId));
                         tags.add(tag);
                     }
                     experiment.setTags(tags);
                 }
-
 
                 n = Integer.parseInt(in.readLine());
                 if (n > 0) {
@@ -229,7 +230,7 @@ public class SimpleFileStore extends AbstractStore {
                         note.setDateCreatedFromString(dateTime);
                         notes.add(note);
                     }
-                    
+
                     experiment.setNotes(notes);
                 }
 
@@ -265,7 +266,7 @@ public class SimpleFileStore extends AbstractStore {
                     }
                 }
                 experiment.setSensors(lstSensors);
-                
+
                 in.close();
             } else {
                 file = new File(parentDir);
@@ -274,7 +275,8 @@ public class SimpleFileStore extends AbstractStore {
                 name = dirName;
 
                 Log.w("SensorDataCollector",
-                        "SimpleFileStore::loadExperiment(): no configuraiton file is found for " + name);
+                        "SimpleFileStore::loadExperiment(): no configuraiton file is found for "
+                                + name);
                 experiment = new Experiment(name, dateCreated);
                 experiment.setPath(parentDir);
             }
@@ -307,24 +309,25 @@ public class SimpleFileStore extends AbstractStore {
         private int mFlags;
 
         protected SimpleFileChannel() {
-            // prohibit from creating SimpleFileChannel object without an argument
+            // prohibit from creating SimpleFileChannel object without an
+            // argument
         }
 
         public SimpleFileChannel(String path) throws FileNotFoundException {
             this(path, WRITE_ONLY, CHANNEL_TYPE_CSV);
         }
-        
+
         public SimpleFileChannel(String path, int flags) throws FileNotFoundException {
             this(path, flags, CHANNEL_TYPE_CSV);
-        }        
-        
+        }
+
         public SimpleFileChannel(String path, int flags, int type) {
             mFlags = flags;
             mType = type;
             mPath = path;
             mBlockingQueue = null;
             mDeferredClosing = false;
-        } 
+        }
 
         @Override
         public boolean open() {
@@ -337,7 +340,8 @@ public class SimpleFileStore extends AbstractStore {
                         mIn = new BufferedReader(new FileReader(mPath));
                     } else {
                         Log.e("SensorDataCollector", "SimpleFileChannel::open(): "
-                                + "error on open openning the channel: cannot find the file: " + mPath);
+                                + "error on open openning the channel: cannot find the file: "
+                                + mPath);
                         return false;
                     }
                 } else if (mFlags == WRITE_ONLY) {
@@ -371,7 +375,7 @@ public class SimpleFileStore extends AbstractStore {
                         + e.toString());
                 return false;
             }
-            
+
             return true;
         }
 
@@ -382,12 +386,12 @@ public class SimpleFileStore extends AbstractStore {
                 closeWhenReady();
             }
         }
-        
 
         @Override
         public void setReadyToClose() {
-            if (!mDeferredClosing) return;
-            
+            if (!mDeferredClosing)
+                return;
+
             if (mDeferredClosing) {
                 mBlockingQueue = new LinkedBlockingQueue<Integer>();
                 try {
@@ -398,18 +402,18 @@ public class SimpleFileStore extends AbstractStore {
                     mBlockingQueue = null;
                     mDeferredClosing = false;
                 }
-            }            
+            }
         }
-        
+
         @Override
         public void setDeferredClosing(boolean deferredClosing) {
             mDeferredClosing = deferredClosing;
-        }        
+        }
 
         private void closeImediately() {
-            if (mOut != null){
-            	mOut.close();
-            } 
+            if (mOut != null) {
+                mOut.close();
+            }
             if (mIn != null) {
                 try {
                     mIn.close();
@@ -418,9 +422,9 @@ public class SimpleFileStore extends AbstractStore {
                     Log.e("SensorDataCollector", "SimpleFileStore::close(): mIn.close() failed.");
                 }
             }
-            mFlags=Channel.READ_ONLY;
+            mFlags = Channel.READ_ONLY;
         }
-        
+
         private void closeWhenReady() {
             new Thread() {
                 public void run() {
@@ -441,12 +445,12 @@ public class SimpleFileStore extends AbstractStore {
         public void write(String s) {
             mOut.print(s);
         }
-        
+
         @Override
         public void write(byte[] buffer, int offset, int length) {
             mOut.write(buffer, offset, length);
         }
-        
+
         @Override
         public void write(byte[] buffer, int bufferOffset, int bufferLength, int fileOffset) {
             try {
@@ -456,9 +460,9 @@ public class SimpleFileStore extends AbstractStore {
             } catch (IOException e) {
                 throw new RuntimeException("SimpleFileStore::Channel::write(): " + e.toString());
             }
-            
+
         }
-        
+
         @Override
         public String read() {
             if (mIn != null) {
@@ -466,14 +470,13 @@ public class SimpleFileStore extends AbstractStore {
                     return mIn.readLine();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.i("SensorDataCollector", "SimpleFileStore::read(): mIn.readLine() failed.");
+                    Log.d("SensorDataCollector", "SimpleFileStore::read(): mIn.readLine() failed.");
                     return null;
                 }
             } else {
                 return null;
             }
         }
-
 
         @Override
         public void reset() {
@@ -483,10 +486,10 @@ public class SimpleFileStore extends AbstractStore {
                     mIn = new BufferedReader(new FileReader(mPath));
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.i("SensorDataCollector", "SimpleFileStore::reset(): mIn.close() failed.");              
+                    Log.d("SensorDataCollector", "SimpleFileStore::reset(): mIn.close() failed.");
                 }
             }
-        }        
+        }
 
         @Override
         public int getType() {
@@ -503,7 +506,7 @@ public class SimpleFileStore extends AbstractStore {
     public Channel createChannel(String tag, int flags, int type) {
 
         String path, extension;
-        
+
         if (type == Channel.CHANNEL_TYPE_CSV) {
             extension = ".csv";
         } else if (type == Channel.CHANNEL_TYPE_BIN) {
@@ -544,23 +547,23 @@ public class SimpleFileStore extends AbstractStore {
     public String getNewExperimentPath() {
         return mNewExperimentPath;
     }
-    
+
     public int getNextExperimentNumber() {
         return mNextExperimentNumber;
     }
-    
+
     public int getNextChannelNumber() {
         return mNextChannelNumber;
     }
 
-	@Override
-	public int getCountExperiments() {
-		return mNextExperimentNumber;
-	}
+    @Override
+    public int getCountExperiments() {
+        return mNextExperimentNumber;
+    }
 
-	@Override
-	public List<Experiment> listStoredExperiments(ProgressBar mProgressBar) {
-		List<Experiment> listExperiments = new ArrayList<Experiment>();
+    @Override
+    public List<Experiment> listStoredExperiments(ProgressBar mProgressBar) {
+        List<Experiment> listExperiments = new ArrayList<Experiment>();
 
         DecimalFormat f = new DecimalFormat("00000");
         for (int i = 1; i < mNextExperimentNumber; i++) {
@@ -573,10 +576,10 @@ public class SimpleFileStore extends AbstractStore {
             mProgressBar.setProgress(i);
         }
         return listExperiments;
-	}
-	
-	public String getExperimentPath(){
-		return mNewExperimentPath;
-	}
+    }
+
+    public String getExperimentPath() {
+        return mNewExperimentPath;
+    }
 
 }

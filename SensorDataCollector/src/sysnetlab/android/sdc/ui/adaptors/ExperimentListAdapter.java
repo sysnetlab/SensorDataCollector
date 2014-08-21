@@ -21,7 +21,7 @@ import java.util.List;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
-import sysnetlab.android.sdc.ui.UserInterfaceUtil;
+import sysnetlab.android.sdc.ui.UserInterfaceUtils;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,8 +37,8 @@ public class ExperimentListAdapter extends ArrayAdapter<Experiment> {
         mContext = context;
         setList(list);
     }
-    
-    public ExperimentListAdapter(Activity context){
+
+    public ExperimentListAdapter(Activity context) {
         super(context, R.layout.experiment_row_layout);
         mContext = context;
     }
@@ -46,10 +46,10 @@ public class ExperimentListAdapter extends ArrayAdapter<Experiment> {
     public void setList(List<Experiment> list) {
         clear();
         if (list != null) {
-            UserInterfaceUtil.addAllCompatible(this, list);
+            UserInterfaceUtils.addAllCompatible(this, list);
         }
     }
-	
+
     static class ViewHolder {
         protected TextView text;
         protected TextView dateCreated;

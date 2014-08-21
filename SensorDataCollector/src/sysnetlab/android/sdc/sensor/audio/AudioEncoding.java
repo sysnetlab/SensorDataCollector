@@ -29,20 +29,23 @@ public class AudioEncoding {
     public int getEncodingId() {
         return mEncodingId;
     }
-    
+
     public int getEncodingNameResId() {
         return mEncodingNameResId;
     }
-    
+
     public boolean equals(Object rhs) {
-        if (this == rhs) return true;
-        
-        if (!(rhs instanceof AudioSource)) return false;
-        
+        if (this == rhs)
+            return true;
+
+        if (!(rhs instanceof AudioSource))
+            return false;
+
         AudioEncoding e = (AudioEncoding) rhs;
-        
-        if (mEncodingId != e.mEncodingId) return false;
-        
+
+        if (mEncodingId != e.mEncodingId)
+            return false;
+
         return true;
-    } 
+    }
 }

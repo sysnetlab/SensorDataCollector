@@ -40,7 +40,7 @@ public class AndroidSensorEventListener implements SensorEventListener {
 
     @SuppressLint("NewApi")
     public void onSensorChanged(SensorEvent event) {
-        Log.i("SensorDataCollector", "onSensorChanged(): get a data point from a sensor.");
+        Log.d("SensorDataCollector", "onSensorChanged(): get a data point from a sensor.");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             mChannel.write(
                     SystemClock.currentThreadTimeMillis() + ", "
@@ -53,18 +53,18 @@ public class AndroidSensorEventListener implements SensorEventListener {
         for (int i = 0; i < event.values.length; i++) {
             mChannel.write(", " + event.values[i]);
         }
-        
+
         TaggingAction lastTaggingAction = mExperiment.getLastTagging();
-        if(lastTaggingAction != null && lastTaggingAction.getTagState()==TaggingState.TAG_ON){
-        	mChannel.write(","+Integer.toString(lastTaggingAction.getTag().getTagId()));
-        }else{
-        	mChannel.write(",0");
+        if (lastTaggingAction != null && lastTaggingAction.getTagState() == TaggingState.TAG_ON) {
+            mChannel.write("," + Integer.toString(lastTaggingAction.getTag().getTagId()));
+        } else {
+            mChannel.write(",0");
         }
         mChannel.write("\n");
     }
-    
+
     public Channel getChannel() {
         return mChannel;
     }
-        
+
 }

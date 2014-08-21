@@ -38,14 +38,16 @@ public class ExperimentRunTaggingFragment extends Fragment {
     private OnFragmentClickListener mCallback;
 
     public interface OnFragmentClickListener {
-        public void onTagClicked_ExperimentRunTaggingFragment(AdapterView<?> gridview, View view, int position);
+        public void onTagClicked_ExperimentRunTaggingFragment(AdapterView<?> gridview, View view,
+                int position);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        TaggingGridView gridview = (TaggingGridView) mView.findViewById(R.id.gridview_experiment_tagging);
+        TaggingGridView gridview = (TaggingGridView) mView
+                .findViewById(R.id.gridview_experiment_tagging);
 
         gridview.setOnItemClickListener(new GridView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> gridview, View view, int position, long id) {
@@ -57,7 +59,7 @@ public class ExperimentRunTaggingFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        
+
         try {
             mCallback = (OnFragmentClickListener) activity;
         } catch (ClassCastException e) {
@@ -73,10 +75,12 @@ public class ExperimentRunTaggingFragment extends Fragment {
 
         mView = inflater.inflate(R.layout.fragment_experiment_tagging, container, false);
 
-        ArrayList<Tag> tags = (ArrayList<Tag>)((CreateExperimentActivity) getActivity()).getExperiment().getTags();
+        ArrayList<Tag> tags = (ArrayList<Tag>) ((CreateExperimentActivity) getActivity())
+                .getExperiment().getTags();
 
-        TaggingGridView gridview = (TaggingGridView) mView.findViewById(R.id.gridview_experiment_tagging);
-        
+        TaggingGridView gridview = (TaggingGridView) mView
+                .findViewById(R.id.gridview_experiment_tagging);
+
         TaggingTagListAdapter taggingAdapter = new TaggingTagListAdapter(getActivity(), tags);
 
         gridview.setAdapter(taggingAdapter);

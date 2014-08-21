@@ -26,18 +26,18 @@ import android.widget.ProgressBar;
 import sysnetlab.android.sdc.datastore.AbstractStore;
 
 public class ExperimentManager {
-    private List<AbstractStore> mStores;    
+    private List<AbstractStore> mStores;
     private Experiment mActiveExperiment;
-    
+
     public ExperimentManager() {
         mStores = new ArrayList<AbstractStore>();
     }
-    
+
     public void addExperimentStore(AbstractStore store) {
-    	if(!mStores.contains(store))
-    		mStores.add(store);
+        if (!mStores.contains(store))
+            mStores.add(store);
     }
-    
+
     public List<Experiment> getExperiments() {
         List<Experiment> allExperiments = new ArrayList<Experiment>();
         for (AbstractStore store : mStores) {
@@ -45,9 +45,8 @@ public class ExperimentManager {
             allExperiments.addAll(experiments);
         }
         return allExperiments;
-    }  
-    
-    
+    }
+
     public List<Experiment> getExperimentsSortedByDate() {
         List<Experiment> allExperiments = getExperiments();
         Collections.sort(allExperiments, new Comparator<Experiment>() {
@@ -58,33 +57,33 @@ public class ExperimentManager {
 
         return allExperiments;
     }
-    
+
     public void setActiveExperiment(Experiment experiment) {
-        mActiveExperiment = experiment; 
+        mActiveExperiment = experiment;
     }
-    
+
     public Experiment getActiveExperiment() {
         return mActiveExperiment;
     }
-    
+
     public List<AbstractStore> getStores() {
         return mStores;
     }
 
-	public int getCountExperiments() {
-		int count=0;
-		for (AbstractStore store : mStores) {
-			count+=store.getCountExperiments();
+    public int getCountExperiments() {
+        int count = 0;
+        for (AbstractStore store : mStores) {
+            count += store.getCountExperiments();
         }
-		return count;
-	}
+        return count;
+    }
 
-	public List<Experiment> getExperiments(ProgressBar mProgressBar) {
-		List<Experiment> allExperiments = new ArrayList<Experiment>();
+    public List<Experiment> getExperiments(ProgressBar mProgressBar) {
+        List<Experiment> allExperiments = new ArrayList<Experiment>();
         for (AbstractStore store : mStores) {
             List<Experiment> experiments = store.listStoredExperiments(mProgressBar);
             allExperiments.addAll(experiments);
         }
         return allExperiments;
-	}
+    }
 }

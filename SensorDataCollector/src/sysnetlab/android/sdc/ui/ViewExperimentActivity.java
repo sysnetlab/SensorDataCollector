@@ -40,7 +40,7 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
         ExperimentSensorListFragment.OnFragmentClickListener {
 
     private ExperimentViewFragment mExperimentViewFragment;
-    private ExperimentViewTagsFragment mExperimentViewTagsFragment; 
+    private ExperimentViewTagsFragment mExperimentViewTagsFragment;
     private ExperimentViewNotesFragment mExperimentViewNotesFragment;
     private ExperimentViewSensorDataFragment mExperimentViewSensorDataFragment;
 
@@ -51,15 +51,15 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
         // TODO handle configuration change
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
-        mLoadingTask=new TaskLoadingSpinner();
+        mLoadingTask = new TaskLoadingSpinner();
         mLoadingTask.execute();
         // mExperiment = (Experiment)
         // getIntent().getParcelableExtra("experiment");
     }
-    
+
     @Override
     protected void loadTask() {
-    	mExperiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();
+        mExperiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();
 
         if (mExperiment == null) {
             Log.d("SensorDataColelctor",
@@ -78,14 +78,14 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
 
         Log.d("SensorDataCollector", "ViewExperimentActivity.onCreate called.");
     }
-    
+
     public void onResume() {
-    	super.onResume();
-    	
+        super.onResume();
+
         // Complete the Dropbox Authorization
         DropboxHelper.getInstance().completeAuthentication();
     }
-    
+
     @Override
     public void onBtnCloneClicked_ExperimentViewFragment() {
         Intent intent = new Intent(this, CreateExperimentActivity.class);
@@ -93,20 +93,20 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
                 SensorDataCollectorActivity.APP_OPERATION_CLONE_EXPERIMENT);
         startActivity(intent);
     }
-    
-    @Override 
+
+    @Override
     public void onBtnDropboxClicked_ExperimentViewFragment() {
-    	DropboxHelper dbHelper = DropboxHelper.getInstance();
-    	if (!dbHelper.isLinked()) {
-    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    		
+        DropboxHelper dbHelper = DropboxHelper.getInstance();
+        if (!dbHelper.isLinked()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
             builder.setMessage(R.string.text_dropbox_not_yet_linked_explanation);
             builder.setTitle(R.string.text_link_to_dropbox);
             builder.setPositiveButton(R.string.text_link_to_dropbox,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                        	dialog.dismiss();
-                            DropboxHelper.getInstance().link();                      
+                            dialog.dismiss();
+                            DropboxHelper.getInstance().link();
                         }
                     });
             builder.setNegativeButton(R.string.text_do_not_link_to_dropbox,
@@ -117,22 +117,22 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
                     });
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
-    	}
-    	else {
-    		dbHelper.writeAllFilesInDirToDropbox(mExperiment.getPath(), ViewExperimentActivity.this);
-    	}
+        }
+        else {
+            dbHelper.writeAllFilesInDirToDropbox(mExperiment.getPath(), ViewExperimentActivity.this);
+        }
     }
 
     @Override
     public void onTagsClicked_ExperimentViewFragment() {
-    	   if (mExperimentViewTagsFragment == null) {
-               mExperimentViewTagsFragment = new ExperimentViewTagsFragment();
-           }
-           FragmentUtil.switchFragment(this, 
-        		   mExperimentViewTagsFragment,
-                   "experimentviewmoretags",
-                   FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
-           changeActionBarTitle(R.string.text_viewing_tags, R.drawable.icon_tags_inverse);
+        if (mExperimentViewTagsFragment == null) {
+            mExperimentViewTagsFragment = new ExperimentViewTagsFragment();
+        }
+        FragmentUtil.switchFragment(this,
+                mExperimentViewTagsFragment,
+                "experimentviewmoretags",
+                FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
+        changeActionBarTitle(R.string.text_viewing_tags, R.drawable.icon_tags_inverse);
     }
 
     @Override
@@ -140,8 +140,8 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
         if (mExperimentViewNotesFragment == null) {
             mExperimentViewNotesFragment = new ExperimentViewNotesFragment();
         }
-        FragmentUtil.switchFragment(this, 
-        		mExperimentViewNotesFragment,
+        FragmentUtil.switchFragment(this,
+                mExperimentViewNotesFragment,
                 "experimentviewmorenotes",
                 FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
         changeActionBarTitle(R.string.text_viewing_notes, R.drawable.icon_notes_inverse);
@@ -152,63 +152,65 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
         if (mExperimentViewSensorDataFragment == null) {
             mExperimentViewSensorDataFragment = new ExperimentViewSensorDataFragment();
         }
-        FragmentUtil.switchFragment(this, 
-        		mExperimentViewSensorDataFragment,
+        FragmentUtil.switchFragment(this,
+                mExperimentViewSensorDataFragment,
                 "experimentviewsensordata",
                 FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
         changeActionBarTitle(R.string.text_viewing_sensors, R.drawable.icon_sensors_inverse);
-    }  
+    }
 
     @Override
     public void onSensorClicked_ExperimentSensorListFragment(int sensorNo) {
-        Log.d("SensorDataCollector", "ViewExperimentActivity::onSensorClicked_ExperimentSensorListFragment() called with sensorNo = " + sensorNo);
-        
+        Log.d("SensorDataCollector",
+                "ViewExperimentActivity::onSensorClicked_ExperimentSensorListFragment() called with sensorNo = "
+                        + sensorNo);
+
         if (mExperimentViewSensorDataFragment == null) {
             mExperimentViewSensorDataFragment = new ExperimentViewSensorDataFragment();
         }
 
         mExperimentViewSensorDataFragment.setSensorNo(sensorNo);
 
-        FragmentUtil.switchFragment(this, 
-        		mExperimentViewSensorDataFragment,
+        FragmentUtil.switchFragment(this,
+                mExperimentViewSensorDataFragment,
                 "experimentviewsensordata",
                 FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
     }
 
     @Override
     public void onSensorClicked_ExperimentSensorListFragment(AbstractSensor sensor) {
-        Log.d("SensorDataCollector", "ViewExperimentActivity::onSensorClicked_ExperimentSensorListFragment() called");
+        Log.d("SensorDataCollector",
+                "ViewExperimentActivity::onSensorClicked_ExperimentSensorListFragment() called");
         // do nothing
     }
-    
+
     public Experiment getExperiment() {
         return mExperiment;
-    }   
-    
-    public ExperimentViewTagsFragment getExperimentViewTagsFragment(){
-    	return mExperimentViewTagsFragment;
     }
-  
-    public ExperimentViewFragment getExperimentViewFragment(){
-    	return mExperimentViewFragment;
+
+    public ExperimentViewTagsFragment getExperimentViewTagsFragment() {
+        return mExperimentViewTagsFragment;
     }
-    
-    public ExperimentViewNotesFragment getExperimentViewNotesFragment(){
-    	return mExperimentViewNotesFragment;
+
+    public ExperimentViewFragment getExperimentViewFragment() {
+        return mExperimentViewFragment;
     }
-    
+
+    public ExperimentViewNotesFragment getExperimentViewNotesFragment() {
+        return mExperimentViewNotesFragment;
+    }
+
     @Override
-    public void onBackPressed(){
-    	if(!mExperimentViewFragment.isFragmentUIActive()){
-    		changeActionBarTitle(R.string.text_viewing_experiment, R.drawable.ic_launcher);
-    	}
-		super.onBackPressed();
+    public void onBackPressed() {
+        if (!mExperimentViewFragment.isFragmentUIActive()) {
+            changeActionBarTitle(R.string.text_viewing_experiment, R.drawable.ic_launcher);
+        }
+        super.onBackPressed();
     }
-    
-	public void changeActionBarTitle(int titleResId, int iconResId){    	
-    	getSupportActionBar().setTitle(titleResId);
-    	getSupportActionBar().setIcon(iconResId);    	
+
+    public void changeActionBarTitle(int titleResId, int iconResId) {
+        getSupportActionBar().setTitle(titleResId);
+        getSupportActionBar().setIcon(iconResId);
     }
-    
-    
+
 }
