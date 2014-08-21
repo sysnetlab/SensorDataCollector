@@ -24,6 +24,7 @@ import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManager;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
 import sysnetlab.android.sdc.datastore.StoreSingleton;
+import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
 import sysnetlab.android.sdc.ui.SensorDataCollectorActivity;
@@ -72,9 +73,17 @@ public class RunExperimentFunctionTests extends
     	Experiment activeExperiment = new Experiment();
     	activeExperiment.setName("Unit Test Experiment");
     	
-    	//Set the active experiment
+        // set sensors for the experiment
         if (!SensorDiscoverer.isInitialized())
             SensorDiscoverer.initialize(getInstrumentation().getTargetContext());
+        
+        List<AbstractSensor> listSensors = SensorDiscoverer.discoverSensorList();
+        for (AbstractSensor sensor : listSensors) {
+            sensor.setSelected(true);
+        }
+        activeExperiment.setSensors(listSensors);
+        
+        //Set the active experiment        
         ExperimentManager experimentManager = ExperimentManagerSingleton.getInstance();
         experimentManager.addExperimentStore(StoreSingleton.getInstance());
         experimentManager.setActiveExperiment(activeExperiment);
@@ -86,8 +95,9 @@ public class RunExperimentFunctionTests extends
                 SensorDataCollectorActivity.APP_OPERATION_CLONE_EXPERIMENT);
     	this.setActivityIntent(intent);
     	CreateExperimentActivity createExperimentActivity = (CreateExperimentActivity) this.getActivity();
-    	getInstrumentation().waitForIdleSync();
+        getInstrumentation().waitForIdleSync();
     	assertNotNull("The CreateExperimentActivity should not be null.", createExperimentActivity);
+
     	//Get the cloned experiment with new date
         activeExperiment = createExperimentActivity.getExperiment();
         
@@ -120,11 +130,11 @@ public class RunExperimentFunctionTests extends
     	dialog = createExperimentActivity.getAlertDialog();
     	Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
         assertNotNull("The positive button was not loaded", positiveButton);
-    	
-    	ActivityMonitor monitor = getInstrumentation().addMonitor(SensorDataCollectorActivity.class.getName(), null, false);
+
+        ActivityMonitor monitor = getInstrumentation().addMonitor(SensorDataCollectorActivity.class.getName(), null, false);        
     	TouchUtils.clickView(this, positiveButton);
         getInstrumentation().waitForIdleSync();  
-    	
+
     	SensorDataCollectorActivity sensorDataCollectorActivity = 
     			(SensorDataCollectorActivity)getInstrumentation().waitForMonitor(monitor);
     	assertNotNull("SensorDataCollector Activity was not loaded", sensorDataCollectorActivity);
@@ -136,6 +146,8 @@ public class RunExperimentFunctionTests extends
     	    	      
         List<Experiment> listExperiments = experimentManager.getExperimentsSortedByDate();
     	assertEquals("The experiment created is not on the top of the list", listExperiments.get(0), activeExperiment);
+    	
+    	sensorDataCollectorActivity.finish();
     }       
     
     public void testExperimentRunTagging(){
@@ -147,9 +159,17 @@ public class RunExperimentFunctionTests extends
     	activeExperiment.addTag("tag1", null);
     	activeExperiment.addTag("tag2", null);
     	
-    	//Set the active experiment
         if (!SensorDiscoverer.isInitialized())
             SensorDiscoverer.initialize(getInstrumentation().getTargetContext());
+        
+        // set sensors for the experiment
+        List<AbstractSensor> listSensors = SensorDiscoverer.discoverSensorList();
+        for (AbstractSensor sensor : listSensors) {
+            sensor.setSelected(true);
+        }
+        activeExperiment.setSensors(listSensors);        
+        
+        // Set the active experiment        
         ExperimentManager experimentManager = ExperimentManagerSingleton.getInstance();
         experimentManager.addExperimentStore(StoreSingleton.getInstance());
         experimentManager.setActiveExperiment(activeExperiment);
@@ -160,10 +180,13 @@ public class RunExperimentFunctionTests extends
     	intent.putExtra(SensorDataCollectorActivity.APP_OPERATION_KEY,
                 SensorDataCollectorActivity.APP_OPERATION_CLONE_EXPERIMENT);
     	this.setActivityIntent(intent);
+    	  
     	CreateExperimentActivity createExperimentActivity = (CreateExperimentActivity) this.getActivity();
-    	getInstrumentation().waitForIdleSync();
+        getInstrumentation().waitForIdleSync();
+      
     	assertNotNull("The CreateExperimentActivity should not be null.", createExperimentActivity);
-    	//Get the cloned experiment with new date
+    	
+    	// Get the cloned experiment with new date
         activeExperiment = createExperimentActivity.getExperiment();
         
     	Button runButton = (Button) createExperimentActivity.findViewById(R.id.button_experiment_run);
