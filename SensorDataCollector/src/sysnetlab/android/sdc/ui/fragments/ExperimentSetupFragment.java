@@ -22,7 +22,7 @@ import sysnetlab.android.sdc.ui.CreateExperimentActivity;
 import sysnetlab.android.sdc.ui.adaptors.OperationAdapter;
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;	
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -46,14 +46,12 @@ public class ExperimentSetupFragment extends Fragment {
         public void onNotesClicked_ExperimentSetupFragment();
 
         public void onSensorsClicked_ExperimentSetupFragment();
-        
+
         public void onDataStoreClicked_ExperimentSetupFragment();
 
         public void onBtnRunClicked_ExperimentSetupFragment(View v);
     }
 
-    
-    
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -61,67 +59,67 @@ public class ExperimentSetupFragment extends Fragment {
         EditText etName = (EditText) mView.findViewById(R.id.et_experiment_setup_name);
         etName.setText(((CreateExperimentActivity) getActivity()).getExperiment().getName());
         etName.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		CreateExperimentActivity a = (CreateExperimentActivity) getActivity();
-		ListView operationMenu = (ListView) mView.findViewById(R.id.lv_operations);
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                    int after) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+        CreateExperimentActivity a = (CreateExperimentActivity) getActivity();
+        ListView operationMenu = (ListView) mView.findViewById(R.id.lv_operations);
         OperationAdapter operationAdapter = new OperationAdapter(a, a.getExperiment(),
                 OperationAdapter.CREATE_EXPERIMENT);
-		operationMenu.setAdapter(operationAdapter);
-		operationMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-		
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				if (position == OperationAdapter.OP_TAGS) {
-					mCallback.onTagsClicked_ExperimentSetupFragment();
-					
-				}
-				else if (position == OperationAdapter.OP_NOTES) {
-					mCallback.onNotesClicked_ExperimentSetupFragment();
-				}
-				else if (position == OperationAdapter.OP_SENSORS) {
-					mCallback.onSensorsClicked_ExperimentSetupFragment();
-				} 
-			}
-			
-		});
+        operationMenu.setAdapter(operationAdapter);
+        operationMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-        
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                    int position, long id) {
+                if (position == OperationAdapter.OP_TAGS) {
+                    mCallback.onTagsClicked_ExperimentSetupFragment();
+
+                }
+                else if (position == OperationAdapter.OP_NOTES) {
+                    mCallback.onNotesClicked_ExperimentSetupFragment();
+                }
+                else if (position == OperationAdapter.OP_SENSORS) {
+                    mCallback.onSensorsClicked_ExperimentSetupFragment();
+                }
+            }
+
+        });
+
         // use nested fragment
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         if (mExperimentSensorListFragment == null) {
             mExperimentSensorListFragment = new ExperimentSensorListFragment();
-            transaction.add(R.id.layout_experiment_setup_sensor_list,  mExperimentSensorListFragment);
+            transaction
+                    .add(R.id.layout_experiment_setup_sensor_list, mExperimentSensorListFragment);
         }
-        transaction.commit();    
-        
+        transaction.commit();
+
         ((Button) mView.findViewById(R.id.button_experiment_run))
                 .setOnClickListener(new Button.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mCallback.onBtnRunClicked_ExperimentSetupFragment(mView);
                     }
-                });    
-        
+                });
+
     }
 
     @Override
@@ -129,7 +127,7 @@ public class ExperimentSetupFragment extends Fragment {
             Bundle savedInstanceState) {
 
         mView = inflater.inflate(R.layout.fragment_experiment_setup, container, false);
-        
+
         return mView;
     }
 
@@ -148,20 +146,21 @@ public class ExperimentSetupFragment extends Fragment {
     public boolean isFragmentUIActive() {
         return isAdded() && !isDetached() && !isRemoving();
     }
-    
+
     public View getView() {
         return mView;
     }
-    
+
     public ExperimentSensorListFragment getExperimentSensorListFragment() {
         return mExperimentSensorListFragment;
     }
-    
-    public boolean hasChanges(){
-    	String experimentName = ((EditText) mView.findViewById(R.id.et_experiment_setup_name))
-    			.getText().toString();
-    	if(!experimentName.trim().equals(((CreateExperimentActivity) getActivity()).getExperiment().getDefaultName()))
-    		return true;
-    	return false;
+
+    public boolean hasChanges() {
+        String experimentName = ((EditText) mView.findViewById(R.id.et_experiment_setup_name))
+                .getText().toString();
+        if (!experimentName.trim().equals(
+                ((CreateExperimentActivity) getActivity()).getExperiment().getDefaultName()))
+            return true;
+        return false;
     }
 }
