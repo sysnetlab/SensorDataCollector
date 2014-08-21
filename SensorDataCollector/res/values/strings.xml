@@ -73,7 +73,7 @@
         No tagging actions were performed during the experiment.
     </string>
     <string name="text_tags_plus">
-        , and %1$d more...
+        , and %1$d more &#8230;
     </string>
     <string name="text_experiment_collect_data_from">
        	The experiment collected data from a few selected sensors.

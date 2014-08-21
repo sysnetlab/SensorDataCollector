@@ -46,6 +46,7 @@
             </intent-filter>
         </activity>
         
+        <!--suppress UnusedAttribute-->
         <activity
             android:name="sysnetlab.android.sdc.ui.SensorDataCollectorActivity"
             android:label="@string/app_name"

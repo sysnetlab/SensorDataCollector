@@ -183,7 +183,13 @@ public class RunExperimentFunctionTests extends
     	  
     	CreateExperimentActivity createExperimentActivity = (CreateExperimentActivity) this.getActivity();
         getInstrumentation().waitForIdleSync();
-      
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
     	assertNotNull("The CreateExperimentActivity should not be null.", createExperimentActivity);
     	
     	// Get the cloned experiment with new date
