@@ -26,7 +26,7 @@ import sysnetlab.android.sdc.sensor.AndroidSensor;
 import sysnetlab.android.sdc.sensor.SensorProperty;
 import sysnetlab.android.sdc.sensor.audio.AudioRecordParameter;
 import sysnetlab.android.sdc.sensor.audio.AudioSensor;
-import sysnetlab.android.sdc.ui.adaptors.SensorPropertyListAdapter;
+import sysnetlab.android.sdc.ui.adapters.SensorPropertyListAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;

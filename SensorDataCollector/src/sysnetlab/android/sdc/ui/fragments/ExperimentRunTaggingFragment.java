@@ -23,7 +23,7 @@ import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
 import sysnetlab.android.sdc.ui.TaggingGridView;
-import sysnetlab.android.sdc.ui.adaptors.TaggingTagListAdapter;
+import sysnetlab.android.sdc.ui.adapters.TaggingTagListAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

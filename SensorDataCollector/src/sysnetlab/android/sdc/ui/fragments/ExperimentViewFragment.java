@@ -19,7 +19,7 @@ package sysnetlab.android.sdc.ui.fragments;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.ui.ViewExperimentActivity;
-import sysnetlab.android.sdc.ui.adaptors.OperationAdapter;
+import sysnetlab.android.sdc.ui.adapters.OperationAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

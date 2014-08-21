@@ -19,7 +19,7 @@ package sysnetlab.android.sdc.ui.fragments;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
-import sysnetlab.android.sdc.ui.adaptors.DataStoreListAdapter;
+import sysnetlab.android.sdc.ui.adapters.DataStoreListAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

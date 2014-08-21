@@ -22,7 +22,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
-public class FragmentUtil {
+public class FragmentUtils {
 
     public final static int FRAGMENT_SWITCH_ADD_TO_BACKSTACK = 1;
     public final static int FRAGMENT_SWITCH_NO_BACKSTACK = 2;
@@ -32,7 +32,7 @@ public class FragmentUtil {
         FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout);
         transaction.replace(R.id.fragment_container, fragment);
-        if (backStackOption == FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK)
+        if (backStackOption == FragmentUtils.FRAGMENT_SWITCH_ADD_TO_BACKSTACK)
             transaction.addToBackStack(name);
         transaction.commit();
     }

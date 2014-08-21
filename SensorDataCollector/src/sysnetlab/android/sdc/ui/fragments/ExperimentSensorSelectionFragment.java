@@ -23,7 +23,7 @@ import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
-import sysnetlab.android.sdc.ui.adaptors.SensorListAdapter;
+import sysnetlab.android.sdc.ui.adapters.SensorListAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

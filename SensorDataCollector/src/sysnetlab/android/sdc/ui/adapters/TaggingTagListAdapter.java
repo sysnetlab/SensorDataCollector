@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package sysnetlab.android.sdc.ui.adaptors;
+package sysnetlab.android.sdc.ui.adapters;
 
 import java.util.ArrayList;
 import java.util.List;

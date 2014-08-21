@@ -27,7 +27,7 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentViewFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewTagsFragment; //maybe class name is different
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewNotesFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentViewSensorDataFragment;
-import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
+import sysnetlab.android.sdc.ui.fragments.FragmentUtils;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -73,7 +73,7 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
 
         if (findViewById(R.id.fragment_container) != null) {
             mExperimentViewFragment = new ExperimentViewFragment();
-            FragmentUtil.addFragment(this, mExperimentViewFragment);
+            FragmentUtils.addFragment(this, mExperimentViewFragment);
         }
 
         Log.d("SensorDataCollector", "ViewExperimentActivity.onCreate called.");
@@ -128,10 +128,10 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
         if (mExperimentViewTagsFragment == null) {
             mExperimentViewTagsFragment = new ExperimentViewTagsFragment();
         }
-        FragmentUtil.switchFragment(this,
+        FragmentUtils.switchFragment(this,
                 mExperimentViewTagsFragment,
                 "experimentviewmoretags",
-                FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
+                FragmentUtils.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
         changeActionBarTitle(R.string.text_viewing_tags, R.drawable.icon_tags_inverse);
     }
 
@@ -140,10 +140,10 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
         if (mExperimentViewNotesFragment == null) {
             mExperimentViewNotesFragment = new ExperimentViewNotesFragment();
         }
-        FragmentUtil.switchFragment(this,
+        FragmentUtils.switchFragment(this,
                 mExperimentViewNotesFragment,
                 "experimentviewmorenotes",
-                FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
+                FragmentUtils.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
         changeActionBarTitle(R.string.text_viewing_notes, R.drawable.icon_notes_inverse);
     }
 
@@ -152,10 +152,10 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
         if (mExperimentViewSensorDataFragment == null) {
             mExperimentViewSensorDataFragment = new ExperimentViewSensorDataFragment();
         }
-        FragmentUtil.switchFragment(this,
+        FragmentUtils.switchFragment(this,
                 mExperimentViewSensorDataFragment,
                 "experimentviewsensordata",
-                FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
+                FragmentUtils.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
         changeActionBarTitle(R.string.text_viewing_sensors, R.drawable.icon_sensors_inverse);
     }
 
@@ -171,10 +171,10 @@ public class ViewExperimentActivity extends FragmentActivityBase implements
 
         mExperimentViewSensorDataFragment.setSensorNo(sensorNo);
 
-        FragmentUtil.switchFragment(this,
+        FragmentUtils.switchFragment(this,
                 mExperimentViewSensorDataFragment,
                 "experimentviewsensordata",
-                FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
+                FragmentUtils.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
     }
 
     @Override

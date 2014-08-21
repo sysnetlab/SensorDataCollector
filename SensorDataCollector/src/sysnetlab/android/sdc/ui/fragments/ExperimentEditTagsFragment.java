@@ -23,7 +23,7 @@ import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Tag;
 import sysnetlab.android.sdc.ui.CreateExperimentActivity;
 import sysnetlab.android.sdc.ui.ViewExperimentActivity;
-import sysnetlab.android.sdc.ui.adaptors.TagListAdapter;
+import sysnetlab.android.sdc.ui.adapters.TagListAdapter;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;

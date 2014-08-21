@@ -25,7 +25,7 @@ import sysnetlab.android.sdc.datastore.StoreSingleton;
 import sysnetlab.android.sdc.sensor.AbstractSensor;
 import sysnetlab.android.sdc.sensor.SensorDiscoverer;
 import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
-import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
+import sysnetlab.android.sdc.ui.fragments.FragmentUtils;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -66,7 +66,7 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
         mProgressBar.setVisibility(View.GONE);
 
         mExperimentListFragment = new ExperimentListFragment();
-        FragmentUtil.addFragment(this, mExperimentListFragment);
+        FragmentUtils.addFragment(this, mExperimentListFragment);
     }
 
     @Override

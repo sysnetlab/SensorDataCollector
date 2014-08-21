@@ -45,7 +45,7 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSelectionFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSensorSetupFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentSetupFragment;
-import sysnetlab.android.sdc.ui.fragments.FragmentUtil;
+import sysnetlab.android.sdc.ui.fragments.FragmentUtils;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -198,7 +198,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
                     sensor.setSelected(false);
                 }
                 if (view != null) {
-                    FragmentUtil.addFragment(this, mExperimentSetupFragment);
+                    FragmentUtils.addFragment(this, mExperimentSetupFragment);
                 }
                 mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
                 Log.d("SensorDataCollector", "Leaving CreateExperimentActivit::onCreate.");
@@ -208,7 +208,7 @@ public class CreateExperimentActivity extends FragmentActivityBase
                 mExperiment = ExperimentManagerSingleton.getInstance().getActiveExperiment()
                         .clone();
                 if (view != null) {
-                    FragmentUtil.addFragment(this, mExperimentSetupFragment);
+                    FragmentUtils.addFragment(this, mExperimentSetupFragment);
                 }
                 mCollectionState = DataCollectionState.DATA_COLLECTION_STOPPED;
                 Log.d("SensorDataCollector",
@@ -289,10 +289,10 @@ public class CreateExperimentActivity extends FragmentActivityBase
         if (mExperimentEditTagsFragment == null) {
             mExperimentEditTagsFragment = new ExperimentEditTagsFragment();
         }
-        FragmentUtil.switchFragment(this,
+        FragmentUtils.switchFragment(this,
                 mExperimentEditTagsFragment,
                 "edittags",
-                FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
+                FragmentUtils.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
         changeActionBarTitle(R.string.text_creating_tags, R.drawable.icon_tags_inverse);
     }
 
@@ -301,10 +301,10 @@ public class CreateExperimentActivity extends FragmentActivityBase
         if (mExperimentEditNotesFragment == null) {
             mExperimentEditNotesFragment = new ExperimentEditNotesFragment();
         }
-        FragmentUtil.switchFragment(this,
+        FragmentUtils.switchFragment(this,
                 mExperimentEditNotesFragment,
                 "editnotes",
-                FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
+                FragmentUtils.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
         changeActionBarTitle(R.string.text_creating_notes, R.drawable.icon_notes_inverse);
     }
 
@@ -316,10 +316,10 @@ public class CreateExperimentActivity extends FragmentActivityBase
             mExperimentSensorSelectionFragment = new ExperimentSensorSelectionFragment();
         }
         getIntent().putExtra("havingheader", true);
-        FragmentUtil.switchFragment(this,
+        FragmentUtils.switchFragment(this,
                 mExperimentSensorSelectionFragment,
                 "sensorselection",
-                FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
+                FragmentUtils.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
         changeActionBarTitle(R.string.text_selecting_sensors, R.drawable.icon_sensors_inverse);
     }
 
@@ -331,10 +331,10 @@ public class CreateExperimentActivity extends FragmentActivityBase
         if (mExperimentDataStoreFragment == null) {
             mExperimentDataStoreFragment = new ExperimentDataStoreFragment();
         }
-        FragmentUtil.switchFragment(this,
+        FragmentUtils.switchFragment(this,
                 mExperimentDataStoreFragment,
                 "datastoreselection",
-                FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
+                FragmentUtils.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
     }
 
     @Override
@@ -355,10 +355,10 @@ public class CreateExperimentActivity extends FragmentActivityBase
                     .findViewById(R.id.et_experiment_setup_name)).getText()
                     .toString());
 
-            FragmentUtil.switchFragment(this,
+            FragmentUtils.switchFragment(this,
                     mExperimentRunFragment,
                     "experimentrun",
-                    FragmentUtil.FRAGMENT_SWITCH_NO_BACKSTACK);
+                    FragmentUtils.FRAGMENT_SWITCH_NO_BACKSTACK);
         }
     }
 
@@ -578,10 +578,10 @@ public class CreateExperimentActivity extends FragmentActivityBase
             mSensorSetupFragment = new ExperimentSensorSetupFragment();
         }
         mSensorSetupFragment.setSensor(sensor);
-        FragmentUtil.switchFragment(this,
+        FragmentUtils.switchFragment(this,
                 mSensorSetupFragment,
                 "sensorsetup",
-                FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
+                FragmentUtils.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
     }
 
     @Override
@@ -592,10 +592,10 @@ public class CreateExperimentActivity extends FragmentActivityBase
             mSensorSetupFragment = new ExperimentSensorSetupFragment();
         }
         mSensorSetupFragment.setSensor(sensor);
-        FragmentUtil.switchFragment(this,
+        FragmentUtils.switchFragment(this,
                 mSensorSetupFragment,
                 "sensorsetup",
-                FragmentUtil.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
+                FragmentUtils.FRAGMENT_SWITCH_ADD_TO_BACKSTACK);
     }
 
     @Override

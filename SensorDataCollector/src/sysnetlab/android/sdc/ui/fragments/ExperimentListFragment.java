@@ -21,7 +21,7 @@ import java.util.List;
 
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
-import sysnetlab.android.sdc.ui.adaptors.ExperimentListAdapter;
+import sysnetlab.android.sdc.ui.adapters.ExperimentListAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
