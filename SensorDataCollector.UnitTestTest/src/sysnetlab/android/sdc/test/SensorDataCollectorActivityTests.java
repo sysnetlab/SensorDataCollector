@@ -20,10 +20,13 @@ package sysnetlab.android.sdc.test;
 import sysnetlab.android.sdc.R;
 import sysnetlab.android.sdc.datacollector.Experiment;
 import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
+import sysnetlab.android.sdc.ui.CreateExperimentActivity;
 import sysnetlab.android.sdc.ui.SensorDataCollectorActivity;
+import sysnetlab.android.sdc.ui.ViewExperimentActivity;
 import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
+import android.app.Instrumentation.ActivityMonitor;
 import android.content.Context;
-import android.content.Intent;
+import android.test.TouchUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 
@@ -31,7 +34,7 @@ import android.widget.Button;
 public class SensorDataCollectorActivityTests 
 		extends android.test.ActivityUnitTestCase<SensorDataCollectorActivity> {
 
-	private SensorDataCollectorActivity sdcActivity;
+	private SensorDataCollectorActivity mSdcActivity;
 	private ExperimentListFragment mExperimentListFragment;
 	private ArrayAdapter<Experiment> mExperimentList;
 	
@@ -42,15 +45,15 @@ public class SensorDataCollectorActivityTests
 	protected void setUp() throws Exception {
 		super.setUp();
 		
+        /*
         Context context = getInstrumentation().getTargetContext();
         context.setTheme(R.style.Theme_AppCompat);
-        Intent intent = new Intent(context, SensorDataCollectorActivity.class);		
 
+        Intent intent = new Intent(context, SensorDataCollectorActivity.class);		
         startActivity(intent, null, null);
         sdcActivity = getActivity();
         getInstrumentation().callActivityOnStart(sdcActivity);
-        mExperimentListFragment = sdcActivity.getExperimentListFragment();
-        mExperimentList = mExperimentListFragment.getExperimentListAdapter();
+        */
 	}
 
 	protected void tearDown() throws Exception {
@@ -59,46 +62,96 @@ public class SensorDataCollectorActivityTests
 
 	public void testSensorDataCollectionActivityLoaded()
 	{
-		assertNotNull(sdcActivity.findViewById(R.id.fragment_container));
-		assertNotNull(sdcActivity.getExperimentListFragment());
+        Context context = getInstrumentation().getTargetContext();
+        context.setTheme(R.style.Theme_AppCompat);
+               
+        mSdcActivity = launchActivity(context.getPackageName(), SensorDataCollectorActivity.class, null);
+        getInstrumentation().waitForIdleSync();  
+        
+		assertNotNull(mSdcActivity.findViewById(R.id.fragment_container));
+		assertNotNull(mSdcActivity.getExperimentListFragment());
 	}
 	
 	public void testCreateExperimentButtonClicked()
 	{
-	    Button view = (Button) sdcActivity.findViewById(R.id.button_create_experiment);
+        Context context = getInstrumentation().getTargetContext();
+        context.setTheme(R.style.Theme_AppCompat);
+               
+        mSdcActivity = launchActivity(context.getPackageName(), SensorDataCollectorActivity.class, null);
+        getInstrumentation().waitForIdleSync();           
+	    
+	    Button view = (Button) mSdcActivity.findViewById(R.id.button_create_experiment);
 	    assertNotNull("Button not allowed to be null", view);
-	    view.performClick();
-	    Intent triggeredIntent = getStartedActivityIntent();
-	    assertNotNull("Intent was null", triggeredIntent);
-	}
-	
-	public void testExperimentListFragmentCreated() {
-		assertNotNull("ExperimentListFragment is null",mExperimentListFragment);
+	    
+        ActivityMonitor monitor = getInstrumentation().addMonitor(CreateExperimentActivity.class.getName(), null, false);        
+	    TouchUtils.clickView(this, view);
+        getInstrumentation().waitForIdleSync();  
+
+        CreateExperimentActivity ceActivity = 
+                (CreateExperimentActivity)getInstrumentation().waitForMonitor(monitor);
+        assertNotNull("CreateExperimentActivity Activity was not loaded", ceActivity);
+        getInstrumentation().removeMonitor(monitor);	
+        
+        
+        monitor = getInstrumentation().addMonitor(SensorDataCollectorActivity.class.getName(), null, false);        
+        ceActivity.finish();
+        getInstrumentation().waitForIdleSync();  
+
+        SensorDataCollectorActivity sdcActivity = 
+                (SensorDataCollectorActivity)getInstrumentation().waitForMonitor(monitor);
+        assertNotNull("SensorDataCollector Activity was not loaded", sdcActivity);
+        getInstrumentation().removeMonitor(monitor);    
+        
+        sdcActivity.finish();        
 	}
 	
 	public void testExperimentListClicked() {
-	    try {
+        Context context = getInstrumentation().getTargetContext();
+        context.setTheme(R.style.Theme_AppCompat);
+               
+        mSdcActivity = launchActivity(context.getPackageName(), SensorDataCollectorActivity.class, null);
+        getInstrumentation().waitForIdleSync();           
+
+        mExperimentListFragment = mSdcActivity.getExperimentListFragment();
+        assertNotNull("ExperimentListFragment is null", mExperimentListFragment);
+        
+        mExperimentList = mExperimentListFragment.getExperimentListAdapter();
+        assertNotNull("ExperimentList is null", mExperimentList);
+
+        try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
 		assertNotNull("Experiment list is null", mExperimentList);
 		assertNotSame("Experiment list is empty, create an experiment to run next tests", 0, mExperimentList.getCount());
 			
 		if(!mExperimentList.isEmpty()){								
-			
-			// TODO Change the way the experiment is loaded performing a item click
-			
-			//mlistView.performItemClick(mlistView.getAdapter().getView(0, null, null),
-			//				0, mlistView.getAdapter().getItemId(0));
-			
-		    sdcActivity.onExperimentClicked_ExperimentListFragment(mExperimentList.getItem(0));
-			Intent triggeredIntent = getStartedActivityIntent();
-			assertNotNull("Intent was null", triggeredIntent);
-			Experiment mExperiment=ExperimentManagerSingleton.getInstance().getActiveExperiment();
+	        ActivityMonitor monitor = getInstrumentation().addMonitor(ViewExperimentActivity.class.getName(), null, false);        
+            mSdcActivity.onExperimentClicked_ExperimentListFragment(mExperimentList.getItem(0));
+	        getInstrumentation().waitForIdleSync();  
+
+	        ViewExperimentActivity veActivity = 
+	                (ViewExperimentActivity)getInstrumentation().waitForMonitor(monitor);
+	        assertNotNull("ViewExperimentActivity Activity was not loaded", veActivity);
+	        getInstrumentation().removeMonitor(monitor);    
+	        
+			Experiment mExperiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();
 			assertNotNull("The loaded experiment is null", mExperiment);			
-			assertEquals("The loaded experiment is not correct",mExperiment,mExperimentList.getItem(0));	
-		}		
+			assertEquals("The loaded experiment is not correct",mExperiment,mExperimentList.getItem(0));
+			
+			monitor = getInstrumentation().addMonitor(SensorDataCollectorActivity.class.getName(), null, false);        
+            veActivity.finish();
+            getInstrumentation().waitForIdleSync();  
+
+            SensorDataCollectorActivity sdcActivity = 
+                    (SensorDataCollectorActivity)getInstrumentation().waitForMonitor(monitor);
+            assertNotNull("SensorDataCollector Activity was not loaded", sdcActivity);
+            getInstrumentation().removeMonitor(monitor);    
+            
+            sdcActivity.finish();
+		}	
 	}		
 }

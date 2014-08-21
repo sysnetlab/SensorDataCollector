@@ -450,7 +450,7 @@ public class Experiment implements Parcelable {
     }
 
     public Experiment(Parcel inParcel) {
-        Log.i("SensorDataCollector", "Experiment(Parcel) called.");
+        Log.d("SensorDataCollector", "Experiment(Parcel) called.");
         //TODO read it properly from parcel.
         mTaggingActions = new ArrayList<TaggingAction>();
         

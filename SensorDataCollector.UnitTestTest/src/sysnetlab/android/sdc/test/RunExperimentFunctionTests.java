@@ -201,5 +201,6 @@ public class RunExperimentFunctionTests extends
     	int width=gridview.getChildAt(0).getWidth();
     	
     	assertEquals("The size of the tags at the screen are changing over time",width, gridview.getChildAt(0).getWidth());
+    	createExperimentActivity.finish();
     }
 }

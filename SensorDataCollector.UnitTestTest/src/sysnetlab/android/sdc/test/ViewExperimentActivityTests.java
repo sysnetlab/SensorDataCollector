@@ -18,19 +18,12 @@
 package sysnetlab.android.sdc.test;
 
 import sysnetlab.android.sdc.R;
-import sysnetlab.android.sdc.datacollector.Experiment;
-import sysnetlab.android.sdc.datacollector.ExperimentManagerSingleton;
+import sysnetlab.android.sdc.datacollector.DropboxHelper;
 import sysnetlab.android.sdc.ui.ViewExperimentActivity;
 import android.content.Context;
-import android.content.Intent;
-
 
 
 public class ViewExperimentActivityTests extends android.test.ActivityUnitTestCase<ViewExperimentActivity> {
-
-	private ViewExperimentActivity veActivity;
-	private Experiment mExperiment;
-	
 	public ViewExperimentActivityTests() {
 		super(ViewExperimentActivity.class);
 	}
@@ -38,6 +31,7 @@ public class ViewExperimentActivityTests extends android.test.ActivityUnitTestCa
 	protected void setUp() throws Exception {
 		super.setUp();		
 		
+		/*
 		Context context = getInstrumentation().getTargetContext();
 		context.setTheme(R.style.Theme_AppCompat);
 	    Intent intent = new Intent(context, ViewExperimentActivity.class);
@@ -49,6 +43,7 @@ public class ViewExperimentActivityTests extends android.test.ActivityUnitTestCa
         veActivity = getActivity();
         
         getInstrumentation().callActivityOnStart(veActivity);
+        */
 	}
 	
 	protected void tearDown() throws Exception {
@@ -57,6 +52,14 @@ public class ViewExperimentActivityTests extends android.test.ActivityUnitTestCa
 	
 	public void testViewExperimentActivityLoaded()
 	{
+        Context context = getInstrumentation().getTargetContext();
+        context.setTheme(R.style.Theme_AppCompat);
+
+        DropboxHelper.getInstance(context);
+        
+        ViewExperimentActivity veActivity = launchActivity(context.getPackageName(), ViewExperimentActivity.class, null);
+        getInstrumentation().waitForIdleSync();	    
+	    
 		assertNotNull("The ExperimentViewFragment was not loaded", veActivity.getExperimentViewFragment());
 		assertNotNull("The activity was not loaded", veActivity.findViewById(R.id.fragment_container));		
 	}			
