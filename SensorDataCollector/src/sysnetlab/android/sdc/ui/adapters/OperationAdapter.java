@@ -27,6 +27,7 @@ import sysnetlab.android.sdc.ui.UserInterfaceUtils;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -154,6 +155,7 @@ public class OperationAdapter extends BaseAdapter {
 
         if (position == OP_TAGS) {
             icon.setImageResource(R.drawable.icon_tags_inverse);
+            Log.d("SensorDataCollector", "Icon X = " + icon.getMeasuredWidth() + "Icon Y = " + icon.getMeasuredHeight() + "Scale Type = " + icon.getScaleType());
             operation.setText(OP_TAGS_NAME);
             listTagsInView(view, VIEW_EXPERIMENT);
         } else if (position == OP_NOTES) {

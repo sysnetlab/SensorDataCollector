@@ -96,6 +96,12 @@ public class SensorDataCollectorActivity extends FragmentActivityBase
 
         // Complete the Dropbox Authorization
         DropboxHelper.getInstance(SensorDataCollectorActivity.this).completeAuthentication();
+
+        // help determine what screen resolution the device is and plan
+        // resources based on 
+        // http://developer.android.com/guide/practices/screens_support.html
+        Log.d("SensorDataCollector", "DensityDpi = "
+                + getResources().getDisplayMetrics().densityDpi);
     }
 
     @Override
