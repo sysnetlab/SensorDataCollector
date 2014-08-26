@@ -101,6 +101,7 @@ public class RunExperimentFunctionTests extends
 
         // Get the cloned experiment with new date
         activeExperiment = createExperimentActivity.getExperiment();
+        getInstrumentation().waitForIdleSync();
 
         Button runButton = (Button) createExperimentActivity
                 .findViewById(R.id.button_experiment_run);

@@ -55,6 +55,7 @@ public class SensorDataCollectorActivityTests
 
     protected void tearDown() throws Exception {
         super.tearDown();
+        mSdcActivity.finish();
     }
 
     public void testSensorDataCollectionActivityLoaded()
@@ -119,14 +120,16 @@ public class SensorDataCollectorActivityTests
         mExperimentList = mExperimentListFragment.getExperimentListAdapter();
         assertNotNull("ExperimentList is null", mExperimentList);
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        for (int i = 0; i < 5; i++) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            if (mExperimentList.getCount() > 0) break;
         }
 
-        assertNotNull("Experiment list is null", mExperimentList);
         assertNotSame("Experiment list is empty, create an experiment to run next tests", 0,
                 mExperimentList.getCount());
 
