@@ -23,6 +23,7 @@ import sysnetlab.android.sdc.ui.adapters.OperationAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +89,6 @@ public class ExperimentViewFragment extends Fragment {
             }
         });
 
-        /*
         // use nested fragment
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         if (mExperimentViewSensorListFragment == null) {
@@ -96,7 +96,6 @@ public class ExperimentViewFragment extends Fragment {
             transaction.add(R.id.layout_experiment_view_sensor_list, mExperimentViewSensorListFragment);
         }
         transaction.commit();
-        */
 
         ((Button) getActivity().findViewById(R.id.button_experiment_view_clone))
                 .setOnClickListener(new Button.OnClickListener() {
