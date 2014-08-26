@@ -82,14 +82,14 @@
         android:layout_below="@id/view_experiment_view_divider"
         android:orientation="vertical" >
 
-        <ListView
+        <sysnetlab.android.sdc.ui.TouchPassingListView
             android:id="@+id/listview_fragment_experiment_view_sensor_data_sensor_properties"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:background="#000" />
 
-        <TextView
+        <sysnetlab.android.sdc.ui.TouchPassingTextView
             android:id="@+id/textview_fragment_experiment_view_notes_note_text"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -97,7 +97,7 @@
             android:layout_marginBottom="12dp"
             android:background="@drawable/layerlist_background_border_lines"
             android:gravity="left|top"
-            android:text="@string/text_experiment"
+            android:text="@string/text_experiment"          
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/DarkTextViewFont" />
     </LinearLayout>

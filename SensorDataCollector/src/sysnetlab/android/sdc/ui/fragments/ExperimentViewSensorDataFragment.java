@@ -49,7 +49,7 @@ public class ExperimentViewSensorDataFragment extends Fragment {
         f.setSensorNo(0);
         return f;
     }
-
+    
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
