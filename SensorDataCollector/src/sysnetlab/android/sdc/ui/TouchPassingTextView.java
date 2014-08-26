@@ -17,7 +17,6 @@
 
 package sysnetlab.android.sdc.ui;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -37,10 +36,14 @@ public class TouchPassingTextView extends TextView {
         super(context);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        super.onTouchEvent(event);
-        return false;
-    }   
+        performClick();
+        return super.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean performClick() {
+        return super.performClick();
+    }  
 }

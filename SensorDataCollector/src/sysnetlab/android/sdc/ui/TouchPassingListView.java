@@ -1,6 +1,5 @@
 package sysnetlab.android.sdc.ui;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -20,11 +19,16 @@ public class TouchPassingListView extends ListView {
         super(context);
     }
     
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        //super.onTouchEvent(event);
+        performClick();
+        super.onTouchEvent(event);
         return false;
     }   
+    
 
+    @Override
+    public boolean performClick() {
+        return super.performClick();
+    }      
 }
