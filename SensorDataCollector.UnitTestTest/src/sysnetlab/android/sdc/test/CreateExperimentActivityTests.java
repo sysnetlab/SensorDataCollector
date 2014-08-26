@@ -66,6 +66,7 @@ public class CreateExperimentActivityTests
                 mCreateExperimentActivity.findViewById(R.id.progressbar_task_in_progress));
 
         sendKeys(KeyEvent.KEYCODE_BACK);
+        mCreateExperimentActivity.finish();
     }
 
     public void testSensorDataCollectionState() {
@@ -80,5 +81,6 @@ public class CreateExperimentActivityTests
                 mCreateExperimentActivity.getCurrentCollectionState(),
                 DataCollectionState.DATA_COLLECTION_STOPPED);
         sendKeys(KeyEvent.KEYCODE_BACK);
+        mCreateExperimentActivity.finish();
     }
 }

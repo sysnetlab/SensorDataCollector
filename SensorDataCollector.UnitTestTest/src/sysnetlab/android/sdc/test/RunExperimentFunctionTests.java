@@ -153,6 +153,8 @@ public class RunExperimentFunctionTests extends
                 listExperiments.get(0), activeExperiment);
 
         sensorDataCollectorActivity.finish();
+        
+        
     }
 
     public void testExperimentRunTagging() {
