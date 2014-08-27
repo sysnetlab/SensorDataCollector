@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<sysnetlab.android.sdc.ui.SwipableRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
@@ -114,4 +114,4 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
     -->
 
-</RelativeLayout>
+</sysnetlab.android.sdc.ui.SwipableRelativeLayout>

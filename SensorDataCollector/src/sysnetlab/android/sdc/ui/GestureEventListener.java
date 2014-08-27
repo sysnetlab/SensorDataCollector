@@ -51,7 +51,8 @@ public abstract class GestureEventListener implements OnTouchListener {
     }
 
     public boolean onTouch(final View v, final MotionEvent event) {
-        return mGestureDetector.onTouchEvent(event);
+        mGestureDetector.onTouchEvent(event);
+        return true;
     }
 
     public GestureEventListener(Activity activity) {
@@ -73,8 +74,15 @@ public abstract class GestureEventListener implements OnTouchListener {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            float diffX = e2.getX() - e1.getX();
-            float diffY = e2.getY() - e1.getY();
+            float diffX = 0;
+            float diffY = 0;
+            
+            if (e1 != null && e2 != null) {
+                diffX = e2.getX() - e1.getX();
+                diffY = e2.getY() - e1.getY();
+            } 
+            
+            Log.d("SensorDataCollector", "onFling: diff X = " + diffX + " diff Y = " + diffY);
 
             if (Math.abs(diffX) > Math.abs(diffY)) {
                 if (Math.abs(diffX) > mMinimumDistance &&

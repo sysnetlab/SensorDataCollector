@@ -36,14 +36,17 @@ public class TouchPassingTextView extends TextView {
         super(context);
     }
 
+    /*
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         performClick();
-        return super.onTouchEvent(event);
+        super.onTouchEvent(event);
+        return false;
     }
 
     @Override
     public boolean performClick() {
         return super.performClick();
     }  
+    */
 }

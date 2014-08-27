@@ -19,6 +19,7 @@ public class TouchPassingListView extends ListView {
         super(context);
     }
     
+    /*
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         performClick();
@@ -30,5 +31,6 @@ public class TouchPassingListView extends ListView {
     @Override
     public boolean performClick() {
         return super.performClick();
-    }      
+    }     
+    */ 
 }
