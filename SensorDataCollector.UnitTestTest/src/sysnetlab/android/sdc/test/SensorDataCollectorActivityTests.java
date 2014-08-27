@@ -138,21 +138,21 @@ public class SensorDataCollectorActivityTests
         }
         assertNotNull("ExperimentListFragment is null", mExperimentListFragment);
 
-        mExperimentList = mExperimentListFragment.getExperimentListAdapter();
-        assertNotNull("ExperimentList is null", mExperimentList);
 
-        for (int i = 0; i < 30; i++) {
+
+        for (int i = 0; i < 600; i++) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+            mExperimentList = mExperimentListFragment.getExperimentListAdapter();
+            assertNotNull("ExperimentList is null", mExperimentList);            
             if (mExperimentList.getCount() > 0) break;
         }
 
-        assertNotSame("Experiment list is empty, create an experiment to run next tests", 0,
-                mExperimentList.getCount());
+        assertTrue("Experiment list should not be empty", mExperimentList.getCount() > 0);
 
         if (!mExperimentList.isEmpty()) {
             ActivityMonitor monitor = getInstrumentation().addMonitor(

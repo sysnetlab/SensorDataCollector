@@ -33,6 +33,7 @@ import sysnetlab.android.sdc.ui.fragments.ExperimentListFragment;
 import sysnetlab.android.sdc.ui.fragments.ExperimentRunFragment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.app.AlertDialog;
 import android.app.Instrumentation.ActivityMonitor;
@@ -103,8 +104,14 @@ public class RunExperimentFunctionTests extends
         activeExperiment = createExperimentActivity.getExperiment();
         getInstrumentation().waitForIdleSync();
 
-        Button runButton = (Button) createExperimentActivity
-                .findViewById(R.id.button_experiment_run);
+        Button runButton = null;
+        for (int i = 0; i < 30; i++) {
+            runButton = (Button) createExperimentActivity
+                    .findViewById(R.id.button_experiment_run);
+            if (runButton != null)
+                break;
+            Thread.sleep(1000);
+        }
         assertNotNull("The button experiment run failed to load", runButton);
 
         TouchUtils.clickView(this, runButton);
@@ -145,25 +152,50 @@ public class RunExperimentFunctionTests extends
         assertNotNull("SensorDataCollector Activity was not loaded", sensorDataCollectorActivity);
         getInstrumentation().removeMonitor(monitor);
 
-        ExperimentListFragment experimentListFragment = sensorDataCollectorActivity
-                .getExperimentListFragment();
-        assertNotNull("The fragment was not loaded", experimentListFragment);
+        ExperimentListFragment experimentListFragment = null;
+
+        // it takes a while for the async task to finish on a slow emulator
+        for (int i = 0; i < 300; i ++) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            experimentListFragment = sensorDataCollectorActivity.getExperimentListFragment();
+            if (experimentListFragment != null) break;
+        }
+        assertNotNull("ExperimentListFragment is null", experimentListFragment);
+
+
+
+        for (int i = 0; i < 300; i++) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            ArrayAdapter<Experiment> experimentList = experimentListFragment.getExperimentListAdapter();
+            assertNotNull("ExperimentList is null", experimentList);            
+            if (experimentList.getCount() > 0) break;
+        }        
+        
 
         List<Experiment> listExperiments = experimentManager.getExperimentsSortedByDate();
         assertEquals("The experiment created is not on the top of the list",
                 listExperiments.get(0), activeExperiment);
 
         sensorDataCollectorActivity.finish();
-        
+
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }        
+        }
     }
 
-    public void testExperimentRunTagging() {
+    public void testExperimentRunTagging() throws Throwable {
         StoreSingleton.resetInstance();
 
         // Create the experiment to be run
@@ -224,8 +256,7 @@ public class RunExperimentFunctionTests extends
 
         assertEquals("The size of the tags at the screen are changing over time", width, gridview
                 .getChildAt(0).getWidth());
-        
-   
+
         Button doneButton = (Button) createExperimentActivity
                 .findViewById(R.id.button_experiment_done);
         assertNotNull("The done button cannot be null.", doneButton);
@@ -239,20 +270,40 @@ public class RunExperimentFunctionTests extends
         assertNotNull("The positive button was not loaded", positiveButton);
 
         ActivityMonitor monitor = getInstrumentation().addMonitor(
-                SensorDataCollectorActivity.class.getName(), null, false);        
+                SensorDataCollectorActivity.class.getName(), null, false);
         TouchUtils.clickView(this, positiveButton);
-        getInstrumentation().waitForIdleSync();        
-        
-        SensorDataCollectorActivity sensorDataCollectorActivity =
+        getInstrumentation().waitForIdleSync();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        final SensorDataCollectorActivity sensorDataCollectorActivity =
                 (SensorDataCollectorActivity) getInstrumentation().waitForMonitor(monitor);
         assertNotNull("SensorDataCollector Activity was not loaded", sensorDataCollectorActivity);
         getInstrumentation().removeMonitor(monitor);
-        sensorDataCollectorActivity.finish();
-        
-        
+
         createExperimentActivity.finish();
         try {
             Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        runTestOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                sensorDataCollectorActivity.finish();
+
+            }
+        });
+
+        try {
+            Thread.sleep(30000);
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
