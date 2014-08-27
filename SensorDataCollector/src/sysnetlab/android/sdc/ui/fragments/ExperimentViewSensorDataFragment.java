@@ -53,7 +53,7 @@ public class ExperimentViewSensorDataFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        
         mView.setOnTouchListener(new GestureEventListener(getActivity()) {
 
             @Override
@@ -98,8 +98,6 @@ public class ExperimentViewSensorDataFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // super.onCreateView(inflater, container, savedInstanceState);
-
         mView = inflater.inflate(R.layout.fragment_experiment_view_sensor_data, container, false);
 
         Experiment experiment = ExperimentManagerSingleton.getInstance().getActiveExperiment();

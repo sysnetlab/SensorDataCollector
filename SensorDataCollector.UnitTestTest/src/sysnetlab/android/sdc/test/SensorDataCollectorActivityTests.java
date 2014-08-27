@@ -79,6 +79,12 @@ public class SensorDataCollectorActivityTests
         mSdcActivity = launchActivity(context.getPackageName(), SensorDataCollectorActivity.class,
                 null);
         getInstrumentation().waitForIdleSync();
+        
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         Button view = (Button) mSdcActivity.findViewById(R.id.button_create_experiment);
         assertNotNull("Button not allowed to be null", view);
@@ -103,7 +109,13 @@ public class SensorDataCollectorActivityTests
         assertNotNull("SensorDataCollector Activity was not loaded", sdcActivity);
         getInstrumentation().removeMonitor(monitor);
 
-        sdcActivity.finish();
+        sdcActivity.finish();           
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
     }
 
     public void testExperimentListClicked() {
@@ -114,13 +126,22 @@ public class SensorDataCollectorActivityTests
                 null);
         getInstrumentation().waitForIdleSync();
 
-        mExperimentListFragment = mSdcActivity.getExperimentListFragment();
+        // it takes a while for the async task to finish on a slow emulator
+        for (int i = 0; i < 10; i ++) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            mExperimentListFragment = mSdcActivity.getExperimentListFragment();
+            if (mExperimentListFragment != null) break;
+        }
         assertNotNull("ExperimentListFragment is null", mExperimentListFragment);
 
         mExperimentList = mExperimentListFragment.getExperimentListAdapter();
         assertNotNull("ExperimentList is null", mExperimentList);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 30; i++) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

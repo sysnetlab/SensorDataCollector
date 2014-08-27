@@ -210,8 +210,13 @@ public class CreateExperimentActivityFunctionTests extends
          * getInstrumentation()
          * .addMonitor(CreateExperimentActivity.class.getName(), null, false);
          */
-        mListOperations = (ListView) mCreateExperimentActivity
-                .findViewById(R.id.lv_operations);
+        for (int i = 0; i < 10; i++) {
+            Thread.sleep(1000);
+            mListOperations = (ListView) mCreateExperimentActivity
+                    .findViewById(R.id.lv_operations);
+            if (mListOperations != null)
+                break;
+        }
         assertNotNull("Menu with operations has not been loaded", mListOperations);
         assertTrue("listOperations.sgetCount() is not 3", mListOperations.getCount() == 3);
 
@@ -468,8 +473,15 @@ public class CreateExperimentActivityFunctionTests extends
     public void testNewNoteEmptyTextField() throws Exception {
         Button mButtonAddNote;
 
-        mListOperations = (ListView) mCreateExperimentActivity
-                .findViewById(R.id.lv_operations);
+        // this takes some time on a slow emulator
+        for (int i = 0; i < 10; i ++) {
+            Thread.sleep(1000);
+            mListOperations = (ListView) mCreateExperimentActivity
+                    .findViewById(R.id.lv_operations);
+            if (mListOperations != null) break;
+        }
+
+        
         assertNotNull("Menu with operations has not been loaded", mListOperations);
         assertTrue("listOperations.getCount() is not 3", mListOperations.getCount() == 3);
 

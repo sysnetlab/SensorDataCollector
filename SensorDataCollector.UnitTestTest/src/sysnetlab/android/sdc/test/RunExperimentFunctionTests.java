@@ -155,7 +155,12 @@ public class RunExperimentFunctionTests extends
 
         sensorDataCollectorActivity.finish();
         
-        
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }        
     }
 
     public void testExperimentRunTagging() {
@@ -193,7 +198,7 @@ public class RunExperimentFunctionTests extends
                 .getActivity();
         getInstrumentation().waitForIdleSync();
         try {
-            Thread.sleep(2000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -219,6 +224,38 @@ public class RunExperimentFunctionTests extends
 
         assertEquals("The size of the tags at the screen are changing over time", width, gridview
                 .getChildAt(0).getWidth());
+        
+   
+        Button doneButton = (Button) createExperimentActivity
+                .findViewById(R.id.button_experiment_done);
+        assertNotNull("The done button cannot be null.", doneButton);
+
+        TouchUtils.clickView(this, doneButton);
+        getInstrumentation().waitForIdleSync();
+        AlertDialog dialog = createExperimentActivity.getAlertDialog();
+        assertNotNull("The Alert Dialog was not loaded", dialog);
+        assertTrue("Not showing the Alert Dialog", dialog.isShowing());
+        Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        assertNotNull("The positive button was not loaded", positiveButton);
+
+        ActivityMonitor monitor = getInstrumentation().addMonitor(
+                SensorDataCollectorActivity.class.getName(), null, false);        
+        TouchUtils.clickView(this, positiveButton);
+        getInstrumentation().waitForIdleSync();        
+        
+        SensorDataCollectorActivity sensorDataCollectorActivity =
+                (SensorDataCollectorActivity) getInstrumentation().waitForMonitor(monitor);
+        assertNotNull("SensorDataCollector Activity was not loaded", sensorDataCollectorActivity);
+        getInstrumentation().removeMonitor(monitor);
+        sensorDataCollectorActivity.finish();
+        
+        
         createExperimentActivity.finish();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }

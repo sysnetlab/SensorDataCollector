@@ -56,6 +56,12 @@ public class ViewExperimentActivityTests extends
         ViewExperimentActivity veActivity = launchActivity(context.getPackageName(),
                 ViewExperimentActivity.class, null);
         getInstrumentation().waitForIdleSync();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
         assertNotNull("The ExperimentViewFragment was not loaded",
                 veActivity.getExperimentViewFragment());
