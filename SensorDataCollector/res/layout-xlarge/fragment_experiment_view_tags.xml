@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <RelativeLayout
+        android:id="@+id/layout_experiment_tag_viewing_heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" 
+        android:layout_gravity="left|center_vertical"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp" >
+        
+        <TextView 
+           android:id="@+id/textview_experiment_tag_viewing_subtext"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentLeft="true"
+           android:layout_alignParentTop="true"
+           android:textSize="14sp"
+           android:text="@string/text_for_experiment_name_x" />  
+	</RelativeLayout>
+	
+    <TableLayout 
+        android:id="@+id/layout_experiment_tag_viewing_experiment_times"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_experiment_tag_viewing_heading"
+        android:layout_alignLeft="@id/layout_experiment_tag_viewing_heading"
+        android:layout_marginTop="8dp" >
+        
+        <TableRow>
+            
+            <TextView
+                android:text="@string/text_from"
+                android:textSize="12sp"
+                android:gravity="left"
+                android:layout_weight="1"/>
+           
+            <TextView 
+                android:text="@string/text_to"
+                android:textSize="12sp"
+                android:gravity="left"
+                android:layout_weight="1"/>
+            
+        </TableRow>
+        
+        <TableRow >
+            
+            <TextView 
+                android:id="@+id/textview_fragment_experiment_view_tag_experiment_time_created"
+		        android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/text_experiment"
+                android:textSize="12sp"
+                android:gravity="left"
+                android:layout_weight="1" />
+            
+            <TextView
+                android:id="@+id/textview_fragment_experiment_view_tags_experiment_time_done"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_experiment"
+                android:textSize="12sp"
+                android:gravity="left"
+                android:layout_weight="1" />
+                
+        </TableRow>
+        
+    </TableLayout>
+    
+    <View
+        android:id="@+id/view_experiment_view_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"    
+        android:layout_below="@id/layout_experiment_tag_viewing_experiment_times"    
+        android:layout_alignLeft="@id/layout_experiment_tag_viewing_heading"
+        android:layout_alignRight="@id/layout_experiment_tag_viewing_heading"
+        android:background="@android:color/darker_gray" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@id/layout_experiment_tag_viewing_heading"
+        android:layout_alignRight="@id/layout_experiment_tag_viewing_heading"
+        android:layout_below="@id/view_experiment_view_divider"
+        android:orientation="vertical" >
+    
+   		<ListView
+            android:id="@+id/listview_fragment_experiment_view_tag_tag_properties"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="4dp"
+            android:layout_weight="618" />
+   		
+   	</LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+	<RelativeLayout
+        android:id="@+id/layout_sensor_selection_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="left|center_vertical"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp">
+
+               
+        <TextView
+            android:id="@+id/textview_experiment_sensor_selection_subtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="8dp"
+            android:textSize="14sp"
+            android:text="@string/text_select_a_sensor_to_the_experiment"/>
+    </RelativeLayout>
+    
+	<RelativeLayout
+	    android:id="@+id/sensor_list_instruction"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/layout_sensor_selection_header"
+	    android:layout_marginTop="8dp"
+	    android:layout_marginLeft="12dp" >
+	    <TextView
+	        android:id="@+id/textview_sensor_list_instruction"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/text_sensor_list_instruction"
+	        android:textSize="13sp"
+	        android:focusable="false">
+	    </TextView>
+	    
+	</RelativeLayout>
+	
+    <RelativeLayout
+        android:id="@+id/sensor_list_header"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"	    
+	    android:layout_below="@id/sensor_list_instruction"
+	    android:layout_marginTop="1dp"
+	    android:layout_marginLeft="6dp" >	    	    
+	
+        <RelativeLayout
+            android:id="@+id/layout_check_all"
+            android:layout_width="match_parent"
+		    android:layout_height="wrap_content">
+		    <CheckBox
+		        android:id="@+id/checkbox_check_all"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentLeft="true"		        
+		        android:layout_marginRight="2dp" 
+		        android:focusable="false"/>	    
+			<TextView
+		        android:id="@+id/textview_check_all"
+		        android:text="@string/text_check_all"	        
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"	        
+		        android:layout_centerInParent="true"	        
+		        android:textSize="15sp"
+		        android:textStyle="bold"
+		        android:layout_toRightOf="@id/checkbox_check_all"		              
+		        android:focusable="false"/>	    
+	    </RelativeLayout>
+	    
+    	<RelativeLayout
+		    android:id="@+id/layout_sensor_selection_list"
+		    android:layout_below="@id/layout_check_all"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"/>
+    				
+	</RelativeLayout>	
+
+	<LinearLayout
+	    android:id="@+id/layout_sensor_selection_footer"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:weightSum="1">
+	</LinearLayout>
+   	
+</RelativeLayout>

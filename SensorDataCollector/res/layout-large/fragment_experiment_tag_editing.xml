@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_edit_tags"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="true">
+
+    <TextView
+        android:id="@+id/tv_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="12dp"
+        android:text="@string/text_tag"
+        android:textAppearance="?android:attr/textAppearance" />
+
+    <EditText
+        android:id="@+id/edittext_tag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/tv_tag"
+        android:layout_alignBaseline="@+id/tv_tag"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="12dp"
+        android:imeOptions="actionDone"
+        android:inputType="text|textAutoCorrect"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceInverse" >
+    </EditText>
+    
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_tag"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/text_description"
+        android:textAppearance="?android:attr/textAppearance" />
+
+    <EditText
+        android:id="@+id/edittext_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/tv_description"
+        android:layout_below="@id/edittext_tag"
+        android:layout_alignBaseline="@+id/tv_description"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="12dp"
+        android:imeOptions="actionDone"
+        android:inputType="textAutoComplete"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceInverse" >
+    </EditText>
+
+    <Button
+        android:id="@+id/btn_add_tag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edittext_description"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:text="@string/text_add_tag"
+        android:textAppearance="?android:attr/textAppearance" />
+
+    <ListView
+        android:id="@+id/listview_tags"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/btn_add_tag" >
+    </ListView>
+
+</RelativeLayout>

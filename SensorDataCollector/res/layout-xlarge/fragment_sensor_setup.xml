@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <TextView
+        android:id="@+id/textview_sensor_setup_page_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="8dp"
+        android:gravity="left|center_vertical"
+        android:text="@string/text_sensor_properties"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <!-- Name -->
+
+    <TextView
+        android:id="@+id/textview_sensor_setup_sensor_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/textview_sensor_setup_page_title"
+        android:layout_below="@id/textview_sensor_setup_page_title"
+        android:layout_marginTop="8dp"
+        android:gravity="left|center_vertical"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <!-- buttons -->
+
+    <LinearLayout
+        android:id="@+id/layout_sensor_setup_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <Button
+            android:id="@+id/button_sensor_setup_set_parameter"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1"
+            android:text="@string/text_set_parameter" />
+
+    </LinearLayout>
+
+    <!-- user input for sampling rate if applicable -->
+
+    <TextView
+        android:id="@+id/textview_sensor_setup_sampling_rate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/layout_sensor_setup_buttons"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/text_sampling_rate"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <EditText
+        android:id="@+id/edittext_sensor_steup_sampling_rate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/layout_sensor_setup_buttons"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_toRightOf="@id/textview_sensor_setup_sampling_rate"
+        android:inputType="number"
+        android:text="@string/text_number_10"
+        android:textAppearance="?android:attr/textAppearanceSmall" >
+
+        <requestFocus />
+    </EditText>
+
+    <!-- other properties in a listview -->
+
+    <ListView
+        android:id="@+id/listview_sensor_setup_sensor_properties"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/textview_sensor_setup_sampling_rate"
+        android:layout_alignLeft="@id/textview_sensor_setup_page_title"
+        android:layout_below="@id/textview_sensor_setup_sensor_name"
+        android:layout_marginTop="8dp" />
+
+</RelativeLayout>

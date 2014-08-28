@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <RelativeLayout
+        android:id="@+id/layout_experiment_datastore_selecting_heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="left|center_vertical"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp">
+
+        <ImageView
+            android:id="@+id/imageview_expriment_datastore_selecting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/text_data_store"
+            android:src="@drawable/icon_datastore"/>
+
+        <TextView
+            android:id="@+id/extview_experiment_datastore_selecting_main_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@id/imageview_expriment_datastore_selecting"
+            android:textSize="20sp" 
+            android:text="@string/text_data_store"/>
+
+        <TextView
+            android:id="@+id/textview_experiment_datastore_selecting_subtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/extview_experiment_datastore_selecting_main_text"
+            android:layout_below="@id/extview_experiment_datastore_selecting_main_text"
+            android:textSize="12sp"
+            android:text="@string/text_select_a_data_store_for_the_experiment"/>
+    </RelativeLayout>
+    
+    
+    
+    <ListView
+        android:id="@+id/listview_experiment_datastore_selecting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_alignLeft="@id/layout_experiment_datastore_selecting_heading"
+        android:layout_below="@id/layout_experiment_datastore_selecting_heading"/>
+    
+    
+</RelativeLayout>
