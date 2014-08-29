@@ -1,4 +1,3 @@
- ![alt text](https://github.com/sysnetlab/SensorDataCollector/raw/master/doc/images/banner.png "SenSee Banner") 
 SenSee (Sensor Data Collector)
 ===================
 [![alt text](http://developer.android.com//images/brand/en_generic_rgb_wo_45.png "Get it on Google Play")](https://play.google.com/store/apps/details?id=sysnetlab.android.sdc)
