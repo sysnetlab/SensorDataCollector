@@ -1,6 +1,7 @@
- ![alt text](https://github.com/sysnetlab/SensorDataCollector/raw/master/doc/images/banner.png "SenSee Banner")
+ ![alt text](https://github.com/sysnetlab/SensorDataCollector/raw/master/doc/images/banner.png "SenSee Banner") 
 SenSee (Sensor Data Collector)
 ===================
+![alt text](http://developer.android.com//images/brand/en_generic_rgb_wo_45.png "Get it on Google Play")
 
 The Sensor Data Collector is an Android tool that collects sensor data in user-defined experiments. The purpose is to enable developers and researchers to quickly collect sensor data for research and prototyping. The sensors are broadly defined to include Android Sensors (Android.Hardware.Sensors), Cameras (still images and videos), Audio (microphones), WiFi, Bluetooth, Battery, and user-defined pseudo sensors.
 
@@ -15,5 +16,7 @@ For more information on the project, visit the <a href="https://github.com/sysne
 <a href="https://github.com/sysnetlab/SensorDataCollector/wiki/Application-Architecture">Application architecture</a>, which is an evovling document that helps contributors quickly get started. 
 </li>
 </ul>
+
+
 
 
