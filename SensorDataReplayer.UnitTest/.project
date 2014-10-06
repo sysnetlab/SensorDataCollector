@@ -3,6 +3,7 @@
 	<name>SensorDataReplayer.UnitTest</name>
 	<comment></comment>
 	<projects>
+		<project>SensorDataCollector</project>
 		<project>SensorDataReplayer</project>
 	</projects>
 	<buildSpec>
