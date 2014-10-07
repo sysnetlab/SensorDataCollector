@@ -16,6 +16,9 @@ public class MockSensingContext extends RenamingDelegatingContext {
 	public MockSensingContext(Context context)
 	{
 		super(context, MOCK_FILE_PREFIX);
+		
+		//for mockito
+		System.setProperty("dexmaker.dexcache", getCacheDir().getPath());
 	}
 	
 	@Override
@@ -25,7 +28,6 @@ public class MockSensingContext extends RenamingDelegatingContext {
 		if(name == SENSOR_SERVICE)	
 		{
 			//TODO: mock the SensorManager			
-			//using mockito
 			SensorManager spySensorManager = (SensorManager) spy(response);
 			/*
 			when(spySensorManager.registerListener(anyObject(), anyObject(), anyInt()).thenAnswer(new Answer() {
@@ -37,7 +39,7 @@ public class MockSensingContext extends RenamingDelegatingContext {
 			});
 			*/
 			
-			//mSensorManager.registerListener(this, mAccelerometer,
+			//mSensorManager.registerListener(listener, mAccelerometer,
 			//		SensorManager.SENSOR_DELAY_UI);
 			
 			return spySensorManager;
