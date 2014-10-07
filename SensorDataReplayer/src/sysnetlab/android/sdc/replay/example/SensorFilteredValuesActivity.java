@@ -1,4 +1,4 @@
-package sysnetlab.android.sdc.replay.test;
+package sysnetlab.android.sdc.replay.example;
 
 import android.app.Activity;
 import android.hardware.Sensor;
@@ -41,13 +41,13 @@ public class SensorFilteredValuesActivity extends Activity implements
 		if (null == (mAccelerometer = mSensorManager
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)))
 			finish();
-
+		
 		mLastUpdate = System.currentTimeMillis();
 	}
 
 	// Register listener
 	@Override
-	protected void onResume() {
+	public void onResume() {
 		super.onResume();
 
 		mSensorManager.registerListener(this, mAccelerometer,
@@ -57,7 +57,7 @@ public class SensorFilteredValuesActivity extends Activity implements
 
 	// Unregister listener
 	@Override
-	protected void onPause() {
+	public void onPause() {
 		super.onPause();
 
 		mSensorManager.unregisterListener(this);
@@ -67,6 +67,8 @@ public class SensorFilteredValuesActivity extends Activity implements
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 
+		if (event == null) return;
+		
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 
 			long actualTime = System.currentTimeMillis();

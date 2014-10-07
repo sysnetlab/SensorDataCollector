@@ -5,14 +5,18 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import android.content.Context;
+import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.hardware.SensorEventListener;
 import android.test.RenamingDelegatingContext;
 
 
 public class MockSensingContext extends RenamingDelegatingContext {
 
 	private static final String MOCK_FILE_PREFIX = "test.";
-
+	
+	private SensorEventListener capturedEventListener = null;
+	
 	public MockSensingContext(Context context)
 	{
 		super(context, MOCK_FILE_PREFIX);
@@ -21,26 +25,33 @@ public class MockSensingContext extends RenamingDelegatingContext {
 		System.setProperty("dexmaker.dexcache", getCacheDir().getPath());
 	}
 	
+	
+	public SensorEventListener getCapturedEventListener()
+	{
+		return capturedEventListener;
+	}
+	
+	
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Object getSystemService(String name)
-	{
+	{			
 		Object response = super.getSystemService(name);
 		if(name == SENSOR_SERVICE)	
 		{
 			//TODO: mock the SensorManager			
 			SensorManager spySensorManager = (SensorManager) spy(response);
-			/*
-			when(spySensorManager.registerListener(anyObject(), anyObject(), anyInt()).thenAnswer(new Answer() {
+			
+			when(spySensorManager.registerListener(any(SensorEventListener.class), 
+												   any(Sensor.class), 
+												   anyInt())).thenAnswer(new Answer() {
 				public Object answer(InvocationOnMock invocation) {
 					Object[] args = invocation.getArguments();
-					Object mock = invocation.getMock();
-					return "called with arguments: " + args;
+					capturedEventListener = (SensorEventListener) args[0];
+					//Object mock = invocation.getMock();
+					return true;
 				}
 			});
-			*/
-			
-			//mSensorManager.registerListener(listener, mAccelerometer,
-			//		SensorManager.SENSOR_DELAY_UI);
 			
 			return spySensorManager;
 		}
